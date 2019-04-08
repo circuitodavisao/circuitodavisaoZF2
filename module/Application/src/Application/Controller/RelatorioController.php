@@ -2679,7 +2679,37 @@ public function alunosNaSemanaAction(){
 
 	public function consultarOrdenacaoAction(){
 		$request = $this->getRequest();
-		$dados = array();		
+		$dados = array();	
+		$filtrado = false;	
+		$dados['pessoaInativada'] = false;
+		if($request->isPost()){				
+			$postDados = $request->getPost();
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($postDados['cpf']);			
+			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+				$filtrado = true;
+				$grupo = $pessoa->getGrupoResponsavel()[0]->getGrupo();
+
+				if(date('m') == 1){
+					$mes = 12;
+					$ano = date('Y') - 1;
+				}else{
+					$mes = date('m') - 1;
+					$ano = date('Y');
+				}		
+	
+				$resultadoMembresia = self::buscarDadosPrincipaisMembresia($this->getRepositorio(), $grupo, $mes, $ano);
+				$resultadoLideresEParceiroDeDeus = self::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano);
+				$resultadoCelula = self::buscarDadosPrincipaisCelula($this->getRepositorio(), $grupo, $mes, $ano);	
+				$dados['membresia'] = $resultadoMembresia['mediaMembresia'];
+				$dados['lideres'] = $resultadoLideresEParceiroDeDeus['lideres'];		
+				$dados['parceiroDeDeus'] = $resultadoLideresEParceiroDeDeus['parceiro'];	
+				$dados['mediaDePessoasEmCelula'] = $resultadoLideresEParceiroDeDeus['mediaPessoasFrequentes'];
+			} else {
+				$dados['pessoaInativada'] = true;	
+			}			
+		}
+		error_log('filtrado: ' . $filtrado);
+		$dados['filtrado'] = $filtrado;	
 		return new ViewModel($dados);
 	}
 
