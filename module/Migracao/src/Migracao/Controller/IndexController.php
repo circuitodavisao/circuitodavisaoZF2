@@ -663,6 +663,9 @@ class IndexController extends CircuitoController {
 		if(!$grupoQueSeraSemeado->getEntidadeAtiva()){
 			$criar = false;
 		}
+		if(count($grupoQueSeraSemeado->getResponsabilidadesAtivas()) === 0){
+			$criar = false;
+		}
 		if($criar){
 			/* novo grupo */
 			$grupoNovo = new Grupo();
