@@ -184,19 +184,11 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
 				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-					$grupoManutencaoId = $this->view->entidade->getGrupo()->getId();
 					$html .= '<li>';
-					if($grupoManutencaoId == 1 || $grupoManutencaoId == 1225){
-						$html .= '<a href="#">';
-						$html .= '<span class="fa fa-users"></span>';
-						$html .= 'Solicita&ccedil;&otilde;es (Em Manutenção)';
-						$html .= '</a>';
-					} else {
-						$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
-						$html .= '<span class="fa fa-users"></span>';
-						$html .= 'Solicita&ccedil;&otilde;es';
-						$html .= '</a>';
-					}					
+					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
+					$html .= '<span class="fa fa-users"></span>';
+					$html .= 'Solicita&ccedil;&otilde;es';
+					$html .= '</a>';
 					$html .= '</li>';
 
 					$html .= '<li>';
