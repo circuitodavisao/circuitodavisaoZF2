@@ -1067,56 +1067,6 @@ class RelatorioController extends CircuitoController {
 				$soma[$grupoFilho->getId()][self::celulaPerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaPerformance'];
 				$soma[$grupoFilho->getId()][self::celulaRealizadas] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadas'];
 				$soma[$grupoFilho->getId()][self::celulaRealizadasPerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadasPerformance'];
-				if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite) {
-					$somaCelulasDeElite = 0;
-
-					$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-					$somaCelulasDeElite += $relatorioCelula['elite'];
-					$grupoPaiFilhoFilhos144 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-					if ($grupoPaiFilhoFilhos144) {
-						foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-							$grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-							$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho144, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-							$somaCelulasDeElite += $relatorioCelula['elite'];
-
-							$grupoPaiFilhoFilhos1728 = $grupoFilho144->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-							if ($grupoPaiFilhoFilhos1728) {
-								foreach ($grupoPaiFilhoFilhos1728 as $gpFilho1728) {
-									$grupoFilho1728 = $gpFilho1728->getGrupoPaiFilhoFilho();
-									$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho1728, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-									$somaCelulasDeElite += $relatorioCelula['elite'];
-
-									$grupoPaiFilhoFilhos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-									if ($grupoPaiFilhoFilhos20736) {
-										foreach ($grupoPaiFilhoFilhos20736 as $gpFilho20736) {
-											$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
-											$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho20736, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-											$somaCelulasDeElite += $relatorioCelula['elite'];
-
-											$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
-											if ($grupoPaiFilhoFilhos248832) {
-												foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-													$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-													$relatorioCelula = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho248832, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-													$somaCelulasDeElite += $relatorioCelula['elite'];
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] = $somaCelulasDeElite;
-					$meta = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'];
-					if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 2) {
-						$meta = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2);
-					}
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
-					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'] = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] / $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] * 100;
-					$soma[$grupoFilho->getId()][self::celulaDeElitePerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'];
-				}
 
 				$dataCriacao = $filho->getData_criacaoStringPadraoBanco();
 				$dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
@@ -2678,8 +2628,61 @@ public function alunosNaSemanaAction(){
 	}
 
 	public function consultarOrdenacaoAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidadeLogada->getGrupo();	
+		$metas = $grupoLogado->getGrupoMetasOrdenacao();	
 		$request = $this->getRequest();
-		$dados = array();		
+		$dados = array();	
+		$filtrado = false;	
+		$dados['pessoaInativada'] = false;
+		if($request->isPost()){				
+			$postDados = $request->getPost();
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($postDados['cpf']);	
+			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
+			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+				$filtrado = true;
+				$grupo = $pessoa->getGrupoResponsavel()[0]->getGrupo();
+				$repositorio = $this->getRepositorio();
+				$tipoRelatorio = 2; // Somado
+				if(date('m') == 1){
+					$mes = 12;
+					$ano = date('Y') - 1;
+				}else{
+					$mes = date('m') -1;
+					$ano = date('Y');
+				}		
+
+				// Media de Membresia e Média de Pessoas em Célula
+				$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+				$indiceParaVer = count($relatorio) - 1;	
+				$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
+				$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
+
+				// Líderes
+				$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+				if($mes == date('m') && $ano == date('Y')){
+					$arrayPeriodoDoMes[1] = 0;
+				}
+				$periodoParaUsar = $arrayPeriodoDoMes[1];				
+				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
+				$fatoLider = 				
+							$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+				$lideres = $fatoLider[0]['lideres'];
+				/* Parceiro de Deus */
+				$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoRelatorio)['valor'];
+				$dados['ordenacaoMetas'] = $metas;
+				$dados['membresia'] = $mediaMembresia;
+				$dados['lideres'] = $lideres;
+				$dados['parceiroDeDeus'] = $parceiro;
+				$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+				$dados['nivelDeDificuldade'] = $nivelDeDificuldade;
+			} else {
+				$dados['pessoaInativada'] = true;	
+			}			
+		}		
+		$dados['filtrado'] = $filtrado;	
 		return new ViewModel($dados);
 	}
 
@@ -3657,7 +3660,7 @@ public function alunosNaSemanaAction(){
 		$tipoRelatorio = $tipoSomado;
 
 		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
-		$indiceParaVer = count($repositorio) - 1;
+		$indiceParaVer = count($relatorio) - 1;
 
 		$mediaCultos = $relatorio[$indiceParaVer]['mediaMembresiaCulto'];
 		$mediaArena = $relatorio[$indiceParaVer]['mediaMembresiaArena'];
@@ -3701,7 +3704,7 @@ public function alunosNaSemanaAction(){
 		$tipoRelatorio = $tipoSomado;
 
 		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
-		$indiceParaVer = count($repositorio) - 1;
+		$indiceParaVer = count($relatorio) - 1;
 
 		$mediaCelulaQuantidade = $relatorio[$indiceParaVer]['mediaCelulaQuantidade'];
 		$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];
