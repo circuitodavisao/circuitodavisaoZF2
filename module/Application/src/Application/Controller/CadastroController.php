@@ -285,6 +285,11 @@ class CadastroController extends CircuitoController {
 		}
 
 		/* Fim Páginas Revisão */
+		if ($pagina == Constantes::$PAGINA_TROCAR_RESPONSABILIDADES) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_TROCAR_RESPONSABILIDADES,
+			));
+		}
 
 		/* Funcoes */
 		if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -2974,5 +2979,18 @@ class CadastroController extends CircuitoController {
 		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 			Constantes::$PAGINA => Constantes::$PAGINA_REVISOES,
 		));
+	}
+
+	public function trocarResponsabilidadesAction(){
+		self::validarSeSouRegiao();
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+
+		$dados = array();
+		$dados['grupo'] = $grupo;
+		return new ViewModel($dados);
 	}
 }

@@ -171,6 +171,18 @@ class CircuitoController extends AbstractActionController {
 			}
 	}
 
+	public function validarSeSouRegiao(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'semAcesso',
+				));
+			}
+	}
+
 	public function registrarLog($acao, $extra){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
