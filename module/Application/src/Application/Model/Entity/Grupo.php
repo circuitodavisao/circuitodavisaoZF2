@@ -38,7 +38,7 @@ class Grupo extends CircuitoEntity {
     /**
      * @ORM\OneToMany(targetEntity="Entidade", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
-    protected $entidade;
+    protected $entidade;    
 
     /**
      * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo", fetch="EXTRA_LAZY")
@@ -154,7 +154,7 @@ class Grupo extends CircuitoEntity {
 			}
         }
         return $entidadeAtiva;
-    }
+    }    
 
     function getEntidadeInativaPorDataInativacao($dataInativacao = null) {
         $entidadeInativa = null;
@@ -642,7 +642,13 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento Revisao
      * @return GrupoEvento
      */
-	function getGrupoEventoRevisao() {
+	function getGrupoEventoRevisao($opcaoData = 0) {
+        if($opcaoData === 0){
+            $dataParaComparar = strtotime(date('Y-m-d'));
+        }
+        if($opcaoData === 1){
+            $dataParaComparar = strtotime('1900-01-01');
+        }
 		$grupoSelecionado = $this;
     $arrayDeGruposEventos = Array();
     if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
@@ -716,9 +722,7 @@ class Grupo extends CircuitoEntity {
     foreach($arrayDeGruposEventos as $grupoEventos){
   		foreach($grupoEventos as $grupoEvento){
   			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
-  			$dataAtual = strtotime(date('Y-m-d'));
-
-  			if($dataDoRevisao >= $dataAtual){
+  			if($dataDoRevisao >= $dataParaComparar){
   				$arrayRevisoes[] = $grupoEvento;
   			}
   		}
