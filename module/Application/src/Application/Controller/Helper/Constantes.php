@@ -377,6 +377,8 @@ class Constantes {
     public static $PAGINA_ENVIAR_RELATORIO = 'EnviarRelatorio';
     public static $PAGINA_ALTERAR_NOME = 'AlterarNome';
     public static $PAGINA_REMOVER_PESSOA = 'RemoverPessoa';
+    public static $PAGINA_TROCAR_RESPONSABILIDADES = 'TrocarResponsabilidades';
+    public static $PAGINA_TROCAR_RESPONSABILIDADES_FINALIZAR = 'TrocarResponsabilidadesFinalizar';
     public static $CONTROLLER_LANCAMENTO = 'Application\Controller\Lancamento';
     public static $CLASS_CENTER_BLOCk = 'center-block';
     public static $NBSP = '&nbsp;';

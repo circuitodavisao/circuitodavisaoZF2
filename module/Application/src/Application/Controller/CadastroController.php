@@ -285,6 +285,17 @@ class CadastroController extends CircuitoController {
 		}
 
 		/* Fim Páginas Revisão */
+		if ($pagina == Constantes::$PAGINA_TROCAR_RESPONSABILIDADES) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_TROCAR_RESPONSABILIDADES,
+			));
+		}
+		if ($pagina == Constantes::$PAGINA_TROCAR_RESPONSABILIDADES_FINALIZAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_TROCAR_RESPONSABILIDADES_FINALIZAR,
+			));
+		}
+
 
 		/* Funcoes */
 		if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -2974,5 +2985,36 @@ class CadastroController extends CircuitoController {
 		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
 			Constantes::$PAGINA => Constantes::$PAGINA_REVISOES,
 		));
+	}
+
+	public function trocarResponsabilidadesAction(){
+		self::validarSeSouRegiao();
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+
+		$dados = array();
+		$dados['grupo'] = $grupo;
+		return new ViewModel($dados);
+	}
+
+	public function trocarResponsabilidadesFinalizarAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				$dados['foi'] = 'sim'; 
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
 	}
 }

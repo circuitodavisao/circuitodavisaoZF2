@@ -63,7 +63,7 @@ class RelatorioController extends CircuitoController {
 
 		if($sessao->idSessao > 0){
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
-			unset($sessao->idSessao);
+			//unset($sessao->idSessao);
 		}
 
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
@@ -85,15 +85,18 @@ class RelatorioController extends CircuitoController {
 				$ano = date('Y');
 			}
 		}
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano);
 
-		switch($tipoRelatorio){
-		case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = ''); break;
-		case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = ''); break;
-		case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = ''); break;
-		case RelatorioController::relatorioCelulasDeElite: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_DE_ELITE, $extra = ''); break;
-		case RelatorioController::relatorioParceiroDeDeus: self::registrarLog(RegistroAcao::VER_RELATORIO_PARCEIRO_DE_DEUS, $extra = ''); break;
+		if($request->isPost()){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano);
+
+			switch($tipoRelatorio){
+			case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioCelulasDeElite: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_DE_ELITE, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioParceiroDeDeus: self::registrarLog(RegistroAcao::VER_RELATORIO_PARCEIRO_DE_DEUS, $extra = $grupo->getId()); break;
+			}
 		}
 
 		$dados = array(
@@ -3787,6 +3790,35 @@ public function alunosNaSemanaAction(){
 			}
 		}
 		$dados['turmas'] = $turmasAbertas;
+		return $dados;
+	}
+
+	static function buscarTimes($grupo){
+		$times = array();
+		if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal()){
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+				$time = array();
+				$time['id'] = $grupo12->getId();
+				$time['entidade'] = $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+				$time['informacao'] = $grupo12->getEntidadeAtiva()->getNome() ? $grupo12->getEntidadeAtiva()->getNome() : $grupo12->getEntidadeAtiva()->getNumero();
+				$time['lideres'] = $grupo12->getNomeLideresAtivos();
+				$times[] = $time;
+				if($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()){
+					foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+						$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+						$time = array();
+						$time['id'] = $grupo144->getId();
+						$time['entidade'] = $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+						$time['informacao'] = $grupo144->getEntidadeAtiva()->getNome() ? $grupo144->getEntidadeAtiva()->getNome() : $grupo144->getEntidadeAtiva()->getNumero();
+						$time['lideres'] = $grupo144->getNomeLideresAtivos();
+						$times[] = $time;
+					}
+				}
+			}
+		}
+		$dados = array();
+		$dados['times'] = $times;
 		return $dados;
 	}
 }
