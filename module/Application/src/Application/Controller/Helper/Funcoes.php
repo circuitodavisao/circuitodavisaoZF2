@@ -351,6 +351,7 @@ class Funcoes {
 
 	static public function encontrarPeriodoDeUmMesPorMesEAno($mes, $ano) {
 		$mesParaVerificarInt = (int) $mes;
+		$anoParaVerificarInt = (int) $ano;
 		$periodoInicial = 6;
 
 		$mesAnteriorVerificacao = $mesParaVerificarInt - 1;
@@ -360,12 +361,15 @@ class Funcoes {
 
 		while (true) {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
-			if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
-				$arrayPeriodo[5] == $mesAnteriorVerificacao) {
-					if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
-						$periodoInicial++;
-					}
-					break;
+			if($arrayPeriodo[3] == $anoParaVerificarInt ||
+				$arrayPeriodo[6] == $anoParaVerificarInt){
+					if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
+						$arrayPeriodo[5] == $mesAnteriorVerificacao) {
+							if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
+								$periodoInicial++;
+							}
+							break;
+						}
 				}
 			$periodoInicial--;
 		}
@@ -373,15 +377,19 @@ class Funcoes {
 		$periodoFinal = $periodoInicial;
 		while (true) {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
-			if ($arrayPeriodo[5] != $mesParaVerificarInt) {
-				if ($arrayPeriodo[2] != $mesParaVerificarInt) {
-					$periodoFinal--;
+			if($arrayPeriodo[3] == $anoParaVerificarInt ||
+				$arrayPeriodo[6] == $anoParaVerificarInt){
+
+					if ($arrayPeriodo[5] != $mesParaVerificarInt) {
+						if ($arrayPeriodo[2] != $mesParaVerificarInt) {
+							$periodoFinal--;
+						}
+						break;
+					}
+					if ($periodoFinal == 0) {
+						break;
+					}
 				}
-				break;
-			}
-			if ($periodoFinal == 0) {
-				break;
-			}
 			$periodoFinal++;
 		}
 
