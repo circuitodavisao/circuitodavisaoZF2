@@ -5,6 +5,7 @@ namespace Application\Model\ORM;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\EventoTipo;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use DateTime;
@@ -219,5 +220,27 @@ class PessoaORM extends CircuitoORM {
 		}
 		return $resposta;
 	}
+
+	public function verificarSeFezReservaNoRevisaoDeVidas($idPessoa){
+		$resposta = false;
+		$dqlBase = "SELECT "
+			. "ef.id "
+			. "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
+			. "JOIN ef.evento e "
+			. "WHERE "
+			. "ef.pessoa_id = ?1 AND "
+			. "e.tipo_id = " . EventoTipo::tipoRevisao;
+
+		$resultado = $this->getEntityManager()->createQuery($dqlBase)
+			->setParameter(1, (int) $idPessoa)
+			->getResult();
+
+		if($resultado){
+			$resposta = true;
+		}
+		return $resposta;
+	}
+
+
 
 }
