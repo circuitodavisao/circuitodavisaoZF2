@@ -290,6 +290,12 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_TROCAR_RESPONSABILIDADES,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_TROCAR_RESPONSABILIDADES_FINALIZAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_TROCAR_RESPONSABILIDADES_FINALIZAR,
+			));
+		}
+
 
 		/* Funcoes */
 		if ($pagina == Constantes::$PAGINA_FUNCOES) {
@@ -2992,5 +2998,23 @@ class CadastroController extends CircuitoController {
 		$dados = array();
 		$dados['grupo'] = $grupo;
 		return new ViewModel($dados);
+	}
+
+	public function trocarResponsabilidadesFinalizarAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				$dados['foi'] = 'sim'; 
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
 	}
 }
