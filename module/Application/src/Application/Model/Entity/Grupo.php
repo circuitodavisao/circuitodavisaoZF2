@@ -491,7 +491,7 @@ class Grupo extends CircuitoEntity {
         if (!$pessoas || !$this->getGrupoPaiFilhoPaiAtivo()) {
             $inativa = true;
             $pessoas = $this->getPessoasInativas();
-            $dataInativacao = $pessoas[0]->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
+            $dataInativacao = $this->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
         }
         foreach ($pessoas as $pessoa) {
             if ($contador === 2) {
