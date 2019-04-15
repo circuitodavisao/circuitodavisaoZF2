@@ -747,7 +747,7 @@ class CursoController extends CircuitoController {
 						}						
 					}
 
-					self::registrarLog(RegistroAcao::ADICIONOU_ALUNOS_A_TURMA, $extra = 'Id: ' . $turma->getId());
+					self::registrarLog(RegistroAcao::ADICIONOU_ALUNOS_A_TURMA, $extra = 'Id: ' . $sessao->idTurma);
 					$this->getRepositorio()->fecharTransacao();
 
 					return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
