@@ -1,3 +1,8 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+?>
 <span id="spanCarregando">Carregando ...</span>
 
 <div id="divSelectTimes" class="hidden">
@@ -55,7 +60,33 @@
 
 </div>
 <div id="divBotaoFinalizar" class="row p10 hidden">
-	<button onClick="finalizar()">FINALIZAR</button>
+	<button class="btn btn-warning" onClick="recomecar()">RECOMEÇAR</button>
+	<button id="botaoFinalizar" class="btn btn-success" onClick="finalizar()">FINALIZAR</button>
+	<!--divSenha-->
+<div id="divSenha" class="hidden">
+<div class="">
+<div class="section-divider">
+<span>Confirma essa solicitação?</span>
+</div>
+<?php echo $this->divMensagens(); ?>
+<div class="row">
+<div class="col-sm-12 col-xs-12">
+<div class="section text-center mb10">
+<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+</div>
+	<div class="text-right" style="height:65px;">
+<?php
+/* Botões */
+$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+$stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha()';
+echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);
+?>
+	</div>
+</div>
+</div>
+</div>
+</div>
+
 </div>
 <script>
 	let listaDeTimesSelecionados = []
@@ -176,7 +207,6 @@
 	function escreverListaDeResponsabilidadesDisponiveis(){
 		let html = ''
 		html += '<option value="0">SELECIONE</option>'
-		//html += '<option value="remover">REMOVER</option>'
 		responsabilidadesParaSelecionar.forEach((item, indice) => {
 			html += `<option value="${item.id}">${item.entidade}: ${item.informacao}</option>`
 		})
@@ -224,10 +254,10 @@
 							if(parseInt(itemParaTestar.idTime) === parseInt(item.id)){
 								jaEstaAtribuida = true
 							}
-							if(!jaEstaAtribuida){
-								listaDeNaoInclusos.push(item.id)
-							}
 						})
+						if(!jaEstaAtribuida){
+							listaDeNaoInclusos.push(item.id)
+						}
 					})
 					listaDeNaoInclusos.forEach(item => {
 						const itemParaRemover = {
@@ -270,7 +300,76 @@
 	}
 
 	function finalizar(){
-		alert('Foi truta')
+		document.getElementById('divSenha').classList.remove('hidden')
+		document.getElementById('divResponsabilidadesDisponiveis').classList.add('hidden')
+		document.getElementById('botaoFinalizar').classList.add('hidden')
+	}
+
+	function recomecar(){
+		document.getElementById('spanCarregando').classList.remove('hidden')
+		document.getElementById('botaoSegundoPasso').classList.add('hidden')
+		listaDeTimesSelecionados = []
+		times = []
+		responsabilidadesParaSelecionar = []
+		listaDeTimesEResponsabilidades = []
+		buscarTimesAte1728()		
+		escreverListaDeTimesSelecionados()
+		escreverListaDeTimesEResponsabilidades()
+		document.getElementById('divListaDeTimesSelecionados').classList.add('hidden')
+		document.getElementById('divSegundoPasso').classList.add('hidden')
+		document.getElementById('divBotaoFinalizar').classList.add('hidden')
+		document.getElementById('divSelectTimesSelecionados').classList.remove('hidden')
+		document.getElementById('divResponsabilidadesDisponiveis').classList.add('hidden')
+		document.getElementById('botaoFinalizar').classList.remove('hidden')
+		document.getElementById('divSenha').classList.add('hidden')
+	}
+
+	function validarSenha(){
+	    const inputSenha = document.getElementById('senha')
+	    const divMensagens = document.getElementById('divMensagens')
+	    if (inputSenha.value.length === 0) {
+	        divMensagens.innerHTML = 'Preencha a senha'
+	        divMensagens.classList.remove('alert-success')
+	        divMensagens.classList.remove('hidden')
+	        divMensagens.classList.add('alert-danger')
+	        return false;
+	    } else {
+			const url = '/validarSenha'
+			fetch(
+				url,
+				{
+					method: 'POST',	
+					body: JSON.stringify({
+						"senha": inputSenha.value,
+					}),
+				},
+			)
+			.then(resultado => {
+				if(!resultado.ok){
+					alert('erro ao validar')
+				}
+				return resultado.json()
+			})
+			.then(json => {
+				if(json.response){
+					const url = '/cadastroTrocarResponsabilidadesFinalizar'
+					fetch(
+						url,
+						{
+							method: 'POST',	
+							body: JSON.stringify({
+								listaDeTimesEResponsabilidades,
+							}),
+						},
+					)
+				}else{
+	        		divMensagens.innerHTML = 'Senha Invalida'
+			        divMensagens.classList.remove('alert-success')
+			        divMensagens.classList.remove('hidden')
+			        divMensagens.classList.add('alert-danger')
+				}	
+			})
+		}
 	}
 
 </script>
