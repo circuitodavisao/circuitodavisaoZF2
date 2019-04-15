@@ -399,6 +399,26 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $resposta;
     }
 
+    public function getUltimaResponsabilidade($ativa = true) {
+        $ultimoId = 0;
+        $ultimaResponsabilidade = null;
+        foreach ($this->getGrupoResponsavel() as $gr) {
+            if($ativa){
+                if ($gr->verificarSeEstaAtivo() && $gr->getId() > $ultimoId) { 
+                    $ultimoId = $gr->getId();
+                    $ultimaResponsabilidade = $gr;
+                }
+            }
+            if(!$ativa){
+                if (!$gr->verificarSeEstaAtivo() && $gr->getId() > $ultimoId) {                
+                    $ultimoId = $gr->getId();
+                    $ultimaResponsabilidade = $gr;
+                }
+            }            
+        }
+        return $ultimaResponsabilidade;
+    }
+
     function getNome() {
         return $this->nome;
     }
