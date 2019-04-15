@@ -2681,58 +2681,81 @@ public function alunosNaSemanaAction(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoLogado = $entidadeLogada->getGrupo();	
-		$metas = $grupoLogado->getGrupoMetasOrdenacao();	
+		$grupoLogado = $entidadeLogada->getGrupo();				
 		$request = $this->getRequest();
 		$dados = array();	
 		$filtrado = false;	
-		$dados['pessoaInativada'] = false;
-		if($request->isPost()){				
+		$pessoaAtiva = false;				
+		if($request->isPost()){		
+			$filtrado = true;		
 			$postDados = $request->getPost();
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($postDados['cpf']);	
+			$repositorio = $this->getRepositorio();
+			$cpf = $postDados['cpf'];
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);	
+			$nome = $pessoa->getNomePrimeiroUltimo();
 			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
+			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
 			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
-				$filtrado = true;
-				$grupo = $pessoa->getGrupoResponsavel()[0]->getGrupo();
-				$repositorio = $this->getRepositorio();
-				$tipoRelatorio = 2; // Somado
+				$pessoaAtiva = true;
+
 				if(date('m') == 1){
 					$mes = 12;
 					$ano = date('Y') - 1;
 				}else{
-					$mes = date('m') -1;
+					$mes = date('m');
 					$ano = date('Y');
-				}		
+				}	
 
-				// Media de Membresia e Média de Pessoas em Célula
-				$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
-				$indiceParaVer = count($relatorio) - 1;	
-				$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
-				$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
+				foreach($pessoa->getGrupoResponsavel() as $grupoResponsavel){
+					$grupo = $grupoResponsavel->getGrupo();
+					$entidadeDaPessoa = $grupo->getEntidadeAtiva();
 
-				// Líderes
-				$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-				if($mes == date('m') && $ano == date('Y')){
-					$arrayPeriodoDoMes[1] = 0;
+					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+					&& $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
+						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
+						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
+					}
+				
+					if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
+						$tipoRelatorio = 2; // Somado							
+
+						// Media de Membresia e Média de Pessoas em Célula
+						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+						$indiceParaVer = count($relatorio) - 1;	
+						$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
+						$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
+
+						// Líderes
+						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+						if($mes == date('m') && $ano == date('Y')){
+							$arrayPeriodoDoMes[1] = 0;
+						}
+						$periodoParaUsar = $arrayPeriodoDoMes[1];				
+						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
+						$fatoLider = 				
+									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+						$lideres = $fatoLider[0]['lideres'];
+						/* Parceiro de Deus */
+						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoRelatorio)['valor'];
+						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
+						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
+						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
+						$dados['parceiroDeDeus'] = $parceiro;				
+						$dados['membresia'] = $mediaMembresia;
+						$dados['lideres'] = $lideres;																					
+					}
 				}
-				$periodoParaUsar = $arrayPeriodoDoMes[1];				
-				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
-				$fatoLider = 				
-							$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-				$lideres = $fatoLider[0]['lideres'];
-				/* Parceiro de Deus */
-				$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoRelatorio)['valor'];
-				$dados['ordenacaoMetas'] = $metas;
-				$dados['membresia'] = $mediaMembresia;
-				$dados['lideres'] = $lideres;
-				$dados['parceiroDeDeus'] = $parceiro;
-				$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
-				$dados['nivelDeDificuldade'] = $nivelDeDificuldade;
-			} else {
-				$dados['pessoaInativada'] = true;	
-			}			
-		}		
+			}	
+		}	
+		$dados['pessoaAtiva'] = $pessoaAtiva;	
+		$dados['ordenacaoMetas'] = $metas;
 		$dados['filtrado'] = $filtrado;	
+		$dados['nome'] = $nome;	
+		$dados['cpf'] = $cpf;
 		return new ViewModel($dados);
 	}
 

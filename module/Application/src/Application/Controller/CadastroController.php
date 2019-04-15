@@ -27,6 +27,9 @@ use Application\Model\Entity\GrupoPaiFilho;
 use Application\Model\Entity\GrupoPessoa;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\GrupoResponsavel;
+use Application\Model\Entity\GrupoMetasOrdenacao;
+use Application\Model\Entity\MetasOrdenacaoCriterio;
+use Application\Model\Entity\MetasOrdenacaoTipo;
 use Application\Model\Entity\Pessoa;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\Entity\Situacao;
@@ -186,6 +189,12 @@ class CadastroController extends CircuitoController {
 		if ($pagina == Constantes::$PAGINA_SELECIONAR_REVISIONISTA) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
+			));
+		}
+		/* Páginas Metas */
+		if ($pagina == Constantes::$PAGINA_METAS) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_METAS,
 			));
 		}
 		if ($pagina == Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO) {
@@ -365,7 +374,8 @@ class CadastroController extends CircuitoController {
 			$extra = $grupo->getId();
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA) {
-			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
+			$semDataLimite = 1;
+			$listagemDeEventos = $grupo->getGrupoEventoRevisao($semDataLimite);
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
 			$tipoEvento = 9;
 			/* Id da Turma em que os alunos serão selecionados */
@@ -1539,6 +1549,119 @@ class CadastroController extends CircuitoController {
 		Funcoes::enviarEmail($ToEmail, $Subject, $Content);
 	}
 
+	public function metasAction() {
+		$repositorio = $this->getRepositorio();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);		
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();					
+		$request = $this->getRequest();
+		$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();	
+		$ordenacaoTipoBispo = 5;
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();		
+				$post_data = $request->getPost();	
+				$metasAtivas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
+				foreach($metasAtivas as $metaAtiva){			
+					$metaAtiva->setDataEHoraDeInativacao();
+					$this->getRepositorio()->getGrupoPessoaORM()->persistir($metaAtiva, $mudarDataDeCriacao = false);
+				}
+				foreach ($tiposDeMetasOrdenacao as $ordenacaoTipo) {																													
+					if($ordenacaoTipo->getId() !== $ordenacaoTipoBispo){
+						$pessoasEmCelulaAdultos = $post_data['pessoasEmCelulaAdultos'.$ordenacaoTipo->getId()];
+						$pessoasEmCelulaJovens = $post_data['pessoasEmCelulaJovens'.$ordenacaoTipo->getId()];
+						
+						$parceiroDeDeusAdultos = $post_data['parceiroDeDeusAdultos'.$ordenacaoTipo->getId()];
+						$parceiroDeDeusJovens = $post_data['parceiroDeDeusJovens'.$ordenacaoTipo->getId()];		
+
+						$membresiaAdultos = $post_data['membresiaAdultos'.$ordenacaoTipo->getId()];
+						$membresiaJovens = $post_data['membresiaJovens'.$ordenacaoTipo->getId()];
+						
+						$lideresAdultos = $post_data['lideresAdultos'.$ordenacaoTipo->getId()];				
+						$lideresJovens = $post_data['lideresJovens'.$ordenacaoTipo->getId()];
+
+						// Gerando meta de Pessoas em Célula
+						$metaPessoasEmCelula = new GrupoMetasOrdenacao;
+						$criterioPessoasEmCelula = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::pessoasEmCelula);
+						$metaPessoasEmCelula->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaPessoasEmCelula->setMetasOrdenacaoCriterio($criterioPessoasEmCelula);												
+						$metaPessoasEmCelula->setGrupo($grupoLogado);
+						$metaPessoasEmCelula->setValorAdulto($pessoasEmCelulaAdultos);
+						$metaPessoasEmCelula->setValorJovem($pessoasEmCelulaJovens);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaPessoasEmCelula);				
+
+						// Gerando meta de Parceiro de Deus
+						$metaParceiroDeDeus = new GrupoMetasOrdenacao;
+						$criterioParceiroDeDeus = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::parceiroDeDeus);
+						$metaParceiroDeDeus->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaParceiroDeDeus->setMetasOrdenacaoCriterio($criterioParceiroDeDeus);												
+						$metaParceiroDeDeus->setGrupo($grupoLogado);
+						$metaParceiroDeDeus->setValorAdulto($parceiroDeDeusAdultos);
+						$metaParceiroDeDeus->setValorJovem($parceiroDeDeusJovens);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaParceiroDeDeus);
+
+						// Gerando meta de Membresia
+						$metaMembresia = new GrupoMetasOrdenacao;
+						$criterioMembresia = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::membresia);
+						$metaMembresia->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaMembresia->setMetasOrdenacaoCriterio($criterioMembresia);												
+						$metaMembresia->setGrupo($grupoLogado);
+						$metaMembresia->setValorAdulto($membresiaAdultos);
+						$metaMembresia->setValorJovem($membresiaJovens);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaMembresia);
+
+						// Gerando meta de Lideres
+						$metaLideres = new GrupoMetasOrdenacao;
+						$criterioLideres = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::lideres);
+						$metaLideres->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaLideres->setMetasOrdenacaoCriterio($criterioMembresia);												
+						$metaLideres->setGrupo($grupoLogado);
+						$metaLideres->setValorAdulto($lideresAdultos);
+						$metaLideres->setValorJovem($lideresJovens);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaLideres);
+					}				
+					if($ordenacaoTipo->getId() === $ordenacaoTipoBispo){
+						$parceiroDeDeusBispo = $post_data['parceiroDeDeusBispo'];
+						$igrejas = $post_data['igrejas'];
+
+						// Gerando meta de Parceiro de Deus para Bispos
+						$metaParceiroDeDeusBispo = new GrupoMetasOrdenacao;
+						$criterioParceiroDeDeusBispo = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::parceiroDeDeus);
+						$metaParceiroDeDeusBispo->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaParceiroDeDeusBispo->setMetasOrdenacaoCriterio($criterioParceiroDeDeusBispo);												
+						$metaParceiroDeDeusBispo->setGrupo($grupoLogado);
+						$metaParceiroDeDeusBispo->setValorAdulto($parceiroDeDeusBispo);
+						$metaParceiroDeDeusBispo->setValorJovem($parceiroDeDeusBispo);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaParceiroDeDeusBispo);
+
+						// Gerando meta de igrejas para Bispos
+						$metaIgrejasBispo = new GrupoMetasOrdenacao;
+						$criterioIgrejasBispo = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::igrejas);
+						$metaIgrejasBispo->setMetasOrdenacaoTipo($ordenacaoTipo);
+						$metaIgrejasBispo->setMetasOrdenacaoCriterio($criterioParceiroDeDeusBispo);												
+						$metaIgrejasBispo->setGrupo($grupoLogado);
+						$metaIgrejasBispo->setValorAdulto($igrejas);
+						$metaIgrejasBispo->setValorJovem($igrejas);
+						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaIgrejasBispo);
+					}
+				}
+				//self::registrarLog(RegistroAcao::LANCOU_UMA_FICHA_NO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
+				$this->getRepositorio()->fecharTransacao();
+				// return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+				// 	Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
+				// ));
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				//echo $exc->getTraceAsString();
+				echo $exc->getMessage();
+			}
+		}
+		$dados = Array();
+		$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;
+		return new ViewModel($dados);
+	}
+
 	public function selecionarRevisionistaAction() {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2374,7 +2497,7 @@ class CadastroController extends CircuitoController {
 							foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
 								$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
 								if ($grupo1728->verificarSeEstaAtivo()) {
-									if (!$grupo1728->verificaSeECasal()) {
+									if (!$grupo1728->verificaSeECasal()) {																																					
 										if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
 											$dados = array();
 											$dados['grupo'] = $grupoPaiFilhoFilho1728;
@@ -2399,7 +2522,8 @@ class CadastroController extends CircuitoController {
 									foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
 										$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
 										if ($grupo20736->verificarSeEstaAtivo()) {
-											if (!$grupo20736->verificaSeECasal()) {
+											if (!$grupo20736->verificaSeECasal()) {	
+																						
 												if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
 													$dados = array();
 													$dados['grupo'] = $grupoPaiFilhoFilho20736;
