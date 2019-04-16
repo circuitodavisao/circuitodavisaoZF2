@@ -2695,7 +2695,7 @@ public function alunosNaSemanaAction(){
 			$nome = $pessoa->getNomePrimeiroUltimo();
 			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
 			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
-			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
 				$pessoaAtiva = true;
 
 				if(date('m') == 1){
@@ -2705,18 +2705,11 @@ public function alunosNaSemanaAction(){
 					$mes = date('m');
 					$ano = date('Y');
 				}	
-
-				foreach($pessoa->getGrupoResponsavel() as $grupoResponsavel){
+				
+				$responsabilidades = $pessoa->getGrupoResponsavel();
+				foreach($responsabilidades as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
-					$entidadeDaPessoa = $grupo->getEntidadeAtiva();
-
-					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
-					&& $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
-						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
-						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
-						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
-					}
+					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
 				
 					if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
@@ -2724,7 +2717,7 @@ public function alunosNaSemanaAction(){
 
 						// Media de Membresia e Média de Pessoas em Célula
 						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
-						$indiceParaVer = count($relatorio) - 1;	
+						$indiceParaVer = 0;	
 						$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
 						$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
 
@@ -2744,9 +2737,19 @@ public function alunosNaSemanaAction(){
 						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
 						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
 						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
-						$dados['parceiroDeDeus'] = $parceiro;				
+						if(!$dados['parceiroDeDeus']){
+							$dados['parceiroDeDeus'] = $parceiro;				
+						}						
 						$dados['membresia'] = $mediaMembresia;
 						$dados['lideres'] = $lideres;																					
+					}
+					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
+						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
+						$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
+						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
 					}
 				}
 			}	

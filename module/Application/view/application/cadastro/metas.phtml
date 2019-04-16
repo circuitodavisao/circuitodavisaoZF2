@@ -17,8 +17,8 @@ $html = '';
 $html .= $this->templateFormularioTopo('Cadastrar <b class="text-danger">Metas</b>');
 // inicio div panel-body
 $html .= '<div class="panel-body bg-light pbn">';
-$html .= '<span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>';
-$html .= '<form id="formConsultarOrdenacao" action="/cadastroMetas" method="post">';
+$html .= '<span id="spanMensagens2" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>';
+$html .= '<form id="formCadastrarMetas" action="/cadastroMetas" method="post">';
 
 foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
     $tipoBispo = 5;     
@@ -37,16 +37,16 @@ foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
         //inicio row 2
         $html .= '<div class="row">';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 cpfcol-xs-12 mb15">';    
-        $html .= '<input type="number" name="lideresJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Lideres" pattern="\d*">';    
+        $html .= '<input type="number" name="lideresJovens'.$ordenacaoTipo->getId().'" id="lideresJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Lideres" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="membresiaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Membresia" pattern="\d*">';    
+        $html .= '<input type="number" name="membresiaJovens'.$ordenacaoTipo->getId().'" id="membresiaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Membresia" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="pessoasEmCelulaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Pessoas em Célula" pattern="\d*">';    
+        $html .= '<input type="number" name="pessoasEmCelulaJovens'.$ordenacaoTipo->getId().'" id="pessoasEmCelulaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Pessoas em Célula" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="parceiroDeDeusJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Parceiro de Deus" pattern="\d*">';    
+        $html .= '<input type="number" name="parceiroDeDeusJovens'.$ordenacaoTipo->getId().'" id="parceiroDeDeusJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Parceiro de Deus" pattern="\d*">';    
         $html .= '</div>';
         // fim row 2
         $html .= '</div>';
@@ -56,16 +56,16 @@ foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
         //inicio row 3
         $html .= '<div class="row">';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 cpfcol-xs-12 mb15">';    
-        $html .= '<input type="number" name="lideresAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Lideres" pattern="\d*">';    
+        $html .= '<input type="number" name="lideresAdultos'.$ordenacaoTipo->getId().'" id="lideresAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Lideres" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="membresiaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Membresia" pattern="\d*">';    
+        $html .= '<input type="number" name="membresiaAdultos'.$ordenacaoTipo->getId().'" id="membresiaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Membresia" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="pessoasEmCelulaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Pessoas em Célula" pattern="\d*">';    
+        $html .= '<input type="number" name="pessoasEmCelulaAdultos'.$ordenacaoTipo->getId().'" id="pessoasEmCelulaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Pessoas em Célula" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="parceiroDeDeusAdultos'.$ordenacaoTipo->getId().'" class="form-control"   placeholder="Meta Adultos: Parceiro de Deus" pattern="\d*">';    
+        $html .= '<input type="number" name="parceiroDeDeusAdultos'.$ordenacaoTipo->getId().'" id="parceiroDeDeusAdultos'.$ordenacaoTipo->getId().'" class="form-control"   placeholder="Meta Adultos: Parceiro de Deus" pattern="\d*">';    
         $html .= '</div>';
         // fim row 3
         $html .= '</div>';
@@ -77,10 +77,10 @@ foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
         //inicio row 3
         $html .= '<div class="row">';
         $html .= '<div class="col-lg-6 col-md-6 col-sm-6 cpfcol-xs-12 mb15">';    
-        $html .= '<input type="number" name="parceiroDeDeusBispo" class="form-control"  placeholder="Meta Bispos: Parceiro de Deus" pattern="\d*">';    
+        $html .= '<input type="number" name="parceiroDeDeusBispo" id="parceiroDeDeusBispo" class="form-control"  placeholder="Meta Bispos: Parceiro de Deus" pattern="\d*">';    
         $html .= '</div>';
         $html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb15">';    
-        $html .= '<input type="number" name="igrejas" class="form-control"  placeholder="Meta Adultos: Igrejas" pattern="\d*">';    
+        $html .= '<input type="number" name="igrejas" id="igrejas" class="form-control"  placeholder="Meta Adultos: Igrejas" pattern="\d*">';    
         $html .= '</div>';
         $html .= '</div>';
     }
@@ -89,7 +89,8 @@ foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
 //inicio row 4
 $html .= '<div class="row">';
 $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
-$html .= '<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block mb15 pull-right" data-style="zoom-in">';
+$html .= '<span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>';
+$html .= '<button type="button" onclick="validarDados();" class="btn ladda-button btn-primary btn-block mb15 pull-right" data-style="zoom-in">';
 $html .= '<span class="ladda-label">Cadastrar</span>';
 $html .= '<span class="ladda-spinner"></span></button>';
 $html .= '</div>';
@@ -115,53 +116,65 @@ echo $html;
         var temErro = false;
         var hidden = 'hidden';
         var spanMensagens = $('#spanMensagens');
+        var spanMensagens2 = $('#spanMensagens2');
+        var formCadastrarMetas = $("#formCadastrarMetas");    
+
+         var inputParceiroDeDeusBispo = $("#parceiroDeDeusBispo");
+         var inputIgrejas = $("#igrejas");   
+         
+         var parceiroDeDeusBispo = inputParceiroDeDeusBispo.val();
+         var igrejas = inputIgrejas.val();     
         
-        for (let index = 1; index < 6; index++) {
-            var InputPessoasEmCelulaAdultos = $("#pessoasEmCelulaAdultos" + index);
-            var InputPessoasEmCelulaJovens = $("#pessoasEmCelulaJovens" + index);
+        for (let index = 1; index < 5; index++) {
+            var inputPessoasEmCelulaAdultos = $("#pessoasEmCelulaAdultos" + index);
+            var inputPessoasEmCelulaJovens = $("#pessoasEmCelulaJovens" + index);
             
-            var InputParceiroDeDeusAdultos = $("#parceiroDeDeusAdultos" + index);
-            var InputParceiroDeDeusJovens = $("#parceiroDeDeusJovens" + index);
+            var inputParceiroDeDeusAdultos = $("#parceiroDeDeusAdultos" + index);
+            var inputParceiroDeDeusJovens = $("#parceiroDeDeusJovens" + index);
             
-            var InputMembresiaAdultos = $("#membresiaAdultos" + index);
-            var InputMembresiaJovens = $("#membresiaJovens" + index);
+            var inputMembresiaAdultos = $("#membresiaAdultos" + index);
+            var inputMembresiaJovens = $("#membresiaJovens" + index);
 
-            var InputLideresAdultos = $("#lideresAdultos" + index);
-            var InputLideresJovens = $("#lideresJovens" + index);  
+            var inputLideresAdultos = $("#lideresAdultos" + index);
+            var inputLideresJovens = $("#lideresJovens" + index);  
 
-            var pessoasEmCelulaAdultos = InputPessoasEmCelulaAdultos.val();
-            var pessoasEmCelulaJovens = InputPessoasEmCelulaJovens.val();
+            var pessoasEmCelulaAdultos = inputPessoasEmCelulaAdultos.val();
+            var pessoasEmCelulaJovens = inputPessoasEmCelulaJovens.val();
 
-            var parceiroDeDeusAdultos = InputParceiroDeDeusAdultos.val();
-            var parceiroDeDeusJovens = InputParceiroDeDeusJovens.val();
+            var parceiroDeDeusAdultos = inputParceiroDeDeusAdultos.val();
+            var parceiroDeDeusJovens = inputParceiroDeDeusJovens.val();
 
-            var membresiaAdultos = InputMembresiaAdultos.val();
-            var membresiaJovens = InputMembresiaJovens.val();
+            var membresiaAdultos = inputMembresiaAdultos.val();
+            var membresiaJovens = inputMembresiaJovens.val();
 
-            var lideresAdultos = InputLideresAdultos.val();
-            var lideresJovens = InputLideresJovens.val();
+            var lideresAdultos = inputLideresAdultos.val();
+            var lideresJovens = inputLideresJovens.val();
 
             if(pessoasEmCelulaAdultos.length === 0 || !isNumber(pessoasEmCelulaAdultos) ||
             pessoasEmCelulaJovens.length === 0 || !isNumber(pessoasEmCelulaJovens) ||
             parceiroDeDeusAdultos.length === 0 || !isNumber(parceiroDeDeusAdultos) ||
             parceiroDeDeusJovens.length === 0 || !isNumber(parceiroDeDeusJovens) ||
+            parceiroDeDeusBispo.length === 0 || !isNumber(parceiroDeDeusBispo) ||
             membresiaAdultos.length === 0 || !isNumber(membresiaAdultos) ||
             membresiaJovens.length === 0 || !isNumber(membresiaJovens) ||
             lideresAdultos.length === 0 || !isNumber(lideresAdultos) ||
             lideresJovens.length === 0 || !isNumber(lideresJovens) ||
+            igrejas.length === 0 || !isNumber(igrejas)){
                 temErro  = true;
-            }                                      
-        }        
-               
-        var formConsultarOrdenacao = $("#formConsultarOrdenacao");
-        var cpf = inputCPF.val();
-        if (cpf.length === 0 || !isNumber(cpf) || cpf.length !== 11) {
+            }
+        }  
+            
+        if (temErro) {            
             spanMensagens.removeClass(hidden);
-            spanMensagens.text('<?php echo $this->translate(Constantes::$TRADUCAO_CPF_INVALIDO); ?>');            
-            temErro = true;
+            spanMensagens.text('É NECESSÁRIO PREENCHER TODAS AS METAS!');     
+            spanMensagens2.removeClass(hidden);
+            spanMensagens2.text('É NECESSÁRIO PREENCHER TODAS AS METAS!');                                    
         }
-        if(!temErro){
-            formConsultarOrdenacao.submit();
-        }
-    }
+        if(!temErro){            
+            formCadastrarMetas.submit();
+        }                                    
+    }        
+               
+       
+    
 </script>
