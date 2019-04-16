@@ -684,6 +684,7 @@ class CursoController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		unset($sessao->idSessao);		
 		$view = new ViewModel(array(
 			Constantes::$ENTIDADE => $entidade,
 			'repositorioORM' => $this->getRepositorio(),

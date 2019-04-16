@@ -25,9 +25,9 @@ use Application\Controller\Helper\Constantes;
                     <?php
                     /* Laço para mostrar as responsabilidades ativas */
                     foreach ($this->responsabilidades as $responsabilidade) {
+						$grupo = $responsabilidade->getGrupo();
 						if($responsabilidade->verificarSeEstaAtivo()){
 							/* Grupo da responsabilidades */
-							$grupo = $responsabilidade->getGrupo();
 							if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
 								$grupoPais = $grupo->getGrupoPaiFilhoPai();
 
@@ -61,9 +61,9 @@ use Application\Controller\Helper\Constantes;
 								echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
 							}
 						}else{
-							$grupo = $responsabilidade->getGrupo();
-							$entidadeSelecionada = $grupo->getEntidadeAtiva();
-							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false);
+							$entidadeSelecionada = $grupo->getEntidade()[0];
+							$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
+							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
 						}
                     }
                     ?>
