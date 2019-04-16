@@ -97,6 +97,21 @@ if($this->filtrado && $this->ordenacaoMetas && $this->pessoaAtiva){
     //fim  row numeros grandes
     $html .= '</div>';
     
+    if($this->quantidadeDeIgrejas){
+        //row igrejas
+        $html .= '<div class="row mb10">';
+        $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+        $html .= '<div class="panel text-center br-a br-grey">';
+        $html .= '<div class="panel-body">';
+        $html .= '<h1 class="fs16 mt5 mbn">Igrejas</h1>';
+        $html .= '<h6 class="text-info">'.$this->quantidadeDeIgrejas.'</h6>';        
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
+        //fim  row igrejas
+        $html .= '</div>';
+    }
+    
     foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) { 
         // row aprovação dos critérios
         $html .= '<div class="row">';        
@@ -106,32 +121,27 @@ if($this->filtrado && $this->ordenacaoMetas && $this->pessoaAtiva){
                 $ordenacaoCriterio = $metas->getMetas_ordenacao_criterio_id();               
                 $meta = $metas->metaPorDificuldade($this->nivelDeDificuldade);                 
                 switch($ordenacaoCriterio){
-                    case MetasOrdenacaoCriterio::lideres:                         
-                        error_log('meta lideres: ' . $meta);
+                    case MetasOrdenacaoCriterio::lideres:                                                 
                         if($this->lideres >= $meta){                            
                             $pontosOrdenado++;
                         }
                         break;
-                    case MetasOrdenacaoCriterio::membresia:     
-                        error_log('meta membresia: ' . $meta);                   
+                    case MetasOrdenacaoCriterio::membresia:                                              
                         if($this->membresia >= $meta){
                             $pontosOrdenado++;
                         }
                         break;
-                    case MetasOrdenacaoCriterio::pessoasEmCelula: 
-                        error_log('meta pessoasEmCelula: ' . $meta);
+                    case MetasOrdenacaoCriterio::pessoasEmCelula:                         
                         if($this->mediaPessoasFrequentes >= $meta){
                             $pontosOrdenado++;
                         }
                         break;                        
-                    case MetasOrdenacaoCriterio::parceiroDeDeus:
-                        error_log('meta parceiroDeDeus: ' . $meta);
+                    case MetasOrdenacaoCriterio::parceiroDeDeus:                        
                         if($this->parceiroDeDeus >= $meta){
                             $pontosOrdenado++;
                         }
                         break;                         
-                    case MetasOrdenacaoCriterio::igrejas:
-                        error_log('meta igrejas: ' . $meta);
+                    case MetasOrdenacaoCriterio::igrejas:                        
                         if($this->quantidadeDeIgrejas >= $meta){
                             $pontosOrdenado++;
                         }
