@@ -83,14 +83,6 @@ class PerfilIcone extends AbstractHelper {
             $html .= '</a>';
             /* FIM Div com tamanho das colunas */
             $html .= '</div>';
-
-            /* Modal */
-            $html .= '<div id="modal-' . $this->getEntidade()->getId() . '" class="popup-basic admin-form mfp-with-anim mfp-hide">';
-
-            $html .= PerfilIcone::htmlPanel(2, $tipoEntidade, $nomeEntidade, $infoEntidade);
-
-            /* FIM Modal */
-            $html .= '</div>';
         }
         return $html;
     }
