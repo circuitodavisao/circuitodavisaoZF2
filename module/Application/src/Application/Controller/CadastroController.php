@@ -376,10 +376,16 @@ class CadastroController extends CircuitoController {
 			$extra = $grupo->getId();
 		}
 		if ($pagina == Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA) {
-			$listagemDeEventos = $grupo->getGrupoEventoRevisao();
+			if(!$sessao->idSessao){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+					Constantes::$ACTION => Constantes::$PAGINA_LISTAR_TURMA,
+				));				
+			}
+			$todosEventos = 1;
+			$listagemDeEventos = $grupo->getGrupoEventoRevisao($todosEventos);
 			$tituloDaPagina = Constantes::$TRADUCAO_LISTAGEM_REVISAO;
 			$tipoEvento = 9;
-			/* Id da Turma em que os alunos serão selecionados */
+			/* Id da Turma em que os alunos serão selecionados */						
 			$sessao->idTurma = $sessao->idSessao;
 		}
 		if ($pagina == Constantes::$PAGINA_DISCIPULADOS) {
