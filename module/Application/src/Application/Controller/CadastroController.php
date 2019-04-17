@@ -1626,7 +1626,7 @@ class CadastroController extends CircuitoController {
 						$metaLideres = new GrupoMetasOrdenacao;
 						$criterioLideres = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::lideres);
 						$metaLideres->setMetasOrdenacaoTipo($ordenacaoTipo);
-						$metaLideres->setMetasOrdenacaoCriterio($criterioMembresia);												
+						$metaLideres->setMetasOrdenacaoCriterio($criterioLideres);												
 						$metaLideres->setGrupo($grupoLogado);
 						$metaLideres->setValorAdulto($lideresAdultos);
 						$metaLideres->setValorJovem($lideresJovens);
@@ -1650,7 +1650,7 @@ class CadastroController extends CircuitoController {
 						$metaIgrejasBispo = new GrupoMetasOrdenacao;
 						$criterioIgrejasBispo = $this->getRepositorio()->getMetasOrdenacaoCriterioORM()->encontrarPorId(MetasOrdenacaoCriterio::igrejas);
 						$metaIgrejasBispo->setMetasOrdenacaoTipo($ordenacaoTipo);
-						$metaIgrejasBispo->setMetasOrdenacaoCriterio($criterioParceiroDeDeusBispo);												
+						$metaIgrejasBispo->setMetasOrdenacaoCriterio($criterioIgrejasBispo);												
 						$metaIgrejasBispo->setGrupo($grupoLogado);
 						$metaIgrejasBispo->setValorAdulto($igrejas);
 						$metaIgrejasBispo->setValorJovem($igrejas);
