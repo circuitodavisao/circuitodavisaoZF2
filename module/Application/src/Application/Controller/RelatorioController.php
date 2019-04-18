@@ -2000,6 +2000,21 @@ class RelatorioController extends CircuitoController {
 				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorMesEAno($mes, $ano);
 			}
 
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				$fatosRankingCelula = Array();
+				$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+				foreach ($grupoPaiFilhoFilhos as $filho) {
+					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+					$ntidadeDoFilho = 	$grupoFilho->getEntidadeAtiva();
+					if($ntidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho->getId(), $mes, $ano);
+					}	
+					foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
+						$fatosRankingCelula[] = $fatoRankingCelulaAuxiliar;
+					}				
+				}		
+			}
+
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 				$fatosRankingCelula = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
