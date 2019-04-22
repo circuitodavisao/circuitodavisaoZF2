@@ -180,11 +180,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
 			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
 			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
-		}
-		if($pessoa->getTipo() != 'LP' && $this->view->periodo == 0){
-			//$dadosAjustar = $pessoa->getId();
-			//$html .= '<span id="" class="btn btn-default btn-xs ml5" onclick="mostrarSplash(); ajustarPessoa(\''.$dadosAjustar.'\');"><i class="fa fa-wrench"></i></span>';			
-		}
+		}		
 
 		$html .= '</div>';
 		/* Col 6 */

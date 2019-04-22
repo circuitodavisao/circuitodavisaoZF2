@@ -67,8 +67,8 @@ class LancamentoController extends CircuitoController {
 		}else{
 			$grupo = $entidade->getGrupo();
 		}
-
-        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+        
+        $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);        
 
         if (!$entidade->verificarSeEstaAtivo()) {
 			$periodoVerificar = Funcoes::encontrarPeriodoDadoDataDeInativacao($entidade->getData_inativacaoStringPadraoBanco());
@@ -106,13 +106,7 @@ class LancamentoController extends CircuitoController {
         }
 
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
-        $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
-        if($periodo == 0){
-            foreach ($grupoPessoasNoPeriodo as $grupoPessoa ) {
-                self::ajustarPessoa($grupoPessoa->getPessoa()->getId(), $this->getRepositorio());                
-            }
-            $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());
-        }
+        $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());       
 		$validacaoPessoasCadastradas = 1;
         $view = new ViewModel(
                 array(
