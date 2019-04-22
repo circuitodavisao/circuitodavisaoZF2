@@ -352,6 +352,8 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 			})
 			.then(json => {
 				if(json.response){
+			        divMensagens.classList.add('hidden')
+					//mostrarSplash()
 					const url = '/cadastroTrocarResponsabilidadesFinalizar'
 					fetch(
 						url,
@@ -362,6 +364,15 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 							}),
 						},
 					)
+					.then(resultado => {
+						if(!resultado.ok){
+							alert('erro ao salvar')
+						}
+						return resultado.json()
+					})
+					.then(json => {
+						console.log(json)
+					})
 				}else{
 	        		divMensagens.innerHTML = 'Senha Invalida'
 			        divMensagens.classList.remove('alert-success')
