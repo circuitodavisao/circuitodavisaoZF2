@@ -64,8 +64,8 @@ class CadastroController extends CircuitoController {
 		if ($pagina == Constantes::$PAGINA_EVENTO_CULTO
 			|| $pagina == Constantes::$PAGINA_EVENTO_CELULA
 			|| $pagina == Constantes::$PAGINA_EVENTO_DISCIPULADO
-			) {
-				if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
+		) {
+			if ($pagina == Constantes::$PAGINA_EVENTO_CULTO) {
 				$sessao->pagina = Constantes::$PAGINA_EVENTO_CULTO;
 			}
 			if ($pagina == Constantes::$PAGINA_EVENTO_CELULA) {
@@ -809,7 +809,7 @@ class CadastroController extends CircuitoController {
 						$grupoEvento->setEvento($evento);
 						$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, $alterarDataDeCriacao);
 
-						
+
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
 						if ($fatosLider = $this->getRepositorio()->getFatoLiderORM()->encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador)) {
 							foreach($fatosLider as $fatoLider){ 
@@ -827,7 +827,7 @@ class CadastroController extends CircuitoController {
 						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao);
 
 						self::registrarLog(RegistroAcao::CADASTROU_UMA_CELULA, $extra = 'Id: '.$evento->getId());
-						
+
 					}
 					$this->getRepositorio()->fecharTransacao();
 
@@ -1443,7 +1443,7 @@ class CadastroController extends CircuitoController {
 								if($minhaEntidade){
 									$stringOndeEstaCadastrado .= $minhaEntidade;
 								}
-								
+
 								if($entidadeDaIgreja || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 									$stringOndeEstaCadastrado .= 'IGREJA: ' .  $entidadeDaIgreja->getNome() . ', ';
 								}	
@@ -1455,16 +1455,16 @@ class CadastroController extends CircuitoController {
 										$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
 									}
 								}			
-									
+
 								if($nomeEntidadeAcimaArrumado){
 									$stringOndeEstaCadastrado .= ' NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
 								}
-								
+
 								$resposta = $respostaTemCadastroAtivo;								
 								if($nomeDoResponsavel){
 									$dados['responsavel']['nome'] = $nomeDoResponsavel;
 								}										
-								
+
 								$dados['ondeEsta'] = $stringOndeEstaCadastrado;
 							}							
 						}
@@ -2811,7 +2811,7 @@ class CadastroController extends CircuitoController {
 			$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
 			$arrayDeEventosRevisoes[] = $eventoRevisao;
 		}
-		 
+
 		foreach ($arrayDeEventosRevisoes as $evento) {			
 			if ($eventoFrequencias = $evento->getEventoFrequencia()) {
 				foreach ($eventoFrequencias as $eventoFrequencia) {
@@ -2964,7 +2964,7 @@ class CadastroController extends CircuitoController {
 				} else {
 					error_log(print_r($formulario->getMessages(), TRUE));					
 				}
- 
+
 				self::registrarLog(RegistroAcao::CADASTROU_UM_REVISAO_DE_VIDAS, $extra = 'Id: '.$evento->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
@@ -3014,13 +3014,66 @@ class CadastroController extends CircuitoController {
 			try {
 				$body = $request->getContent();
 				$json = Json::decode($body);
+				$dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
+				foreach($json->listaDeTimesEResponsabilidades as $item){
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($item->idTime);	
+					$pessoas = array();
+					foreach($grupo->getResponsabilidadesAtivas() as  $grupoResponsavel){
+						$pessoas[] = $grupoResponsavel->getPessoa();
+					}
 
-				$dados['foi'] = 'sim'; 
+					foreach($item->responsabilidades as $responsabilidade){
+						if($responsabilidade->id !== 'removido'){
+							$grupoParaNovaResponsabilidades = $this->getRepositorio()->getGrupoORM()->encontrarPorId($responsabilidade->id);	
+
+							$criarNovo = true;
+							foreach($pessoas as $pessoaParaVerificar){
+								foreach($pessoaParaVerificar->getResponsabilidadesAtivas() as $grupoResponsavelParaVerificar){
+									if($grupoResponsavelParaVerificar->getGrupo()->getId() === $grupoParaNovaResponsabilidades->getId()){
+										$criarNovo = false;
+									}
+								}
+							}
+							if($criarNovo){
+								/* Adicionar Responsabilidade */
+//								$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+//								$solicitacao = new Solicitacao();
+//								$solicitacao->setSolicitante($pessoaLogada);
+//								$solicitacao->setGrupo($grupoIgreja);
+//								$solicitacao->setSolicitacaoTipo($solicitacaoTipo);
+//								$solicitacao->setObjeto1($post_data['objeto1']);
+//								$solicitacao->setObjeto2($post_data['objeto1']);
+//								$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+//
+//								$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+//								$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+//								$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+//								$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+							}
+						}else{
+							/* Remover Responsabilidade */
+//							$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+//							$solicitacao = new Solicitacao();
+//							$solicitacao->setSolicitante($pessoaLogada);
+//							$solicitacao->setGrupo($grupoIgreja);
+//							$solicitacao->setSolicitacaoTipo($solicitacaoTipo);
+//							$solicitacao->setObjeto1($post_data['objeto1']);
+//							$solicitacao->setObjeto2($post_data['objeto1']);
+//							$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+//
+//							$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
+//							$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
+//							$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
+//							$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+						}
+					}
+				}
+
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}
+			$response->setContent(Json::encode($dados));
+			return $response;
 		}
-		$response->setContent(Json::encode($dados));
-		return $response;
 	}
 }

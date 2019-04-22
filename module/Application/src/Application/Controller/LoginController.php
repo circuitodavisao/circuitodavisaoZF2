@@ -284,7 +284,13 @@ class LoginController extends CircuitoController {
         $response = $this->getResponse();
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $senhaInformada = md5($data['senha']);
+			if($data['senha']){
+            	$senhaInformada = md5($data['senha']);
+			}else{
+				$body = $request->getContent();
+				$json = Json::decode($body);
+            	$senhaInformada = md5($json->senha);
+			}
             $senhaNaIdentidade = $this->identity()->getSenha();
 
             if ($senhaNaIdentidade === $senhaInformada) {

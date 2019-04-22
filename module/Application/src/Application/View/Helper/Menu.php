@@ -219,7 +219,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
-			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao\', null);">';
+			$html .= '<a href="/lancamentoArregimentacao/-1" onClick="mostrarSplash(););">';
 			$html .= '<span class="fa fa-terminal"></span>';
 			$html .= 'Arregimentação';
 			$html .= '</a>';
@@ -388,7 +388,8 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			}
 
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 			$html .= '<li>';
 			$html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-users"></span>';
