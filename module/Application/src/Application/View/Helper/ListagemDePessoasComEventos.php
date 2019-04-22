@@ -150,16 +150,13 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
 
 		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
-		$participouDoRevisao = false;		
-		if($pessoa->verificaSeParticipouDoRevisao() && $pessoa->getTipo() != 'LP'){
-			$participouDoRevisao = true;			
-			$iconeDaPessoa = '<span class="label label-dark"><i class="fa fa-file-text"></i></span> ';
+		$iconeDaPessoa = '';
+		if($pessoa->getTipo() != 'LP'){
 			if($pessoa->verificarSeEhAluno()){
 				$iconeDaPessoa = '<span class="label label-dark"><i class="fa fa-graduation-cap"></i></span> ';
 			}
-			$html .= $iconeDaPessoa;
 		}
-
+		$html .= $iconeDaPessoa;
 		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
 		$html .= $pessoa->getNomeListaDeLancamento(5);
 		$html .= '</span>';
@@ -179,7 +176,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= $telefone;
 
 		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
-			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo().'_'.$participouDoRevisao;
+			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
 			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
 			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
