@@ -76,28 +76,26 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
             foreach ($discipulos as $gpFilho) {
 
                 $html .= '<hr/>';
-                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();
-                if ($grupoFilho->getResponsabilidadesAtivas()) {
+                $grupoFilho = $gpFilho->getGrupoPaiFilhoFilho();              
 
-                    $html .= $this->montarLinhaDeAtendimento($grupoFilho);
+                $html .= $this->montarLinhaDeAtendimento($grupoFilho);
 
-                    if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio) {
-                        $todosFilhos = $grupoFilho->getGrupoPaiFilhoFilhosPorMesEAno($this->getMes(), $this->getAno());
-                        if (count($todosFilhos)) {
-                            $html .= '<div id="grupos144' . $grupoFilho->getId() . '" class="hidden bg-default">';
-                            foreach ($todosFilhos as $gpFilho144) {
-                                $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
-                                if ($grupoFilho144->getResponsabilidadesAtivas()) {
-                                    $ehDiscipuloAbaixo = true;
-                                    $html .= $this->montarLinhaDeAtendimento($grupoFilho144, $ehDiscipuloAbaixo);
-                                }
+                if ($this->getTipo() === AtendimentoGruposAbaixo::tipoRelatorio) {
+                    $todosFilhos = $grupoFilho->getGrupoPaiFilhoFilhosPorMesEAno($this->getMes(), $this->getAno());
+                    if (count($todosFilhos)) {
+                        $html .= '<div id="grupos144' . $grupoFilho->getId() . '" class="hidden bg-default">';
+                        foreach ($todosFilhos as $gpFilho144) {
+                            $grupoFilho144 = $gpFilho144->getGrupoPaiFilhoFilho();
+                            if ($grupoFilho144->getResponsabilidadesAtivas()) {
+                                $ehDiscipuloAbaixo = true;
+                                $html .= $this->montarLinhaDeAtendimento($grupoFilho144, $ehDiscipuloAbaixo);
                             }
-                            $html .= '</div>';
-                        } else {
-                            $html .= $mensagemAlertaSemDiscipulos;
                         }
+                        $html .= '</div>';
+                    } else {
+                        $html .= $mensagemAlertaSemDiscipulos;
                     }
-                }
+                }                
             }
         } else {
             $html .= $mensagemAlertaSemDiscipulos;
@@ -318,7 +316,7 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $html .= '<div class="col-md-3 hidden-xs">';
         if (!$discipuloAbaixo) {
             $quantidadeDeLideres = 1;
-            foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+            foreach ($grupo->getGrupoResponsavel() as $grupoResponsavel) {
                 if ($quantidadeDeLideres === 2) {
                     $html .= Constantes::$NBSP;
                 }
