@@ -760,7 +760,14 @@ class LancamentoController extends CircuitoController {
 
       $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
       /* Formulario */
-      $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos, $pessoa, $aluno = $dados[2]);
+	  $particiouDeAlgumRevisao = false;
+	  if($this->getRepositorio()->getPessoaORM()->verificarSeFezReservaNoRevisaoDeVidas($pessoa->getId())){
+		  $particiouDeAlgumRevisao = true;
+	  }
+	  if($pessoa->verificarSeEhAluno()){
+		  $particiouDeAlgumRevisao = true;
+	  }
+      $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos, $pessoa, $aluno = $particiouDeAlgumRevisao);
       $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
       $view = new ViewModel(array(
