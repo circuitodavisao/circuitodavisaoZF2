@@ -379,13 +379,24 @@ class Funcoes {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
 			if($arrayPeriodo[3] == $anoParaVerificarInt ||
 				$arrayPeriodo[6] == $anoParaVerificarInt){
-
-					if ($arrayPeriodo[5] != $mesParaVerificarInt) {
-						if ($arrayPeriodo[2] != $mesParaVerificarInt) {
-							$periodoFinal--;
+					if($mes != date('m')){
+						if ($arrayPeriodo[5] != $mesAnteriorVerificacao) {
+							if ($arrayPeriodo[2] != $mesAnteriorVerificacao) {
+								$periodoFinal--;
+							}
+							break;
 						}
-						break;
 					}
+
+					if($mes == date('m')){
+						if ($arrayPeriodo[5] != $mesParaVerificarInt) {
+							if ($arrayPeriodo[2] != $mesParaVerificarInt) {
+								$periodoFinal--;
+							}
+							break;
+						}
+					}
+					
 					if ($periodoFinal == 0) {
 						break;
 					}
