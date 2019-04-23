@@ -335,7 +335,7 @@ class GrupoForm extends Form {
 		/* Numeracao */
 		$arrayNumeracao = array();
 		$arrayNumeracao[0] = Constantes::$FORM_SELECT;
-		for ($indiceNumeroSubEquipe = 1; $indiceNumeroSubEquipe <= 24; $indiceNumeroSubEquipe++) {
+		for ($indiceNumeroSubEquipe = 1; $indiceNumeroSubEquipe <= 48; $indiceNumeroSubEquipe++) {
 			$adicionarNumero = true;
 			if ($numeros) {
 				foreach ($numeros as $numero) {
