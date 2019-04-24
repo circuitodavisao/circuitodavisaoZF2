@@ -973,8 +973,17 @@ class RelatorioController extends CircuitoController {
 								}
 
 							}
-							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-								$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
+							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+								$grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){							
+								
+									
+									if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao ){
+										$contadorRegioesCoordenacoesEIgrejas['regiao']++;
+									}
+			
+									if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
+										$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
+									}
 
 								$todosDiscipulosRegiaoOuCoordenacao1 = array();
 								for ($indiceDeArrays2 = $arrayPeriodoDoMes[0]; $indiceDeArrays2 <= $arrayPeriodoDoMes[1]; $indiceDeArrays2++) {
@@ -1007,7 +1016,10 @@ class RelatorioController extends CircuitoController {
 
 										if($tipoRelatorio === self::relatorioParceiroDeDeus){
 
-											//TODO
+											$relatorioDiscipulos2
+												= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho2,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
+
+											$relatorioSomado2 += $relatorioDiscipulos1['valor'];
 
 										}else{
 
@@ -1022,7 +1034,7 @@ class RelatorioController extends CircuitoController {
 
 											$relatorioDiscipulos2 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho2, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 											foreach($relatorioDiscipulos2 as $key => $val){
-												$relatorioSomado1[$key] += $val;
+												$relatorioSomado2[$key] += $val;
 											}
 
 										}
@@ -1033,11 +1045,11 @@ class RelatorioController extends CircuitoController {
 
 							}
 						}
-
-						if($tipoRelatorio === self::relatorioParceiroDeDeus){
-							//$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] = $relatorioSomado1;
+						$totalSomado = $relatorioSomado1 + $relatorioSomado2;
+						if($tipoRelatorio === self::relatorioParceiroDeDeus){							
+							$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] = $totalSomado;
 						}else{
-							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $relatorioSomado1;
+							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $totalSomado;
 						}
 
 					}
