@@ -376,8 +376,7 @@ class FatoCicloORM extends CircuitoORM {
 									|| (
 										!$grupoPessoa->verificarSeEstaAtivo()
 										&& $grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE
-										&& $dataDeInativacaoEmTempo >= $inicioDoPeriodoEmTempo
-										&& $dataDeInativacaoEmTempo <= $fimDoPeriodoEmTempo
+										&& $dataDeInativacaoEmTempo >= $inicioDoPeriodoEmTempo										
 									)
 								){
 									$visitantes++;

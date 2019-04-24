@@ -310,7 +310,12 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 					$mostrar = true;
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao) {
-						$mostrar = false;
+			if($indiceMenuRelatorio == 9){
+				$mostrar = true;
+			} else {
+				$mostrar = false;
+			}
+						
 					}
 					break;
 				}
