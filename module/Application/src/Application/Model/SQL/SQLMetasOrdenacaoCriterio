@@ -1,0 +1,35 @@
+-- Table: metas_ordenacao_criterio
+
+-- DROP TABLE metas_ordenacao_criterio;
+
+CREATE TABLE metas_ordenacao_criterio
+(
+  id serial NOT NULL, -- Identificação do critério da meta    
+  nome character varying(45) NOT NULL, -- Nome para os critérios: líderes, membresia, células e etc
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do critério da meta    
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do critério da meta    
+  data_inativacao date, -- Data de inativação do critério da meta    
+  hora_inativacao time without time zone, -- Hora da inativação do critério da meta        
+  CONSTRAINT pk_metas_ordenacao_criterio PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE metas_ordenacao_criterio
+  OWNER TO postgres;
+COMMENT ON TABLE metas_ordenacao_criterio
+  IS 'Tabela que armazena os dados dos critérios da meta: membresia, células, células de elite e etc';
+COMMENT ON COLUMN metas_ordenacao_criterio.id IS 'Identificação do critério da meta';
+COMMENT ON COLUMN metas_ordenacao_criterio.data_criacao IS 'Data de criação do critério da meta';
+COMMENT ON COLUMN metas_ordenacao_criterio.hora_criacao IS 'Hora de criação do critério da meta';
+COMMENT ON COLUMN metas_ordenacao_criterio.nome IS 'Nome do critério da meta';
+COMMENT ON COLUMN metas_ordenacao_criterio.data_inativacao IS 'Data de inativação do critério da meta';
+COMMENT ON COLUMN metas_ordenacao_criterio.hora_inativacao IS 'Hora da inativação do critério da meta';
+
+insert into metas_ordenacao_criterio values (1, 'LIDERES', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_criterio values (2, 'MEMBRESIA', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_criterio values (3, 'PESSOAS EM CÉLULA', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_criterio values (4, 'PARCEIRO DE DEUS', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_criterio values (5, 'IGREJAS', '2019-04-08', '14:39:00');
+
+

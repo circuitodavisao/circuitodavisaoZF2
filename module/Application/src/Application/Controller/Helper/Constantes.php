@@ -246,7 +246,10 @@ class Constantes {
     public static $ENTITY_GRUPO_RESPONSAVEL = 'Application\Model\Entity\GrupoResponsavel';
     public static $ENTITY_GRUPO_PAI_FILHO = 'Application\Model\Entity\GrupoPaiFilho';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
-    public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';
+    public static $ENTITY_GRUPO_METAS_ORDENACAO = 'Application\Model\Entity\GrupoMetasOrdenacao';
+    public static $ENTITY_METAS_ORDENACAO_CRITERIO = 'Application\Model\Entity\MetasOrdenacaoCriterio';
+    public static $ENTITY_METAS_ORDENACAO_TIPO = 'Application\Model\Entity\MetasOrdenacaoTipo';
+    public static $ENTITY_GRUPO_CV = 'Application\Model\Entity\GrupoCv';    
     public static $ENTITY_CURSO = 'Application\Model\Entity\Curso';
     public static $ENTITY_DISCIPLINA = 'Application\Model\Entity\Disciplina';
     public static $ENTITY_AULA = 'Application\Model\Entity\Aula';
@@ -519,6 +522,7 @@ class Constantes {
     public static $PAGINA_REVISAO_FINALIZAR = 'RevisaoFinalizar';
     public static $PAGINA_REVISAO_EXCLUIR = 'RevisaoExcluir';
     public static $PAGINA_SELECIONAR_REVISIONISTA = 'SelecionarRevisionista';
+    public static $PAGINA_METAS = 'Metas';
     public static $PAGINA_SELECIONAR_FICHA_REVISIONISTA = 'SelecionarFichasRevisionista';
     public static $PAGINA_LISTA_LIDERES = 'ListaLideres';
     public static $PAGINA_LISTA_REVISIONISTAS = 'ListaRevisionistas';

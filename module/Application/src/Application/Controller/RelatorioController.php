@@ -910,15 +910,12 @@ class RelatorioController extends CircuitoController {
 						}
 
 					}else{
-
 						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao ){
 							$contadorRegioesCoordenacoesEIgrejas['regiao']++;
 						}
-
 						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
 							$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
 						}
-
 						$todosDiscipulosRegiaoOuCoordenacao = array();
 						for ($indiceDeArrays1 = $arrayPeriodoDoMes[0]; $indiceDeArrays1 <= $arrayPeriodoDoMes[1]; $indiceDeArrays1++) {
 							if($grupoPaiFilhoFilhos1 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays1)){
@@ -938,25 +935,19 @@ class RelatorioController extends CircuitoController {
 								}
 							}
 						}
-
-						$relatorioSomado1 = array();
+						$relatorioSomado1 = array();						
+						$relatorioParceiroDiscipulos = array();
+						$relatorioParceiroDiscipulos['valor'] = 0;										
 						foreach ($todosDiscipulosRegiaoOuCoordenacao as $filho1) {
 							$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();
-
 							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 								$contadorRegioesCoordenacoesEIgrejas['igreja']++;
-
 								$numeroIdentificadorFilho1 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho1, $dataInativacao);
-
 								if($tipoRelatorio === self::relatorioParceiroDeDeus){
-
 									$relatorioDiscipulos1
 										= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho1,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
-
-									$relatorioSomado1 += $relatorioDiscipulos1['valor'];
-
+									$relatorioParceiroDiscipulos['valor'] += $relatorioDiscipulos1['valor'];									
 								}else{
-
 									$dataInativacao = null;
 									if ($filho1->getData_inativacao()) {
 										$dataInativacao = $filho1->getData_inativacaoStringPadraoBanco();
@@ -965,17 +956,20 @@ class RelatorioController extends CircuitoController {
 									if(!$filho1->verificarSeEstaAtivo()){
 										$estaInativo = true;
 									}
-
 									$relatorioDiscipulos1 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho1, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 									foreach($relatorioDiscipulos1 as $key => $val){
 										$relatorioSomado1[$key] += $val;
 									}
 								}
-
 							}
-							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-								$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
-
+							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+								$grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+									if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao ){
+										$contadorRegioesCoordenacoesEIgrejas['regiao']++;
+									}
+									if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ){
+										$contadorRegioesCoordenacoesEIgrejas['coordenacao']++;
+									}
 								$todosDiscipulosRegiaoOuCoordenacao1 = array();
 								for ($indiceDeArrays2 = $arrayPeriodoDoMes[0]; $indiceDeArrays2 <= $arrayPeriodoDoMes[1]; $indiceDeArrays2++) {
 									if($grupoPaiFilhoFilhos2 = $grupoFilho1->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays2)){
@@ -995,22 +989,16 @@ class RelatorioController extends CircuitoController {
 										}
 									}
 								}
-
 								foreach ($todosDiscipulosRegiaoOuCoordenacao1 as $filho2) {
 									$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
-
 									if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
-
 										$contadorRegioesCoordenacoesEIgrejas['igreja']++;
-
 										$numeroIdentificadorFilho2 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho2, $dataInativacao);
-
-										if($tipoRelatorio === self::relatorioParceiroDeDeus){
-
-											//TODO
-
+										if($tipoRelatorio === self::relatorioParceiroDeDeus){				
+											$relatorioDiscipulos2
+												= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho2,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
+											$relatorioParceiroDiscipulos['valor'] += $relatorioDiscipulos2['valor'];	
 										}else{
-
 											$dataInativacao = null;
 											if ($filho2->getData_inativacao()) {
 												$dataInativacao = $filho2->getData_inativacaoStringPadraoBanco();
@@ -1019,27 +1007,21 @@ class RelatorioController extends CircuitoController {
 											if(!$filho2->verificarSeEstaAtivo()){
 												$estaInativo = true;
 											}
-
 											$relatorioDiscipulos2 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho2, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
 											foreach($relatorioDiscipulos2 as $key => $val){
 												$relatorioSomado1[$key] += $val;
 											}
-
 										}
-
 									}
-
 								}
-
-							}
+							}							
 						}
-
-						if($tipoRelatorio === self::relatorioParceiroDeDeus){
-							//$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] = $relatorioSomado1;
+						if($tipoRelatorio === self::relatorioParceiroDeDeus){														
+							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $relatorioParceiroDiscipulos;
+							$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 						}else{
 							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = $relatorioSomado1;
 						}
-
 					}
 
 				if ($tipoRelatorio === RelatorioController::relatorioMembresia ||
@@ -2033,6 +2015,21 @@ class RelatorioController extends CircuitoController {
 								}
 							}
 						}						
+					}				
+				}		
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				$fatosRankingCelula = Array();
+				$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+				foreach ($grupoPaiFilhoFilhos as $filho) {
+					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+					$ntidadeDoFilho = 	$grupoFilho->getEntidadeAtiva();
+					if($ntidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho->getId(), $mes, $ano);
+					}	
+					foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
+						$fatosRankingCelula[] = $fatoRankingCelulaAuxiliar;
 					}				
 				}		
 			}
