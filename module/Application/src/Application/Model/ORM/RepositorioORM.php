@@ -20,7 +20,10 @@ class RepositorioORM {
     private $_grupoORM;
     private $_grupoPessoaORM;
     private $_grupoPessoaTipoORM;
-    private $_eventoORM;
+    private $_grupoMetasOrdenacaoORM;
+    private $_metasOrdenacaoTipoORM;
+    private $_metasOrdenacaoCriterioORM;
+    private $_eventoORM;    
     private $_eventoCelulaORM;
     private $_grupoEventoORM;
     private $_eventoTipoORM;
@@ -309,6 +312,39 @@ class RepositorioORM {
         return $this->_turmaPessoaVistoORM;
     }
 
+    /**
+     * Metodo public para obter a instancia do GrupoMetasOrdenacao
+     * @return CircuitoORM
+     */
+    public function getGrupoMetasOrdenacaoORM() {
+        if (is_null($this->_grupoMetasOrdenacaoORM)) {
+            $this->_grupoMetasOrdenacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_METAS_ORDENACAO);
+        }
+        return $this->_grupoMetasOrdenacaoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do MetasOrdenacaoTipo
+     * @return CircuitoORM
+     */
+    public function getMetasOrdenacaoTipoORM() {
+        if (is_null($this->_metasOrdenacaoTipoORM)) {
+            $this->_metasOrdenacaoTipoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_METAS_ORDENACAO_TIPO);
+        }
+        return $this->_metasOrdenacaoTipoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do MetasOrdenacaoCriterio
+     * @return CircuitoORM
+     */
+    public function getMetasOrdenacaoCriterioORM() {
+        if (is_null($this->_metasOrdenacaoCriterioORM)) {
+            $this->_metasOrdenacaoCriterioORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_METAS_ORDENACAO_CRITERIO);
+        }
+        return $this->_metasOrdenacaoCriterioORM;
+    }
+    
     /**
      * Metodo public para obter a instancia do TurmaPessoaFinanceiroORM
      * @return TurmaPessoaFinanceiroORM

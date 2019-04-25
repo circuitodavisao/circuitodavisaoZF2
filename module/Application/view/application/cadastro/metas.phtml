@@ -1,0 +1,180 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Zend\View\Helper\AbstractHelper;
+use Application\Model\Entity\MetasOrdenacaoCriterio;
+
+/**
+ * Nome: consultar-ordenacao.phtml
+ * @author Ivan Tavares <ivanlsjt@gmail.com>
+ * Descricao: Página cadastrar as metas de ordenação.
+ */
+$cpf = '';
+if($this->cpf){
+    $cpf = $this->cpf;
+}
+$html = '';
+$html .= $this->templateFormularioTopo('Cadastrar <b class="text-danger">Metas</b>');
+// inicio div panel-body
+$html .= '<div class="panel-body bg-light pbn">';
+$html .= '<span id="spanMensagens2" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>';
+$html .= '<form id="formCadastrarMetas" action="/cadastroMetas" method="post">';
+
+foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {
+    $tipoBispo = 5;     
+    //inicio row 1
+    $html .= '<div class="row">';
+    $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+    $html .= '<div class="alert alert-primary text-center">'. $ordenacaoTipo->getNome() .'</div>';    
+    $html .= '</div>';
+    // fim row 1
+    $html .= '</div>';
+        
+    if($ordenacaoTipo->getId() !== $tipoBispo){
+
+        $html .= '<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Meta para Jovens</span></div>';
+
+        //inicio row 2
+        $html .= '<div class="row">';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 cpfcol-xs-12 mb15">';    
+        $html .= '<input type="number" name="lideresJovens'.$ordenacaoTipo->getId().'" id="lideresJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Lideres" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="membresiaJovens'.$ordenacaoTipo->getId().'" id="membresiaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Membresia" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="pessoasEmCelulaJovens'.$ordenacaoTipo->getId().'" id="pessoasEmCelulaJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Pessoas em Célula" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="parceiroDeDeusJovens'.$ordenacaoTipo->getId().'" id="parceiroDeDeusJovens'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Jovens: Parceiro de Deus" pattern="\d*">';    
+        $html .= '</div>';
+        // fim row 2
+        $html .= '</div>';
+
+        $html .= '<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Meta para Adultos</span></div>';
+
+        //inicio row 3
+        $html .= '<div class="row">';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 cpfcol-xs-12 mb15">';    
+        $html .= '<input type="number" name="lideresAdultos'.$ordenacaoTipo->getId().'" id="lideresAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Lideres" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="membresiaAdultos'.$ordenacaoTipo->getId().'" id="membresiaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Membresia" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="pessoasEmCelulaAdultos'.$ordenacaoTipo->getId().'" id="pessoasEmCelulaAdultos'.$ordenacaoTipo->getId().'" class="form-control"  placeholder="Meta Adultos: Pessoas em Célula" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="parceiroDeDeusAdultos'.$ordenacaoTipo->getId().'" id="parceiroDeDeusAdultos'.$ordenacaoTipo->getId().'" class="form-control"   placeholder="Meta Adultos: Parceiro de Deus" pattern="\d*">';    
+        $html .= '</div>';
+        // fim row 3
+        $html .= '</div>';
+    }
+    if($ordenacaoTipo->getId() === $tipoBispo){
+
+        $html .= '<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Meta para Bispos</span></div>';
+
+        //inicio row 3
+        $html .= '<div class="row">';
+        $html .= '<div class="col-lg-6 col-md-6 col-sm-6 cpfcol-xs-12 mb15">';    
+        $html .= '<input type="number" name="parceiroDeDeusBispo" id="parceiroDeDeusBispo" class="form-control"  placeholder="Meta Bispos: Parceiro de Deus" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mb15">';    
+        $html .= '<input type="number" name="igrejas" id="igrejas" class="form-control"  placeholder="Meta Adultos: Igrejas" pattern="\d*">';    
+        $html .= '</div>';
+        $html .= '</div>';
+    }
+}
+
+//inicio row 4
+$html .= '<div class="row">';
+$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
+$html .= '<span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>';
+$html .= '<button type="button" onclick="validarDados();" class="btn ladda-button btn-primary btn-block mb15 pull-right" data-style="zoom-in">';
+$html .= '<span class="ladda-label">Cadastrar</span>';
+$html .= '<span class="ladda-spinner"></span></button>';
+$html .= '</div>';
+// fim row 4
+$html .= '</div>';
+
+
+$html .= '</form>';
+
+//fim div panel-body
+$html .= '</div>';
+
+$html .= $this->templateFormularioRodape();
+echo $html;   
+        
+?>
+
+<script>
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    function validarDados(){
+        var temErro = false;
+        var hidden = 'hidden';
+        var spanMensagens = $('#spanMensagens');
+        var spanMensagens2 = $('#spanMensagens2');
+        var formCadastrarMetas = $("#formCadastrarMetas");    
+
+         var inputParceiroDeDeusBispo = $("#parceiroDeDeusBispo");
+         var inputIgrejas = $("#igrejas");   
+         
+         var parceiroDeDeusBispo = inputParceiroDeDeusBispo.val();
+         var igrejas = inputIgrejas.val();     
+        
+        for (let index = 1; index < 5; index++) {
+            var inputPessoasEmCelulaAdultos = $("#pessoasEmCelulaAdultos" + index);
+            var inputPessoasEmCelulaJovens = $("#pessoasEmCelulaJovens" + index);
+            
+            var inputParceiroDeDeusAdultos = $("#parceiroDeDeusAdultos" + index);
+            var inputParceiroDeDeusJovens = $("#parceiroDeDeusJovens" + index);
+            
+            var inputMembresiaAdultos = $("#membresiaAdultos" + index);
+            var inputMembresiaJovens = $("#membresiaJovens" + index);
+
+            var inputLideresAdultos = $("#lideresAdultos" + index);
+            var inputLideresJovens = $("#lideresJovens" + index);  
+
+            var pessoasEmCelulaAdultos = inputPessoasEmCelulaAdultos.val();
+            var pessoasEmCelulaJovens = inputPessoasEmCelulaJovens.val();
+
+            var parceiroDeDeusAdultos = inputParceiroDeDeusAdultos.val();
+            var parceiroDeDeusJovens = inputParceiroDeDeusJovens.val();
+
+            var membresiaAdultos = inputMembresiaAdultos.val();
+            var membresiaJovens = inputMembresiaJovens.val();
+
+            var lideresAdultos = inputLideresAdultos.val();
+            var lideresJovens = inputLideresJovens.val();
+
+            if(pessoasEmCelulaAdultos.length === 0 || !isNumber(pessoasEmCelulaAdultos) ||
+            pessoasEmCelulaJovens.length === 0 || !isNumber(pessoasEmCelulaJovens) ||
+            parceiroDeDeusAdultos.length === 0 || !isNumber(parceiroDeDeusAdultos) ||
+            parceiroDeDeusJovens.length === 0 || !isNumber(parceiroDeDeusJovens) ||
+            parceiroDeDeusBispo.length === 0 || !isNumber(parceiroDeDeusBispo) ||
+            membresiaAdultos.length === 0 || !isNumber(membresiaAdultos) ||
+            membresiaJovens.length === 0 || !isNumber(membresiaJovens) ||
+            lideresAdultos.length === 0 || !isNumber(lideresAdultos) ||
+            lideresJovens.length === 0 || !isNumber(lideresJovens) ||
+            igrejas.length === 0 || !isNumber(igrejas)){
+                temErro  = true;
+            }
+        }  
+            
+        if (temErro) {            
+            spanMensagens.removeClass(hidden);
+            spanMensagens.text('É NECESSÁRIO PREENCHER TODAS AS METAS!');     
+            spanMensagens2.removeClass(hidden);
+            spanMensagens2.text('É NECESSÁRIO PREENCHER TODAS AS METAS!');                                    
+        }
+        if(!temErro){            
+            formCadastrarMetas.submit();
+        }                                    
+    }        
+               
+       
+    
+</script>

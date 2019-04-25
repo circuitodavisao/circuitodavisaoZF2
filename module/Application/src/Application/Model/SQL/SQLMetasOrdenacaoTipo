@@ -1,0 +1,35 @@
+-- Table: metas_ordenacao_tipo
+
+-- DROP TABLE metas_ordenacao_tipo;
+
+CREATE TABLE metas_ordenacao_tipo
+(
+  id serial NOT NULL, -- Identificação do tipo da meta de ordenação   
+  nome character varying(45) NOT NULL, -- Nome para o tipo de ordenação: missionários, missionários adultos, obreiros, obreiros adultos e etc
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do tipo da meta de ordenação   
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do tipo da meta de ordenação    
+  data_inativacao date, -- Data de inativação do tipo da meta de ordenação   
+  hora_inativacao time without time zone, -- Hora da inativação do tipo da meta de ordenação         
+  CONSTRAINT pk_metas_ordenacao_tipo PRIMARY KEY (id) 
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE metas_ordenacao_tipo
+  OWNER TO postgres;
+COMMENT ON TABLE metas_ordenacao_tipo
+  IS 'Tabela que armazena os dados dos tipos da meta de ordenação: missionários, missionários adultos, obreiros, obreiros adultos e etc';
+COMMENT ON COLUMN metas_ordenacao_tipo.id IS 'Identificação do tipo da meta de ordenação';
+COMMENT ON COLUMN metas_ordenacao_tipo.data_criacao IS 'Data de criação do tipo da meta de ordenação';
+COMMENT ON COLUMN metas_ordenacao_tipo.hora_criacao IS 'Hora de criação do tipo da meta de ordenação';
+COMMENT ON COLUMN metas_ordenacao_tipo.nome IS 'Nome do tipo da meta de ordenação';
+COMMENT ON COLUMN metas_ordenacao_tipo.data_inativacao IS 'Data de inativação do tipo da meta de ordenação';
+COMMENT ON COLUMN metas_ordenacao_tipo.hora_inativacao IS 'Hora da inativação do tipo da meta de ordenação';
+
+insert into metas_ordenacao_tipo values (1, 'OBREIRO(A)', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_tipo values (2, 'DIACONO(ISA)', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_tipo values (3, 'MISSIONARIO(IA)', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_tipo values (4, 'PASTOR(A)', '2019-04-08', '14:39:00');
+insert into metas_ordenacao_tipo values (5, 'BISPO(A)', '2019-04-08', '14:39:00');
+
+

@@ -41,6 +41,11 @@ class Grupo extends CircuitoEntity {
     protected $entidade;    
 
     /**
+     * @ORM\OneToMany(targetEntity="GrupoMetasOrdenacao", mappedBy="grupo", fetch="EXTRA_LAZY")
+     */
+    protected $grupoMetasOrdenacao;
+
+    /**
      * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="grupo", fetch="EXTRA_LAZY")
      */
     protected $grupoResponsavel;
@@ -124,6 +129,28 @@ class Grupo extends CircuitoEntity {
     function getEntidade() {
         return $this->entidade;
     }
+
+    /**
+     * Recupera todas as metas vinculadas aquele grupo
+     * @return GrupoMetasOrdenacao
+     */
+    function getGrupoMetasOrdenacao() {
+        return $this->grupoMetasOrdenacao;
+    }
+
+    /**
+     * Recupera todas as metas ativas vinculadas aquele grupo
+     * @return GrupoMetasOrdenacao
+     */
+    function getGrupoMetasOrdenacaoAtivas() {        
+        $arrayDeMetas = Array();
+        foreach ($this->getGrupoMetasOrdenacao() as $metasOrdenacao) {
+            if ($metasOrdenacao->verificarSeEstaAtivo()) {
+                $arrayDeMetas[] = $metasOrdenacao;                
+            }
+        }
+        return $arrayDeMetas;
+    }    
 
     /**
      * Retorna a entidade ativa
