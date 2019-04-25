@@ -353,12 +353,10 @@ class Funcoes {
 		$mesParaVerificarInt = (int) $mes;
 		$anoParaVerificarInt = (int) $ano;
 		$periodoInicial = 6;
-
 		$mesAnteriorVerificacao = $mesParaVerificarInt - 1;
 		if ($mesParaVerificarInt == 1) {
 			$mesAnteriorVerificacao = 12;
 		}
-
 		while (true) {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
 			if($arrayPeriodo[3] == $anoParaVerificarInt ||
@@ -373,43 +371,28 @@ class Funcoes {
 				}
 			$periodoInicial--;
 		}
-
 		$periodoFinal = $periodoInicial;
 		while (true) {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
 			if($arrayPeriodo[3] == $anoParaVerificarInt ||
 				$arrayPeriodo[6] == $anoParaVerificarInt){
-					if($mes != date('m')){
-						if ($arrayPeriodo[5] != $mesAnteriorVerificacao) {
-							if ($arrayPeriodo[2] != $mesAnteriorVerificacao) {
-								$periodoFinal--;
-							}
-							break;
+					if ($arrayPeriodo[5] != $mesParaVerificarInt) {
+						if ($arrayPeriodo[2] != $mesParaVerificarInt) {
+							$periodoFinal--;
 						}
+						break;
 					}
-
-					if($mes == date('m')){
-						if ($arrayPeriodo[5] != $mesParaVerificarInt) {
-							if ($arrayPeriodo[2] != $mesParaVerificarInt) {
-								$periodoFinal--;
-							}
-							break;
-						}
-					}
-					
 					if ($periodoFinal == 0) {
 						break;
 					}
 				}
 			$periodoFinal++;
 		}
-
 		if ($periodoFinal == 0) {
 			$periodoFinal = -1;
 		}
 		$arrayDePeriodos[0] = $periodoInicial;
 		$arrayDePeriodos[1] = $periodoFinal;
-
 		return $arrayDePeriodos;
 	}
 
