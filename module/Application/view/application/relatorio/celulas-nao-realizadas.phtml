@@ -3,6 +3,8 @@
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 
+//Funcoes::var_dump($this->relatorio);
+
 ?>
 <style type="text/css">
 	th, p {
@@ -31,20 +33,12 @@ echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 if($this->relatorio){
-	foreach($this->relatorio as $relatorio){
-		$eventoCelula = $this->repositorio->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
-		$grupo = $this->repositorio->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
-
-		$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
-		$lideres = $grupo->getNomeLideresAtivos();
-		$linkWhatsapp = $grupo->getLinksWhatsapp();
-		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
-
+	foreach($this->relatorio as $relatorioOrdenado => $resultado){
 		echo '<tr>';
-		echo '<td>'.$infoEntidade.'</td>';
-		echo '<td>'.$lideres.'</td>';
-		echo '<td>'.$linkWhatsapp.'</td>';
-		echo '<td class="hidden-xs">'.$celulaDia.'</td>';
+		echo '<td>'.$resultado['infoEntidade'].'</td>';
+		echo '<td>'.$resultado['lideres'].'</td>';
+		echo '<td>'.$resultado['linkWhatsapp'].'</td>';
+		echo '<td class="hidden-xs">'.$resultado['celulaDia'].'</td>';		
 		echo '</tr>';
 	}
 }
