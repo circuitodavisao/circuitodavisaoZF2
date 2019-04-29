@@ -155,6 +155,15 @@ class ListagemDeEventos extends AbstractHelper {
 
                 $html .= '<tr>';
                 if ($tipoCelula) {
+                    $validarMostrarCadastro = true;
+                    $diaDaSemana = date('w');
+                    /* segunda */
+                    if($diaDaSemana == 1){
+                        $horaDoDia = date('G');
+                        if($horaDoDia >= 0 && $horaDoDia <= 6){
+                            $validarMostrarCadastro = false;
+                        }
+                    }
                     /* Verificar se a celula foi alterada recentimente para nao permitir */
                     $arrayPeriodo = Funcoes::montaPeriodo($periodo = 0);
                     $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
@@ -187,7 +196,7 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<td class="text-center visible-lg visible-md visible-sm">' . $nomeTipo . '</td>';
                     $html .= '<td class="text-center">';
                     if ($this->view->mostrarOpcoes) {
-                        if (!$validarCadastroDepoisDoComecoDoPeriodo) {
+                        if (!$validarCadastroDepoisDoComecoDoPeriodo && $validarMostrarCadastro) {
                             $html .= $this->view->botaoLink(Constantes::$STRING_ICONE_PENCIL, Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClick));
                         }
                     }
@@ -409,17 +418,6 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<div class="panel-footer text-right">';
             /* Botões */
             if ($tipoCelula) {
-				$validarMostrarCadastro = true;
-				/* validar hora do dia */
-				$diaDaSemana = date('w');
-				/* segunda */
-				if($diaDaSemana == 1){
-					$horaDoDia = date('G');
-					if($horaDoDia >= 0 && $horaDoDia <= 6){
-						$validarMostrarCadastro = false;
-					}
-				}
-
 				if($validarMostrarCadastro){
 					if (count($this->getGrupoEventos()) < 2) {
 						$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
@@ -432,7 +430,7 @@ class ListagemDeEventos extends AbstractHelper {
 					}
 				}else{
 					$html .= '<div class="alert alert-micro alert-warning">';
-					$html .= 'Cadastro de célula em manutenção';
+					$html .= 'Cadastro e edição de células em manutenção';
 					$html .= '</div>';
 				}
             }

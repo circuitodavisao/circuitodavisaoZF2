@@ -2080,8 +2080,7 @@ class RelatorioController extends CircuitoController {
 	}
 
 	public function celulasNaoRealizadasAction(){
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
+		$sessao = new Container(Constantes::$NOME_APLICACAO);		
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
@@ -2090,13 +2089,37 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
 		$inicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
         $dateFormatada = DateTime::createFromFormat('Y-m-d', $inicioPeriodo);
+		$relatorioOrdenado = array();
+		$relatorioDesordenado = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);
+		$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
+		$tradutor = $viewHelperManager->get('translate');
 
-		$relatorio = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);
+		foreach($relatorioDesordenado as $relatorio){
+			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
+	
+			 $infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+			 $lideres = $grupo->getNomeLideresAtivos();
+			 $linkWhatsapp = $grupo->getLinksWhatsapp();
+			 $celulaDia = $tradutor(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
+	
+			$relatorioOrdenado[$infoEntidade]['infoEntidade'] = $infoEntidade;
+			$relatorioOrdenado[$infoEntidade]['lideres'] = $lideres;
+			$relatorioOrdenado[$infoEntidade]['linkWhatsapp'] = $linkWhatsapp;
+			$relatorioOrdenado[$infoEntidade]['celulaDia'] = $celulaDia;			
+		}
+
+		uksort($relatorioOrdenado, function ($ak, $bk) use ($relatorioOrdenado) {
+			$a = $relatorioOrdenado[$ak];
+			$b = $relatorioOrdenado[$bk];
+			if ((float)$a['infoEntidade'] === (float)$b['infoEntidade']) return $ak - $bk;
+			return (float)$a['infoEntidade'] > (float)$b['infoEntidade'] ? 1 : -1;
+		});
 
 		self::registrarLog(RegistroAcao::VER_RELATORIO_CELULAS_NAO_REALIZADAS, $extra = '');
 		return new ViewModel(
 			array(
-				'relatorio' => $relatorio,
+				'relatorio' => $relatorioOrdenado,
 				'repositorio' => $this->getRepositorio(),
 				'periodo' => $periodo,
 			));
