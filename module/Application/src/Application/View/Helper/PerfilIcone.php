@@ -218,7 +218,12 @@ class PerfilIcone extends AbstractHelper {
         /* Pegando dados do lider */
         if ($grupoPai) {
             $grupoResponsabilidades = $grupoPai->getResponsabilidadesAtivas();
-            $nomeLideres = Menu::montaNomeLideres($grupoResponsabilidades);
+            if($grupoPai->getResponsabilidadesAtivas()){
+                $nomeLideres = Menu::montaNomeLideres($grupoResponsabilidades);
+            }
+            if(!$grupoPai->getResponsabilidadesAtivas()){
+                $nomeLideres = $grupoPai->getNomeLideresInativos();
+            }            
             $html .= '<h3>Discípulo de: ' . $nomeLideres . '</h3>';
         }
 
