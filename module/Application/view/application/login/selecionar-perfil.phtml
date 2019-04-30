@@ -61,7 +61,7 @@ use Application\Controller\Helper\Constantes;
 								echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades));
 							}
 						}else{
-							$entidadeSelecionada = $grupo->getEntidade()[0];
+							$entidadeSelecionada = $grupo->getUltimaEntidadeInativa();
 							$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
 							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
 						}

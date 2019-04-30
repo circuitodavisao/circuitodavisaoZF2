@@ -153,6 +153,25 @@ class Grupo extends CircuitoEntity {
     }    
 
     /**
+     * Retorna a ultima entidade inativa
+     * @return Entidade
+     */
+    function getUltimaEntidadeInativa() {                
+        $ultimaEntidade = null;
+        foreach ($this->getEntidade() as $entidade) {
+            if (!$entidade->verificarSeEstaAtivo()) {
+                if($ultimaEntidade === null){
+                    $ultimaEntidade = $entidade;
+                }
+                if($entidade->getId() > $ultimaEntidade->getId()){
+                    $ultimaEntidade = $entidade;
+                }
+            }
+        }              
+        return $ultimaEntidade;
+    }   
+
+    /**
      * Retorna a entidade ativa
      * @return Entidade
      */
