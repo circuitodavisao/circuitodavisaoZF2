@@ -1712,7 +1712,7 @@ class IndexController extends CircuitoController {
 							$html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
 
 							/* grupo pessoa */
-							$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
+							$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 3);
 							$grupoPessoa = new GrupoPessoa();
 							$grupoPessoa->setGrupo($grupo);
 							$grupoPessoa->setPessoa($pessoaVolatil);
