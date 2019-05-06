@@ -1358,13 +1358,14 @@ class IndexController extends CircuitoController {
 		if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
 			$grupoPessoaAtivo->setDataEHoraDeInativacao($dataParaInativar);
 			$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaAtivo);
-
+		}
 			$grupoPessoaNovo = new GrupoPessoa();
 			$grupoPessoaNovo->setGrupo($grupo);
 			$grupoPessoaNovo->setPessoa($turmaPessoa->getPessoa());
-			$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoaAtivo->getGrupoPessoaTipo());
+			$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 3);
+			$grupoPessoaNovo->setGrupoPessoaTipo($grupoPessoaTipo);
 			$this->getRepositorio()->getGrupoPessoaORM()->persistir($grupoPessoaNovo);
-
+		
 			if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
 				foreach($fatosCurso as $fatoCurso){
 					if($fatoCurso->verificarSeEstaAtivo()){
@@ -1373,15 +1374,16 @@ class IndexController extends CircuitoController {
 					}
 				}
 			}
+			
 			$numeroIdentificador =
-				$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
 			$fatoCurso = new FatoCurso();
 			$fatoCurso->setNumero_identificador($numeroIdentificador);
 			$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
 			$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
 			$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
-			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-		}
+			$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);			
+		
 	}
 
 	static public function getDataParaInativacao(){
@@ -1710,7 +1712,7 @@ class IndexController extends CircuitoController {
 							$html .= '<br /><br />PESSOA - ' . $pessoaVolatil->getNome();
 
 							/* grupo pessoa */
-							$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 1);
+							$grupoPessoaTipo = $this->getRepositorio()->getGrupoPessoaTipoORM()->encontrarPorId($tipoMembro = 3);
 							$grupoPessoa = new GrupoPessoa();
 							$grupoPessoa->setGrupo($grupo);
 							$grupoPessoa->setPessoa($pessoaVolatil);
