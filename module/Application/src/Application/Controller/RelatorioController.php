@@ -1348,7 +1348,7 @@ class RelatorioController extends CircuitoController {
 				}
 			if ($tipoRelatorio === RelatorioController::relatorioCelulaRealizadas ||
 				$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'] * 100;
+					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'] / ($relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'] + $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidadeEstrategica']) * 100;
 					$somaFinal['celulaQuantidade'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'];
 					$somaFinal['celulaQuantidadeEstrategica'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidadeEstrategica'];
 					$somaFinal['celulaRealizadas'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'];
@@ -1586,6 +1586,7 @@ class RelatorioController extends CircuitoController {
 				if ($quantidadeCelulas ||$quantidadeCelulasEstrategicas) {
 					$performanceCelulasRealizadas = $quantidadeCelulasRealizadas / ($quantidadeCelulas + $quantidadeCelulasEstrategicas) * 100;
 				}
+			
 				$performanceCelula = 0;
 				if ($relatorio['membresiaMetaSomada'] > 0) {
 					$performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMetaSomada'] * 100;
@@ -2095,7 +2096,9 @@ class RelatorioController extends CircuitoController {
 		$tradutor = $viewHelperManager->get('translate');
 
 		foreach($relatorioDesordenado as $relatorio){
-			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
+			$eventoCelulaId = $relatorio['evento_celula_id'];
+			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($eventoCelulaId);
+			
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
 	
 			 $infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
@@ -2103,10 +2106,10 @@ class RelatorioController extends CircuitoController {
 			 $linkWhatsapp = $grupo->getLinksWhatsapp();
 			 $celulaDia = $tradutor(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
 	
-			$relatorioOrdenado[$infoEntidade]['infoEntidade'] = $infoEntidade;
-			$relatorioOrdenado[$infoEntidade]['lideres'] = $lideres;
-			$relatorioOrdenado[$infoEntidade]['linkWhatsapp'] = $linkWhatsapp;
-			$relatorioOrdenado[$infoEntidade]['celulaDia'] = $celulaDia;			
+			$relatorioOrdenado[$eventoCelulaId]['infoEntidade'] = $infoEntidade;
+			$relatorioOrdenado[$eventoCelulaId]['lideres'] = $lideres;
+			$relatorioOrdenado[$eventoCelulaId]['linkWhatsapp'] = $linkWhatsapp;
+			$relatorioOrdenado[$eventoCelulaId]['celulaDia'] = $celulaDia;			
 		}
 
 		uksort($relatorioOrdenado, function ($ak, $bk) use ($relatorioOrdenado) {
