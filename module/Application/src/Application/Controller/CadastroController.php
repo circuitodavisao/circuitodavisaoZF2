@@ -1304,7 +1304,8 @@ class CadastroController extends CircuitoController {
 				$post_data = $request->getPost();
 				$loginORM = new RepositorioORM($this->getDoctrineORMEntityManager());
 				$pessoa = $loginORM->getPessoaORM()->encontrarPorId($post_data[Constantes::$ID]);
-				$pessoa->setTelefone($post_data[Constantes::$FORM_INPUT_DDD] + $post_data[Constantes::$FORM_INPUT_CELULAR]);
+				$telefone = $post_data[Constantes::$FORM_INPUT_DDD] . $post_data[Constantes::$FORM_INPUT_CELULAR];
+				$pessoa->setTelefone($telefone);				
 				$pessoa->dadosAtualizados();
 				$loginORM->getPessoaORM()->persistir($pessoa);
 			} catch (Exception $exc) {
