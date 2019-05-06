@@ -62,8 +62,14 @@ use Application\Controller\Helper\Constantes;
 							}
 						}else{
 							$entidadeSelecionada = $grupo->getUltimaEntidadeInativa();
-							$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
-							echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
+							$mostrar = true;
+							if(!$entidadeSelecionada){
+								$mostrar = false;
+							}
+							if($mostrar){
+								$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
+								echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
+							}							
 						}
                     }
                     ?>
