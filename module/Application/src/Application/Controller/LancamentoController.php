@@ -99,6 +99,10 @@ class LancamentoController extends CircuitoController {
             if ($validarCadastroAntesDoPeriodo) {
                 $mostrarBotaoPeriodoAnterior = true;
             }
+
+            if($dataDaEntidadeCriacaoParaComparar > $dataDoInicioDoPeriodoParaComparar){
+                $periodo = 0;
+            }
         }
 
         if ($periodo < 0 && $entidade->verificarSeEstaAtivo()) {
