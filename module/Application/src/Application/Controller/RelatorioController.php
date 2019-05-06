@@ -1348,7 +1348,7 @@ class RelatorioController extends CircuitoController {
 				}
 			if ($tipoRelatorio === RelatorioController::relatorioCelulaRealizadas ||
 				$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
-					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'] / $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'] * 100;
+					$relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadasPerformance'] = $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'] / ($relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'] + $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidadeEstrategica']) * 100;
 					$somaFinal['celulaQuantidade'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidade'];
 					$somaFinal['celulaQuantidadeEstrategica'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaQuantidadeEstrategica'];
 					$somaFinal['celulaRealizadas'] += $relatorio[$contadorFilhos][$indiceDeArrays]['celulaRealizadas'];
@@ -1586,6 +1586,7 @@ class RelatorioController extends CircuitoController {
 				if ($quantidadeCelulas ||$quantidadeCelulasEstrategicas) {
 					$performanceCelulasRealizadas = $quantidadeCelulasRealizadas / ($quantidadeCelulas + $quantidadeCelulasEstrategicas) * 100;
 				}
+			
 				$performanceCelula = 0;
 				if ($relatorio['membresiaMetaSomada'] > 0) {
 					$performanceCelula = $soma[RelatorioController::dimensaoTipoCelula] / $relatorio['membresiaMetaSomada'] * 100;
