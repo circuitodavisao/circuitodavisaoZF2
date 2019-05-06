@@ -47,6 +47,34 @@ class FatoCursoORM extends CircuitoORM {
 			echo $exc->getTraceAsString();
 		}
 	}
+
+	public function encontrarUltimoFatoCursoPorTurmaPessoa($idTurmaPessoa) {
+		$resposta = null;
+		try {
+			$dql = "SELECT fc "
+				. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
+				. "WHERE "
+				. " fc.turma_pessoa_id = ?1 ";				
+				$resposta = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $idTurmaPessoa)
+				->getResult();
+			
+			$ultimoFatoCurso = null;
+			foreach ($resposta as $fatoCurso) {				
+				if($ultimoFatoCurso === null){
+					$ultimoFatoCurso = $fatoCurso;
+				}
+				if($fatoCurso->getId() > $ultimoFatoCurso->getId()){
+					$ultimoFatoCurso = $fatoCurso;
+				}				
+			} 
+
+			return $ultimoFatoCurso;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
 	public function encontrarFatoCursoPorTurma($idTurma) {
 		$resposta = null;
 		try {
