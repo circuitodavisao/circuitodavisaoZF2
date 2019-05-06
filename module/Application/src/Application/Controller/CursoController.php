@@ -1960,6 +1960,9 @@ class CursoController extends CircuitoController {
 			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
 			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
+			if(!$fatoCurso){
+				$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($idTurmaPessoa);				
+			}
 			$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 			$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
