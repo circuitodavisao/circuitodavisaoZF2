@@ -2095,7 +2095,9 @@ class RelatorioController extends CircuitoController {
 		$tradutor = $viewHelperManager->get('translate');
 
 		foreach($relatorioDesordenado as $relatorio){
-			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($relatorio['evento_celula_id']);
+			$eventoCelulaId = $relatorio['evento_celula_id'];
+			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($eventoCelulaId);
+			
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
 	
 			 $infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
@@ -2103,10 +2105,10 @@ class RelatorioController extends CircuitoController {
 			 $linkWhatsapp = $grupo->getLinksWhatsapp();
 			 $celulaDia = $tradutor(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
 	
-			$relatorioOrdenado[$infoEntidade]['infoEntidade'] = $infoEntidade;
-			$relatorioOrdenado[$infoEntidade]['lideres'] = $lideres;
-			$relatorioOrdenado[$infoEntidade]['linkWhatsapp'] = $linkWhatsapp;
-			$relatorioOrdenado[$infoEntidade]['celulaDia'] = $celulaDia;			
+			$relatorioOrdenado[$eventoCelulaId]['infoEntidade'] = $infoEntidade;
+			$relatorioOrdenado[$eventoCelulaId]['lideres'] = $lideres;
+			$relatorioOrdenado[$eventoCelulaId]['linkWhatsapp'] = $linkWhatsapp;
+			$relatorioOrdenado[$eventoCelulaId]['celulaDia'] = $celulaDia;			
 		}
 
 		uksort($relatorioOrdenado, function ($ak, $bk) use ($relatorioOrdenado) {
