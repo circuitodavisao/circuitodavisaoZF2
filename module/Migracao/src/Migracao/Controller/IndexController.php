@@ -106,7 +106,7 @@ class IndexController extends CircuitoController {
 			$idCoordenacao = 136;
 			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao . ' limit 1');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
-				//$html .= '<br />Igreja: ' . $row['nome'];
+				$html .= '<br />Igreja: ' . $row['nome'];
 				$idPerfilIgreja = 18;
 				$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
 				$informacaoEntidade = $row[$stringNome];
