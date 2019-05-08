@@ -108,4 +108,21 @@ class CircuitoORM {
         return $this->_entity;
     }
 
+    public function encontrarPorNomeETabela($nome, $tabela) {
+        try {
+            $dql = "SELECT e "
+                    . "FROM  " . $tabela . " e "
+                    . "WHERE "
+                    . "e.nome LIKE ?1 ";
+
+            $nomeAjustado = '%' . $nome . '%';
+            $resultado = $this->getEntityManager()->createQuery($dql)
+                    ->setParameter(1, $nomeAjustado)
+                    ->getResult();
+            return $resultado;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
+
 }
