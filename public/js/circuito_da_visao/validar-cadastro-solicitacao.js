@@ -145,7 +145,7 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 			$('#solicitacaoTipoId').val() == TROCAR_RESPONSABILIDADES ||
 			$('#solicitacaoTipoId').val() == REMOVER_LIDER ||
 			$('#solicitacaoTipoId').val() == REMOVER_CELULA ||
-			$("#formSolicitacaoReceber").length) {
+			parseInt($("#receber").val()) === 1) {
 			$(stringDivSelecionarLider).removeClass(hidden);
 		}
 
@@ -207,6 +207,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 		}
 		if($('#solicitacaoTipoId').val() == SUBIR_LIDER){
 			$('#divNomeEquipe').removeClass(hidden);
+		}
+		if(parseInt($("#receber").val()) === 1) {
+			$(stringDivSelecionarNumeracao).removeClass(hidden);
 		}
 	}
 	objetoSelecionado = qualObjeto;

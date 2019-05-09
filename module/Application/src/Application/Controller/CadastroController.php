@@ -2303,6 +2303,14 @@ class CadastroController extends CircuitoController {
 						if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
 							$adicionar = false;
 						}
+						if($adicionar === false && 
+							$solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+							$objeto2 = $solicitacao->getObjeto2();
+							$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto2);
+							if($entidade->getGrupo()->getId() === $grupo2->getGrupoEquipe()->getId()){
+								$adicionar = true;
+							}
+						}
 					}
 				}
 			}
@@ -2312,7 +2320,7 @@ class CadastroController extends CircuitoController {
 		}
 
 
-		$dados['grupo'] = $grupo;
+		$dados['grupo'] = $entidade->getGrupo();
 		$dados['entidade'] = $entidade;
 		$dados['solicitacoes'] = $solicitacoesDivididasPorTipo;
 		$dados['solicitacoesTipo'] = $solicitacoesTipo;
@@ -2723,7 +2731,6 @@ class CadastroController extends CircuitoController {
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 				if ($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 					($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
-					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
