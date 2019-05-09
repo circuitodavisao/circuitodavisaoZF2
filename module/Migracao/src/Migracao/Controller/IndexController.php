@@ -814,6 +814,7 @@ class IndexController extends CircuitoController {
 					$eventoNovo->setHora($eventoAtual->getHora());
 					$eventoNovo->setDia($eventoAtual->getDia());
 					$eventoNovo->setEventoTipo($eventoAtual->getEventoTipo());
+					$eventoNovo->setEvento_id($eventoAtual->getId());
 					$this->getRepositorio()->getEventoORM()->persistir($eventoNovo);
 
 					$eventoCelulaAtual = $eventoAtual->getEventoCelula();
