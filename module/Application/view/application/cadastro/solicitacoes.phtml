@@ -127,7 +127,6 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
 					$objeto2 = $solicitacao->getObjeto2();
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
-
 					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';
 					break;
 				case SolicitacaoTipo::TRANSFERIR_IGREJA:
@@ -195,6 +194,30 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 						$funcaoAceitar = $this->funcaoOnClick('if(confirm("Realmente deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');						
 						$funcaoRecusar = $this->funcaoOnClick('if(confirm("Realmente deseja recusar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoRecusar", '.$solicitacao->getId().');}');
 						$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
+						$botaoRecusar = $this->botaoSimples('Recusar', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);						
+						$botaoAceitarIcone = $this->botaoSimples('<i class="fa fa-check" ></i>', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
+						$botaoRecusarIcone = $this->botaoSimples('<i class="fa fa-times" ></i>', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);
+						$htmlTbody .= '<td class="hidden-xs">';						
+						$htmlTbody .= $botaoRecusar;
+						$htmlTbody .= $botaoAceitar;
+						$htmlTbody .= '</td>';
+						$htmlTbody .= '<td class="hidden-sm hidden-md hidden-lg">';						
+						$htmlTbody .= $botaoRecusarIcone;
+						$htmlTbody .= $botaoAceitarIcone;
+						$htmlTbody .= '</td>';
+					}else{
+						$htmlTbody .= '<td></td>';
+					}
+			}
+
+		if($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE){
+				if($solicitacao->getSolicitacaoSituacaoAtiva()
+					&& $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
+					&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+					&& intVal($solicitacao->getObjeto2()) === $this->grupo->getId()){
+						$funcaoAceitar = $this->funcaoOnClick('funcaoCircuito("cadastroSolicitacaoReceber", '.$solicitacao->getId().')');
+						$funcaoRecusar = $this->funcaoOnClick('if(confirm("Realmente deseja recusar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoRecusar", '.$solicitacao->getId().');}');
+						$botaoAceitar = $this->botaoSimples('Receber', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
 						$botaoRecusar = $this->botaoSimples('Recusar', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);						
 						$botaoAceitarIcone = $this->botaoSimples('<i class="fa fa-check" ></i>', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
 						$botaoRecusarIcone = $this->botaoSimples('<i class="fa fa-times" ></i>', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);
