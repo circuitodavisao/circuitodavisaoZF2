@@ -35,7 +35,11 @@ if ($this->mostrarPrincipal) {
 <h4><?php echo $this->pessoa->getNomePrimeiroUltimo(); ?></h4>
 <small>
 <?php 
-	echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $stringEntidade; 
+	if($stringEntidade == 'PRESIDENCIAL' || $stringEntidade == 'NACIONAL'){
+		echo $stringEntidade;
+	} else {
+		echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $stringEntidade; 
+	}	
 ?>
 </small>
 <p class="mt10">
