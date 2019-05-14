@@ -2572,24 +2572,33 @@ public function alunosNaSemanaAction(){
 					}
 
 				$arrayLideres = array();
-				foreach($fatosSetenta as $fato){
-					if($fato->getSetenta() == 'S'){
-						$arrayLideres[$fato->getGrupo_id()]['setenta'] = 'S';
+				foreach($fatosSetenta as $fatoA){
+					$adicionarFato = true;
+					$GrupoFatoA = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoA->getGrupo_id());
+					$comInativos = true;
+					$grupoResponsavelFatoA = $GrupoFatoA->getResponsabilidadesAtivas($comInativos);					
+					$pessoaIdFatoA = $grupoResponsavelFatoA[0]->getPessoa()->getId();
+
+					foreach($fatosSetenta as $fatoB){
+						$GrupoFatoB = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoB->getGrupo_id());
+						$comInativos = true;
+						$grupoResponsavelFatoB = $GrupoFatoB->getResponsabilidadesAtivas($comInativos);					
+						$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
+
+						if($pessoaIdFatoA == $pessoaIdFatoB){						
+							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo()){
+								$adicionarFato = false;
+							}
+						}				
 					}
 
-					if($arrayLideres[$fato->getGrupo_id()]['celula']){
-						$validacaoSeJaTem = false;
-						foreach($arrayLideres[$fato->getGrupo_id()]['celula'] as $fatoVerificar){
-							if($fato->getGrupo_evento_id() === $fatoVerificar->getGrupo_evento_id()){
-								$validacaoSeJaTem = true;
-							}
+					if($adicionarFato){
+						if($fatoA->getSetenta() == 'S'){
+						 	$arrayLideres[$fatoA->getGrupo_id()]['setenta'] = 'S';
 						}
-						if(!$validacaoSeJaTem){
-							$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
-						}
-					}else{
-						$arrayLideres[$fato->getGrupo_id()]['celula'][] = $fato;
+						$arrayLideres[$fatoA->getGrupo_id()]['celula'][] = $fatoA;
 					}
+
 				}
 
 				$dados['lideres'] = $arrayLideres;

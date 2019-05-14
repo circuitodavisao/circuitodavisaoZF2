@@ -300,8 +300,14 @@ foreach ($this->relatorio as $relatorio) {
 		echo '<span class="'.$hiddenCelular.'"> ' . $relatorio['lideresEntidade'] . '</span>';
 
 		if($contagemRanking !== 0 && $relatorio['lideres'] != 'TOTAL'){
-			$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
-			$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
+			$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($relatorio['grupo']);
+			if($grupoDoLink->getGrupoResponsavelAtivo()){
+				$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorio/'.$url.'",'.$relatorio['grupo'].')';
+				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio['lideres'].'</a>';
+			} else {
+				$linkDeQuemEstaLogado = $relatorio['lideres'];
+			}		
+			
 			echo ' '.$linkDeQuemEstaLogado;
 		}
 		if($relatorio['lideres'] == 'TOTAL'){

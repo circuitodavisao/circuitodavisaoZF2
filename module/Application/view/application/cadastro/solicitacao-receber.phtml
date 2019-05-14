@@ -11,6 +11,7 @@ $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'Sol
 echo $this->form()->openTag($form);
 echo $this->templateFormularioTopo($this->titulo);
 echo '<input type="hidden" id="idSolicitacao" name="idSolicitacao" value="' . $this->idSolicitacao . '" />';
+echo '<input type="hidden" id="receber" name="receber" value="1" />';
 ?>
 <div class="panel-body bg-light">
     <!-- Progress Bar -->
@@ -66,14 +67,18 @@ echo '<input type="hidden" id="idSolicitacao" name="idSolicitacao" value="' . $t
         }
         ?>
     </div>
-    <!--divSelecionarLider-->
-    <div id="divSelecionarLider" class="hidden">
-        <div id="treeLideres" class="fancytree-radio">
-            <ul id="treeData" style="display: none;">
-                <?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
-            </ul>
-        </div>
-    </div> 
+	<!--divSelecionarLider-->
+	<div id="divSelecionarLider" class="hidden">
+	<select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
+	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+	<?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+	</select>
+	<div id="divBotaoSelecionarLider" class="hidden mt10">
+	<?php
+		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarLider()'));
+	?>
+	</div>
+	</div>
     <!--divSelecionarNumeracao-->
     <div id="divSelecionarNumeracao" class="hidden">
         <div class="section-divider mt20">
