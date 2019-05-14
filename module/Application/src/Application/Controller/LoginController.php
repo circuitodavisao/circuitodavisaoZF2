@@ -11,6 +11,7 @@ use Application\Form\PerfilForm;
 use Application\Form\RecuperarAcessoForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\EntidadeTipo;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -761,6 +762,39 @@ class LoginController extends CircuitoController {
   			));
       }
     }
+
+    
+    public function aniversariantesAction(){  
+        $filtrado = false;      
+        $dados = array();         
+        $request = $this->getRequest();                
+        if ($request->isPost()) {            
+            $aniversariantes = array();
+            $filtrado = true;
+            $post_data = $request->getPost();
+            $hierarquiaId = $post_data['hierarquia'];
+            $mes = $post_data['mes'];            
+            $dia = $post_data['dia'];   
+            $dataAniversariantes = $mes . '-' . $dia;            
+            $pessoasAniversariantesDDD_61_87_81_79 = $this->getRepositorio()->getPessoaORM()->encontrarPorDDDRegiaoBispoLucas();             
+            foreach($pessoasAniversariantesDDD_61_87_81_79 as $pessoa){
+                if(substr($pessoa['data_nascimento'],5,8) == $dataAniversariantes){
+                    $pessoa_aniversariante = $this->getRepositorio()->getPessoaORM()->encontrarPorId($pessoa['id']);  
+                    if($pessoa_aniversariante->getPessoaHierarquiaAtivo()->getHierarquia_id() == $hierarquiaId){                       
+                        $aniversariantes[] = $pessoa_aniversariante;
+                    }                        
+                }                
+            }
+            $dados['hierarquiaSelecionadaId'] = $hierarquiaId; 
+            $dados['aniversariantes'] = $aniversariantes;             
+            $dados['mesSelecionado'] = $mes;             
+            $dados['diaSelecionado'] = $dia;             
+        }
+        $todasHierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();          
+        $dados['hierarquias'] = $todasHierarquias;  
+        $dados['filtrado'] = $filtrado; 
+        return new ViewModel($dados);
+      }
 
 
     static public function geraSenha($tamanho = 8, $maiusculas = true, $numeros = true, $simbolos = false) {

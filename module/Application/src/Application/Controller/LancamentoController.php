@@ -100,7 +100,7 @@ class LancamentoController extends CircuitoController {
                 $mostrarBotaoPeriodoAnterior = true;
             }
 
-            if($dataDaEntidadeCriacaoParaComparar > $dataDoInicioDoPeriodoParaComparar){
+            if($dataDoGrupoPaiFilhoCriacaoParaComparar > $dataDoInicioDoPeriodoParaComparar){
                 $periodo = 0;
             }
         }

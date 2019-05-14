@@ -97,7 +97,7 @@ function acessarMatricula() {
 						.removeClass('alert-danger')
 						.removeClass('hidden')
 						.html(informacaoAluno);
-					location.href="/cursoAluno/"+idTurmaPessoa.val()
+					location.href="/cursoAluno/"+data.idTurmaPessoa
 				} else {
 					mensagem
 						.addClass('alert-danger')

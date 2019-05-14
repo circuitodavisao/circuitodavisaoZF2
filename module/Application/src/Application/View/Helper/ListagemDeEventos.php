@@ -147,23 +147,23 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<th class="text-center"></th>';
             $html .= '</tr>';
             $html .= '</thead>';
-            $html .= '<tbody>';
-
+            $html .= '<tbody>';                                       
+            
             foreach ($this->getGrupoEventos() as $grupoEvento) {
+                $validarMostrarCadastro = true;
+                $diaDaSemana = date('w');
+                /* segunda */
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
+                        $validarMostrarCadastro = false;
+                    }
+                }
                 $evento = $grupoEvento->getEvento();
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 
-                $html .= '<tr>';
-                if ($tipoCelula) {
-                    $validarMostrarCadastro = true;
-                    $diaDaSemana = date('w');
-                    /* segunda */
-                    if($diaDaSemana == 1){
-                        $horaDoDia = date('G');
-                        if($horaDoDia >= 0 && $horaDoDia <= 6){
-                            $validarMostrarCadastro = false;
-                        }
-                    }
+                $html .= '<tr>';                
+                if ($tipoCelula) {                                       
                     /* Verificar se a celula foi alterada recentimente para nao permitir */
                     $arrayPeriodo = Funcoes::montaPeriodo($periodo = 0);
                     $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
@@ -397,6 +397,7 @@ class ListagemDeEventos extends AbstractHelper {
                 }
                 $html .= '</tr>';
             }
+            
             $html .= '</tbody>';
             $html .= '</table>';
         } else {
@@ -418,6 +419,15 @@ class ListagemDeEventos extends AbstractHelper {
             $html .= '<div class="panel-footer text-right">';
             /* Botões */
             if ($tipoCelula) {
+                $validarMostrarCadastro = true;
+                $diaDaSemana = date('w');
+                /* segunda */
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
+                        $validarMostrarCadastro = false;
+                    }
+                }                
 				if($validarMostrarCadastro){
 					if (count($this->getGrupoEventos()) < 2) {
 						$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
@@ -430,7 +440,7 @@ class ListagemDeEventos extends AbstractHelper {
 					}
 				}else{
 					$html .= '<div class="alert alert-micro alert-warning">';
-					$html .= 'Cadastro e edição de células em manutenção';
+					$html .= 'Cadastro e edição de células em manutenção ' . $validarMostrarCadastro;
 					$html .= '</div>';
 				}
             }
