@@ -1,0 +1,146 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+use Application\Model\Entity\EntidadeTipo;
+
+$label = '<span class="text-danger"><b>Aniversariantes</b></span>';
+echo $this->templateFormularioTopo($label, 0, 'style="max-width:100%; margin-top:0%;');
+echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+echo '<form action="/aniversariantes" method="post">';
+echo '<div class="row p5">';
+
+echo '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Dia</div>';
+
+echo '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">';
+echo '<select name="dia" id="dia" class="form-control">';
+for ($indiceDias=1; $indiceDias < 32; $indiceDias++) { 
+	if($indiceDias < 10){
+		$indiceDias = '0' . $indiceDias;
+	}
+	if($this->diaSelecionado && $this->diaSelecionado == $indiceDias){
+		$selected = 'selected';
+	} else {
+		$selected = '';
+	}
+	echo '<option value="'.$indiceDias.'" '.$selected.'>'.$indiceDias.'</option>';
+}
+
+echo '</select>';
+echo '</div>';
+
+echo '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>';
+
+echo '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
+echo '<select name="mes" id="mes" class="form-control">';
+for ($indiceMes=1; $indiceMes < 13; $indiceMes++){
+	switch ($indiceMes) {
+		case 1:			
+			$labelMes = 'JANEIRO';
+			break;
+		case 2:
+			$labelMes = 'FEVEREIRO';
+			break;
+		case 3:
+			$labelMes = 'MARÇO';
+			break;
+		case 4:
+			$labelMes = 'ABRIL';
+			break;
+		case 5:
+			$labelMes = 'MAIO';
+			break;
+		case 6:
+			$labelMes = 'JUNHO';
+			break;
+		case 7:
+			$labelMes = 'JULHO';
+			break;
+		case 8:
+			$labelMes = 'AGOSTO';
+			break;
+		case 9:
+			$labelMes = 'SETEMBRO';
+			break;
+		case 10:
+			$labelMes = 'OUTUBRO';
+			break;
+		case 11:
+			$labelMes = 'NOVEMBRO';
+			break;
+		case 12:
+			$labelMes = 'DEZEMBRO';
+			break;
+	}	
+	if($indiceMes < 10){
+		$indiceMes = '0' . $indiceMes;
+	}
+	if($this->mesSelecionado && $this->mesSelecionado == $indiceMes){
+		$selected = 'selected';
+	} else {
+		$selected = '';
+	}
+	echo '<option value="'.$indiceMes.'" '.$selected.'>'.$labelMes.'</option>';	
+}
+echo '</select>';
+echo '</div>';
+
+echo '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Hierarquia</div>';
+
+echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">';
+echo '<select name="hierarquia" id="hierarquia" class="form-control">';
+foreach($this->hierarquias as $hierarquia){
+	if($this->hierarquiaSelecionadaId && $this->hierarquiaSelecionadaId == $hierarquia->getId()){
+		$selected = 'selected';
+	} else {
+		$selected = '';
+	}
+    echo '<option value="'.$hierarquia->getId().'" '.$selected.' >'.$hierarquia->getNome().'</option>';
+}
+echo '</select>';
+echo '</div>';
+
+echo '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
+echo '<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">';
+echo '<span class="ladda-label">Filtrar</span><span class="ladda-spinner"></span>';
+echo '</button>';
+echo '</div>';
+
+echo '</div>';
+echo '</form>';
+
+echo '<div class="table-responsive p5">';
+echo '<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">';
+echo '<thead>';
+echo '<tr>';
+echo '<th class="text-center">Nome</th>';
+echo '<th class="text-center">Telefone</th>';
+echo '<th class="text-center hidden-xs">Data de Nascimento</th>';
+echo '<th class="text-center">Idade</th>';
+echo '<th class="text-center hidden-xs">Hierarquia</th>';
+echo '</tr>';
+echo '</thead>';
+
+echo '<tbody>';
+if($this->aniversariantes && $this->filtrado){
+	$classeCor = 'dark';	
+	foreach($this->aniversariantes as $pessoa){
+		$nomeHierarquia = '';
+		if($pessoa->getSexo() == 'M'){
+			$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+		} else {
+			$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino();
+		}
+		echo '<tr class="'.$classeCor.'">';
+		echo '<td>'.$pessoa->getNomePrimeiroUltimo().'</td>';
+		echo '<td>'.$pessoa->getTelefone().'</td>';
+		echo '<td class="hidden-xs">'.$pessoa->getDataNascimentoFormatada().'</td>';		
+		echo '<td>'.$pessoa->getIdade().'</td>';	
+		echo '<td class="hidden-xs">'.$nomeHierarquia.'</td>';					
+		echo '</tr>';
+	}
+}
+echo '</tbody>';
+echo '</table>';
+echo '</div>';
+echo $this->templateFormularioRodape();

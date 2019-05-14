@@ -239,7 +239,26 @@ class PessoaORM extends CircuitoORM {
 			$resposta = true;
 		}
 		return $resposta;
-	}
+    }
+    
+      /**
+     * Localizar pessoa por nome
+     */
+    public function encontrarPorDDDRegiaoBispoLucas() {                 
+        try {
+            $dql = "SELECT p.id, p.nome, p.telefone, p.data_nascimento FROM " . Constantes::$ENTITY_PESSOA . " p "
+           . " WHERE " 
+           . " (p.telefone > 61000000000  AND p.telefone < 61999999999 AND p.documento is not null) OR  "           
+           . " (p.telefone > 87000000000  AND p.telefone < 87999999999 AND p.documento is not null) OR  "          
+           . " (p.telefone > 81000000000  AND p.telefone < 81999999999 AND p.documento is not null) OR  "
+           . " (p.telefone > 79000000000  AND p.telefone < 79999999999 AND p.documento is not null)";                 
+                                          
+            $resultado = $this->getEntityManager()->createQuery($dql)->getResult();
+            return $resultado;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
 
 
 
