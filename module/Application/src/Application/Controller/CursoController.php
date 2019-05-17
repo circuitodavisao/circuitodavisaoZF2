@@ -1274,14 +1274,8 @@ class CursoController extends CircuitoController {
 			$idTurmaPessoa = $_POST['id'];
 			$idParaRetornar = null;
 			$temAulaAtiva = false;
-
-			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeMatricula[0]);
-			if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa)) {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
-			}
-			if ($this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa)) {
-				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa);
-			}
+			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa));
+			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa));
 			if ($turmaPessoa) {
 				$resposta = true;
 				$nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();
