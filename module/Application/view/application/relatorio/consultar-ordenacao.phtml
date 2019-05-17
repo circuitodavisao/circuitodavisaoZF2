@@ -29,16 +29,35 @@ $html .= '<input type="number" name="cpf" class="form-control" id="cpf" placehol
 $html .= '</div>';
 $html .= '</div>';
 
+
 $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
 $html .= '<div class="option-group field text-center mb15">';
-$html .= '<label class="option option-primary">';
-$html .= '<input type="radio" name="nivelDeDificuldade" value="1" checked="checked">';
-$html .= '<span class="radio"></span>Jovem</label>';
-$html .= '<label class="option option-primary">';
-$html .= '<input type="radio" name="nivelDeDificuldade" value="2">';
-$html .= '<span class="radio"></span>Adulto</label>';
+
+for($indiceRadio = 1; $indiceRadio < 3; $indiceRadio++){
+    $checked = '';
+    if($this->nivelDeDificuldade && $this->nivelDeDificuldade == $indiceRadio){
+        $checked = 'checked';
+    } 
+    if(!$this->nivelDeDificuldade){
+        if($indiceRadio == 1){
+            $checked = 'checked';
+        }
+    }
+    switch($indiceRadio){
+        case 1:             
+            $label = 'Jovem';
+            break;
+        case 2:                                                            
+            $label = 'Adulto';
+            break;
+    }
+    $html .= '<label class="option option-primary">';
+    $html .= '<input type="radio" name="nivelDeDificuldade" value="'.$indiceRadio.'" '.$checked.'>';
+    $html .= '<span class="radio"></span>'.$label.'</label>';
+}
 $html .= '</div>';
 $html .= '</div>';
+
 
 $html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
 $html .= '<button type="button" onclick="validarDados();" class="btn ladda-button btn-primary btn-block mb15" data-style="zoom-in">';
@@ -62,18 +81,26 @@ if($this->filtrado && $this->ordenacaoMetas && $this->pessoaAtiva){
     // row numeros grandes
     $html .= '<div class="row mb10">';
     $totalDeIndices = 4;
+    if(!$this->lideres){
+        $this->lideres = 0;
+    }
+    if(!$this->membresia){
+        $this->membresia = 0;
+    }
+    if(!$this->parceiroDeDeus){
+        $this->parceiroDeDeus = 0;
+    }
+    if(!$this->mediaPessoasFrequentes){
+        $this->mediaPessoasFrequentes = 0;
+    }
     for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
         switch($indiceNumeroGrandes){
             case 1: 
                 $valor = number_format($this->membresia, 2);
                 $label = 'Membresia';
                 break;
-            case 2: 
-                if($this->lideres){
-                    $valor = $this->lideres;
-                } else {
-                    $valor = 0;
-                }                
+            case 2:                 
+                $valor = $this->lideres;                                
                 $label = 'Lider(es)';
                 break;
             case 3: 
@@ -103,8 +130,8 @@ if($this->filtrado && $this->ordenacaoMetas && $this->pessoaAtiva){
         $html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">';
         $html .= '<div class="panel text-center br-a br-grey">';
         $html .= '<div class="panel-body">';
-        $html .= '<h1 class="fs16 mt5 mbn">Igrejas</h1>';
-        $html .= '<h6 class="text-info">'.$this->quantidadeDeIgrejas.'</h6>';        
+        $html .= '<h1 class="fs16 mt5 mbn">'.$this->quantidadeDeIgrejas.'</h1>';
+        $html .= '<h6 class="text-info">Igrejas</h6>';        
         $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
@@ -121,7 +148,7 @@ if($this->filtrado && $this->ordenacaoMetas && $this->pessoaAtiva){
                 $ordenacaoCriterio = $metas->getMetas_ordenacao_criterio_id();               
                 $meta = $metas->metaPorDificuldade($this->nivelDeDificuldade);                                    
                 switch($ordenacaoCriterio){
-                    case MetasOrdenacaoCriterio::lideres:                                                          
+                    case MetasOrdenacaoCriterio::lideres:                                                                              
                         if($this->lideres >= $meta){                                   
                             $pontosOrdenado++;
                         }

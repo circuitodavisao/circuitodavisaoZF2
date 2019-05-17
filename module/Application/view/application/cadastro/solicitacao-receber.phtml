@@ -84,10 +84,10 @@ echo '<input type="hidden" id="receber" name="receber" value="1" />';
         <div class="section-divider mt20">
             <span>Selecione uma numeração</span>
         </div>
-        <select id="numero" class="mt10 form-control">
+        <select id="numero" name="numero" class="mt10 form-control">
             <option value="0">SELECIONE</option>
             <?php
-            for ($indiceNumeracao = 1; $indiceNumeracao <= 24; $indiceNumeracao++) {
+            for ($indiceNumeracao = 1; $indiceNumeracao <= 48; $indiceNumeracao++) {
                 echo "<option value='$indiceNumeracao'>$indiceNumeracao</option>";
             }
             ?>
@@ -107,8 +107,7 @@ echo '<input type="hidden" id="receber" name="receber" value="1" />';
         <div class="panel heading-border panel-info">
             <div class="panel-body">
                 <address>
-                    tem isso
-                    va acontecer isso
+                Confirma receber esse líder na sua equipe? Somente no próximo período será feito a transfêrencia!
                 </address>                                  
             </div>                 
         </div>
@@ -118,7 +117,7 @@ echo '<input type="hidden" id="receber" name="receber" value="1" />';
                     <label class="option block mt15">
                         <input type="checkbox" name="checked" value="checked" onclick="pedirSenha();">
                         <span class="checkbox"></span>
-                        Confirmo isso
+                        Confirmo isso!
                     </label> 
                 </div>
             </div>
