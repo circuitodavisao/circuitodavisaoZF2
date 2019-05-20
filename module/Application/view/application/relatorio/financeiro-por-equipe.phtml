@@ -146,47 +146,12 @@ if($this->relatorio){
 		}
 
 
-	$htmlTime = '';
-	
-	// foreach($chaves as $chave){			
-	// 	$nome = '';				
-	// 	$relatorioTime = $relatorioPronto[$chave];
-	// 	if($grupoFilho){
-
-	// 	}
-	// 	$grupoFilho = $this->repositorio->getGrupoORM()->encontrarPorId($chave);
-	// 	$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '_' . $chave;						
-	// 	//$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome();				
-	// 	$corPerformanceGeral = 'dark';
-	// 	$htmlTime .= '<tr>';
-	// 	$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $nome . '</td>';
-	// 	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-	// 	$contadorDeTurmas = 0;
-	// 	foreach($this->turmas as $turma){
-	// 		$corPerformance = 'dark';
-	// 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">R$ ' . number_format($relatorioTime[$turma->getId()]['total'], 2) . '</td>';			
-	// 		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-	// 		$contadorDeTurmas++;
-	// 	}
-
-	// 	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioTime['total'], 2) . '</td>';		
-	// 	$htmlTime .= '</tr>';
-
-	// }
-	
+	$htmlTime = '';	
 	foreach($filhos as $filho){		
 		$temDados = false;
 		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 		$idGrupoFilho = $grupoFilho->getId();		
 		$relatorioTime = $relatorioPronto[$idGrupoFilho];
-		// foreach($chaves as $chave){						
-		// 	if($chave == $idGrupoFilho){								
-		// 		$temDados = true;				
-		// 		break;
-		// 	}
-		// }
-					
 		$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome();										
 			
 		$corPerformanceGeral = 'dark';
