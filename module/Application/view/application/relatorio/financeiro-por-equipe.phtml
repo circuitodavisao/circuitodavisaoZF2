@@ -1,0 +1,232 @@
+<?php
+use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
+use Application\Controller\RelatorioController;
+use Application\Model\Entity\EntidadeTipo;
+
+//Funcoes::var_dump($this->relatorio);
+echo $this->templateFormularioTopo('Financeiro - <b class="text-danger">Por Equipes</b>');
+?>
+<style type="text/css">
+	th {
+		text-align: center;
+	}
+	.colunaEspacamento {
+		width: 5px;
+		background-color: #fff;
+	}
+</style>
+		<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+<?php
+echo '<form action="/relatorioFinanceiroPorEquipe" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+$contadorDeTurmas = 0;
+foreach($this->turmas as $turma){
+	$classeBase = 'turma' . $contadorDeTurmas . ' ';
+	$classeBase .= 'hidden-xs';
+	$mostrarBotaoEsquerdo = true;
+	if ($contadorDeTurmas === 0) {
+		$mostrarBotaoEsquerdo = false;
+	}
+	$mostrarBotaoDireito = true;
+	if ($contadorDeTurmas === count($this->turmas)) {
+		$mostrarBotaoDireito = false;
+	}
+	$funcaoEsquerda = $this->funcaoOnClick('$(".turma' . ($contadorDeTurmas - 1) . '").removeClass("hidden-xs");$(".turma' . $contadorDeTurmas . '").addClass("hidden-xs");');
+	$funcaoDireita = $this->funcaoOnClick('$(".turma' . ($contadorDeTurmas + 1) . '").removeClass("hidden-xs");$(".turma' . $contadorDeTurmas . '").addClass("hidden-xs");');
+	$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+	$botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+	echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
+	if ($mostrarBotaoEsquerdo) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+	}
+	$modulo = '';
+	if($turma->getTurmaAulaAtiva()){
+		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+	}
+	echo $modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 2).'/'.$turma->getAno();
+	if ($mostrarBotaoDireito) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+	}
+	echo '</div>';
+	$contadorDeTurmas++;
+}
+
+$funcaoEsquerda = $this->funcaoOnClick('$(".turma' . ($contadorDeTurmas - 1) . '").removeClass("hidden-xs");$(".turma' . $contadorDeTurmas . '").addClass("hidden-xs");');
+$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center turma'. $contadorDeTurmas . '" style="margin-bottom: 17px;"> ';
+echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+echo 'FINAL';
+echo '</div>';
+?>
+			<div class="p5">
+				<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+					<thead>
+						<tr class="dark">
+							<th>Times</th>
+<?php
+echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+$contadorDeTurmas = 0;
+foreach($this->turmas as $turma){
+	$modulo = '';
+	if($turma->getTurmaAulaAtiva()){
+		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+	}
+	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">'.$modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+	$contadorDeTurmas++;
+}
+echo '<th colspan="4" class="turma'.$contadorDeTurmas.'">TOTAL</th>';
+?>
+						</tr>
+						<tr>
+							<th></th>
+<?php
+echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+$contadorDeTurmas = 0;
+foreach($this->turmas as $turma){	
+	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">VALOR</th>';
+	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+	$contadorDeTurmas++;
+}
+echo '<th class="turma'.$contadorDeTurmas.'">TOTAL</th>';
+?>
+						</tr>
+					</thead>
+					<tbody>
+<?php
+if($this->relatorio){
+	$relatorioPronto = array();
+	$chaves = array();	
+	foreach($this->relatorio as $chave => $relatorio){
+		$adicionar = false;
+		if($chave !== 'total'){
+			$adicionar = true;
+		}
+		if($adicionar){
+			$chaves[] = $chave;
+			$soma = array();
+			$relatorioTime = array();
+			foreach($this->turmas as $turma){
+				$total = $relatorio[$turma->getId()]['valor'];
+				$soma['total'] += $total;				
+				$relatorioTime[$turma->getId()]['total'] = $total;				
+				$relatorioFinal[$turma->getId()]['total'] += $total;				
+			}
+			
+			$relatorioTime['total'] = $soma['total'];			
+			$relatorioPronto[$chave] = $relatorioTime;
+			$relatorioFinal['total'] += $soma['total'];			
+		}
+	}
+		
+	$filhos = $this->filhos;
+	$tamanhoArray = count($filhos);
+
+		for ($i = 0; $i < $tamanhoArray; $i++) {
+			for ($j = 0; $j < $tamanhoArray; $j++) {
+
+				$discipulo1 = $filhos[$i];
+				$discipulo2 = $filhos[$j];
+
+				$grupoFilho1 = $discipulo1->getGrupoPaiFilhoFilho();
+				$idGrupoFilho1 = $grupoFilho1->getId();		
+				$grupoFilho2 = $discipulo2->getGrupoPaiFilhoFilho();
+				$idGrupoFilho2 = $grupoFilho2->getId();
+				$valor1 = $relatorioPronto[$idGrupoFilho1]['total'];
+				$valor2 = $relatorioPronto[$idGrupoFilho2]['total'];
+
+				if ($valor1 > $valor2) {
+					$aux = $discipulo1;
+					$filhos[$i] = $discipulo2;
+					$filhos[$j] = $aux;
+				}
+			}
+		}
+
+
+	$htmlTime = '';
+	
+	// foreach($chaves as $chave){			
+	// 	$nome = '';				
+	// 	$relatorioTime = $relatorioPronto[$chave];
+	// 	if($grupoFilho){
+
+	// 	}
+	// 	$grupoFilho = $this->repositorio->getGrupoORM()->encontrarPorId($chave);
+	// 	$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome() . '_' . $chave;						
+	// 	//$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome();				
+	// 	$corPerformanceGeral = 'dark';
+	// 	$htmlTime .= '<tr>';
+	// 	$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $nome . '</td>';
+	// 	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+	// 	$contadorDeTurmas = 0;
+	// 	foreach($this->turmas as $turma){
+	// 		$corPerformance = 'dark';
+	// 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">R$ ' . number_format($relatorioTime[$turma->getId()]['total'], 2) . '</td>';			
+	// 		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+	// 		$contadorDeTurmas++;
+	// 	}
+
+	// 	$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioTime['total'], 2) . '</td>';		
+	// 	$htmlTime .= '</tr>';
+
+	// }
+	
+	foreach($filhos as $filho){		
+		$temDados = false;
+		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+		$idGrupoFilho = $grupoFilho->getId();		
+		$relatorioTime = $relatorioPronto[$idGrupoFilho];
+		// foreach($chaves as $chave){						
+		// 	if($chave == $idGrupoFilho){								
+		// 		$temDados = true;				
+		// 		break;
+		// 	}
+		// }
+					
+		$nome = $grupoFilho->getGrupoEquipe()->getEntidadeAtiva()->getNome();										
+			
+		$corPerformanceGeral = 'dark';
+		$htmlTime .= '<tr>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $nome . '</td>';
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+		$contadorDeTurmas = 0;
+		foreach($this->turmas as $turma){
+			$corPerformance = 'dark';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">R$ ' . number_format($relatorioTime[$turma->getId()]['total'], 2) . '</td>';			
+			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+			$contadorDeTurmas++;
+		}
+
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioTime['total'], 2) . '</td>';		
+		$htmlTime .= '</tr>';	
+			
+	}
+
+	$htmlTime .= '<tr>';
+	$htmlTime .= '<td>TOTAL</td>';
+	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+	
+	$contadorDeTurmas = 0;
+	foreach($this->turmas as $turma){		
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioFinal[$turma->getId()]['total'], 2) . '</td>';		
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';		
+		$contadorDeTurmas++;
+	}
+
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioFinal['total'], 2) . '</td>';	
+	$htmlTime .= '</tr>';
+
+	echo $htmlTime;
+}
+?>
+					</tbody>
+				</table>
+		</div>
+	</div>
+<?php
+echo $this->templateFormularioRodape();
