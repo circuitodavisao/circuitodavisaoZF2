@@ -556,6 +556,7 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$repositorio = $this->getRepositorio();
 		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
 		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
 		$request = $this->getRequest();
 		$dados = array();								
@@ -569,7 +570,7 @@ class RelatorioController extends CircuitoController {
 		}
 
 		$turmaPessoaFinanceiroPorIgrejaMesEAno =
-		$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), 8, 2018);			
+		$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), $mes, $ano);			
 		
 		$turmasComAulaAberta = array();
 		$turmas = $grupoIgreja->getTurma();
@@ -583,56 +584,34 @@ class RelatorioController extends CircuitoController {
 		$relatorioAjustado = array();
 		foreach($turmaPessoaFinanceiroPorIgrejaMesEAno as $turmaPessoaFinanceiro){
 			$valor = 0;			
-			$relatorio = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoaFinanceiro['turma_pessoa_id'])[0];						
+			$relatorio = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoaFinanceiro['turma_pessoa_id'])[0];									
 			foreach($turmasComAulaAberta as $turma){				
 				if($relatorio && $relatorio->getTurma_id() === $turma->getId()){
 					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));					
-					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);					
-					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-						for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
-							if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
-								$valor += 15;
-							}
-						}										
-						if($valor){
-							$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['valor'] += $valor;
-						}						
+					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);	
+					for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
+						if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
+							$valor += 15;
+						}
 					}
-					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
-						$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-						$sub = $nomeDaEquipe . ' ' .$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->getNumero();
-						for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
-							if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
-								$valor += 15;
-							}
-						}										
-						if($valor){
-							$relatorioAjustado[$sub][$turma->getId()]['valor'] = $valor;								
-						}						
-					}
-					if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-						for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
-							if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
-								$valor += 15;
-							}
-						}										
-						if($valor){
-							if(count($grupo->getResponsabilidadesAtivas()) > 0){
-								$relatorioAjustado[$grupo->getEntidadeAtiva()->infoEntidade()][$turma->getId()] += $valor;	
-							}
-							if(count($grupo->getResponsabilidadesAtivas()) == 0){
-								$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()] += $valor;
-							}
-						}							
-																	
-					}
+					$relatorioAjustado[$grupo->getGrupoEquipe()->getId()][$turma->getId()]['valor'] += $valor;																			
 					$relatorioAjustado[$turma->getId()]['valor']+= $valor;
 					$relatorioAjustado['total']['valor'] += $valor;
 				}
 			}
-		}						
-		$dados['turmas'] = $turmasComAulaAberta;
+		}
+		
+		if ($grupoLogado->getGrupoPaiFilhoFilhosAtivosReal()) {
+			$filhos = $grupoLogado->getGrupoPaiFilhoFilhosAtivosReal();
+		}
+
 		$dados['relatorio'] = $relatorioAjustado;
+		$dados['turmas'] = $turmasComAulaAberta;
+		$dados['repositorio'] = $repositorio;
+		$dados['entidade'] = $entidade;		
+		$dados['filhos'] = $filhos;
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
 		
 		return new ViewModel($dados);
 	}

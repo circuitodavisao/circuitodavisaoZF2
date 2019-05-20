@@ -112,8 +112,7 @@ class GrupoDadosComplementares extends AbstractHelper {
 									|| $entidadeTipo->getId() === EntidadeTipo::igreja)){
 										$mostrar = true;
 									}
-
-								$mostrar = true;
+							
 								if($mostrar){
 									$html .= '<option value="'.$entidadeTipo->getId().'">'.$entidadeTipo->getNome().'</option>';
 								}
