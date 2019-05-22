@@ -131,6 +131,7 @@ Dados
 <?php
 $totalDeIndices = 8;
 for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
+	
 	$idValor = '';
 	$label = '';
 	$idDiv = '';
@@ -152,6 +153,9 @@ for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNu
 	case 4: 
 		$idValor = 'idValorAlunos';
 		$label = 'Aluno(s)';
+		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+			$hidden = 'hidden';	
+		}
 		break;
 	case 5: 
 		$idValor = 'idValorRegioes';
@@ -210,7 +214,8 @@ echo '</div>';
 
 <?php
 if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 ?>
 <!-- dados membresia -->
 <div class="row mb10">

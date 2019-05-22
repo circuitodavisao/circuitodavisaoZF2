@@ -5,7 +5,7 @@ CREATE TABLE public.turma_pessoa_financeiro
     hora_criacao time without time zone NOT NULL,
     data_inativacao date,
     hora_inativacao time without time zone,
-    turma_pessoa_id integer NOT NULL,
+    turma_pessoa_id integer NOT NULL,    
     disciplina_id integer NOT NULL,
     CONSTRAINT pk_turma_pessoa_financeiro_id PRIMARY KEY (id),
     CONSTRAINT fk_turma_pessoa_financeiro_turma_pessoa_id FOREIGN KEY (turma_pessoa_id)
@@ -20,6 +20,17 @@ CREATE TABLE public.turma_pessoa_financeiro
 WITH (
     OIDS = FALSE
 );
+
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN mes1 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN ano1 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN valor1 enumsn DEFAULT 'N';
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN mes2 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN ano2 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN valor2 enumsn DEFAULT 'N';
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN mes3 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN ano3 integer;
+ALTER TABLE public.turma_pessoa_financeiro ADD COLUMN valor3 enumsn DEFAULT 'N';
+
 
 ALTER TABLE public.turma_pessoa_financeiro
     OWNER to postgres;
@@ -43,6 +54,33 @@ COMMENT ON COLUMN public.turma_pessoa_financeiro.hora_inativacao
 
 COMMENT ON COLUMN public.turma_pessoa_financeiro.turma_pessoa_id
     IS 'identficação da turmapessoa';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.mes1
+    IS 'Mês referente ao pagamento da primeira mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.ano1
+    IS 'Ano referente ao pagamento da primeira mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.valor1
+    IS 'Valor referente ao pagamento da primeira mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.mes2
+    IS 'Mês referente ao pagamento da segunda mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.ano2
+    IS 'Ano referente ao pagamento da segunda mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.valor2
+    IS 'Valor referente ao pagamento da segunda mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.mes3
+    IS 'Mês referente ao pagamento da terceira mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.ano3
+    IS 'Ano referente ao pagamento da terceira mensalidade do módulo';
+
+COMMENT ON COLUMN public.turma_pessoa_financeiro.valor3
+    IS 'Valor referente ao pagamento da terceira mensalidade do módulo';
 
 COMMENT ON COLUMN public.turma_pessoa_financeiro.disciplina_id
     IS 'identficação da disciplina';

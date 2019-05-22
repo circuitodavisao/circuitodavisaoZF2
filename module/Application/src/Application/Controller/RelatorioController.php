@@ -551,6 +551,71 @@ class RelatorioController extends CircuitoController {
 		return $grupoDoDiscipuloAbaixoDeQuemEstaLogado;
 	}
 
+	public function financeiroPorEquipeAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$repositorio = $this->getRepositorio();
+		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
+		$request = $this->getRequest();
+		$dados = array();								
+		if($request->isPost()){					
+			$postDados = $request->getPost();
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+		} else {
+			$mes = date('m');
+			$ano = date('Y');
+		}
+
+		$turmaPessoaFinanceiroPorIgrejaMesEAno =
+		$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), $mes, $ano);			
+		
+		$turmasComAulaAberta = array();
+		$turmas = $grupoIgreja->getTurma();
+
+		foreach($turmas as $turma){
+			if($turma->getTurmaAulaAtiva()){
+				$turmasComAulaAberta[] = $turma;
+			}
+		}
+
+		$relatorioAjustado = array();
+		foreach($turmaPessoaFinanceiroPorIgrejaMesEAno as $turmaPessoaFinanceiro){
+			$valor = 0;			
+			$relatorio = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoaFinanceiro['turma_pessoa_id'])[0];									
+			foreach($turmasComAulaAberta as $turma){				
+				if($relatorio && $relatorio->getTurma_id() === $turma->getId()){
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));					
+					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);	
+					for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
+						if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
+							$valor += 15;
+						}
+					}
+					$relatorioAjustado[$grupo->getGrupoEquipe()->getId()][$turma->getId()]['valor'] += $valor;																			
+					$relatorioAjustado[$turma->getId()]['valor']+= $valor;
+					$relatorioAjustado['total']['valor'] += $valor;
+				}
+			}
+		}
+		
+		if ($grupoLogado->getGrupoPaiFilhoFilhosAtivosReal()) {
+			$filhos = $grupoLogado->getGrupoPaiFilhoFilhosAtivosReal();
+		}
+
+		$dados['relatorio'] = $relatorioAjustado;
+		$dados['turmas'] = $turmasComAulaAberta;
+		$dados['repositorio'] = $repositorio;
+		$dados['entidade'] = $entidade;		
+		$dados['filhos'] = $filhos;
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		
+		return new ViewModel($dados);
+	}
+
 	public function institutoAction(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -937,10 +1002,11 @@ class RelatorioController extends CircuitoController {
 						}
 						$relatorioSomado1 = array();						
 						$relatorioParceiroDiscipulos = array();
-						$relatorioParceiroDiscipulos['valor'] = 0;										
+						$relatorioParceiroDiscipulos['valor'] = 0;														
+						
 						foreach ($todosDiscipulosRegiaoOuCoordenacao as $filho1) {
-							$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();
-							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();													
+							if($grupoFilho1->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){																
 								$contadorRegioesCoordenacoesEIgrejas['igreja']++;
 								$numeroIdentificadorFilho1 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho1, $dataInativacao);
 								if($tipoRelatorio === self::relatorioParceiroDeDeus){
@@ -991,7 +1057,7 @@ class RelatorioController extends CircuitoController {
 								}
 								foreach ($todosDiscipulosRegiaoOuCoordenacao1 as $filho2) {
 									$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
-									if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo() === EntidadeTipo::igreja){
+									if($grupoFilho2->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 										$contadorRegioesCoordenacoesEIgrejas['igreja']++;
 										$numeroIdentificadorFilho2 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho2, $dataInativacao);
 										if($tipoRelatorio === self::relatorioParceiroDeDeus){				
@@ -2754,7 +2820,7 @@ public function alunosNaSemanaAction(){
 									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
 						$lideres = $fatoLider[0]['lideres'];
 						/* Parceiro de Deus */
-						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$periodoParaUsar, $mes, $ano, $tipoRelatorio)['valor'];
+						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
 						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
 						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
 						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
@@ -3470,7 +3536,11 @@ public function alunosNaSemanaAction(){
 			$tipoSomado = 2;
 
 			$tipoRelatorio = $tipoSomado;
-			$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+				$numeroIdentificador = '';
+			} else {
+				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+			}			
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
@@ -3490,9 +3560,10 @@ public function alunosNaSemanaAction(){
 
 					/* Discipulados */
 					$discipulados = $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
-
-					/* Alunos */
-					$alunos = RelatorioController::totalDeAlunos($repositorio, $grupo);
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+						/* Alunos */
+						$alunos = RelatorioController::totalDeAlunos($repositorio, $grupo);
+					}					
 
 					/* Parceiro de Deus */
 					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];					
