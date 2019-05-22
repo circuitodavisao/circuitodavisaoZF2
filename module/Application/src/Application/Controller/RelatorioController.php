@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Migracao\Controller\IndexController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Controller\CadastroController;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
@@ -590,7 +591,7 @@ class RelatorioController extends CircuitoController {
 					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));					
 					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);	
 					for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
-						if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S'){
+						if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S' && $turmaPessoaFinanceiro['mes'.$indiceDeValor] == $mes){
 							$valor += 15;
 						}
 					}
@@ -608,6 +609,7 @@ class RelatorioController extends CircuitoController {
 		$dados['relatorio'] = $relatorioAjustado;
 		$dados['turmas'] = $turmasComAulaAberta;
 		$dados['repositorio'] = $repositorio;
+		$dados['grupoLogado'] = $grupoLogado;
 		$dados['entidade'] = $entidade;		
 		$dados['filhos'] = $filhos;
 		$dados['mes'] = $mes;
@@ -2766,6 +2768,7 @@ public function alunosNaSemanaAction(){
 	}
 
 	public function consultarOrdenacaoAction(){
+		CadastroController::validarSeSouRegiao();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);

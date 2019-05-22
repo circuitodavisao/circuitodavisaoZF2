@@ -97,6 +97,7 @@ echo '<th class="turma'.$contadorDeTurmas.'">TOTAL</th>';
 					<tbody>
 <?php
 if($this->relatorio){
+	$temRelatorio = true;
 	$relatorioPronto = array();
 	$chaves = array();	
 	foreach($this->relatorio as $chave => $relatorio){
@@ -146,9 +147,25 @@ if($this->relatorio){
 		}
 
 
-	$htmlTime = '';	
-	foreach($filhos as $filho){		
-		$temDados = false;
+	$htmlTime = '';		
+	$idLiderDeIgreja = $this->grupoLogado->getId();		
+	$relatorioTime = $relatorioPronto[$idLiderDeIgreja];
+	$nome = $this->grupoLogado->getEntidadeAtiva()->getNome();										
+		
+	$htmlTime .= '<tr>';
+	$htmlTime .= '<td>' . $nome . '</td>';
+	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+
+	$contadorDeTurmas = 0;
+	foreach($this->turmas as $turma){		
+		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioTime[$turma->getId()]['total'], 2) . '</td>';			
+		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+		$contadorDeTurmas++;
+	}
+
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">R$ ' . number_format($relatorioTime['total'], 2) . '</td>';		
+	$htmlTime .= '</tr>';	
+	foreach($filhos as $filho){				
 		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 		$idGrupoFilho = $grupoFilho->getId();		
 		$relatorioTime = $relatorioPronto[$idGrupoFilho];
@@ -187,11 +204,17 @@ if($this->relatorio){
 	$htmlTime .= '</tr>';
 
 	echo $htmlTime;
+} else {
+	$temRelatorio = false;
 }
 ?>
 					</tbody>
 				</table>
 		</div>
-	</div>
-<?php
+		<?php
+	if(!$temRelatorio){
+		echo '<div class="alert alert-warning text-center" role="alert">Sem lançamentos financeiros neste mês!</div>';
+	}
+	echo '</div>';
+
 echo $this->templateFormularioRodape();

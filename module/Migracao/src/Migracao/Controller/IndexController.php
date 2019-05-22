@@ -3040,7 +3040,59 @@ class IndexController extends CircuitoController {
 					foreach($turmaPessoas as $turmaPessoa){
 						$html .= '<br />'.$turmaPessoa->GetPessoa()->getNome();
 						if($fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-							if($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){
+						// REPROVAÇÃO POR FINANCEIRO	
+						$idSegundoModulo = 7;
+						$idTerceiroModulo = 8;
+						$reprovadoPorFinanceiro = false;
+							if($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO || $fatoCurso[0]->getSituacao_id() === Situacao::ESPECIAL){								
+								if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idSegundoModulo || $turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
+									$idDisciplinaAtual = $turmaAulaAtiva->getAula()->getDisciplina()->getId();
+									$idDisciplinaAnterior = $idDisciplinaAtual -1;
+									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+											if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnterior && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+												if($turmaPessoaFinanceiro->getValor1() == 'N' ||
+													$turmaPessoaFinanceiro->getValor2() == 'N' ||
+													$turmaPessoaFinanceiro->getValor3() == 'N'){
+														$reprovadoPorFinanceiro = true;
+												}											
+											}
+										}
+									}
+								}
+								if($reprovadoPorFinanceiro){
+									$html .= '<br /><span class="label label-danger">Reprovar por financeiro</span>';
+									$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
+									$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
+									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
+
+									$turmaPessoaSituacao = new TurmaPessoaSituacao();
+									$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
+									$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FINANCEIRO));
+									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
+
+									if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
+										foreach($fatosCurso as $fatoCurso){
+											if($fatoCurso->verificarSeEstaAtivo()){
+												$fatoCurso->setDataEHoraDeInativacao();
+												$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
+											}
+										}
+									}
+									if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
+										$numeroIdentificador =
+											$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
+										$fatoCurso = new FatoCurso();
+										$fatoCurso->setNumero_identificador($numeroIdentificador);
+										$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
+										$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
+										$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FINANCEIRO);
+										$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+									}
+								}
+							}
+						// REPROVAÇÃO POR FALTA
+							if(!$reprovadoPorFinanceiro && $fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){
 								$contagemDeFaltas = 0;
 								foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
 									if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
@@ -3068,7 +3120,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contagemDeFaltas >= 4){
-									$html .= '<br /><span class="label label-danger">Reprovar</span>';
+									$html .= '<br /><span class="label label-danger">Reprovar por faltas</span>';
 									$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
 									$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
 									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);

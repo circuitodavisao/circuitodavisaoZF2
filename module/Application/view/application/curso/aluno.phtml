@@ -402,45 +402,55 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 
 		$html .= '<tr>';
 		$html .= '<th>Diciplinas</th>';
-		$html .= '<th class="text-center">Pagamento</th>';
-		$html .= '<th class="text-center">Recibo</th>';
+		$html .= '<th colspan="3" class="text-center">Mensalidade</th>';
+		$html .= '<th class="text-center hidden-xs hidden-sm hidden-md"">Recibo</th>';
 		$html .= '</tr>';
 		$html .= '</thead>';
 		$html .= '<tbody>';
 		$pontosFinanceiro = Array();
+		$mensalidadeFinanceiro = Array();
 		$validacaoFinanceiro = 1;		
 		foreach ($this->turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
-			if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
-				$extra = '';
-				$icone = 'fa-times';
-				$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
-				$botaoFinanceiro = $this->botaoSimples($iconeBotao, '#', $corBotao, BotaoSimples::posicaoAoCentro);
+			if ($disciplina->getId() !== Disciplina::POS_REVISAO) {				
+				//$botaoFinanceiro = $this->botaoSimples($iconeBotao, '#', $corBotao, BotaoSimples::posicaoAoCentro);
 
-				$html .= '<tr>';
-				$html .= '<td>' . $disciplina->getNome() . '</td>';
+				$html .= '<tr>';	
+				$html .= '<td>' . $disciplina->getNome() . '</td>';			
 				if (count($this->turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
 					foreach ($this->turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
 						if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
-							$pontosFinanceiro[$disciplina->getNome()] += 1;
-							$icone = 'fa-check';
-							$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+							$mensalidadeFinanceiro['valor1'] = $turmaPessoaFinanceiro->getValor1();
+							$mensalidadeFinanceiro['valor2'] = $turmaPessoaFinanceiro->getValor2();
+							$mensalidadeFinanceiro['valor3'] = $turmaPessoaFinanceiro->getValor3();
 						}
 					}
 				}
 
-				if($pontosFinanceiro[$disciplina->getNome()] < 1){
-					$validacaoFinanceiro = 0;
+				for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
+					$extra = '';
+					$icone = 'fa-times';
+					$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;					
+					if($mensalidadeFinanceiro['valor'.$indiceMensalidade] == 'S'){
+						$pontosFinanceiro[$disciplina->getNome()] += 1;
+						$icone = 'fa-check';
+						$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+					}
+					$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+					$idBotao = 'botao_' . $this->turmaPessoa->getId() . '_' . $disciplina->getId() . '_3' . '_' . $indiceMensalidade;
+					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 3 ,' . $indiceMensalidade . ')');
+
+					$html .= '<td>';
+					$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					$html .= '</td>';
 				}
 
-				$iconeBotao = '<i class="fa ' . $icone . '"></i>';
-				$idBotao = 'botao_' . $this->turmaPessoa->getId() . '_' . $disciplina->getId() . '_3';
-				$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 3)');
+				
 
-				$html .= '<td class="text-center">';
-				$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
-				$html .= '</td>';
+				if($pontosFinanceiro[$disciplina->getNome()] < 3){
+					$validacaoFinanceiro = 0;
+				}				
 
-				$html .= '<td class="text-center"><a target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'9999999999'.$disciplina->getId() . '" class="btn btn-xs btn-primary" ><i class="fa fa-print"></i></a></td>';
+				$html .= '<td class="text-center hidden-xs hidden-sm hidden-md""><a target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'9999999999'.$disciplina->getId() . '" class="btn btn-xs btn-primary" ><i class="fa fa-print"></i></a></td>';
 
 				$html .= '</tr>';
 			}
@@ -573,7 +583,7 @@ $html .= '<input type="hidden" id="validacaoGeralDoAluno" value="' . $validacaoG
 $html .= '<input type="hidden" id="validacaoDoFinanceiro" value="' . $validacaoFinanceiro . '" />';
 echo $html;
 
-$versao = '?v=1.1.30';
+$versao = '?v=1.1.32';
 
 echo $this
 	->headScript()
