@@ -24,6 +24,7 @@ class Situacao extends CircuitoEntity {
     const ESPECIAL = 6;
     const DESISTENTE = 7;
     const REPROVADO_POR_FALTA = 8;
+    const REPROVADO_POR_FINANCEIRO = 9;
 
     /**
      * @ORM\OneToMany(targetEntity="TurmaPessoaSituacao", mappedBy="situacao", fetch="EXTRA_LAZY") 

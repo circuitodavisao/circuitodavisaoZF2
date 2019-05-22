@@ -1658,15 +1658,10 @@ class CadastroController extends CircuitoController {
 						$metaIgrejasBispo->setValorJovem($igrejas);
 						$this->getRepositorio()->getGrupoMetasOrdenacaoORM()->persistir($metaIgrejasBispo);
 					}
-				}
-				//self::registrarLog(RegistroAcao::LANCOU_UMA_FICHA_NO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
-				$this->getRepositorio()->fecharTransacao();
-				// return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-				// 	Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
-				// ));
+				}				
+				$this->getRepositorio()->fecharTransacao();				
 			} catch (Exception $exc) {
-				$this->getRepositorio()->desfazerTransacao();
-				//echo $exc->getTraceAsString();
+				$this->getRepositorio()->desfazerTransacao();				
 				echo $exc->getMessage();
 			}
 		}
