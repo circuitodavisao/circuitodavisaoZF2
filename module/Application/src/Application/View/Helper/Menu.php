@@ -123,6 +123,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -166,6 +167,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			
 			if ($this->view->entidade->verificarSeEstaAtivo()
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -216,6 +218,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		$html .= '<ul class="nav sub-nav">';
 
 		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -246,6 +249,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		}
 
 		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -330,6 +334,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			}
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 				$html .= '<li>';
 				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorioExclusaoCelulas\', null);">';
@@ -361,6 +366,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';		
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -372,7 +378,8 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			
 			}
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial) {
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioAproveitamentoDoIv" onClick="mostrarSplash();">';
@@ -391,6 +398,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';
 
 			// if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			// && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 			// && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 			// $html .= '<li>';
 			// $html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
@@ -401,6 +409,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			// }
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
@@ -460,6 +469,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 				&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';

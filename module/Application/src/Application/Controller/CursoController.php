@@ -1271,11 +1271,13 @@ class CursoController extends CircuitoController {
 		$response = $this->getResponse();
 		try {
 			$turmaPessoa = null;
-			$idTurmaPessoa = $_POST['id'];
+			$idTurmaPessoa = $_POST['id'];			
 			$idParaRetornar = null;
 			$temAulaAtiva = false;
-			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa));
-			if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa));
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+			if(!$turmaPessoa){
+				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorIdAntigo($idTurmaPessoa);
+			}			
 			if ($turmaPessoa) {
 				$resposta = true;
 				$nomeTurma = Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno();

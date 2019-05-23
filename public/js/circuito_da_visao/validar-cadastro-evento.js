@@ -142,7 +142,7 @@ function retornaDiaDaSemanaPorExtenso(diaDaSemana) {
             diaDaSemanaPorExtenso = 'DOMINGO';
             break;
         case 2:
-            diaDaSemanaPorExtenso = 'SEGUDA-FEIRA';
+            diaDaSemanaPorExtenso = 'SEGUNDA-FEIRA';
             break;
         case 3:
             diaDaSemanaPorExtenso = 'TERÇA-FEIRA';

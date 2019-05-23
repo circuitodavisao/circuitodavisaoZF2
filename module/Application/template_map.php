@@ -92,6 +92,7 @@ return array(
     'application/lancamento/cadastrar-pessoa'             => __DIR__ . '/view/application/lancamento/cadastrar-pessoa.phtml',
     'application/lancamento/parceiro-de-deus'             => __DIR__ . '/view/application/lancamento/parceiro-de-deus.phtml',
     'application/lancamento/arregimentacao'               => __DIR__ . '/view/application/lancamento/arregimentacao.phtml',
+    'application/relatorio/financeiro-por-equipe'         => __DIR__ . '/view/application/relatorio/financeiro-por-equipe.phtml',
     'application/relatorio/setenta'                       => __DIR__ . '/view/application/relatorio/setenta.phtml',
     'application/relatorio/gerador-metas'                 => __DIR__ . '/view/application/relatorio/gerador-metas.phtml',
     'application/relatorio/exclusao-celulas'              => __DIR__ . '/view/application/relatorio/exclusao-celulas.phtml',
