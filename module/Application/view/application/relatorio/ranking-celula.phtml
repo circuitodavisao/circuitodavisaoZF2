@@ -53,6 +53,9 @@ if($this->fatos && $this->filtrado){
 		if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 			$mostrar = true;
 		}
+		if(!$grupoEvento->verificarSeEstaAtivo() || !$grupoEvento->getGrupo()->getGrupoResponsavelAtivo()){
+			$mostrar = false;
+		}
 		if($mostrar){
 			$classeCor = 'dark';
 			if($fato->getValor() > 6){

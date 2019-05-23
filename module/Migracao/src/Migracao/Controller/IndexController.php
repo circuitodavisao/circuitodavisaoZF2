@@ -568,6 +568,26 @@ class IndexController extends CircuitoController {
 		return new ViewModel(array('html' => $html));
 	}
 
+	public function ajustarTurmaPessoaFinanceiroAction() {		
+		$todasTurmaPessoaFinanceiro = $this->getRepositorio()->getTurmaPessoaFinanceiroORM()->buscarTodosRegistrosEntidade();
+		foreach($todasTurmaPessoaFinanceiro as $turmaPessoaFinanceiro){
+			if($turmaPessoaFinanceiro->verificarSeEstaAtivo()){		
+				$mes = $turmaPessoaFinanceiro->getData_criacaoMes();						
+				$ano = $turmaPessoaFinanceiro->getData_criacaoAno();						
+				$turmaPessoaFinanceiro->setMes1($mes);
+				$turmaPessoaFinanceiro->setMes2($mes);
+				$turmaPessoaFinanceiro->setMes3($mes);
+				$turmaPessoaFinanceiro->setAno1($ano);
+				$turmaPessoaFinanceiro->setAno2($ano);
+				$turmaPessoaFinanceiro->setAno3($ano);
+				$turmaPessoaFinanceiro->setValor1('S');
+				$turmaPessoaFinanceiro->setValor2('S');
+				$turmaPessoaFinanceiro->setValor3('S');
+				$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro,  $alterarDataDeCriacao = false);
+			}
+		}		
+	}
+
 	public function ajustarLideresAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
