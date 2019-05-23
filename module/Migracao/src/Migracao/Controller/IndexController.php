@@ -3774,4 +3774,46 @@ class IndexController extends CircuitoController {
 		}
 	}
 
+	public function transformarCelulaBetaAction(){
+		$dados = array();
+		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = -10, $tipoComparacao = 2, $estrategica = true);
+		$listaDeCelulas = array();
+		foreach($fatoCelulasBeta as $valor){
+			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($valor['evento_celula_id']);
+			$eventoSelecionado = $eventoCelula->getEvento();
+			if($idEventoAnterior = $eventoCelula->getEvento()->getEvento_id()){
+				while($idEventoAnterior){
+					$eventoSelecionado = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEventoAnterior);
+					$idEventoAnterior = null;
+					if($eventoSelecionado->getEvento_id()){
+						$idEventoAnterior = $eventoSelecionado->getEvento_id();
+					}
+				}
+			}
+			$dadosCelula = array();
+			$dadosCelula['idFatoCelula'] = $valor['id'];
+			$dadosCelula['data_criacao'] = $eventoSelecionado->getData_criacaoStringPadraoBrasil();
+			$date1 = date_create($eventoSelecionado->getData_criacaoStringPadraoBanco());
+			$date2 = date_create(date('Y-m-d'));
+			$diff = date_diff($date1,$date2)->format('%a');
+			$dadosCelula['diferenca'] = intVal($diff);
+			$listaDeCelulas[] = $dadosCelula; 
+		}
+		$this->getRepositorio()->iniciarTransacao();
+		try{
+			foreach($listaDeCelulas as $item){
+				if($item['diferenca'] >= 180){
+					$fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorId($item['idFatoCelula']);
+					$fatoCelula->setEstrategica('N');
+					$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, $trocarDataDeCriacao = false);
+				}
+			}
+			$this->getRepositorio()->fecharTransacao();
+		} catch(Exception $e){
+			$this->getRepositorio()->desfazerTransacao();
+		}
+		$dados['listaDeCelulas'] = $listaDeCelulas;
+		return new ViewModel($dados);
+	}
+
 }
