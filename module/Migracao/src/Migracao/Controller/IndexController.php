@@ -2666,10 +2666,11 @@ class IndexController extends CircuitoController {
 					if (!is_numeric($telefone)) {
 						$telefone = '99999999999';
 					}
+					$idClassificacao = 3; // membro
 					$pessoa = new Pessoa();
 					$pessoa->setNome($rowPessoasVolateis['nome']);
 					$pessoa->setTelefone($telefone);
-					$pessoa->setTipo($rowPessoasVolateis['idClassificacao']);
+					$pessoa->setTipo($idClassificacao);
 					$pessoas[] = $pessoa;
 				}
 			}
