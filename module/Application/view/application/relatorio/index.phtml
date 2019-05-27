@@ -138,7 +138,7 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 			$colspan = 2;
 		}
 	if($this->tipoRelatorio == 8) {
-		$colspan = 4;
+		$colspan = 6;
 	}
 
 	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
@@ -211,7 +211,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
 	}
 	if ($this->tipoRelatorio == 8) {
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL BETA</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET BETA</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
@@ -419,12 +421,14 @@ foreach ($this->relatorio as $relatorio) {
 			}
 			if ($this->tipoRelatorio == 8) {
 				if($contagemRanking === 0 || $relatorio['lideres'] == 'TOTAL' || $relatorio[$indiceDeArrays]['mostrar']){
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaQuantidade'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeEliteMeta'] . '</td>';
-					echo '<td class="' . $classeBase . '">' . $relatorio[$indiceDeArrays]['celulaDeElite'] . '</td>';
+					echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['celulaQuantidade']) . '</td>';
+					echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['celulaQuantidadeEstrategica']) . '</td>';
+					echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['celulaDeEliteMeta']) . '</td>';
+					echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['celulaDeEliteMetaEstrategica']) . '</td>';
+					echo '<td class="' . $classeBase . '">' . number_format($relatorio[$indiceDeArrays]['celulaDeElite']) . '</td>';
 					echo '<td class="' . $classeBase . '">' . RelatorioController::formataNumeroRelatorio($relatorio[$indiceDeArrays]['celulaDeElitePerformance']) . '%</td>';
 				}else{
-					for($i = 1;$i <= 4;$i++){
+					for($i = 1;$i <= 6;$i++){
 						echo '<td class="' . $classeBase . '"><i class="fa fa-retweet"></i></td>';
 					}
 				}
