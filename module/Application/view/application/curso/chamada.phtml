@@ -99,7 +99,8 @@ if($this->filtrado){
 
 						$mostrarSituacao = false;
 						if($this->postado['idSituacao'] == 0 && ($relatorio->getSituacao_id() === Situacao::ATIVO ||
-							$relatorio->getSituacao_id() === Situacao::ESPECIAL)){
+							$relatorio->getSituacao_id() === Situacao::ESPECIAL ||
+							$relatorio->getSituacao_id() === Situacao::REPROVADO_POR_FINANCEIRO)){
 								$mostrarSituacao = true;
 							}else{
 								if($relatorio->getSituacao_id() == $this->postado['idSituacao']){
@@ -153,6 +154,9 @@ if($this->filtrado){
 									$corSituacao = 'warning';
 									break;
 								case Situacao::REPROVADO_POR_FALTA:
+									$corSituacao = 'danger';
+									break;
+								case Situacao::REPROVADO_POR_FINANCEIRO:
 									$corSituacao = 'danger';
 									break;
 								default:
