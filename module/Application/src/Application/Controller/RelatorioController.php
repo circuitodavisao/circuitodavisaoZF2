@@ -67,7 +67,7 @@ class RelatorioController extends CircuitoController {
 			//unset($sessao->idSessao);
 		}
 
-		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
+		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');		
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
@@ -865,10 +865,10 @@ class RelatorioController extends CircuitoController {
 						if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite ||
 							$tipoRelatorio === RelatorioController::relatorioMembresiaECelula) {
 								$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupo, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-								$meta = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'];
+								$meta = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'];								
 								if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] > 2) {
 									$meta = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidade'] / 2);
-								}
+								}								
 								$metaEstrategicas = $relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'];
 								if ($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'] > 2) {
 									$metaEstrategicas = number_format($relatorio[self::dadosPessoais][$indiceDeArrays]['celulaQuantidadeEstrategica'] / 2);
@@ -1048,6 +1048,28 @@ class RelatorioController extends CircuitoController {
 							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaRealizadasPerformance'] = $performanceCelula;
 						}
 					}
+				if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite){
+					$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);
+					error_log(print_r($dadosCelulasDeElite, true));
+					$meta = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'];								
+					if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 2) {
+						$meta = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2);
+					}								
+					$metaEstrategicas = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidadeEstrategica'];
+					if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidadeEstrategica'] > 2) {
+						$metaEstrategicas = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidadeEstrategica'] / 2);
+					}
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] = $meta;
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMetaEstrategica'] = $metaEstrategicas;
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] = $dadosCelulasDeElite['elite'];
+					$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'] 
+						= $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElite'] / 
+						($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMeta'] 
+						+ $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeEliteMetaEstrategica'])
+						* 100;
+					$soma[$grupoFilho->getId()][self::celulaDeElitePerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaDeElitePerformance'];
+				}
+
 				$soma[$grupoFilho->getId()][self::membresia] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresia'];
 				$soma[$grupoFilho->getId()][self::membresiaPerformance] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['membresiaPerformance'];
 				$soma[$grupoFilho->getId()][self::celula] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celula'];
