@@ -3052,33 +3052,33 @@ class IndexController extends CircuitoController {
 						$reprovadoPorFinanceiro = false;
 						$pontosFinanceiro = 0;
 							if($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO || $fatoCurso[0]->getSituacao_id() === Situacao::ESPECIAL){								
-								if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idSegundoModulo || $turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
-									$idDisciplinaAtual = $turmaAulaAtiva->getAula()->getDisciplina()->getId();
-									$idDisciplinaAnterior = $idDisciplinaAtual -1;
-									if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
-										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior -1;
-										$pontosParaPassar = 6;
-									} else {
-										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior;
-										$pontosParaPassar = 3;
-									}									
-									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
-										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
-											if (($turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnterior ||
-												$turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnteriorDaAnterior) &&
-											 $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
-												if($turmaPessoaFinanceiro->getValor1() == 'S' &&
-													$turmaPessoaFinanceiro->getValor2() == 'S' &&
-													$turmaPessoaFinanceiro->getValor3() == 'S'){
-														$pontosFinanceiro += 3;
-												}											
-											}
-										}
-									}	
-									if($pontosFinanceiro < $pontosParaPassar){
-										$reprovadoPorFinanceiro = true;
-									}								
-								}
+//								if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idSegundoModulo || $turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
+//									$idDisciplinaAtual = $turmaAulaAtiva->getAula()->getDisciplina()->getId();
+//									$idDisciplinaAnterior = $idDisciplinaAtual -1;
+//									if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
+//										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior -1;
+//										$pontosParaPassar = 6;
+//									} else {
+//										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior;
+//										$pontosParaPassar = 3;
+//									}									
+//									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+//										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+//											if (($turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnterior ||
+//												$turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnteriorDaAnterior) &&
+//											 $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+//												if($turmaPessoaFinanceiro->getValor1() == 'S' &&
+//													$turmaPessoaFinanceiro->getValor2() == 'S' &&
+//													$turmaPessoaFinanceiro->getValor3() == 'S'){
+//														$pontosFinanceiro += 3;
+//												}											
+//											}
+//										}
+//									}	
+//									if($pontosFinanceiro < $pontosParaPassar){
+//										$reprovadoPorFinanceiro = true;
+//									}								
+//								}
 								
 								if($reprovadoPorFinanceiro){
 									$html .= '<br /><span class="label label-danger">Reprovar por financeiro</span>';
