@@ -2491,4 +2491,70 @@ class CursoController extends CircuitoController {
 		$view = new ViewModel($dados);
 		return $view;
 	}
+
+	public function financeiroPorEquipeAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$repositorio = $this->getRepositorio();
+		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
+		$request = $this->getRequest();
+		$dados = array();								
+		if($request->isPost()){					
+			$postDados = $request->getPost();
+			$mes = $postDados['mes'];
+			$ano = $postDados['ano'];
+		} else {
+			$mes = date('m');
+			$ano = date('Y');
+		}
+
+		$turmaPessoaFinanceiroPorIgrejaMesEAno =
+		$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), $mes, $ano);			
+		
+		$turmasComAulaAberta = array();
+		$turmas = $grupoIgreja->getTurma();
+
+		foreach($turmas as $turma){
+			if($turma->getTurmaAulaAtiva()){
+				$turmasComAulaAberta[] = $turma;
+			}
+		}
+
+		$relatorioAjustado = array();
+		foreach($turmaPessoaFinanceiroPorIgrejaMesEAno as $turmaPessoaFinanceiro){
+			$valor = 0;			
+			$relatorio = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoaFinanceiro['turma_pessoa_id'])[0];									
+			foreach($turmasComAulaAberta as $turma){				
+				if($relatorio && $relatorio->getTurma_id() === $turma->getId()){
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));					
+					$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);	
+					for ($indiceDeValor=1; $indiceDeValor < 4; $indiceDeValor++) { 
+						if($turmaPessoaFinanceiro['valor'.$indiceDeValor] == 'S' && $turmaPessoaFinanceiro['mes'.$indiceDeValor] == $mes){
+							$valor += 15;
+						}
+					}
+					$relatorioAjustado[$grupo->getGrupoEquipe()->getId()][$turma->getId()]['valor'] += $valor;																			
+					$relatorioAjustado[$turma->getId()]['valor']+= $valor;
+					$relatorioAjustado['total']['valor'] += $valor;
+				}
+			}
+		}
+		
+		if ($grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal()) {
+			$filhos = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+		}
+
+		$dados['relatorio'] = $relatorioAjustado;
+		$dados['turmas'] = $turmasComAulaAberta;
+		$dados['repositorio'] = $repositorio;
+		$dados['grupoIgreja'] = $grupoIgreja;
+		$dados['entidade'] = $entidade;		
+		$dados['filhos'] = $filhos;
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		
+		return new ViewModel($dados);
+	}
 }

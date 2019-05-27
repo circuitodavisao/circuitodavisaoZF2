@@ -493,6 +493,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$arrayOQueMostrarDosCursos['gerarCarterinhas'] = false;
 			$arrayOQueMostrarDosCursos['gerarReposicoes'] = false;
 			$arrayOQueMostrarDosCursos['gerarFaltas'] = false;
+			$arrayOQueMostrarDosCursos['financeiroPorEquipe'] = false;			
 			$arrayOQueMostrarDosCursos['lancarPresenca'] = false;
 			$arrayOQueMostrarDosCursos['consultarMatricula'] = false;
 			$arrayOQueMostrarDosCursos['listagem'] = false;
@@ -507,6 +508,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
 					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
+					$arrayOQueMostrarDosCursos['financeiroPorEquipe'] = true;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -533,6 +535,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 					$arrayOQueMostrarDosCursos['gerarCarterinhas'] = true;
 					$arrayOQueMostrarDosCursos['gerarReposicoes'] = true;
 					$arrayOQueMostrarDosCursos['gerarFaltas'] = true;
+					$arrayOQueMostrarDosCursos['financeiroPorEquipe'] = true;
 					$arrayOQueMostrarDosCursos['lancarPresenca'] = true;
 					$arrayOQueMostrarDosCursos['consultarMatricula'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
@@ -616,7 +619,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= 'Gerar Faltas';
 				$html .= '</a>';
 				$html .= '</li>';
-			}
+			}			
 			if ($arrayOQueMostrarDosCursos['lancarPresenca']) {
 				$html .= '<li>';
 				$html .= '<a href="/cursoLancarPresenca" onClick="mostrarSplash();">';
@@ -640,7 +643,14 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= '</a>';
 				$html .= '</li>';
 			}
-
+			if ($arrayOQueMostrarDosCursos['financeiroPorEquipe']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoFinanceiroPorEquipe" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-money"></span>';
+				$html .= 'Financeiro Equipes';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
 			$html .= '</ul>';
 			$html .= '</li>';
 
