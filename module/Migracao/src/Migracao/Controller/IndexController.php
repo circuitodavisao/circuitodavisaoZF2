@@ -63,7 +63,7 @@ class IndexController extends CircuitoController {
 	private $entidadeTipoEquipe;
 	private $entidadeTipoSub;
 
-	const DATA_CRIACAO = '2019-05-13';
+	const DATA_CRIACAO = '2019-05-27';
 
 	/**
 	 * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -103,6 +103,8 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
+			// 136 rio de janeiro
+			// 40 tocantins 
 			$idCoordenacao = 136;
 			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao);
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
@@ -110,7 +112,10 @@ class IndexController extends CircuitoController {
 				$idPerfilIgreja = 18;
 				$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
 				$informacaoEntidade = $row[$stringNome];
-				$idGrupoPai = 37;
+				// novo grupo
+				// rio 7693
+				// tocantins 7694
+				$idGrupoPai = 7693;
 				$grupoCoordenacao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				$grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, $grupoCoordenacao, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja, null);
 				$this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
