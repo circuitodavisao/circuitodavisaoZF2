@@ -75,6 +75,7 @@ if (
 	$this->situacao->getId() === Situacao::ATIVO ||
 	$this->situacao->getId() === Situacao::DESISTENTE ||
 	$this->situacao->getId() === Situacao::REPROVADO_POR_FALTA ||
+	$this->situacao->getId() === Situacao::REPROVADO_POR_FINANCEIRO ||
 	$this->situacao->getId() === Situacao::ESPECIAL){
 		$botaoMudarSituacao = 
 			$this->botaoSimples($this->situacao->getNome() . ' <i class="fa fa-pencil"></i>', ' id="botaoSituacao" ' . $this->funcaoOnClick('$("#selectMudarSituacao").removeClass("hidden"); $("#botaoSituacao").addClass("hidden")'), BotaoSimples::botaoMuitoPequenoMenosImportante, BotaoSimples::posicaoAEsquerda);
@@ -407,8 +408,7 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 		$html .= '</tr>';
 		$html .= '</thead>';
 		$html .= '<tbody>';
-		$pontosFinanceiro = Array();
-		$mensalidadeFinanceiro = Array();
+		$pontosFinanceiro = Array();		
 		$validacaoFinanceiro = 1;		
 		foreach ($this->turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
 			if ($disciplina->getId() !== Disciplina::POS_REVISAO) {				
@@ -417,8 +417,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 				$html .= '<tr>';	
 				$html .= '<td>' . $disciplina->getNome() . '</td>';			
 				if (count($this->turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+					$mensalidadeFinanceiro = Array();
 					foreach ($this->turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
-						if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+						if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {							
 							$mensalidadeFinanceiro['valor1'] = $turmaPessoaFinanceiro->getValor1();
 							$mensalidadeFinanceiro['valor2'] = $turmaPessoaFinanceiro->getValor2();
 							$mensalidadeFinanceiro['valor3'] = $turmaPessoaFinanceiro->getValor3();
@@ -429,7 +430,8 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 				for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
 					$extra = '';
 					$icone = 'fa-times';
-					$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;					
+					$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;				
+									
 					if($mensalidadeFinanceiro['valor'.$indiceMensalidade] == 'S'){
 						$pontosFinanceiro[$disciplina->getNome()] += 1;
 						$icone = 'fa-check';
