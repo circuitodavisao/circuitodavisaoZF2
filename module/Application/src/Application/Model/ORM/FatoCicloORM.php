@@ -173,6 +173,43 @@ class FatoCicloORM extends CircuitoORM {
 		}
 	}
 
+	public function fatoCelulaPorNumeoIdentificador($numeroIdentificador, $periodo, $tipoComparacao, $estrategica = null) {
+		$dqlBase = "SELECT c.id, c.evento_celula_id "
+			. "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+			. "JOIN fc.fatoCelula c "
+			. "WHERE "
+			. "fc.numero_identificador #tipoComparacao ?1 "
+			. "AND fc.data_inativacao is null "
+			. "AND fc.data_criacao = ?2 "
+			. "AND c.estrategica = ?3 ";
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}
+			$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+			$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+			$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+			if($estrategica === null){
+				$estrategica = 'N';
+			}else{
+				$estrategica = 'S';
+			}
+			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
+				->setParameter(2, $dataDoPeriodoFormatada)
+				->setParameter(3, $estrategica)
+				->getResult();
+
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
+
 	public function montarRelatorioCelulaDeElitePorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao) {
 		$dqlBase = "SELECT "
 			. "count(d.id) celulaDeElite "

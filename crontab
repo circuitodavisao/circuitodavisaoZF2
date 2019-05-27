@@ -20,4 +20,4 @@
 0 18 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoCelulaDeElite/0_1_2'
 0 18 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoCelulaDeElite/0_2_1'
 0 18 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoCelulaDeElite/0_2_2'
-#0 * * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoRanking'
+0 4 * * * /usr/bin/wget - O -q 'https://circuitodavisaonovo.com.br/migracaoTransformarCelulaBeta'
