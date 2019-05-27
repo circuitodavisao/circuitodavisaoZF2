@@ -2135,11 +2135,14 @@ class CursoController extends CircuitoController {
 					}
 					$turmaPessoaElemento->setAula($aulaOuDisciplina);
 				}
-				if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {					
+				if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {
+					$alterarDataDeCriacaoFinanceiro = false;
+					$cadastroNovo = false;				
 					$aulaOuDisciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idAulaOuDisciplina);
 					$turmaPessoaElemento = $turmaPessoa->getTurmaPessoaFinanceiroPorDisciplina($aulaOuDisciplina->getId());
 					if (!$turmaPessoaElemento) {
-						$turmaPessoaElemento = new TurmaPessoaFinanceiro();
+						$turmaPessoaElemento = new TurmaPessoaFinanceiro();	
+						$cadastroNovo = true;						
 					}
 					$turmaPessoaElemento->setDisciplina($aulaOuDisciplina);
 					$qualAvaliacao = (int) $post_data['qualAvaliacao'];
@@ -2161,12 +2164,24 @@ class CursoController extends CircuitoController {
 						$turmaPessoaElemento->setMes3($mes);
 						$turmaPessoaElemento->setAno3($ano);
 						break;
+					}
+					if($cadastroNovo){
+						$alterarDataDeCriacaoFinanceiro = true;
+						if(!$turmaPessoaElemento->getValor1()){
+							$turmaPessoaElemento->setValor1('N');
+						}
+						if(!$turmaPessoaElemento->getValor2()){
+							$turmaPessoaElemento->setValor2('N');
+						}
+						if(!$turmaPessoaElemento->getValor3()){
+							$turmaPessoaElemento->setValor3('N');
+						}
 					}					
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoAvaliacao) {
 					$aulaOuDisciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idAulaOuDisciplina);
 					$turmaPessoaElemento = $turmaPessoa->getTurmaPessoaAvaliacaoPorDisciplina($aulaOuDisciplina->getId());
-					if (!$turmaPessoaElemento) {
+					if (!$turmaPessoaElemento) {						
 						$turmaPessoaElemento = new TurmaPessoaAvaliacao();
 					}
 					$turmaPessoaElemento->setDisciplina($aulaOuDisciplina);
@@ -2205,7 +2220,7 @@ class CursoController extends CircuitoController {
 					$qualRegistroAcao = RegistroAcao::ALTEROU_UM_VISTO_DE_UM_ALUNO;
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoFinanceiro) {					
-					$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaElemento, $alterarDataDeCriacao = false);
+					$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaElemento, $alterarDataDeCriacaoFinanceiro);					
 					$qualRegistroAcao = RegistroAcao::ALTEROU_UM_FINANCEIRO_DE_UM_ALUNO;
 				}
 				if ($tipoDeLancamento === $tipoDeLancamentoAvaliacao) {

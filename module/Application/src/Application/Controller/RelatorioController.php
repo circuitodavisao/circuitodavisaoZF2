@@ -2793,7 +2793,8 @@ public function alunosNaSemanaAction(){
 					$mes = 12;
 					$ano = date('Y') - 1;
 				}else{
-					$mes = date('m');
+					$mesAtual = date('m');
+					$mes = $mesAtual -1;
 					$ano = date('Y');
 				}	
 				
