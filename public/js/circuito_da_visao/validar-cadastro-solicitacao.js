@@ -70,8 +70,10 @@ function selecionarTipo() {
 	$('#divProgress').removeClass(hidden);
 	$('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
 	$('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
-
-	$('.grupoLogado').attr('disabled','disabled');
+	
+	if(parseInt($('#solicitacaoTipo').val()) !== TRANSFERIR_ALUNO){
+		$('.grupoLogado').attr('disabled','disabled');
+	}	
 
 	if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 		parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
