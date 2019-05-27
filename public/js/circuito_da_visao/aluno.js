@@ -41,13 +41,13 @@ function mudarPresencaOuVistoOuFinanceiro(idTurmaPessoa, idAulaOuDisciplina, tip
 	const btnSuccess = 'btn-success';
 	const btnTransicao = 'btn-default';
 	let botao = $('#botao_' + idTurmaPessoa + '_' + idAulaOuDisciplina + '_' + tipoDeLancamento);
-	if (parseInt(tipoDeLancamento) === 4) {
+	if (parseInt(tipoDeLancamento) === 4 || parseInt(tipoDeLancamento) === 3) {
 		botao = $('#botao_' + idTurmaPessoa + '_' + idAulaOuDisciplina + '_' + tipoDeLancamento + '_' + qualAvaliacao);
 	}
 	let valor = 'N';
 	if (botao.hasClass(btnDanger)) {
 		valor = "S";
-	}
+	}	
 	botao.html(loader);
 	botao.removeClass(btnDanger);
 	botao.removeClass(btnSuccess);
