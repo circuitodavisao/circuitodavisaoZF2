@@ -268,8 +268,8 @@ class IndexController extends CircuitoController {
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
-				//$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
-				$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				//$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
