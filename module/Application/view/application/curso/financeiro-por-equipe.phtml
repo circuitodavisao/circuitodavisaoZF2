@@ -5,7 +5,7 @@ use Application\Controller\RelatorioController;
 use Application\Model\Entity\EntidadeTipo;
 
 //Funcoes::var_dump($this->relatorio);
-echo $this->templateFormularioTopo('Financeiro - <b class="text-danger">Por Equipes</b>');
+echo $this->templateFormularioTopo('Financeiro - <b class="text-danger">Por Equipes</b>' , '', 'style="max-width: 100%; margin-top: 0px;"');
 ?>
 <style type="text/css">
 	th {
@@ -148,9 +148,9 @@ if($this->relatorio){
 
 
 	$htmlTime = '';		
-	$idLiderDeIgreja = $this->grupoLogado->getId();		
+	$idLiderDeIgreja = $this->grupoIgreja->getId();		
 	$relatorioTime = $relatorioPronto[$idLiderDeIgreja];
-	$nome = $this->grupoLogado->getEntidadeAtiva()->getNome();										
+	$nome = $this->grupoIgreja->getEntidadeAtiva()->getNome();										
 		
 	$htmlTime .= '<tr>';
 	$htmlTime .= '<td>' . $nome . '</td>';
