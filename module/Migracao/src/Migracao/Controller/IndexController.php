@@ -3289,24 +3289,23 @@ class IndexController extends CircuitoController {
 											'valor' => $valor['valor'],
 											'periodos' => $valor['periodos'],
 										);
-										$relatorios[] = $dados;										
-
-										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-										if ($grupoPaiFilhoFilhos248832) {
-											foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-												$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, false, $mesSelecinado, $anoSelecinado);
-												foreach($relatorioCelulas as $chave => $valor){
-													$dados = array(
-														'idGrupoIgreja'=>$idGrupoIgreja,
-														'idGrupoEquipe'=>$grupoFilho144->getId(),
-														'idGrupo'=>$grupo->getId(),
-														'idGrupoEvento' => $chave,
-														'valor' => $valor['valor'],
-														'periodos' => $valor['periodos'],
-													);
-													$relatorios[] = $dados;													
-												}
+										$relatorios[] = $dados;
+									}								
+									$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);									
+									if ($grupoPaiFilhoFilhos248832) {
+										foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+											$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();											
+											$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, false, $mesSelecinado, $anoSelecinado);
+											foreach($relatorioCelulas as $chave => $valor){													
+												$dados = array(
+													'idGrupoIgreja'=>$idGrupoIgreja,
+													'idGrupoEquipe'=>$grupoFilho144->getId(),
+													'idGrupo'=>$grupo->getId(),
+													'idGrupoEvento' => $chave,
+													'valor' => $valor['valor'],
+													'periodos' => $valor['periodos'],
+												);
+												$relatorios[] = $dados;													
 											}
 										}
 									}
@@ -3345,7 +3344,7 @@ class IndexController extends CircuitoController {
 			foreach($relatorios as $relatorio){
 				$fatoRankingCelula = new FatoRankingCelula();
 				$fatoRankingCelula->setGrupo_id($relatorio['idGrupoIgreja']);
-				$fatoRankingCelula->setGrupo_equipe_id($relatorio['idGrupoEquipe']);
+				$fatoRankingCelula->setGrupo_equipe_id($relatorio['idGrupoEquipe']);				
 				$fatoRankingCelula->setGrupo_evento_id($relatorio['idGrupoEvento']);
 				$fatoRankingCelula->setValor(number_format($relatorio['valor']));
 				$fatoRankingCelula->setMes($mesSelecinado);
