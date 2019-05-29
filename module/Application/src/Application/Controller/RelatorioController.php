@@ -2008,30 +2008,30 @@ class RelatorioController extends CircuitoController {
 				$grupoPaiFilhoFilhos12 = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
 				foreach ($grupoPaiFilhoFilhos12 as $filho12) {
 					$grupoFilho12 = $filho12->getGrupoPaiFilhoFilho();
-					$ntidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
-					if($ntidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
+					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho12->getId(), $mes, $ano);
 					}	
 					foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
 						$fatosRankingCelula[] = $fatoRankingCelulaAuxiliar;
 					}
-					$grupoPaiFilhoFilhos144 = $ntidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+					$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
 					foreach ($grupoPaiFilhoFilhos144 as $filho144) {
-						if($ntidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 							$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
-							$ntidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
-							if($ntidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
+							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 								$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho144->getId(), $mes, $ano);
 							}	
 							foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
 								$fatosRankingCelula[] = $fatoRankingCelulaAuxiliar;
 							}
-							$grupoPaiFilhoFilhos1728 = $ntidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+							$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
 							foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
-								if($ntidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 									$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
-									$ntidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
-									if($ntidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+									if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 										$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho1728->getId(), $mes, $ano);
 									}	
 									foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
@@ -2049,8 +2049,8 @@ class RelatorioController extends CircuitoController {
 				$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
 				foreach ($grupoPaiFilhoFilhos as $filho) {
 					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-					$ntidadeDoFilho = 	$grupoFilho->getEntidadeAtiva();
-					if($ntidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$entidadeDoFilho = 	$grupoFilho->getEntidadeAtiva();
+					if($entidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$fatosRankingCelulaAuxiliar = $this->getRepositorio()->getFatoRankingCelulaORM()->encontrarPorIdGrupoIgreja($grupoFilho->getId(), $mes, $ano);
 					}	
 					foreach($fatosRankingCelulaAuxiliar as $fatoRankingCelulaAuxiliar){
@@ -2107,49 +2107,98 @@ class RelatorioController extends CircuitoController {
 	public function celulasNaoRealizadasAction(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);		
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$periodo = -1;
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
 		$inicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
-        $dateFormatada = DateTime::createFromFormat('Y-m-d', $inicioPeriodo);
-		$relatorioOrdenado = array();
-		$relatorioDesordenado = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);
+		$dateFormatada = DateTime::createFromFormat('Y-m-d', $inicioPeriodo);
+		$dados = Array();
+		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+			$relatorioDesordenado = Array();
+			$grupoPaiFilhoFilhos12 = $entidadeLogada->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+			foreach ($grupoPaiFilhoFilhos12 as $filho12) {
+				$grupoFilho12 = $filho12->getGrupoPaiFilhoFilho();
+				$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
+				if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$numeroIdentificadorFilho12 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);						
+					$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho12, $dateFormatada);			
+				}	
+				foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
+					$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+				}
+				$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+				foreach ($grupoPaiFilhoFilhos144 as $filho144) {
+					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
+						$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
+						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$numeroIdentificadorFilho144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);						
+							$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho144, $dateFormatada);			
+						}	
+						foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
+							$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+						}
+						$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+						foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
+							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+								$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
+								$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$numeroIdentificadorFilho1728 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);						
+									$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho1728, $dateFormatada);			
+								}	
+								foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
+									$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+								}
+							}
+						}
+					}						
+				}				
+			}
+			$dados['mostrarIgreja'] = true;
+		}
+		
+		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja 
+			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			$grupo = $entidadeLogada->getGrupo();
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);						
+			$relatorioDesordenado = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificador, $dateFormatada);			
+		}		
+
 		$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
 		$tradutor = $viewHelperManager->get('translate');
-
+		$relatorioOrdenado = array();
 		foreach($relatorioDesordenado as $relatorio){
 			$eventoCelulaId = $relatorio['evento_celula_id'];
 			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($eventoCelulaId);
 			
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId(substr($relatorio['numero_identificador'], (count($relatorio['numero_identificador'])-8)));
-	
-			 $infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
-			 $lideres = $grupo->getNomeLideresAtivos();
-			 $linkWhatsapp = $grupo->getLinksWhatsapp();
-			 $celulaDia = $tradutor(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
+			$celulaDia = $tradutor(Funcoes::diaDaSemanaPorDia($eventoCelula->getEvento()->getDia())).' - ' . substr($eventoCelula->getEvento()->getHora(),0,5);
+			$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+			$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
+			$linkWhatsapp = $grupo->getLinksWhatsapp();			
+			$lideres = $grupo->getNomeLideresAtivos();		
 	
 			$relatorioOrdenado[$eventoCelulaId]['infoEntidade'] = $infoEntidade;
-			$relatorioOrdenado[$eventoCelulaId]['lideres'] = $lideres;
 			$relatorioOrdenado[$eventoCelulaId]['linkWhatsapp'] = $linkWhatsapp;
-			$relatorioOrdenado[$eventoCelulaId]['celulaDia'] = $celulaDia;			
+			$relatorioOrdenado[$eventoCelulaId]['nomeIgreja'] = $nomeIgreja;
+			$relatorioOrdenado[$eventoCelulaId]['celulaDia'] = $celulaDia;
+			$relatorioOrdenado[$eventoCelulaId]['lideres'] = $lideres;									
 		}
 
 		uksort($relatorioOrdenado, function ($ak, $bk) use ($relatorioOrdenado) {
 			$a = $relatorioOrdenado[$ak];
 			$b = $relatorioOrdenado[$bk];
-			if ((float)$a['infoEntidade'] === (float)$b['infoEntidade']) return $ak - $bk;
-			return (float)$a['infoEntidade'] > (float)$b['infoEntidade'] ? 1 : -1;
+			if ($a['infoEntidade'] === $b['infoEntidade']) return $ak - $bk;
+			return $a['infoEntidade'] > $b['infoEntidade'] ? 1 : -1;
 		});
-
+		$dados['repositorio'] = $this->getRepositorio();
+		$dados['relatorio'] = $relatorioOrdenado;		
+		$dados['periodo'] = $periodo;
 		self::registrarLog(RegistroAcao::VER_RELATORIO_CELULAS_NAO_REALIZADAS, $extra = '');
-		return new ViewModel(
-			array(
-				'relatorio' => $relatorioOrdenado,
-				'repositorio' => $this->getRepositorio(),
-				'periodo' => $periodo,
-			));
+		return new ViewModel($dados);
 	}
 
 const relatorioAlunosQueNaoForamAAula = 1;
