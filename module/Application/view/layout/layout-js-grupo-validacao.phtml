@@ -2,7 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 
-$versao = '?v=0.7';
+$versao = '?v=0.8';
 
 echo $this
 	->headScript()
@@ -1036,7 +1036,7 @@ default:
 
 	function mostrarBotaoSelecionarEntidadeTipo() {
 		let div = $('#divBotaoSelecionarEntidadeTipo');
-		if (parseInt($('#idTipoEntidade').val()) === 0) {
+		if (parseInt($('#idEntidadeTipo').val()) === 0) {
 			div.addClass(hidden);
 		} else {
 			div.removeClass(hidden);
