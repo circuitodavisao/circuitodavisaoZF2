@@ -1413,10 +1413,13 @@ class CursoController extends CircuitoController {
 	public function reentradaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
-		$lideres = $this->todosLideresAPartirDoGrupo($grupo->getGrupoIgreja());
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidadeLogada->getGrupo();
+		$turmas = $grupoLogado->getGrupoIgreja()->getTurma();
+		$lideres = $this->todosLideresAPartirDoGrupo($grupoLogado->getGrupoIgreja());
+		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			array_unshift($lideres, $grupoLogado);		
+		}					
 		$formulario = new ReentradaDeAlunoForm('formulario', $lideres, $turmas);
 		return new ViewModel(array(
 			'formulario' => $formulario,

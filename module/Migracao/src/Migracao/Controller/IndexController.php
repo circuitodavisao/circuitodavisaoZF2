@@ -3724,17 +3724,29 @@ class IndexController extends CircuitoController {
 						$soma += $resultado;
 					}else{
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
-						if($grupoEventoCelula->getEvento()->getEvento_id() && $resultado['arregimentacao'] == 0){
-							$resultado = 
-								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);
+						if($grupoEventoCelula->getEvento()->getEvento_id()){
+							$resultado2 = 
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);								
 						}
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
 						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
-						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
+						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];					
 						$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
 						$soma += $resultado['arregimentacao'];
 						$somaVisitantes += $resultado['visitantes'];
 						$somaPaceiroDeDeus += $resultado['parceiroDeDeus'];
+
+						if($resultado2){
+							$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] += $resultado2['arregimentacao'];
+							$arrayPeriodos[$contadorDePeriodos]['visitantes'] += $resultado2['visitantes'];
+							$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] += $resultado2['parceiroDeDeus'];					
+							if($resultado2['elite']){
+								$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado2['elite'];		
+							}							
+							$soma += $resultado2['arregimentacao'];
+							$somaVisitantes += $resultado2['visitantes'];
+							$somaPaceiroDeDeus += $resultado2['parceiroDeDeus'];
+						}
 					}
 					$contadorDePeriodos++;
 				}
