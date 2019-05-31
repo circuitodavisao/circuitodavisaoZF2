@@ -397,16 +397,16 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';
 
-			// if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-			// && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
-			// && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-			// $html .= '<li>';
-			// $html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
-			// $html .= '<span class="fa fa-users"></span>';
-			// $html .= 'Ranking Setenta';
-			// $html .= '</a>';
-			// $html .= '</li>';
-			// }
+			 if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+			 && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
+			 && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+			 $html .= '<li>';
+			 $html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
+			 $html .= '<span class="fa fa-users"></span>';
+			 $html .= 'Ranking Setenta';
+			 $html .= '</a>';
+			 $html .= '</li>';
+			 }
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
