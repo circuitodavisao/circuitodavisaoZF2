@@ -2443,6 +2443,7 @@ class CadastroController extends CircuitoController {
 			}else{
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
