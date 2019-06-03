@@ -350,43 +350,94 @@ class Funcoes {
 	}
 
 	static public function encontrarPeriodoDeUmMesPorMesEAno($mes, $ano) {
+		$arrayDePeriodos = array();
 		$mesParaVerificarInt = (int) $mes;
 		$anoParaVerificarInt = (int) $ano;
-		$periodoInicial = 6;
+		$periodoInicial = 0;
 		$mesAnteriorVerificacao = $mesParaVerificarInt - 1;
-		if ($mesParaVerificarInt == 1) {
+		$anoAnterior = (int) $ano;
+		if ($mesParaVerificarInt === 1) {
 			$mesAnteriorVerificacao = 12;
+			$anoAnterior = (int) $ano - 1;
 		}
 		while (true) {
 			$arrayPeriodo = Funcoes::montaPeriodo($periodoInicial);
-			if($arrayPeriodo[3] == $anoParaVerificarInt ||
-				$arrayPeriodo[6] == $anoParaVerificarInt){
+			$verificar = false;
+			if($mesParaVerificarInt === 2){
+				if(intval($arrayPeriodo[3]) === intval($arrayPeriodo[6]) &&
+					($arrayPeriodo[3] == $anoParaVerificarInt ||
+					$arrayPeriodo[6] == $anoParaVerificarInt)){
+						$verificar = true;
+					}
+			}
+			if($mesParaVerificarInt === 1){
+				if(intval($arrayPeriodo[3]) === $anoAnterior &&
+					intval($arrayPeriodo[6]) === $anoParaVerificarInt){
+						$verificar = true;
+					}
+				if(intval($arrayPeriodo[3]) === $anoParaVerificarInt &&
+					intval($arrayPeriodo[6]) === $anoParaVerificarInt){
+						$verificar = true;
+					}
+			}
+			if($mesParaVerificarInt !== 1 && $mesParaVerificarInt !== 2){
+				if(intval($arrayPeriodo[3]) == $anoParaVerificarInt ||
+					intval($arrayPeriodo[6]) == $anoParaVerificarInt){
+						$verificar = true;
+					}
+			}
+
+			if($verificar){
+				$quebrar = false;
+				if($mesParaVerificarInt === 1){
+					// ano nao comeca no dia um
+					if ($arrayPeriodo[5] == $mesParaVerificarInt &&
+						intval($arrayPeriodo[6]) === $anoParaVerificarInt &&
+						intval($arrayPeriodo[2]) === $mesAnteriorVerificacao &&
+						intval($arrayPeriodo[3]) === $anoAnterior){
+							$quebrar = true;
+						}
+					// ano começa no dia um
+					if ($arrayPeriodo[2] == $mesParaVerificarInt &&
+						intval($arrayPeriodo[1]) === 1){
+							$quebrar = true;
+						}
+				} else {
 					if ($arrayPeriodo[2] == $mesAnteriorVerificacao ||
 						$arrayPeriodo[5] == $mesAnteriorVerificacao) {
-							if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
-								$periodoInicial++;
-							}
-							break;
+							$quebrar = true;
 						}
 				}
+				if($quebrar){
+					if ($arrayPeriodo[5] == $mesAnteriorVerificacao) {
+						$periodoInicial++;
+					}
+					break;
+				}
+			}
 			$periodoInicial--;
 		}
-		$periodoFinal = $periodoInicial;
-		while (true) {
-			$arrayPeriodo = Funcoes::montaPeriodo($periodoFinal);
-			if($arrayPeriodo[3] == $anoParaVerificarInt ||
-				$arrayPeriodo[6] == $anoParaVerificarInt){
-					if ($arrayPeriodo[5] != $mesParaVerificarInt) {
-						if ($arrayPeriodo[2] != $mesParaVerificarInt) {
-							$periodoFinal--;
-						}
-						break;
-					}
-					if ($periodoFinal == 0) {
-						break;
-					}
-				}
-			$periodoFinal++;
+		$periodosParaAdicionar = 4;
+		$periodoParaValidar = Funcoes::montaPeriodo($periodoInicial + $periodosParaAdicionar);
+		if(intval($periodoParaValidar[4]) < 30 && intval($periodoParaValidar[5]) === $mesParaVerificarInt){
+			$periodosParaAdicionar = 5;
+		}
+		if(intval($periodoParaValidar[4]) < 30 && intval($periodoParaValidar[5]) === $mesParaVerificarInt &&
+			(
+				intval($periodoParaValidar[5]) === 1
+				|| intval($periodoParaValidar[5]) === 3
+				|| intval($periodoParaValidar[5]) === 5
+				|| intval($periodoParaValidar[5]) === 7
+				|| intval($periodoParaValidar[5]) === 8
+				|| intval($periodoParaValidar[5]) === 10
+				|| intval($periodoParaValidar[5]) === 12
+			)
+		){
+			$periodosParaAdicionar = 5;
+		}
+		$periodoFinal = $periodoInicial + $periodosParaAdicionar;
+		if($periodoFinal > 0){
+			$periodoFinal = 0;
 		}
 		if ($periodoFinal == 0) {
 			$periodoFinal = -1;
