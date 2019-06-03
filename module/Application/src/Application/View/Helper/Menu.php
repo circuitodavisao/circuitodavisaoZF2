@@ -164,6 +164,15 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Discipulados';
 			$html .= '</a>';
 			$html .= '</li>';
+
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$html .= '<li>';
+				$html .= '<a href="/cadastroMetas" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-bullseye"></span>';
+				$html .= 'Metas Ordenação';
+				$html .= '</a>';
+				$html .= '</li>';			
+			}
 			
 			if ($this->view->entidade->verificarSeEstaAtivo()
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
@@ -462,6 +471,15 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Gerador de Meta';
 			$html .= '</a>';
 			$html .= '</li>';			
+			}
+
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$html .= '<li>';
+				$html .= '<a href="/relatorioConsultarOrdenacao" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-search"></span>';
+				$html .= 'Consulta Ordenação';
+				$html .= '</a>';
+				$html .= '</li>';			
 			}
 
 			$html .= '</ul>';
