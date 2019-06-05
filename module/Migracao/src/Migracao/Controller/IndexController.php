@@ -2893,16 +2893,27 @@ class IndexController extends CircuitoController {
 				$this->cadastrarHierarquia($idGrupoAntigo, $idPerfil, $lider);
 			}
 		}
-		$fatoLider = new FatoLider();
-		$fatoLider->setDataEHoraDeCriacao(self::DATA_CRIACAO);
-		if(!$numeroIdentificadorNovo){
-			$numeroIdentificadorNovo = str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
-		}else{
-			$numeroIdentificadorNovo = $numeroIdentificadorNovo . str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+		$ehLider = false;
+		$id2 = null;
+		if($idLider2){
+			$id2 = $idLider2;
 		}
-		$fatoLider->setNumero_identificador($numeroIdentificadorNovo);
-		$fatoLider->setLideres(count($lideres));
-		$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+		$eventos = $this->buscaCelulasPorLideres($idLider1, $id2);
+		if($eventos){
+			$ehLider = true;
+		}
+		if($ehLider){
+			$fatoLider = new FatoLider();
+			$fatoLider->setDataEHoraDeCriacao(self::DATA_CRIACAO);
+			if(!$numeroIdentificadorNovo){
+				$numeroIdentificadorNovo = str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+			}else{
+				$numeroIdentificadorNovo = $numeroIdentificadorNovo . str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+			}
+			$fatoLider->setNumero_identificador($numeroIdentificadorNovo);
+			$fatoLider->setLideres(count($lideres));
+			$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+		}
 
 		/* Cadastro do grupo_cv */
 		$grupoCV = new GrupoCv();
