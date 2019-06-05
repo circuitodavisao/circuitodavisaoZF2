@@ -561,12 +561,15 @@ class Grupo extends CircuitoEntity {
 
     function getLinksWhatsapp() {
         $pessoas = $this->getPessoasAtivas();
-		$links = '';
-        foreach ($pessoas as $pessoa) {
-			if($pessoa->getTelefone()){
-				$links .= ' <a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-			}
+        $links = '';
+        if($pessoas){
+            foreach ($pessoas as $pessoa) {
+                if($pessoa->getTelefone()){
+                    $links .= ' <a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+                }
+            }
         }
+       
         return $links;
     }
 
