@@ -173,6 +173,16 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= '</a>';
 				$html .= '</li>';			
 			}
+
+			if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe &&
+				$this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){				
+				$html .= '<li>';
+				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
+				$html .= '<span class="fa fa-users"></span>';
+				$html .= 'Solicita&ccedil;&otilde;es';
+				$html .= '</a>';
+				$html .= '</li>';			
+			}
 			
 			if ($this->view->entidade->verificarSeEstaAtivo()
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
@@ -193,15 +203,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-				$this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
-					$html .= '<li>';
-					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
-					$html .= '<span class="fa fa-users"></span>';
-					$html .= 'Solicita&ccedil;&otilde;es';
-					$html .= '</a>';
-					$html .= '</li>';
-
+			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){							
 					$html .= '<li>';
 					$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
 					$html .= '<span class="fa fa-user"></span>';
@@ -406,12 +408,22 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';
 
-			 $html .= '<li>';
-			 $html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
-			 $html .= '<span class="fa fa-users"></span>';
-			 $html .= 'Ranking Setenta';
-			 $html .= '</a>';
-			 $html .= '</li>';
+			$html .= '<li>';
+			$html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Ranking Setenta';
+			$html .= '</a>';
+			$html .= '</li>';
+
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial && 
+				$this->view->entidade->getId() !== 3981){
+				$html .= '<li>';
+				$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-users"></span>';
+				$html .= 'Células não realizadas no período';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
 			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
@@ -436,14 +448,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '<span class="fa fa-graduation-cap"></span>';
 			$html .= 'Quantidade de alunos que já tem presença na aula aberta';
 			$html .= '</a>';
-			$html .= '</li>';
-
-			$html .= '<li>';
-			$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
-			$html .= '<span class="fa fa-users"></span>';
-			$html .= 'Células não realizadas no período';
-			$html .= '</a>';
-			$html .= '</li>';
+			$html .= '</li>';			
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';

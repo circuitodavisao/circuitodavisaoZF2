@@ -1326,7 +1326,15 @@ class RelatorioController extends CircuitoController {
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
 			if($grupoFilhoOrdenado->getEntidadeAtiva()){
 				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
-				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+				$nomeFilhoOrdenado = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);				
+				if(!$nomeFilhoOrdenado){
+					$nomeFilhoOrdenado = $grupoFilhoOrdenado->getEntidadeAtiva()->getNome();				
+				}
+				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);				
+				if($grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+					$grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->getNome();
+				}
 				if($grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 					$relatorio[$contadorFilhos]['lideresEntidade'] = 'COORD. '.$grupoFilhoOrdenado->getEntidadeAtiva()->getNumero();
 				}
@@ -2126,10 +2134,11 @@ class RelatorioController extends CircuitoController {
 				}	
 				foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 					$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-				}
-				$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-				foreach ($grupoPaiFilhoFilhos144 as $filho144) {
-					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				}				
+				if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+					$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
+					$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+					foreach ($grupoPaiFilhoFilhos144 as $filho144) {					
 						$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
 						$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
 						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
@@ -2138,10 +2147,11 @@ class RelatorioController extends CircuitoController {
 						}	
 						foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 							$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-						}
-						$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-						foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
-							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						}						
+						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+							$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+							$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+							foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {							
 								$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
 								$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
 								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
@@ -2150,6 +2160,21 @@ class RelatorioController extends CircuitoController {
 								}	
 								foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 									$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+								}								
+								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+									$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+									$grupoPaiFilhoFilhos20736 = $entidadeDoFilho1728->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+									foreach ($grupoPaiFilhoFilhos20736 as $filho20736) {									
+										$grupoFilho20736 = $filho20736->getGrupoPaiFilhoFilho();
+										$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
+										if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+											$numeroIdentificadorFilho20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);						
+											$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho20736, $dateFormatada);			
+										}	
+										foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
+											$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+										}										
+									}
 								}
 							}
 						}
