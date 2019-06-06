@@ -1562,7 +1562,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function metasAction() {
-		self::validarSeSouRegiao();
+		self::validarSeSouPresidencial();
 		$repositorio = $this->getRepositorio();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);		
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
