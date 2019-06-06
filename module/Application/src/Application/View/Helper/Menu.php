@@ -474,14 +474,14 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';			
 			}
 
-			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-				$html .= '<li>';
-				$html .= '<a href="/relatorioConsultarOrdenacao" onClick="mostrarSplash();">';
-				$html .= '<span class="fa fa-search"></span>';
-				$html .= 'Consulta Ordenação';
-				$html .= '</a>';
-				$html .= '</li>';			
-			}
+			// if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			// 	$html .= '<li>';
+			// 	$html .= '<a href="/relatorioConsultarOrdenacao" onClick="mostrarSplash();">';
+			// 	$html .= '<span class="fa fa-search"></span>';
+			// 	$html .= 'Consulta Ordenação';
+			// 	$html .= '</a>';
+			// 	$html .= '</li>';			
+			// }
 
 			$html .= '</ul>';
 
