@@ -786,14 +786,8 @@ class LoginController extends CircuitoController {
 			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
 				$pessoaAtiva = true;
 
-				if(date('m') == 1){
-					$mes = 12;
-					$ano = date('Y') - 1;
-				}else{
-					$mesAtual = date('m');
-					$mes = $mesAtual -1;
-					$ano = date('Y');
-				}	
+				$mes = date('m');					
+				$ano = date('Y');		
 				
 				$responsabilidades = $pessoa->getGrupoResponsavel();
 				foreach($responsabilidades as $grupoResponsavel){
