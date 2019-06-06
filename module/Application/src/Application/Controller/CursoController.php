@@ -1413,10 +1413,13 @@ class CursoController extends CircuitoController {
 	public function reentradaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
-		$lideres = $this->todosLideresAPartirDoGrupo($grupo->getGrupoIgreja());
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidadeLogada->getGrupo();
+		$turmas = $grupoLogado->getGrupoIgreja()->getTurma();
+		$lideres = $this->todosLideresAPartirDoGrupo($grupoLogado->getGrupoIgreja());
+		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			array_unshift($lideres, $grupoLogado);		
+		}					
 		$formulario = new ReentradaDeAlunoForm('formulario', $lideres, $turmas);
 		return new ViewModel(array(
 			'formulario' => $formulario,
@@ -1952,38 +1955,35 @@ class CursoController extends CircuitoController {
 				$possoAcessarIsso = true;
 			}
 
-		if($possoAcessarIsso){
-			$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
-			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
-			if(!$fatoCurso){
-				$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($idTurmaPessoa);				
-			}
-			$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-			$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
-			if($nomeEquipe == ''){
-				$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-			}
-			$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
-			$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-			$view = new ViewModel(array(
-				'turmaPessoa' => $turmaPessoa,
-				'situacoes' => $situacoes,
-				'pessoa' => $pessoa,
-				'entidade' => $entidade,
-				'fatoCurso' => $fatoCurso,
-				'situacao' => $situacao,
-				'nomeEquipe' => $nomeEquipe,
-			));
-
-			self::registrarLog(RegistroAcao::CONSULTAR_MATRICULA, $extra = 'Id: ' . $turmaPessoa->getId());
-			return $view;
-		}else{
-			return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
-				Constantes::$ACTION => 'chamada',
-			));
+		$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
+		$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+		$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];
+		if(!$fatoCurso){
+			$fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($idTurmaPessoa);				
 		}
+		$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
+		$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+		$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+		if($nomeEquipe == ''){
+			$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+		}
+		$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
+		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		
+		$view = new ViewModel(array(
+			'turmaPessoa' => $turmaPessoa,
+			'situacoes' => $situacoes,
+			'pessoa' => $pessoa,
+			'entidade' => $entidade,
+			'fatoCurso' => $fatoCurso,
+			'situacao' => $situacao,
+			'nomeEquipe' => $nomeEquipe,
+			'possoAcessarIsso' => $possoAcessarIsso,
+		));
+
+		self::registrarLog(RegistroAcao::CONSULTAR_MATRICULA, $extra = 'Id: ' . $turmaPessoa->getId());
+		return $view;
+		
 	}
 
 	/**

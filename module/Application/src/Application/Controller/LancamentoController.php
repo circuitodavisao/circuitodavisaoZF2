@@ -1498,10 +1498,7 @@ class LancamentoController extends CircuitoController {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
 				$grupo = $entidade->getGrupo();
 
-				$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS;
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA;
-				}
+				$qualPerfilUsar = $post_data['qualPerfilUsar'];
 				$fatoFinanceiroAcesso = $this->getRepositorio()->getFatoFinanceiroAcessoORM()->encontrarPorId($qualPerfilUsar);
 				$pessoaFatoFinanceiroAcesso = new PessoaFatoFinanceiroAcesso();
 				$pessoaFatoFinanceiroAcesso->setPessoa($pessoa);

@@ -63,8 +63,7 @@ if($this->fatos){
 						$this->pessoa->getPessoaFatoFinanceiroAcessoAtivo()
 						&& $this->pessoa->getPessoaFatoFinanceiroAcessoAtivo()->getFatoFinanceiroAcesso()->getId() === FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS
 					)
-					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja					
 				)
 			){
 				$html .= '<td>' . $botaoAceitar . '</td>';
@@ -76,8 +75,7 @@ if($this->fatos){
 
 			if($situacao->getId() === Situacao::ACEITO_AGENDADO
 				&& (
-					$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-					|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+					$this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja					
 				)
 			){
 				$html .= '<td>' . $botaoExcluir . '</td>';
