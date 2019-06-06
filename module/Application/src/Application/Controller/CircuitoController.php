@@ -181,6 +181,18 @@ class CircuitoController extends AbstractActionController {
 					Constantes::$ACTION => 'semAcesso',
 				));
 			}
+    }
+    
+    public function validarSeSouPresidencial(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'semAcesso',
+				));
+			}
 	}
 
 	public function registrarLog($acao, $extra){

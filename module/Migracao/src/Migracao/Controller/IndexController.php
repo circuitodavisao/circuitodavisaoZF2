@@ -2893,16 +2893,27 @@ class IndexController extends CircuitoController {
 				$this->cadastrarHierarquia($idGrupoAntigo, $idPerfil, $lider);
 			}
 		}
-		$fatoLider = new FatoLider();
-		$fatoLider->setDataEHoraDeCriacao(self::DATA_CRIACAO);
-		if(!$numeroIdentificadorNovo){
-			$numeroIdentificadorNovo = str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
-		}else{
-			$numeroIdentificadorNovo = $numeroIdentificadorNovo . str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+		$ehLider = false;
+		$id2 = null;
+		if($idLider2){
+			$id2 = $idLider2;
 		}
-		$fatoLider->setNumero_identificador($numeroIdentificadorNovo);
-		$fatoLider->setLideres(count($lideres));
-		$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+		$eventos = $this->buscaCelulasPorLideres($idLider1, $id2);
+		if($eventos){
+			$ehLider = true;
+		}
+		if($ehLider){
+			$fatoLider = new FatoLider();
+			$fatoLider->setDataEHoraDeCriacao(self::DATA_CRIACAO);
+			if(!$numeroIdentificadorNovo){
+				$numeroIdentificadorNovo = str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+			}else{
+				$numeroIdentificadorNovo = $numeroIdentificadorNovo . str_pad($grupo->getId(), 8, '0', STR_PAD_LEFT);
+			}
+			$fatoLider->setNumero_identificador($numeroIdentificadorNovo);
+			$fatoLider->setLideres(count($lideres));
+			$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, false);
+		}
 
 		/* Cadastro do grupo_cv */
 		$grupoCV = new GrupoCv();
@@ -3289,24 +3300,23 @@ class IndexController extends CircuitoController {
 											'valor' => $valor['valor'],
 											'periodos' => $valor['periodos'],
 										);
-										$relatorios[] = $dados;										
-
-										$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);
-										if ($grupoPaiFilhoFilhos248832) {
-											foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
-												$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
-												$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, false, $mesSelecinado, $anoSelecinado);
-												foreach($relatorioCelulas as $chave => $valor){
-													$dados = array(
-														'idGrupoIgreja'=>$idGrupoIgreja,
-														'idGrupoEquipe'=>$grupoFilho144->getId(),
-														'idGrupo'=>$grupo->getId(),
-														'idGrupoEvento' => $chave,
-														'valor' => $valor['valor'],
-														'periodos' => $valor['periodos'],
-													);
-													$relatorios[] = $dados;													
-												}
+										$relatorios[] = $dados;
+									}								
+									$grupoPaiFilhoFilhos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos($periodoAfrente);									
+									if ($grupoPaiFilhoFilhos248832) {
+										foreach ($grupoPaiFilhoFilhos248832 as $gpFilho248832) {
+											$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();											
+											$relatorioCelulas =	self::pegarMediaPorCelula($this->getRepositorio(), $grupoFilho248832, false, $mesSelecinado, $anoSelecinado);
+											foreach($relatorioCelulas as $chave => $valor){													
+												$dados = array(
+													'idGrupoIgreja'=>$idGrupoIgreja,
+													'idGrupoEquipe'=>$grupoFilho144->getId(),
+													'idGrupo'=>$grupo->getId(),
+													'idGrupoEvento' => $chave,
+													'valor' => $valor['valor'],
+													'periodos' => $valor['periodos'],
+												);
+												$relatorios[] = $dados;													
 											}
 										}
 									}
@@ -3345,7 +3355,7 @@ class IndexController extends CircuitoController {
 			foreach($relatorios as $relatorio){
 				$fatoRankingCelula = new FatoRankingCelula();
 				$fatoRankingCelula->setGrupo_id($relatorio['idGrupoIgreja']);
-				$fatoRankingCelula->setGrupo_equipe_id($relatorio['idGrupoEquipe']);
+				$fatoRankingCelula->setGrupo_equipe_id($relatorio['idGrupoEquipe']);				
 				$fatoRankingCelula->setGrupo_evento_id($relatorio['idGrupoEvento']);
 				$fatoRankingCelula->setValor(number_format($relatorio['valor']));
 				$fatoRankingCelula->setMes($mesSelecinado);
@@ -3725,17 +3735,29 @@ class IndexController extends CircuitoController {
 						$soma += $resultado;
 					}else{
 						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
-						if($grupoEventoCelula->getEvento()->getEvento_id() && $resultado['arregimentacao'] == 0){
-							$resultado = 
-								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);
+						if($grupoEventoCelula->getEvento()->getEvento_id()){
+							$resultado2 = 
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);								
 						}
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
 						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
-						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];
+						$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] = $resultado['parceiroDeDeus'];					
 						$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado['elite'];
 						$soma += $resultado['arregimentacao'];
 						$somaVisitantes += $resultado['visitantes'];
 						$somaPaceiroDeDeus += $resultado['parceiroDeDeus'];
+
+						if($resultado2){
+							$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] += $resultado2['arregimentacao'];
+							$arrayPeriodos[$contadorDePeriodos]['visitantes'] += $resultado2['visitantes'];
+							$arrayPeriodos[$contadorDePeriodos]['parceiroDeDeus'] += $resultado2['parceiroDeDeus'];					
+							if($resultado2['elite']){
+								$arrayPeriodos[$contadorDePeriodos]['elite'] = $resultado2['elite'];		
+							}							
+							$soma += $resultado2['arregimentacao'];
+							$somaVisitantes += $resultado2['visitantes'];
+							$somaPaceiroDeDeus += $resultado2['parceiroDeDeus'];
+						}
 					}
 					$contadorDePeriodos++;
 				}
