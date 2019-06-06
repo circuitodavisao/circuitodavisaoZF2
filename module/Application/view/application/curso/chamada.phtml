@@ -172,16 +172,9 @@ if($this->filtrado){
 									$stringSituacao = '<span class="label label-' . $corSituacao . '">' . $situacao->getNome() . '</span>';
 
 									$html .= '<tr class="'.$corSituacao.'">';
-									$html .= '<td class="text-center">' . $stringSituacao . '</td>';
-									if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-										$this->pessoa->getPessoaCursoAcessoAtivo() &&
-										($this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
-										$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
-										$this->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)) {
-											$html .= '<td class="text-center"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . $turmaPessoa->getId(). '</a></td>';
-										}else{
-											$html .= '<td class="text-center"><span class="label label-default">'.$turmaPessoa->getId().'</span></td>';
-										}
+									$html .= '<td class="text-center">' . $stringSituacao . '</td>';									
+									$html .= '<td class="text-center"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . $turmaPessoa->getId(). '</a></td>';
+										
 									$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
 									$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
 									if($this->postado['mostrarAulas'] == 1){

@@ -165,7 +165,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 				$html .= '<li>';
 				$html .= '<a href="/cadastroMetas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-bullseye"></span>';
