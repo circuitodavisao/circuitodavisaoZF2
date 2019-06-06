@@ -763,6 +763,93 @@ class LoginController extends CircuitoController {
       }
     }
 
+    public function consultarOrdenacaoAction(){
+		//self::validarSeSouPresidencial();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+        //$idEntidadeAtual = $sessao->idEntidadeAtual;
+        $idEntidadeAtual = 9497; // idEntidade do presidencial setado temporariamente
+		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidadeLogada->getGrupo();				
+		$request = $this->getRequest();
+		$dados = array();	
+		$filtrado = false;	
+		$pessoaAtiva = false;				
+		if($request->isPost()){		
+			$filtrado = true;		
+			$postDados = $request->getPost();
+			$repositorio = $this->getRepositorio();
+			$cpf = $postDados['cpf'];
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);	
+			$nome = $pessoa->getNomePrimeiroUltimo();
+			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
+			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
+			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
+				$pessoaAtiva = true;
+
+				if(date('m') == 1){
+					$mes = 12;
+					$ano = date('Y') - 1;
+				}else{
+					$mesAtual = date('m');
+					$mes = $mesAtual -1;
+					$ano = date('Y');
+				}	
+				
+				$responsabilidades = $pessoa->getGrupoResponsavel();
+				foreach($responsabilidades as $grupoResponsavel){
+					$grupo = $grupoResponsavel->getGrupo();
+					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
+				
+					if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
+						$tipoRelatorio = 2; // Somado							
+
+						// Media de Membresia e Média de Pessoas em Célula
+						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+						$indiceParaVer = 0;	
+						$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
+						$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
+
+						// Líderes
+						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+						if($mes == date('m') && $ano == date('Y')){
+							$arrayPeriodoDoMes[1] = 0;
+						}
+						$periodoParaUsar = $arrayPeriodoDoMes[1];				
+						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
+						$fatoLider = 				
+									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+						$lideres = $fatoLider[0]['lideres'];
+						/* Parceiro de Deus */
+						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
+						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
+						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
+						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
+						if(!$dados['parceiroDeDeus']){
+							$dados['parceiroDeDeus'] = $parceiro;				
+						}						
+						$dados['membresia'] = $mediaMembresia;
+						$dados['lideres'] = $lideres;																					
+					}
+					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
+						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
+						$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
+						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
+					}
+				}
+			}	
+		}	
+		$dados['pessoaAtiva'] = $pessoaAtiva;	
+		$dados['ordenacaoMetas'] = $metas;
+		$dados['filtrado'] = $filtrado;	
+		$dados['nome'] = $nome;	
+		$dados['cpf'] = $cpf;
+		return new ViewModel($dados);
+	}
     
     public function aniversariantesAction(){  
         $filtrado = false;      
