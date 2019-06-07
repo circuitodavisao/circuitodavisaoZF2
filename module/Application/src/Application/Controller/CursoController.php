@@ -1223,6 +1223,7 @@ class CursoController extends CircuitoController {
 		}
 				  		
 		$view = new ViewModel(array(
+			'repositorio' => $this->getRepositorio(),
 			'turmas' => $turmas,
 			'filtrado' => $filtrado,
 			'postado' => $postado,
