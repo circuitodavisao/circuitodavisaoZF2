@@ -550,7 +550,7 @@ class Grupo extends CircuitoEntity {
             }
             $contador++;
         }
-		if($this->getEntidadeAtiva() && $this->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+		if($this->getEntidadeAtiva() && $this->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 			$inativa = false;
 		}
         if ($inativa) {
