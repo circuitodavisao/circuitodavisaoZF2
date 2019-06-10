@@ -1344,11 +1344,29 @@ class IndexController extends CircuitoController {
 		$grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
 		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
 
+		/*retirando acesso ao parceiro de Deus e IV */
+		if($pessoasDoGrupo = $grupo->getPessoasAtivas()){			
+			foreach ($pessoasDoGrupo as $pessoa) {								
+				foreach($pessoa->getPessoaFatoFinanceiroAcesso() as $pessoaFatoFinanceiroAcesso){
+					if($pessoaFatoFinanceiroAcesso->verificarSeEstaAtivo()){						
+						$pessoaFatoFinanceiroAcesso->setDataEHoraDeInativacao($dataParaInativar);
+						$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso, false);	
+					}					
+				}
+				foreach ($pessoa->getPessoaCursoAcesso() as $pessoaCursoAcesso) {
+					if ($pessoaCursoAcesso->verificarSeEstaAtivo()) {
+						$pessoaCursoAcesso->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getPessoaCursoAcessoORM()->persistir($pessoaCursoAcesso, false);
+					}
+				}				
+			}
+		}
+
 		/* responsabilidades */
 		foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
 			$grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
 			$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-		}
+		}		
 
 		/* celulas */
 		if($grupoEventoCelulas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
@@ -3860,10 +3878,18 @@ class IndexController extends CircuitoController {
 	}
 
 	public function removerEmailDasPessoasDoGrupo($grupo){
-		if($pessoasDoGrupo = $grupo->getPessoasAtivas()){
+		if($pessoasDoGrupo = $grupo->getPessoasAtivas()){			
 			foreach ($pessoasDoGrupo as $pessoa) {
-				$pessoa->setEmail(null);
-				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+				$responsabilidadesDaPessoa = 0;
+				foreach($pessoa->getGrupoResponsavel() as $grupoResponsavel){
+					if($grupoResponsavel->verificarSeEstaAtivo()){
+						$responsabilidadesDaPessoa++;
+					}
+				}
+				if($responsabilidadesDaPessoa == 1){
+					$pessoa->setEmail(null);
+					$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+				}				
 			}
 		}
 	}
@@ -3885,6 +3911,7 @@ class IndexController extends CircuitoController {
 				}
 			}
 			$dadosCelula = array();
+			$dadosCelula['eventoId'] = $eventoCelula->getEvento_id();
 			$dadosCelula['idFatoCelula'] = $valor['id'];
 			$dadosCelula['data_criacao'] = $eventoSelecionado->getData_criacaoStringPadraoBrasil();
 			$date1 = date_create($eventoSelecionado->getData_criacaoStringPadraoBanco());
@@ -3893,13 +3920,18 @@ class IndexController extends CircuitoController {
 			$dadosCelula['diferenca'] = intVal($diff);
 			$listaDeCelulas[] = $dadosCelula; 
 		}
-		$this->getRepositorio()->iniciarTransacao();
+		$this->getRepositorio()->iniciarTransacao();		
 		try{
 			foreach($listaDeCelulas as $item){
-				if($item['diferenca'] >= 180){
+				if($item['diferenca'] >= 180){					
 					$fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorId($item['idFatoCelula']);
 					$fatoCelula->setEstrategica('N');
 					$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, $trocarDataDeCriacao = false);
+					$eventoParaAlterar = $this->getRepositorio()->getEventoORM()->encontrarPorId($item['eventoId']);
+					$eventoTipoCelula = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula);
+					$eventoParaAlterar->setEventoTipo($eventoTipoCelula);
+					$this->getRepositorio()->getEventoORM()->persistir($eventoParaAlterar, $trocarDataDeCriacao = false);
+
 				}
 			}
 			$this->getRepositorio()->fecharTransacao();
