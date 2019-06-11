@@ -1495,13 +1495,16 @@ class LancamentoController extends CircuitoController {
 				$idEntidadeAtual = $sessao->idEntidadeAtual;
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 				$post_data = $request->getPost();
-				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
+                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data['idPessoa']);
+                foreach($pessoa->getPessoaFatoFinanceiroAcesso() as $pessoaFatoFinanceiroAcesso){
+					if($pessoaFatoFinanceiroAcesso->verificarSeEstaAtivo()){						
+						$pessoaFatoFinanceiroAcesso->setDataEHoraDeInativacao();
+						$this->getRepositorio()->getPessoaFatoFinanceiroAcessoORM()->persistir($pessoaFatoFinanceiroAcesso, false);	
+					}					
+				}
 				$grupo = $entidade->getGrupo();
 
-				$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS;
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$qualPerfilUsar = FatoFinanceiroAcesso::SECRETARIO_PARCEIRO_DE_DEUS_IGREJA;
-				}
+				$qualPerfilUsar = $post_data['qualPerfilUsar'];
 				$fatoFinanceiroAcesso = $this->getRepositorio()->getFatoFinanceiroAcessoORM()->encontrarPorId($qualPerfilUsar);
 				$pessoaFatoFinanceiroAcesso = new PessoaFatoFinanceiroAcesso();
 				$pessoaFatoFinanceiroAcesso->setPessoa($pessoa);

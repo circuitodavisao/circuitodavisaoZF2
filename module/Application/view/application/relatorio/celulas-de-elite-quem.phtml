@@ -1,0 +1,102 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+?>
+<div class="center-block mw600">
+	<div class="panel">
+		<div class="panel-heading text-center">Células referentes ao período: <b class="text-danger"><?php echo Funcoes::montaPeriodo($periodo = -1)[0] ?></b></div>
+		<div class="panel-body pn">
+<?php
+//Funcoes::var_dump($this->lideres);
+$label = 'CÉLULAS DE ELITE';
+$icone = 'trophy';
+echo '<div class="panel user-group-widget mt10">';
+echo '<div class="panel-heading text-center"><span class="panel-icon"><i class="fa fa-'.$icone.'"></i></span><span class="panel-title">'.$label.'</span></div>';
+echo '<div class="panel-body pn">';
+foreach($this->lideres as $chave => $valor){   
+    
+    $grupo = $this->repositorio->getGrupoORM()->encontrarporId($chave);
+    $foto = $grupo->getFotosLideresAtivos(56);
+    $infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
+    $nomeLideres = $grupo->getNomeLideresAtivos();
+    $funcaoOnClick = $this->funcaoOnClick('$("#dados'.$chave.'").toggleClass("hidden")');
+    echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 p10 text-center" '.$funcaoOnClick.'>';
+    echo $foto;
+    echo '<div class="caption">';
+    echo '<h5>'.$nomeLideres;
+    echo '<br />';
+    echo '<small>'.$infoEntidade. '</small>';
+    echo '</h5>';
+    echo '<span class="label label-primary" style="cursor: pointer;" >Clique Para Mais Informações</span>';
+    echo '</div>';
+
+
+    echo '<div id="dados'.$chave.'" class="hidden">';
+    foreach($valor['celula'] as $dados){
+        $grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($dados->getGrupo_evento_id());
+        $celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+        echo '<div class="panel">';
+        echo '<div class="panel-heading text-center"><span class="panel-icon"><i class="fa fa-map-marker"></i></span><span class="panel-title">'.$celulaDia.'</span></div>';
+        echo '<div class="panel-body">';
+        for ($indiceItens = 1; $indiceItens <= 3; $indiceItens++) {
+            $label = '';
+            switch($indiceItens){
+            case 1: $label = 'Arregimentação';break;
+            case 2: $label = 'Visitantes';break;
+            case 3: $label = 'Parceiro de Deus';break;
+            }
+            echo $label;
+            echo '<div class="row">';
+            $contadorDePeriodos = $this->contagemDoPeriodo;           
+            $valorMostrar = '';
+            switch($indiceItens){
+            case 1: 
+                switch($contadorDePeriodos){
+                case 1: $valorMostrar = $dados->getP1(); break;
+                case 2: $valorMostrar = $dados->getP2(); break;
+                case 3: $valorMostrar = $dados->getP3(); break;
+                case 4: $valorMostrar = $dados->getP4(); break;
+                case 5: $valorMostrar = $dados->getP5(); break;
+                case 6: $valorMostrar = $dados->getP6(); break;
+                }
+                break;
+                case 2:
+                    switch($contadorDePeriodos){
+                    case 1: $valorMostrar = $dados->getV1(); break;
+                    case 2: $valorMostrar = $dados->getV2(); break;
+                    case 3: $valorMostrar = $dados->getV3(); break;
+                    case 4: $valorMostrar = $dados->getV4(); break;
+                    case 5: $valorMostrar = $dados->getV5(); break;
+                    case 6: $valorMostrar = $dados->getV6(); break;
+                    }
+                    break;
+                    case 3:
+                        switch($contadorDePeriodos){
+                        case 1: $valorMostrar = $dados->getPd1(); break;
+                        case 2: $valorMostrar = $dados->getPd2(); break;
+                        case 3: $valorMostrar = $dados->getPd3(); break;
+                        case 4: $valorMostrar = $dados->getPd4(); break;
+                        case 5: $valorMostrar = $dados->getPd5(); break;
+                        case 6: $valorMostrar = $dados->getPd6(); break;
+                        }
+                        break;
+            }
+                echo $valorMostrar;               
+            echo '</div>';
+        }
+        echo '</div>';
+        echo '</div>';// fim div panel
+    }
+    echo '</div>';// fim dados
+    echo '</div>';
+    
+}
+
+echo '</div>';// fim panel body
+if(!$this->lideres){
+    echo '<div class="alert alert-warning text-center" role="alert">Sem células de elite neste período</div>';
+}
+echo '</div>';// fim panel
+
+echo '</div>';

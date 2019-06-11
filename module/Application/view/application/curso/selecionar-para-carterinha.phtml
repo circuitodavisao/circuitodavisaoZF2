@@ -68,7 +68,16 @@ if($this->filtrado){
 						}
 					}
 					if ($mostrar) {
-						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($turmaPessoa);
+						$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())[0];															
+						if(!$fatoCurso){
+							$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($turmaPessoa->getId());
+						}
+						$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
+						$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						if($nomeEquipe == ''){
+							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						}						
 
 						$mostrarSituacao = false;
 						switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {

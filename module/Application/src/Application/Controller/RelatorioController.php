@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Migracao\Controller\IndexController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
-use Application\Controller\CadastroController;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
@@ -1049,8 +1048,7 @@ class RelatorioController extends CircuitoController {
 						}
 					}
 				if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite){
-					$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-					error_log(print_r($dadosCelulasDeElite, true));
+					$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);					
 					$meta = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'];								
 					if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 2) {
 						$meta = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2);
@@ -1326,7 +1324,15 @@ class RelatorioController extends CircuitoController {
 			$relatorio[$contadorFilhos]['lideres'] = $grupoFilhoOrdenado->getNomeLideresAtivos();
 			if($grupoFilhoOrdenado->getEntidadeAtiva()){
 				$relatorio[$contadorFilhos]['lideresFotos'] = $grupoFilhoOrdenado->getFotosLideresAtivos();
-				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);
+				$nomeFilhoOrdenado = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);				
+				if(!$nomeFilhoOrdenado){
+					$nomeFilhoOrdenado = $grupoFilhoOrdenado->getEntidadeAtiva()->getNome();				
+				}
+				$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->infoEntidade($somenteNumeros = true);				
+				if($grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+					$grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$relatorio[$contadorFilhos]['lideresEntidade'] = $grupoFilhoOrdenado->getEntidadeAtiva()->getNome();
+				}
 				if($grupoFilhoOrdenado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 					$relatorio[$contadorFilhos]['lideresEntidade'] = 'COORD. '.$grupoFilhoOrdenado->getEntidadeAtiva()->getNumero();
 				}
@@ -2126,10 +2132,11 @@ class RelatorioController extends CircuitoController {
 				}	
 				foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 					$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-				}
-				$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-				foreach ($grupoPaiFilhoFilhos144 as $filho144) {
-					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				}				
+				if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+					$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
+					$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+					foreach ($grupoPaiFilhoFilhos144 as $filho144) {					
 						$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
 						$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
 						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
@@ -2138,10 +2145,11 @@ class RelatorioController extends CircuitoController {
 						}	
 						foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 							$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-						}
-						$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-						foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
-							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						}						
+						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+							$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+							$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+							foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {							
 								$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
 								$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
 								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
@@ -2150,6 +2158,21 @@ class RelatorioController extends CircuitoController {
 								}	
 								foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
 									$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+								}								
+								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+									$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+									$grupoPaiFilhoFilhos20736 = $entidadeDoFilho1728->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+									foreach ($grupoPaiFilhoFilhos20736 as $filho20736) {									
+										$grupoFilho20736 = $filho20736->getGrupoPaiFilhoFilho();
+										$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
+										if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+											$numeroIdentificadorFilho20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);						
+											$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho20736, $dateFormatada);			
+										}	
+										foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
+											$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
+										}										
+									}
 								}
 							}
 						}
@@ -2612,6 +2635,85 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
+	public function celulasDeEliteQuemAction() {
+		$request = $this->getRequest();		
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;		
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$postDados = $request->getPost();
+		$mes = date('m');
+		$ano = date('Y');
+				
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$contagemDoPeriodo = 1;	
+		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+			if($indiceDeArrays == -1){
+				break;
+			}
+			$contagemDoPeriodo++;
+		}	
+		$processar = true;		
+		/* mostrar aparti de novembro de 2018 */
+		if($ano == 2018 && $mes <= 10){
+			$processar = false;
+		}
+
+		if($processar){			
+			$dados = array();		
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
+
+			$arrayLideres = array();
+			foreach($fatosSetenta as $fatoA){				
+				$adicionarFato = true;
+				$GrupoFatoA = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoA->getGrupo_id());
+				$comInativos = true;
+				$grupoResponsavelFatoA = $GrupoFatoA->getResponsabilidadesAtivas($comInativos);					
+				$pessoaIdFatoA = $grupoResponsavelFatoA[0]->getPessoa()->getId();
+
+				foreach($fatosSetenta as $fatoB){
+					$GrupoFatoB = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoB->getGrupo_id());
+					$comInativos = true;
+					$grupoResponsavelFatoB = $GrupoFatoB->getResponsabilidadesAtivas($comInativos);					
+					$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
+
+					if($pessoaIdFatoA == $pessoaIdFatoB){						
+						if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo() && $grupoResponsavelFatoB[0]->verificarSeEstaAtivo()){
+							$adicionarFato = false;
+						}
+					}				
+				}
+
+				switch($contagemDoPeriodo){
+					case 1: $eElite = $fatoA->getE1(); break;
+					case 2: $eElite = $fatoA->getE2(); break;
+					case 3: $eElite = $fatoA->getE3(); break;
+					case 4: $eElite = $fatoA->getE4(); break;
+					case 5: $eElite = $fatoA->getE5(); break;
+					case 6: $eElite = $fatoA->getE6(); break;
+				}
+				
+				if($adicionarFato && $eElite == 'S'){					
+					$arrayLideres[$fatoA->getGrupo_id()]['celula'][] = $fatoA;
+				}
+
+			}
+			$dados['lideres'] = $arrayLideres;	
+			$dados['contagemDoPeriodo'] = $contagemDoPeriodo;
+			$dados['repositorio'] = $this->getRepositorio();
+		}				
+		return new ViewModel($dados);
+	}
+
 	public function setentaAction() {
 		$request = $this->getRequest();
 		$dados = array();
@@ -2659,7 +2761,7 @@ public function alunosNaSemanaAction(){
 						$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
 
 						if($pessoaIdFatoA == $pessoaIdFatoB){						
-							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo()){
+							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo() && $grupoResponsavelFatoB[0]->verificarSeEstaAtivo()){
 								$adicionarFato = false;
 							}
 						}				
@@ -2772,92 +2874,86 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
-	public function consultarOrdenacaoAction(){
-		CadastroController::validarSeSouRegiao();
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoLogado = $entidadeLogada->getGrupo();				
-		$request = $this->getRequest();
-		$dados = array();	
-		$filtrado = false;	
-		$pessoaAtiva = false;				
-		if($request->isPost()){		
-			$filtrado = true;		
-			$postDados = $request->getPost();
-			$repositorio = $this->getRepositorio();
-			$cpf = $postDados['cpf'];
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);	
-			$nome = $pessoa->getNomePrimeiroUltimo();
-			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
-			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
-			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
-				$pessoaAtiva = true;
+	// public function consultarOrdenacaoAction(){
+	// 	self::validarSeSouPresidencial();
+	// 	$sessao = new Container(Constantes::$NOME_APLICACAO);
+	// 	$idEntidadeAtual = $sessao->idEntidadeAtual;
+	// 	$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+	// 	$grupoLogado = $entidadeLogada->getGrupo();				
+	// 	$request = $this->getRequest();
+	// 	$dados = array();	
+	// 	$filtrado = false;	
+	// 	$pessoaAtiva = false;				
+	// 	if($request->isPost()){		
+	// 		$filtrado = true;		
+	// 		$postDados = $request->getPost();
+	// 		$repositorio = $this->getRepositorio();
+	// 		$cpf = $postDados['cpf'];
+	// 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);	
+	// 		$nome = $pessoa->getNomePrimeiroUltimo();
+	// 		$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
+	// 		$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
+	// 		if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
+	// 			$pessoaAtiva = true;
 
-				if(date('m') == 1){
-					$mes = 12;
-					$ano = date('Y') - 1;
-				}else{
-					$mesAtual = date('m');
-					$mes = $mesAtual -1;
-					$ano = date('Y');
-				}	
+	// 			$mes = date('m');					
+	// 			$ano = date('Y');					
 				
-				$responsabilidades = $pessoa->getGrupoResponsavel();
-				foreach($responsabilidades as $grupoResponsavel){
-					$grupo = $grupoResponsavel->getGrupo();
-					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
+	// 			$responsabilidades = $pessoa->getGrupoResponsavel();
+	// 			foreach($responsabilidades as $grupoResponsavel){
+	// 				$grupo = $grupoResponsavel->getGrupo();
+	// 				$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
 				
-					if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
-						$tipoRelatorio = 2; // Somado							
+	// 				if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+	// 				&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
+	// 					$tipoRelatorio = 2; // Somado							
 
-						// Media de Membresia e Média de Pessoas em Célula
-						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
-						$indiceParaVer = 0;	
-						$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
-						$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
+	// 					// Media de Membresia e Média de Pessoas em Célula
+	// 					$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+	// 					$indiceParaVer = 0;	
+	// 					$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
+	// 					$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
 
-						// Líderes
-						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-						if($mes == date('m') && $ano == date('Y')){
-							$arrayPeriodoDoMes[1] = 0;
-						}
-						$periodoParaUsar = $arrayPeriodoDoMes[1];				
-						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
-						$fatoLider = 				
-									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-						$lideres = $fatoLider[0]['lideres'];
-						/* Parceiro de Deus */
-						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
-						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
-						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
-						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
-						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
-						if(!$dados['parceiroDeDeus']){
-							$dados['parceiroDeDeus'] = $parceiro;				
-						}						
-						$dados['membresia'] = $mediaMembresia;
-						$dados['lideres'] = $lideres;																					
-					}
-					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
-					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
-						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
-						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
-						$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
-						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
-					}
-				}
-			}	
-		}	
-		$dados['pessoaAtiva'] = $pessoaAtiva;	
-		$dados['ordenacaoMetas'] = $metas;
-		$dados['filtrado'] = $filtrado;	
-		$dados['nome'] = $nome;	
-		$dados['cpf'] = $cpf;
-		return new ViewModel($dados);
-	}
+	// 					// Líderes
+	// 					$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+	// 					if($mes == date('m') && $ano == date('Y')){
+	// 						$arrayPeriodoDoMes[1] = 0;
+	// 					}
+	// 					$periodoParaUsar = $arrayPeriodoDoMes[1];				
+	// 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
+	// 					$fatoLider = 				
+	// 								$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+	// 					$lideres = $fatoLider[0]['lideres'];
+	// 					/* Parceiro de Deus */
+	// 					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
+	// 					$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
+	// 					$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+	// 					$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
+	// 					$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
+	// 					if(!$dados['parceiroDeDeus']){
+	// 						$dados['parceiroDeDeus'] = $parceiro;				
+	// 					}						
+	// 					$dados['membresia'] = $mediaMembresia;
+	// 					$dados['lideres'] = $lideres;																					
+	// 				}
+	// 				if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+	// 				|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+	// 					$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+	// 					$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
+	// 					$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
+	// 					$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
+	// 					$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
+	// 				}
+	// 			}
+	// 		}	
+	// 	}	
+	// 	$dados['pessoaAtiva'] = $pessoaAtiva;	
+	// 	$dados['ordenacaoMetas'] = $metas;
+	// 	$dados['filtrado'] = $filtrado;	
+	// 	$dados['nome'] = $nome;	
+	// 	$dados['cpf'] = $cpf;
+	// 	return new ViewModel($dados);
+	// }
 
 	static public function relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior){
 		$relatorio = null;

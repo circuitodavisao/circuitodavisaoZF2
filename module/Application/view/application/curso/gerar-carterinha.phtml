@@ -43,7 +43,18 @@ foreach ($this->alunosId as $idTurmaPessoa) {
 	} else {
 		$alinhamento = "right";
 	}
+	$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($idTurmaPessoa)[0];	
+	if(!$fatoCurso){
+		$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($idTurmaPessoa);
+	}
 	$turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
+
+	$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
+	$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+	$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+	if($nomeEquipe == ''){
+		$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+	}	
 
 	echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
 	echo '<div align="center">';
@@ -52,7 +63,7 @@ foreach ($this->alunosId as $idTurmaPessoa) {
 	echo '<hr />';
 	echo '<div align="left">';
 	echo 'Nome: ' . $turmaPessoa->getPessoa()->getNome() . '<br />';
-	echo 'Equipe: ' . $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+	echo 'Equipe: ' . $nomeEquipe . '<br />';
 	echo 'Revis&atilde;o: ' . Funcoes::mesPorExtenso($turmaPessoa->getTurma()->getMes(), 1) . '/' . $turmaPessoa->getTurma()->getAno() . '<br />';
 	echo '</div>';
 	echo '<br />';
