@@ -153,7 +153,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2){
+                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
                   //  $horaDoDia = date('G');
                   //  if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
@@ -178,7 +178,7 @@ class ListagemDeEventos extends AbstractHelper {
                     $html .= '<th class="hidden-xs text-center">';
                     $html .= $evento->getData_criacaoStringPadraoBrasil();
                     $html .= '</th>';
-                    $html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
+                    //$html .= '<td class="text-center">' . $this->view->translate($diaDaSemanaAjustado) . '/' . $evento->getHoraFormatoHoraMinutoParaListagem() . '</td>';
                     $celula = $evento->getEventoCelula();
                     $stringNomeDaFuncaoOnClick = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", ' . $celula->getId() . ')';
                     $stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_EXCLUSAO . '", ' . $evento->getId() . ')';
@@ -422,7 +422,7 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2){
+                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
                  //   $horaDoDia = date('G');
                  //   if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
@@ -440,7 +440,7 @@ class ListagemDeEventos extends AbstractHelper {
 					}
 				}else{
 					$html .= '<div class="alert alert-micro alert-warning">';
-					$html .= 'Cadastro e edição de células em manutenção excepcionalmente até quarta feira.' . $validarMostrarCadastro;
+					$html .= 'Cadastro e edição de células em manutenção excepcionalmente até quinta feira.' . $validarMostrarCadastro;
 					$html .= '</div>';
 				}
             }
