@@ -112,11 +112,10 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				$idGrupoPai = 8580;
-				//$idGrupoPai = 3110; //ceilandia
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
-				$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
+				//$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao);
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $rowC['id']);
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 					$html .= '<br />Igreja: ' . $row['nome'];
 					$idPerfilIgreja = 18;
