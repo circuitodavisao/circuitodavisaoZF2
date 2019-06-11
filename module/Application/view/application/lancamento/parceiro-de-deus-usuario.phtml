@@ -1,18 +1,38 @@
-<?php use Application\Controller\Helper\Constantes; ?>  
+<?php use Application\Controller\Helper\Constantes; 
+echo $this->templateFormularioTopo('Secretário Parceiro de Deus');
+?>  
 <form action="lancamentoParceiroDeDeusUsuarioFinalizar" method="POST">
-<div class="panel panel-info">
-<div class="panel-heading">Secretário do Parceiro de Deus</div>
 <div class="panel-body bg-light">
-	<select id="idPessoa" name="idPessoa" class="form-control mb10">
-	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-	<?php 
-if($this->lideres){
-	foreach($this->lideres as $lider){
-		echo '<option value="'.$lider->getId().'">'.$lider->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . ' - ' . $lider->getNome().'</option>';
-	}
-}
-?>
-	</select>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+            <div class="form-group">
+                <select id="idPessoa" name="idPessoa" class="form-control mb10">
+                    <option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
+                    <?php 
+                        if($this->lideres){
+                            foreach($this->lideres as $lider){
+                                echo '<option value="'.$lider->getId().'">'.$lider->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . ' - ' . $lider->getNome().'</option>';
+                            }
+                        }
+                    ?>
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <div class="row text-center">
+                <div class="col">
+                    <div class="option-group field section mb15">                       
+                        <label class="block mb5 option option-primary" style="margin-left: 9px;">
+                        <input type="radio" name="qualPerfilUsar" value="1" checked="checked">
+                        <span class="radio"></span>Secretário de Equipe</label>
+                        <label class="block mb5 option option-primary">
+                        <input type="radio" name="qualPerfilUsar" value="2">
+                        <span class="radio"></span>Secretário de Igreja</label>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </div>
 </div>
 <!-- end .form-body section -->
 <div class="panel-footer text-right">
@@ -24,9 +44,9 @@ if($this->lideres){
     echo $this->botaoSimples(Constantes::$TRADUCAO_CADASTRAR, $funcaoVerificarCadastroPessoa);
     ?>
 </div>  
-</div>
 </form>
 <?php
+$this->templateFormularioRodape();
 /* Layout com javascript para tela de index */
 echo $this->layoutJSCadastrarPessoaRevisao;
 ?>

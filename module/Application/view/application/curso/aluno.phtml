@@ -29,31 +29,35 @@ $botaoGerarCarterinha = $this->botaoSimples(
 	$this->turmaPessoa->getId(). ' <i class="fa fa-user"></i>', $funcaoGerarCarterinha, BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 
 $botaoMudarNome = '';
-$botaoMudarNome .= '<div class="btn-group dropdown">';
 
-$botaoMudarNome .= '<a id="menudrop_' . $this->turmaPessoa->getPessoa()->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-$botaoMudarNome .= '<span class="btn btn-primary btn-xs hidden-lg" id="span_nome_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
-$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNomeListaDeLancamento(5);
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '<span class="btn btn-primary btn-xs  hidden-xs hidden-sm hidden-md" id="span_nome_lg_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
-$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNome();
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '</a>';
-$botaoMudarNome .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
-$botaoMudarNome .= '<span class="editable-container editable-inline">';
-$botaoMudarNome .= '<div class="ml10 campo-edicao-nome">';
-$botaoMudarNome .= '<form class="form-inline editableform">';
-$botaoMudarNome .= '<div class="control-group form-group">';
-$botaoMudarNome .= '<div>';
-$botaoMudarNome .= '<div class="input-group">';
-$botaoMudarNome .= '<input type="text" class="form-control" id="nome_' . $this->turmaPessoa->getPessoa()->getId() . '" value="' . $this->turmaPessoa->getPessoa()->getNome() . '" />';
-$botaoMudarNome .= '<span class="input-group-btn">';
-$botaoMudarNome .= '<span onclick="alterarNome(' . $this->turmaPessoa->getPessoa()->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
-$botaoMudarNome .= '</span>';
-$botaoMudarNome .= '</div>';
-$botaoMudarNome .= '</div>';
-$botaoMudarNome .= '</div>';
-
+if($this->possoAcessarIsso){
+	$botaoMudarNome .= '<div class="btn-group dropdown">';
+	$botaoMudarNome .= '<a id="menudrop_' . $this->turmaPessoa->getPessoa()->getId() . '" class="tdNome text-left dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+	$botaoMudarNome .= '<span class="btn btn-primary btn-xs hidden-lg" id="span_nome_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
+	$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNomeListaDeLancamento(5);
+	$botaoMudarNome .= '</span>';
+	$botaoMudarNome .= '<span class="btn btn-primary btn-xs  hidden-xs hidden-sm hidden-md" id="span_nome_lg_' . $this->turmaPessoa->getPessoa()->getId() . '" >';
+	$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNome();
+	$botaoMudarNome .= '</span>';
+	$botaoMudarNome .= '</a>';
+	$botaoMudarNome .= '<ul class="dropdown-menu sobrepor-elementos modal-edicao-nome">';
+	$botaoMudarNome .= '<span class="editable-container editable-inline">';
+	$botaoMudarNome .= '<div class="ml10 campo-edicao-nome">';
+	$botaoMudarNome .= '<form class="form-inline editableform">';
+	$botaoMudarNome .= '<div class="control-group form-group">';
+	$botaoMudarNome .= '<div>';
+	$botaoMudarNome .= '<div class="input-group">';
+	$botaoMudarNome .= '<input type="text" class="form-control" id="nome_' . $this->turmaPessoa->getPessoa()->getId() . '" value="' . $this->turmaPessoa->getPessoa()->getNome() . '" />';
+	$botaoMudarNome .= '<span class="input-group-btn">';
+	$botaoMudarNome .= '<span onclick="alterarNome(' . $this->turmaPessoa->getPessoa()->getId() . ')" class="btn ladda-button btn-primary" data-style="zoom-in"><span class="ladda-label"><i class="fa fa-check"></i></span></span>';
+	$botaoMudarNome .= '</span>';
+	$botaoMudarNome .= '</div>';
+	$botaoMudarNome .= '</div>';
+	$botaoMudarNome .= '</div>';
+}
+if(!$this->possoAcessarIsso){	
+	$botaoMudarNome .= $this->turmaPessoa->getPessoa()->getNome();	
+}
 $html .= '</div>';
 
 $selectMudarSituacao = '';
@@ -214,7 +218,25 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 				$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $aula->getId() . ')');
 			}
 			$html .= '<td class="text-center">';
-			$html .= $aula->getPosicao() . ' ' . $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+			if($this->possoAcessarIsso){
+				$html .= $aula->getPosicao() . ' ' . $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+			}
+			if(!$this->possoAcessarIsso){
+				if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+					$corDoSpan = 'success';
+				}
+				if($corDoBotao == BotaoSimples::botaoMuitoPequenoWarning){
+					$corDoSpan = 'warning';
+				}
+				if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+					$corDoSpan = 'danger';
+				}
+				$html .= $aula->getPosicao() . ' ';
+				$html .= '<span class="btn-xs btn-'.$corDoSpan.' hidden-xs hidden-sm hidden-md">';
+				$html .= $iconeBotao;
+				$html .= '</span>';				
+			}
+			
 			$html .= '</td>';
 		}
 		$html .= '</tr>';
@@ -301,7 +323,21 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 4,' . $indiceAvaliacao . ')');
 
 					$html .= '<td class="text-center">';
-					$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					if($this->possoAcessarIsso){
+						$html .= $aula->getPosicao() . ' ' . $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					}
+					if(!$this->possoAcessarIsso){
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+							$corDoSpan = 'success';
+						}
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+							$corDoSpan = 'danger';
+						}
+						$html .= $aula->getPosicao() . ' ';
+						$html .= '<span class="btn-xs btn-'.$corDoSpan.' hidden-xs hidden-sm hidden-md">';
+						$html .= $iconeBotao;
+						$html .= '</span>';				
+					}					
 					$html .= '</td>';
 				}
 
@@ -362,7 +398,21 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$idBotao = 'botao_' . $this->turmaPessoa->getId() . '_' . $aula->getId() . '_2';
 					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $aula->getId() . ', 2)');
 					$html .= '<td class="text-center">';
-					$html .= $aula->getPosicao() . ' ' . $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					if($this->possoAcessarIsso){
+						$html .= $aula->getPosicao() . ' ' . $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					}
+					if(!$this->possoAcessarIsso){
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+							$corDoSpan = 'success';
+						}
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+							$corDoSpan = 'danger';
+						}
+						$html .= $aula->getPosicao() . ' ';
+						$html .= '<span class="btn-xs btn-'.$corDoSpan.' hidden-xs hidden-sm hidden-md">';
+						$html .= $iconeBotao;
+						$html .= '</span>';				
+					}						
 					$html .= '</td>';
 				}
 
@@ -404,7 +454,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 		$html .= '<tr>';
 		$html .= '<th>Diciplinas</th>';
 		$html .= '<th colspan="3" class="text-center">Mensalidade</th>';
-		$html .= '<th class="text-center hidden-xs hidden-sm hidden-md"">Recibo</th>';
+		if($this->possoAcessarIsso){
+			$html .= '<th class="text-center hidden-xs hidden-sm hidden-md"">Recibo</th>';
+		}		
 		$html .= '</tr>';
 		$html .= '</thead>';
 		$html .= '<tbody>';
@@ -442,7 +494,21 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 3 ,' . $indiceMensalidade . ')');
 
 					$html .= '<td>';
-					$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					if($this->possoAcessarIsso){
+						$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+					}
+					if(!$this->possoAcessarIsso){
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+							$corDoSpan = 'success';
+						}
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+							$corDoSpan = 'danger';
+						}						
+						$html .= '<span class="btn-xs btn-'.$corDoSpan.' hidden-xs hidden-sm hidden-md">';
+						$html .= $iconeBotao;
+						$html .= '</span>';				
+					}
+					
 					$html .= '</td>';
 				}
 
@@ -452,7 +518,9 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$validacaoFinanceiro = 0;
 				}				
 
-				$html .= '<td class="text-center hidden-xs hidden-sm hidden-md""><a target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'9999999999'.$disciplina->getId() . '" class="btn btn-xs btn-primary" ><i class="fa fa-print"></i></a></td>';
+				if($this->possoAcessarIsso){
+					$html .= '<td class="text-center hidden-xs hidden-sm hidden-md""><a target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'9999999999'.$disciplina->getId() . '" class="btn btn-xs btn-primary" ><i class="fa fa-print"></i></a></td>';
+				}			
 
 				$html .= '</tr>';
 			}
