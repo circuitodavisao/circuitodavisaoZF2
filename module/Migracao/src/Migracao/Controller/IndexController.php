@@ -105,7 +105,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			//(78, 83, 84, 131, 132, 133, 175, 214)
-			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (132, 133, 175, 214)');
+			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (130)');
 			while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
 				$html .= '<br />Coordenacao: ' . $rowC['numero'];
 				$idPerfilCoordenacao = 21;
@@ -113,8 +113,9 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				$idGrupoPai = 8580;
-				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
-				$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
+				//$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
+				$grupoCoordenacao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); 
+				//$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
 				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $rowC['id']);
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
