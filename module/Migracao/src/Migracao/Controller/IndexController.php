@@ -105,7 +105,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			//(78, 83, 84, 131, 132, 133, 175, 214)
-			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (78, 83, 84, 131)');
+			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (132, 133, 175, 214)');
 			while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
 				$html .= '<br />Coordenacao: ' . $rowC['numero'];
 				$idPerfilCoordenacao = 21;
