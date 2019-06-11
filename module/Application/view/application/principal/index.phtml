@@ -407,10 +407,13 @@ if(count($this->discipulos) > 0){
 			$vendoDiscipulosAbaixo = 'vendoDiscipulosAbaixoPaginaPrincipal';
 			$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipulosAbaixo;
 			$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
-			$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
-			if ($pessoa->getSexo() === 'F') {
-				if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
-					$nomeHierarquia = $nomeFeminino;
+			$nomeHierarquia = 'Sem Hierarquia';
+			if($pessoa->getPessoaHierarquiaAtivo()){
+				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+				if ($pessoa->getSexo() === 'F') {
+					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+						$nomeHierarquia = $nomeFeminino;
+					}
 				}
 			}
 			if($contadorDeDiscipulosPorLinha === 0){
