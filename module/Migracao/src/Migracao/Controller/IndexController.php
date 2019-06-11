@@ -104,7 +104,8 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
-			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (78, 83, 84, 130, 131, 132, 133, 175, 214)');
+			//(78, 83, 84, 131, 132, 133, 175, 214)
+			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (78, 83, 84, 131)');
 			while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
 				$html .= '<br />Coordenacao: ' . $rowC['numero'];
 				$idPerfilCoordenacao = 21;
@@ -113,7 +114,7 @@ class IndexController extends CircuitoController {
 
 				$idGrupoPai = 8580;
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
-				//$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
+				$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
 				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $rowC['id']);
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
