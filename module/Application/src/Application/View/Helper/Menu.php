@@ -415,8 +415,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</a>';
 			$html .= '</li>';
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial && 
-				$this->view->entidade->getId() !== 3981){
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 				$html .= '<li>';
 				$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
@@ -458,6 +457,15 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';
 			}
 
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe){
+				$html .= '<li>';
+				$html .= '<a href="/relatorioCelulasDeEliteQuem" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-table"></span>';
+				$html .= 'Quem foi célula de elite';
+				$html .= '</a>';
+				$html .= '</li>';			
+			}
+
 			$html .= '<li>';
 			$html .= '<a href="/relatorioRegistro" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-calendar"></span>';
@@ -472,7 +480,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Gerador de Meta';
 			$html .= '</a>';
 			$html .= '</li>';			
-			}
+			}			
 
 			// if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 			// 	$html .= '<li>';
