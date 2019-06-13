@@ -1048,8 +1048,7 @@ class RelatorioController extends CircuitoController {
 						}
 					}
 				if ($tipoRelatorio === RelatorioController::relatorioCelulasDeElite){
-					$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);
-					error_log(print_r($dadosCelulasDeElite, true));
+					$dadosCelulasDeElite = RelatorioController::saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo($repositorio, $grupoFilho, $indiceDeArrays, $contagemDeArray, $mes, $ano);					
 					$meta = $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'];								
 					if ($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] > 2) {
 						$meta = number_format($relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['celulaQuantidade'] / 2);
@@ -2636,6 +2635,85 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
+	public function celulasDeEliteQuemAction() {
+		$request = $this->getRequest();		
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;		
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$postDados = $request->getPost();
+		$mes = date('m');
+		$ano = date('Y');
+				
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$contagemDoPeriodo = 1;	
+		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+			if($indiceDeArrays == -1){
+				break;
+			}
+			$contagemDoPeriodo++;
+		}	
+		$processar = true;		
+		/* mostrar aparti de novembro de 2018 */
+		if($ano == 2018 && $mes <= 10){
+			$processar = false;
+		}
+
+		if($processar){			
+			$dados = array();		
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+				$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
+			}
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+					$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
+					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
+				}
+
+			$arrayLideres = array();
+			foreach($fatosSetenta as $fatoA){				
+				$adicionarFato = true;
+				$GrupoFatoA = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoA->getGrupo_id());
+				$comInativos = true;
+				$grupoResponsavelFatoA = $GrupoFatoA->getResponsabilidadesAtivas($comInativos);					
+				$pessoaIdFatoA = $grupoResponsavelFatoA[0]->getPessoa()->getId();
+
+				foreach($fatosSetenta as $fatoB){
+					$GrupoFatoB = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoB->getGrupo_id());
+					$comInativos = true;
+					$grupoResponsavelFatoB = $GrupoFatoB->getResponsabilidadesAtivas($comInativos);					
+					$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
+
+					if($pessoaIdFatoA == $pessoaIdFatoB){						
+						if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo() && $grupoResponsavelFatoB[0]->verificarSeEstaAtivo()){
+							$adicionarFato = false;
+						}
+					}				
+				}
+
+				switch($contagemDoPeriodo){
+					case 1: $eElite = $fatoA->getE1(); break;
+					case 2: $eElite = $fatoA->getE2(); break;
+					case 3: $eElite = $fatoA->getE3(); break;
+					case 4: $eElite = $fatoA->getE4(); break;
+					case 5: $eElite = $fatoA->getE5(); break;
+					case 6: $eElite = $fatoA->getE6(); break;
+				}
+				
+				if($adicionarFato && $eElite == 'S'){					
+					$arrayLideres[$fatoA->getGrupo_id()]['celula'][] = $fatoA;
+				}
+
+			}
+			$dados['lideres'] = $arrayLideres;	
+			$dados['contagemDoPeriodo'] = $contagemDoPeriodo;
+			$dados['repositorio'] = $this->getRepositorio();
+		}				
+		return new ViewModel($dados);
+	}
+
 	public function setentaAction() {
 		$request = $this->getRequest();
 		$dados = array();
@@ -2683,7 +2761,7 @@ public function alunosNaSemanaAction(){
 						$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
 
 						if($pessoaIdFatoA == $pessoaIdFatoB){						
-							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo()){
+							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo() && $grupoResponsavelFatoB[0]->verificarSeEstaAtivo()){
 								$adicionarFato = false;
 							}
 						}				
@@ -2818,14 +2896,8 @@ public function alunosNaSemanaAction(){
 	// 		if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
 	// 			$pessoaAtiva = true;
 
-	// 			if(date('m') == 1){
-	// 				$mes = 12;
-	// 				$ano = date('Y') - 1;
-	// 			}else{
-	// 				$mesAtual = date('m');
-	// 				$mes = $mesAtual -1;
-	// 				$ano = date('Y');
-	// 			}	
+	// 			$mes = date('m');					
+	// 			$ano = date('Y');					
 				
 	// 			$responsabilidades = $pessoa->getGrupoResponsavel();
 	// 			foreach($responsabilidades as $grupoResponsavel){
