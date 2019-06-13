@@ -773,34 +773,37 @@ class LoginController extends CircuitoController {
 		$request = $this->getRequest();
 		$dados = array();	
 		$filtrado = false;	
-		$pessoaAtiva = false;				
+		$situacaoPessoa = 'naoEncontrada';				
 		if($request->isPost()){		
 			$filtrado = true;		
 			$postDados = $request->getPost();
 			$repositorio = $this->getRepositorio();
 			$cpf = $postDados['cpf'];
-			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);	
-			$nome = $pessoa->getNomePrimeiroUltimo();
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);				
+            if($pessoa){
+                $nome = $pessoa->getNomePrimeiroUltimo(); 
+                $situacaoPessoa = 'inativada';				
+            }
 			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
 			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
-			if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				
-				$pessoaAtiva = true;
+			if($pessoa && $pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				                
+				$situacaoPessoa = 'ativa';
 
 				if(date('m') == 1){
-					$mes = 12;
-					$ano = date('Y') - 1;
-				}else{
-					$mesAtual = date('m');
-					$mes = $mesAtual -1;
-					$ano = date('Y');
-				}	
+                    $mes = 12;
+                    $ano = date('Y') - 1;
+                }else{
+                    $mesAtual = date('m');
+                    $mes = $mesAtual -1;
+                    $ano = date('Y');
+                }		
 				
 				$responsabilidades = $pessoa->getGrupoResponsavel();
 				foreach($responsabilidades as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
 					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
 				
-					if($pessoaAtiva && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+					if($situacaoPessoa == 'ativa' && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
 						$tipoRelatorio = 2; // Somado							
 
@@ -832,9 +835,9 @@ class LoginController extends CircuitoController {
 						$dados['membresia'] = $mediaMembresia;
 						$dados['lideres'] = $lideres;																					
 					}
-					if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
-					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-						$relatorioDadosPrincipais = self::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+					if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+						$relatorioDadosPrincipais = RelatorioController::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
 						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
 						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
 						$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
@@ -843,7 +846,7 @@ class LoginController extends CircuitoController {
 				}
 			}	
 		}	
-		$dados['pessoaAtiva'] = $pessoaAtiva;	
+		$dados['situacaoPessoa'] = $situacaoPessoa;	
 		$dados['ordenacaoMetas'] = $metas;
 		$dados['filtrado'] = $filtrado;	
 		$dados['nome'] = $nome;	
