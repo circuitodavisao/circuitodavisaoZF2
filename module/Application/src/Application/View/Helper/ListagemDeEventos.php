@@ -153,12 +153,13 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
-                  //  $horaDoDia = date('G');
-                  //  if($horaDoDia >= 0 && $horaDoDia <= 6){
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
-                 //   }
+                    }
                 }
+                $validarMostrarCadastro = false; // Setado fixo como false por conta de manutenção extraordinaria
                 $evento = $grupoEvento->getEvento();
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 
@@ -422,12 +423,13 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
-                 //   $horaDoDia = date('G');
-                 //   if($horaDoDia >= 0 && $horaDoDia <= 6){
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
-                 //   }
+                    }
                 }                
+                $validarMostrarCadastro = false; // Setado fixo como false por conta de manutenção extraordinaria
 				if($validarMostrarCadastro){
 					if (count($this->getGrupoEventos()) < 2) {
 						$stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("cadastro' . Constantes::$PAGINA_EVENTO_CELULA . '", 0)';
@@ -440,7 +442,7 @@ class ListagemDeEventos extends AbstractHelper {
 					}
 				}else{
 					$html .= '<div class="alert alert-micro alert-warning">';
-					$html .= 'Cadastro e edição de células em manutenção excepcionalmente até quinta feira.' . $validarMostrarCadastro;
+					$html .= 'Cadastro e edição de células em manutenção excepcionalmente.' . $validarMostrarCadastro;
 					$html .= '</div>';
 				}
             }
