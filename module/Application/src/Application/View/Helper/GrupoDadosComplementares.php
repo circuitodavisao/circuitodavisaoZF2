@@ -101,7 +101,7 @@ class GrupoDadosComplementares extends AbstractHelper {
 							&& $entidadeTipo->getId() !== EntidadeTipo::nacional){
 
 								$mostrar = false;
-								if(($tipoEntidade === EntidadeTipo::nacional || $tipoEntidade === EntidadeTipo::regiao || $tipoEntidade === EntidadeTipo::regiao) 
+								if(($tipoEntidade === EntidadeTipo::nacional || $tipoEntidade === EntidadeTipo::regiao || $tipoEntidade === EntidadeTipo::presidencial) 
 
 									&& ($entidadeTipo->getId() === EntidadeTipo::regiao 
 									|| $entidadeTipo->getId() === EntidadeTipo::coordenacao
