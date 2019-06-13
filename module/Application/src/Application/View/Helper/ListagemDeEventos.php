@@ -153,11 +153,11 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
-                  //  $horaDoDia = date('G');
-                  //  if($horaDoDia >= 0 && $horaDoDia <= 6){
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
-                 //   }
+                    }
                 }
                 $evento = $grupoEvento->getEvento();
                 $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
@@ -422,11 +422,11 @@ class ListagemDeEventos extends AbstractHelper {
                 $validarMostrarCadastro = true;
                 $diaDaSemana = date('w');
                 /* segunda */
-                if($diaDaSemana == 1 || $diaDaSemana == 2 || $diaDaSemana == 3){
-                 //   $horaDoDia = date('G');
-                 //   if($horaDoDia >= 0 && $horaDoDia <= 6){
+                if($diaDaSemana == 1){
+                    $horaDoDia = date('G');
+                    if($horaDoDia >= 0 && $horaDoDia <= 6){
                         $validarMostrarCadastro = false;
-                 //   }
+                    }
                 }                
 				if($validarMostrarCadastro){
 					if (count($this->getGrupoEventos()) < 2) {
