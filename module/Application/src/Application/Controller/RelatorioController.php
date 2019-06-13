@@ -404,6 +404,50 @@ class RelatorioController extends CircuitoController {
 		return $view;
 	}
 
+	public function quantidadeDePessoasPorRevisaoAction(){
+		$dados = array();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);		
+		$gruposEventoRevisao = $entidade->getGrupo()->getGrupoIgreja()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+		$grupoEventos = array();
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$post_data = $request->getPost();
+			$anoParaComparar = $post_data['ano'];
+		} else {
+			$anoParaComparar = date('Y');
+		}
+		foreach($gruposEventoRevisao as $grupoEvento){  
+			$evento = $grupoEvento->getEvento();
+			list($ano, $mes, $dia) = explode('-', $evento->getData());   			
+            if($ano == $anoParaComparar) {											
+                $eventosNoAno[] = $evento;
+            }            
+		}		
+		$relatorioPessoasNoRevisao = array();
+		foreach($eventosNoAno as $eventoRevisao){
+			$frequencias = $eventoRevisao->getEventoFrequencia();
+			if($frequencias){
+				foreach($frequencias as $frequencia){
+					if($frequencia->getFrequencia() == 'S') {
+						if($frequencia->getPessoa()->getGrupoPessoaAtivo()){
+							$nomeDaEquipe = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
+							getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+							$relatorioPessoasNoRevisao[$nomeDaEquipe][$eventoRevisao->getId()]++;
+							$relatorioPessoasNoRevisao[$eventoRevisao->getId()]++;
+							$relatorioPessoasNoRevisao['total']++;
+						}										
+					}
+				}
+			}
+		}
+		$dados['relatorioPessoasNoRevisao'] = $relatorioPessoasNoRevisao;
+		$dados['anoParaComparar'] = $anoParaComparar;
+		$dados['eventosNoAno'] = $eventosNoAno;
+		return new ViewModel($dados);
+	}
+
 	public function liderAction() {
 		$idUrl = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idUrl);
