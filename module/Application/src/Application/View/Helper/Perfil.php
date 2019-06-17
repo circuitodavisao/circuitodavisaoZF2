@@ -184,7 +184,12 @@ class Perfil extends AbstractHelper {
             $html .= '<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">';
         }
         $html .= '<div class="btn btn-default btn-block" disabled>';
-        $nomeHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+        if($this->getPessoa()->getPessoaHierarquiaAtivo()){
+            $nomeHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+        }        
+        if(!$nomeHierarquia){
+            $nomeHierarquia = 'SEM HIERARQUIA';
+        }
         if ($this->getPessoa()->getSexo() === 'F') {
             if ($nomeFeminino = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
                 $nomeHierarquia = $nomeFeminino;
