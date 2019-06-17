@@ -524,7 +524,7 @@ class LancamentoController extends CircuitoController {
 							}
 						}
 
-						if(!$fatoCelulas){
+						if(!$fatoCelulaSelecionado){
 							$fatoCelulaSelecionado = $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCicloSelecionado, $eventoCelulaId);
 						}
 
