@@ -54,12 +54,15 @@ class HierarquiaForm extends Form {
             $arrayHierarquia[$hierarquia->getId()] = $hierarquia->getNome();
         }
 
+        if($this->getPessoa()->getPessoaHierarquiaAtivo()){
+           $valueHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
+        }
         $inputSelectHierarquia = new Select();
         $inputSelectHierarquia->setName(Constantes::$FORM_HIERARQUIA);
         $inputSelectHierarquia->setAttributes(array(
             Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
             Constantes::$FORM_ID => Constantes::$FORM_HIERARQUIA,
-            'value' => $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getId(),
+            'value' => $valueHierarquia,
         ));
         $inputSelectHierarquia->setValueOptions($arrayHierarquia);
         $this->add($inputSelectHierarquia);

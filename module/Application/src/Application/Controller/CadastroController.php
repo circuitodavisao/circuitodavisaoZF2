@@ -1188,6 +1188,9 @@ class CadastroController extends CircuitoController {
 				$entidadeNova->setEntidadeTipo(
 					$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
 				);
+				if($tipoEntidadeAbaixo == EntidadeTipo::secretario){
+					$entidadeNova->setGrupoSecretario($entidadeLogada->getGrupo());
+				}
 				$entidadeNova->setGrupo($grupoNovo);
 				if ($post_data[Constantes::$FORM_NUMERACAO]) {
 					$entidadeNova->setNumero($post_data[Constantes::$FORM_NUMERACAO]);
@@ -1675,6 +1678,7 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idRevisao = $sessao->idSessao;
+		unset($sessao->idSessao);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
