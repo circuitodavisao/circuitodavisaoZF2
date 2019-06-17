@@ -394,7 +394,8 @@ class PrincipalController extends CircuitoController {
 				$post_data = $request->getPost();
 				$idPessoa = $post_data[Constantes::$INPUT_ID_PESSOA];
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-				if ($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() != $post_data[Constantes::$FORM_HIERARQUIA]) {
+				if ($pessoa->getPessoaHierarquiaAtivo() && 
+					$pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId() != $post_data[Constantes::$FORM_HIERARQUIA]) {
 					$setarDataEHora = false;
 					$pessoaHierarquiaAtivo = $pessoa->getPessoaHierarquiaAtivo();
 					$pessoaHierarquiaAtivo->setDataEHoraDeInativacao();
@@ -408,6 +409,15 @@ class PrincipalController extends CircuitoController {
 
 					$sessao->mostrarNotificacao = true;
 					$sessao->hierarquiaAlterada = true;
+				}
+				if(!$pessoa->getPessoaHierarquiaAtivo()){
+					$pessoaHierarquia = new PessoaHierarquia();
+					$pessoaHierarquia->setPessoa($pessoa);
+					$novaHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarPorId($post_data[Constantes::$FORM_HIERARQUIA]);
+					$pessoaHierarquia->setHierarquia($novaHierarquia);
+					$this->getRepositorio()->getPessoaHierarquiaORM()->persistir($pessoaHierarquia);
+
+					$sessao->mostrarNotificacao = true;
 				}
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute('principal');
