@@ -32,6 +32,7 @@ class FatoCelulaORM extends CircuitoORM {
 			}
 			$fatoCelula->setEstrategica($seEhEstrategica);
             $this->persistir($fatoCelula);
+			return $fatoCelula;
         } catch (Exception $exc) {
             echo $exc->getMessage();
         }
