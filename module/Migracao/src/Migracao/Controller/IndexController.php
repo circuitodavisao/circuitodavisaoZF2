@@ -241,7 +241,7 @@ class IndexController extends CircuitoController {
 					}
 				}
 			}
-			$this->getRepositorio()->fecharTransacao();
+			//$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			Funcoes::var_dump($exc->getTraceAsString());
@@ -268,7 +268,10 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
-			$idCoordenacao = 40;
+//coordenacões centro norte (78, 83, 84, 130, 131, 132, 133, 175, 214)
+//coordenacões santa catarina (41, 43)
+//coordenacao florianópolis (37)
+			$idCoordenacao = 37;
 			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao);
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
