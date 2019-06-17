@@ -186,15 +186,16 @@ class Perfil extends AbstractHelper {
         $html .= '<div class="btn btn-default btn-block" disabled>';
         if($this->getPessoa()->getPessoaHierarquiaAtivo()){
             $nomeHierarquia = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+            if ($this->getPessoa()->getSexo() === 'F') {
+                if ($nomeFeminino = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+                    $nomeHierarquia = $nomeFeminino;
+                }
+            }
         }        
         if(!$nomeHierarquia){
             $nomeHierarquia = 'SEM HIERARQUIA';
         }
-        if ($this->getPessoa()->getSexo() === 'F') {
-            if ($nomeFeminino = $this->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
-                $nomeHierarquia = $nomeFeminino;
-            }
-        }
+       
 
         $html .= '<span class="hidden-xs">' . $nomeHierarquia . '</span>';
         $html .= '<span class="hidden-sm hidden-md hidden-lg">' . substr($nomeHierarquia, 0, 12) . ' ...</span>';
