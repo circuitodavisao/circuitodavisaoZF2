@@ -20,6 +20,14 @@ function validarUsuario(form) {
     }
 }
 
+function validaEmail(email) {
+    var er = RegExp(/^[A-Za-z0-9_\-\.]+@[A-Za-z0-9_\-\.]{2,}\.[A-Za-z0-9]{2,}(\.[A-Za-z0-9])?/);
+    if (er.test(email) == false) {
+        return false;
+    }
+    return true;
+}
+
 function validarEnvioDeEmail(form) {
     var email = $('#email').val();
     var repetirEmail = $('#repetirEmail').val();
@@ -39,6 +47,12 @@ function validarEnvioDeEmail(form) {
         temErro = true;
         mensagem = 'Preencha o email';
     }
+
+    if (!validaEmail(email)) {
+        temErro = true;
+        mensagem = 'Email inválido';
+    }
+
     if (temErro) {
         divMensagens
                 .html(mensagem)
