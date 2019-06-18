@@ -1188,9 +1188,9 @@ class CadastroController extends CircuitoController {
 				$entidadeNova->setEntidadeTipo(
 					$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
 				);
-				if($tipoEntidadeAbaixo == EntidadeTipo::secretario){
-					$entidadeNova->setGrupoSecretario($entidadeLogada->getGrupo());
-				}
+				// if($tipoEntidadeAbaixo == EntidadeTipo::secretario){
+				// 	$entidadeNova->setGrupoSecretario($entidadeLogada->getGrupo());
+				// }
 				$entidadeNova->setGrupo($grupoNovo);
 				if ($post_data[Constantes::$FORM_NUMERACAO]) {
 					$entidadeNova->setNumero($post_data[Constantes::$FORM_NUMERACAO]);
@@ -2738,14 +2738,19 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
-
+						
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 
 						$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
 						$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
 						$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+						$setarDataEHora = true;
+						// if($solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL){
+						// 	$solicitacaoSituacaoAceito->setDataEHoraDeCriacao(date('Y-m-t'));
+						// 	$setarDataEHora = false;
+						// }
+						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito, $setarDataEHora);
 					}
 
 				self::registrarLog(RegistroAcao::CADASTROU_UMA_SOLICITACAO, $extra = 'Id: '.$solicitacao->getId());
