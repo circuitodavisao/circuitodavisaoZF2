@@ -798,13 +798,25 @@ class LoginController extends CircuitoController {
                     $ano = date('Y');
                 }		
 				
-				$responsabilidades = $pessoa->getGrupoResponsavel();
+				$responsabilidades = $pessoa->getResponsabilidadesAtivas();
 				foreach($responsabilidades as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
 					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
-				
+                    $nomeOndeEstou = null;
 					if($situacaoPessoa == 'ativa' && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){																					
+					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+
+                        if(!$nomeOndeEstou){
+                            if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+                                $nomeOndeEstou = $entidadeDaPessoa->getNome();
+                            }
+                            if($entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
+                                $nomeOndeEstou = $entidadeDaPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();   
+                                $nomeOndeEstou .= ' - ';                         
+                                $nomeOndeEstou .= $entidadeDaPessoa->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome();   
+                            }
+                        }																					
+                        
 						$tipoRelatorio = 2; // Somado							
 
 						// Media de Membresia e Média de Pessoas em Célula
@@ -837,6 +849,17 @@ class LoginController extends CircuitoController {
 					}
 					if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
 					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+                        if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+                            $nomeOndeEstou = 'REGIÃO: ' . $entidadeDaPessoa->getNome();
+                        }
+                        if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){                               
+                            $nomeOndeEstou = 'COORDENAÇÃO: ';                         
+                            $nomeOndeEstou .= $entidadeDaPessoa->getNumero(); 
+                            $entidadeDoPai = $entidadeDaPessoa->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+                            if($entidadeDoPai->getEntidadeTipo()->getId() === EntidadeTipo::regiao){                               
+                                $nomeOndeEstou .= ' - ' . $entidadeDoPai->getNome();
+                            }                            
+                        }
 						$relatorioDadosPrincipais = RelatorioController::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
 						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
 						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
@@ -845,7 +868,10 @@ class LoginController extends CircuitoController {
 					}
 				}
 			}	
-		}	
+        }	
+        if($nome){
+            $nome .= ' - ' . $nomeOndeEstou;
+        }
 		$dados['situacaoPessoa'] = $situacaoPessoa;	
 		$dados['ordenacaoMetas'] = $metas;
 		$dados['filtrado'] = $filtrado;	
