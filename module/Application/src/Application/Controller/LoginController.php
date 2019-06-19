@@ -798,7 +798,7 @@ class LoginController extends CircuitoController {
                     $ano = date('Y');
                 }		
 				
-				$responsabilidades = $pessoa->getGrupoResponsavel();
+				$responsabilidades = $pessoa->getResponsabilidadesAtivas();
 				foreach($responsabilidades as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
 					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
