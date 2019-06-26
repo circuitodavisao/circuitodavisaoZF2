@@ -11,7 +11,13 @@ echo $this->templateFormularioTopo('Alterar Hierarquia');
 <div class="panel-body bg-light">
     <div class="alert alert-info">
         <p>Pessoa: <?php echo $this->pessoa->getNome(); ?></p>
-        <p>Hierarquia: <?php echo $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome(); ?></p>
+        <p>Hierarquia: <?php 
+        if($this->pessoa->getPessoaHierarquiaAtivo()){
+            $nomeHierarquia = $this->pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+        } else {
+           $nomeHierarquia = 'SEM HIERARQUIA'; 
+        }
+        echo $nomeHierarquia ?></p>
     </div>
     <?php
     echo $this->divMensagens();

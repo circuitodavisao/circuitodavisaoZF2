@@ -22,7 +22,7 @@ class EntidadeTipo extends CircuitoEntity {
     const igreja = 5;
     const equipe = 6;
     const subEquipe = 7;
-	const administrativo = 8;
+	const secretario = 8;
 
     /**
      * @ORM\OneToMany(targetEntity="Entidade", mappedBy="entidadeTipo") 

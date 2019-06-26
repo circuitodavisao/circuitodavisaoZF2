@@ -713,8 +713,10 @@ class RelatorioController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$tipoRelatorioEquipe = 2;
+				$tipoRelatorioPessoal = 1;
 				$periodoInicial = -8;
 				$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
+				$relatorio2 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaQuantidade);
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fotos = '';
 				foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
@@ -724,8 +726,10 @@ class RelatorioController extends CircuitoController {
 				$dados = array();
 				$dados['nomeLideres'] = $grupo->getNomeLideresAtivos();
 				$dados['fotos'] = $fotos;
-				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'];
+				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'] + $relatorio['celulaQuantidadeEstrategica'];
+				$dados['celulaQuantidadePessoal'] = $relatorio2['celulaQuantidade'] + $relatorio2['celulaQuantidadeEstrategica'];
 				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
+				$dados['quantidadeLideresPessoal'] = $relatorio2['quantidadeLideres'];
 				if($dados['quantidadeLideres'] === null){
 					$dados['quantidadeLideres'] = 0;
 				}
@@ -1679,7 +1683,7 @@ class RelatorioController extends CircuitoController {
 	public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo, $contagemDoPeriodo, $mes, $ano) {
 		$relatorio = array();
 		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-		if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+		if($grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){			
 			foreach($grupoEventosCelulaEstrategica as $grupoEvento){
 				$grupoEventosCelula[] = $grupoEvento;
 			}
@@ -1711,8 +1715,7 @@ class RelatorioController extends CircuitoController {
 			$relatorio[$contagem]['resposta'] = $resposta;
 			$relatorio[$contagem]['hospedeiro'] = $grupoEventoCelula->getEvento()->getEventoCelula()->getNome_hospedeiroPrimeiroNome();
 			$contagem++;
-		}
-
+		}		
 		$relatorio['elite'] = $contagemCelulasDeElite;
 		return $relatorio;
 	}

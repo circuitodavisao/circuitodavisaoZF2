@@ -440,7 +440,9 @@ class IndexController extends CircuitoController {
 							if($solicitacao->verificarSeEstaAtivo()){
 
 								$idSituacao = $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId();
-								if ($idSituacao == Situacao::ACEITO_AGENDADO) {
+								$dataDaSolicitacaoParaComparar = strtotime($solicitacao->getSolicitacaoSituacaoAtiva()->getData_criacaoStringPadraoBanco());
+								$dataDeHojeParaComparar = strtotime(date('Y-m-d'));
+								if ($idSituacao == Situacao::ACEITO_AGENDADO && $dataDaSolicitacaoParaComparar <= $dataDeHojeParaComparar) {
 									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
 									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||

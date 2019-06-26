@@ -26,3 +26,4 @@ COMMENT ON COLUMN solicitacao_tipo.hora_criacao IS 'Hora de criação do tipo da
 COMMENT ON COLUMN solicitacao_tipo.data_inativacao IS 'Data de inativação do tipo da solicitacao';
 COMMENT ON COLUMN solicitacao_tipo.hora_inativacao IS 'Hora de inativação do tipo da solicitacao';
 
+insert into solicitacao_tipo (id, nome, data_criacao, hora_criacao) values (12, 'ADICIONAR RESPONSABILIDADE', '2019-06-24', '15:46:00');

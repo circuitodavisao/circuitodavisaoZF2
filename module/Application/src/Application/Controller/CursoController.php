@@ -490,23 +490,31 @@ class CursoController extends CircuitoController {
 				$this->getRepositorio()->iniciarTransacao();
 
 				$dadosPost = $request->getPost();
-				$idCurso = $dadosPost['idCurso'];
+				$idTurmaParaEditar = $idCurso = $dadosPost['id'];
+				if($idTurmaParaEditar){
+					$alterarDataDeCriacaoDaTurma = false;
+					$turma = $this->getRepositorio()->getTurmaORM()->encontrarporid($idTurmaParaEditar);
+				}
+				if(!$idTurmaParaEditar){
+					$alterarDataDeCriacaoDaTurma = true;
+					$turma = new Turma();
+					$identidadeatual = $sessao->identidadeatual;
+					$entidade = $this->getrepositorio()->getEntidadeORM()->encontrarporid($idEntidadeAtual);
+					$grupo = $entidade->getGrupo();
+					$idCurso = $dadosPost['idCurso'];
+					$curso = $this->getRepositorio()->getCursoORM()->encontrarporid($idCurso);
+					$turma->setCurso($curso);
+					$turma->setGrupo($grupo->getGrupoIgreja());
+				}	
+
 				$mes = $dadosPost['Mes'];
 				$ano = $dadosPost['Ano'];
-				$observacao = strtoupper($dadosPost['observacao']);
-
-				$turma = new Turma();
-				$identidadeatual = $sessao->identidadeatual;
-				$entidade = $this->getrepositorio()->getEntidadeORM()->encontrarporid($idEntidadeAtual);
-				$grupo = $entidade->getGrupo();
-				$curso = $this->getRepositorio()->getCursoORM()->encontrarporid($idCurso);
-
-				$turma->setCurso($curso);
-				$turma->setGrupo($grupo->getGrupoIgreja());
+				$observacao = strtoupper($dadosPost['observacao']);				
+				
 				$turma->setAno((int) $ano);
 				$turma->setMes((int) $mes);
 				$turma->setObservacao($observacao);
-				$this->getRepositorio()->getTurmaORM()->persistir($turma);
+				$this->getRepositorio()->getTurmaORM()->persistir($turma, $alterarDataDeCriacaoDaTurma);
 
 				self::registrarLog(RegistroAcao::CADASTROU_UMA_TURMA, $extra = 'Id: ' . $turma->getId());
 				$this->getRepositorio()->fecharTransacao();

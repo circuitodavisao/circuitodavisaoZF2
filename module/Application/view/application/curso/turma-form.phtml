@@ -18,14 +18,14 @@ echo $this->form()->openTag($form);
 <?php
 echo $this->divMensagens();
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TIPO, $form->get(Constantes::$FORM_ID_CURSO), 12, 2);
-echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 12);
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_MES, $form->get(Constantes::$FORM_INPUT_MES), 12, 2);
 echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ANO, $form->get(Constantes::$FORM_INPUT_ANO), 12, 2);
+echo $this->inputFormularioSimples(Constantes::$TRADUCAO_OBSERVACAO, $form->get(Constantes::$FORM_OBSERVACAO), 12);
 
 ?>
 </div>
 <!-- end .form-body section -->
-<div class="panel-footer">
+<div class="panel-footer text-right">
 <?php
 echo $this->formHidden($form->get(Constantes::$INPUT_CSRF));
 $stringNomeDaFuncaoOnClickCadastro = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_LISTAR_TURMA . '", 0)';
