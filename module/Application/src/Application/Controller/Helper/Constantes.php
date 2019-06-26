@@ -516,6 +516,7 @@ class Constantes {
     public static $PAGINA_CELULA_CONFIRMACAO = 'CelulaConfirmacao';
     public static $PAGINA_BUSCAR_ENDERECO = 'BuscarEndereco';
     public static $PAGINA_BUSCAR_CPF = 'BuscarCPF';
+    public static $PAGINA_VERIFICAR_CPF = 'VerificarCPF';
     public static $PAGINA_ENVIAR_SMS = 'EnviarSMS';
     public static $PAGINA_BUSCAR_EMAIL = 'BuscarEmail';
     public static $PAGINA_REVISAO = 'Revisao';
