@@ -447,8 +447,6 @@ class LancamentoController extends CircuitoController {
                 $fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
                         $numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
 
-
-
                 if ($fatoCicloSelecionado->getDimensao()) {
                     foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
                         switch ($dimensao->getDimensaoTipo()->getId()) {
@@ -513,13 +511,23 @@ class LancamentoController extends CircuitoController {
 						}
 
 						$eventoCelulaId = $evento->getEventoCelula()->getId();
-						$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+
+						$fatosCelulas = null;
 						$fatoCelulaSelecionado = null;
-						foreach ($fatoCelulas as $fatoCelula) {
-							if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
-								$fatoCelulaSelecionado = $fatoCelula;
+
+						if(count($fatoCicloSelecionado->getFatoCelula()) > 0){
+							$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
+							foreach ($fatoCelulas as $fatoCelula) {
+								if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
+									$fatoCelulaSelecionado = $fatoCelula;
+								}
 							}
 						}
+
+						if(!$fatoCelulaSelecionado){
+							$fatoCelulaSelecionado = $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCicloSelecionado, $eventoCelulaId);
+						}
+
 						$realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
 						$fatoCelulaSelecionado->setRealizada($realizada);
 						$setarDataEHora = false;
