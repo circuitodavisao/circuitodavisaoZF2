@@ -87,8 +87,11 @@ class Sitemap extends AbstractHelper {
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
 				$stringGrupo .= ' EQUIPE ' . $entidade->getNome();
 			}
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 				$stringGrupo .= ' SUB ' . $entidade->infoEntidade($somenteNumeros = true);
+			}
+			if($entidade->getSecretario_Grupo_id()){
+				$stringGrupo .= ' SECRETÁRIO';
 			}
 	
 			$stringOrdem = $stringGrupo . $stringOrdem;

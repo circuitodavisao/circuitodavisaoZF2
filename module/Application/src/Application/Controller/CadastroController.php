@@ -138,6 +138,12 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_BUSCAR_CPF,
 			));
 		}
+		/* Verificar CPF JSON */
+		if ($pagina == Constantes::$PAGINA_VERIFICAR_CPF) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_VERIFICAR_CPF,
+			));
+		}
 		/* Enviar SMS */
 		if ($pagina == Constantes::$PAGINA_ENVIAR_SMS) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1132,10 +1138,15 @@ class CadastroController extends CircuitoController {
 		}
 		$form = new GrupoForm(Constantes::$FORM, $arrayHierarquia, $arrayDeNumerosUsados);
 		$entidadeTipos = $this->getRepositorio()->getEntidadeTipoORM()->buscarTodosRegistrosEntidade('id', 'asc');
+		$secretario = false;
+		if($entidade->getTipo_id() == 8){
+			$secretario = true;
+		}
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
-			'tipoEntidade' => $entidade->getTipo_id(),
+			'tipoEntidade' => $entidade->getEntidadeTipo()->getId(),
 			'entidadeTipos' => $entidadeTipos,
+			'secretario' => $secretario,
 			'mostrarCadastro' => $mostrarCadastro,
 			'tituloDaPagina' => 'Cadastro de Time',
 		));
@@ -1188,6 +1199,10 @@ class CadastroController extends CircuitoController {
 				$entidadeNova->setEntidadeTipo(
 					$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoEntidadeAbaixo)
 				);
+				if($tipoEntidadeAbaixo == EntidadeTipo::secretario){
+					$entidadeNova->setGrupoSecretario($entidadeLogada->getGrupo());
+					$entidadeNova->setNome('SECRETÁRIO');
+				}
 				$entidadeNova->setGrupo($grupoNovo);
 				if ($post_data[Constantes::$FORM_NUMERACAO]) {
 					$entidadeNova->setNumero($post_data[Constantes::$FORM_NUMERACAO]);
@@ -1492,6 +1507,39 @@ class CadastroController extends CircuitoController {
 		return $response;
 	}
 
+	public function verificarCPFAction() {		
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {			
+			$body = $request->getContent();
+			$json = Json::decode($body);			
+			$cpf = $json->cpf;
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
+			if($pessoa){				
+				if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+					$nome = $pessoa->getNome(); 
+					$idPessoa = $pessoa->getId();                							
+					$dados['nome'] = $nome;
+					$dados['idPessoa'] = $idPessoa;
+					
+				} 
+				if(!$pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+					$status = 'PESSOA INATIVADA';
+					$dados['status'] = $status;		
+				}
+			} 
+			if(!$pessoa){
+				$status = 'PESSOA NÃO ENCONTRADA';
+				$dados['status'] = $status;				
+			}
+			error_log(print_r($dados, true)); 
+			$response->setContent(Json::encode($dados));
+		}		
+		
+		return $response;		
+	}
+
 	public function enviarSMSAction() {
 		$resposta = false;
 		$request = $this->getRequest();
@@ -1675,6 +1723,7 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idRevisao = $sessao->idSessao;
+		unset($sessao->idSessao);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
@@ -2391,6 +2440,8 @@ class CadastroController extends CircuitoController {
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+			//$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE);
+			//$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 			$igrejas = array();
 			$paraOndeTransferir = array();
@@ -2608,6 +2659,10 @@ class CadastroController extends CircuitoController {
 	 */
 	public function solicitacaoFinalizarAction() {
 		self::validarSeSouIgrejaOuEquipe();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);		
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
 		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 		$request = $this->getRequest();
 		if ($request->isPost()) {
@@ -2702,6 +2757,16 @@ class CadastroController extends CircuitoController {
 					$objeto2 = 0;
 					$solicitacao->setObjeto2($objeto2);
 				}
+				
+				// if ($solicitacaoTipo->getId() == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE) {					
+				// 	$idResponsabilidade = $post_data['idResponsabilidade'];					
+				// 	if($idResponsabilidade == 8){
+				// 		$objeto1 = $post_data['idPessoa'];						
+				// 		$objeto2 = $grupoLogado->getId();
+				// 		$solicitacao->setObjeto1($objeto1);
+				// 		$solicitacao->setObjeto2($objeto2);
+				// 	}
+				// }
 
 				if ($post_data['numero']) {
 					$solicitacao->setNumero($post_data['numero']);
@@ -2717,7 +2782,8 @@ class CadastroController extends CircuitoController {
 						$solicitacao->setNome($post_data['nomeEquipe']);
 					}
 				}
-				$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
+				
+				$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);				
 
 				$solicitacaoSituacao = new SolicitacaoSituacao();
 				$solicitacaoSituacao->setSolicitacao($solicitacao);
@@ -2734,14 +2800,20 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
-
+						
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 
 						$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
 						$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
 						$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+						$setarDataEHora = true;
+						if($solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL){
+							$solicitacaoSituacaoAceito->setDataEHoraDeCriacao(date('Y-m-t'));
+							$setarDataEHora = false;
+						}
+						
+						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito, $setarDataEHora);
 					}
 
 				self::registrarLog(RegistroAcao::CADASTROU_UMA_SOLICITACAO, $extra = 'Id: '.$solicitacao->getId());

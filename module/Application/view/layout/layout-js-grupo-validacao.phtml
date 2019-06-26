@@ -2,7 +2,7 @@
 
 use Application\Controller\Helper\Constantes;
 
-$versao = '?v=0.8';
+$versao = '?v=0.10';
 
 echo $this
 	->headScript()
@@ -88,7 +88,8 @@ function validarEstadoCivil() {
 			|| entidadeTipo === 4
 			|| entidadeTipo === 5
 			|| entidadeTipo === 6
-			|| entidadeTipo === 7) {
+			|| entidadeTipo === 7
+			|| entidadeTipo === 8) {
 				$('#divSelecionarAluno').addClass(hidden);
 				$('#divCPFDataNascimento').removeClass(hidden);
 				$('#divDadosSelecionados').removeClass(hidden);
@@ -455,7 +456,7 @@ default:
 
 	}
 
-	function mostrarDivHierarquia(entidadeTipo) {
+	function mostrarDivHierarquia(entidadeTipo) {		
 		$('#divEmail').addClass(hidden);
 
 		if (entidadeTipo !== 1
@@ -768,15 +769,23 @@ default:
 		insereDadosComplementares(mudarBarraDeProgresso);
 	}
 
-	function insereDadosComplementares(adicaoDaBarraDeProgresso) {
-		$('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');
+	function insereSecretarioNaTelaDeConfimacao(mudarBarraDeProgresso) {		
+		var spanDadosComplementares = $('#spanDadosComplementares');
+		spanDadosComplementares.html('Perfil: SECRETÁRIO');
+		$('#divDadosComplementares').addClass(hidden);		
+		$('#divConfirmacao').removeClass(hidden);
+		insereDadosComplementares(mudarBarraDeProgresso);		
+	}
+
+	function insereDadosComplementares(adicaoDaBarraDeProgresso) {		
+		$('#spanInsiraOsDadosComplementares').html('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_COMPLEMENTARES); ?>');		
 		$('#divCheckDadosComplementaresInseridos').removeClass(hidden);
 		$('#divBotaoInserirDadosComplementares').addClass(hidden);
-		$('#divBotaoLimparDadosComplementares').removeClass(hidden);
+		$('#divBotaoLimparDadosComplementares').removeClass(hidden);		
 		$('#divBlocoDadosComplementares').removeClass('btn').removeClass('btn-default').prop('onclick', null).off('click');
-		if (adicaoDaBarraDeProgresso) {
+		if (adicaoDaBarraDeProgresso) {			
 			atualizarBarraDeProgresso(adicaoDaBarraDeProgresso);
-		}
+		}		
 	}
 
 	function pegaValorBarraDeProgresso() {
@@ -1051,6 +1060,9 @@ default:
 			case 3: $('#divPreencherNomeEntidade').removeClass(hidden); break;
 			case 4: $('#divPreencherNumeracaoEntidade').removeClass(hidden); break;
 			case 5: $('#divPreencherNomeEntidade').removeClass(hidden); break;
+			case 8: let valorProgresso = 50;			
+					insereSecretarioNaTelaDeConfimacao(valorProgresso);
+					break;
 		}
 	}
 </script>
