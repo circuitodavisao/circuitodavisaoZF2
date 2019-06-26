@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
 
+    const SECRETARIO = 8;
     const SUBEQUIPE = 7;
     const EQUIPE = 6;
     const IGREJA = 5;
@@ -51,6 +52,12 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
      */
     private $grupo;
 
+     /**
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="entidade")
+     * @ORM\JoinColumn(name="secretario_grupo_id", referencedColumnName="id")
+     */
+    private $grupoSecretario;
+
     /** @ORM\Column(type="string") */
     protected $nome;
 
@@ -65,6 +72,9 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
 
     /** @ORM\Column(type="integer") */
     protected $grupo_id;
+
+    /** @ORM\Column(type="integer") */
+    protected $secretario_grupo_id;
 
     public function infoEntidade($somenteNumero = false) {
         $resposta = '';
@@ -182,7 +192,11 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
      * @return EntidadeTipo
      */
     function getEntidadeTipo() {
-        return $this->entidadeTipo;
+        if($this->grupoSecretario){
+            return $this->getGrupo()->getEntidadeAtiva()->getEntidadeTipo();
+        } else {
+            return $this->entidadeTipo;
+        }        
     }
 
     /**
@@ -190,7 +204,11 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
      * @return Grupo
      */
     function getGrupo() {
-        return $this->grupo;
+        if($this->grupoSecretario){
+            return $this->grupoSecretario;
+        } else {
+            return $this->grupo;
+        }        
     }
 
     function getNome() {
@@ -213,12 +231,24 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
         return $this->grupo_id;
     }
 
+    function getSecretario_Grupo_id() {
+        return $this->secretario_grupo_id;
+    }   
+    
+    function setSecretario_Grupo_id($secretario_grupo_id) {
+        $this->secretario_grupo_id = $secretario_grupo_id;
+    }
+
     function setEntidadeTipo($entidadeTipo) {
         $this->entidadeTipo = $entidadeTipo;
     }
 
     function setGrupo($grupo) {
         $this->grupo = $grupo;
+    }
+
+    function setGrupoSecretario($grupoSecretario) {
+        $this->grupoSecretario = $grupoSecretario;
     }
 
     function setNome($nome) {

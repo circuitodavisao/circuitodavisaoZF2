@@ -48,7 +48,7 @@ class TurmaForm extends Form {
                         ->setName(Constantes::$INPUT_CSRF)
         );
 
-        $arryTipo = array();
+        $arrayTipo = array();
         $arrayTipo[0] = Constantes::$TRADUCAO_TIPO;
         if (!empty($cursos)) {
             foreach ($cursos as $curso) {
@@ -108,9 +108,9 @@ class TurmaForm extends Form {
             $this->get(Constantes::$FORM_INPUT_MES)->setValue($turma->getMes());
             $this->get(Constantes::$FORM_INPUT_ANO)->setValue($turma->getAno());
             $this->get(Constantes::$FORM_OBSERVACAO)->setValue($turma->getObservacao());
-            $this->get(Constantes::$FORM_INPUT_TIPO)->setValue($turma->getTipo_turma_id());
-            $this->get(Constantes::$FORM_INPUT_TIPO)->setAttribute('disabled', 'disabled');
+            $this->get(Constantes::$FORM_ID_CURSO)->setValue($turma->getCurso_id());
+            $this->get(Constantes::$FORM_ID_CURSO)->setAttribute('disabled', 'disabled');
         }
-    }
+     }
 
 }

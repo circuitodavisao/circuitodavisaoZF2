@@ -105,8 +105,15 @@ class GrupoDadosComplementares extends AbstractHelper {
 
 									&& ($entidadeTipo->getId() === EntidadeTipo::regiao 
 									|| $entidadeTipo->getId() === EntidadeTipo::coordenacao
+									|| $entidadeTipo->getId() === EntidadeTipo::secretario
 									|| $entidadeTipo->getId() === EntidadeTipo::igreja)){
 										$mostrar = true;
+										
+										//Impossibilitando secretários cadastrarem novos secretários
+										if($entidadeTipo->getId() === EntidadeTipo::secretario && $this->view->secretario){
+											$mostrar = false;
+										}
+
 									}	
 								if(($tipoEntidade === EntidadeTipo::coordenacao) 
 									&& ($entidadeTipo->getId() === EntidadeTipo::coordenacao 

@@ -16,6 +16,12 @@ if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 	$stringEntidade = $this->entidade->getNumero();
 }
 
+$secretario = false;
+//Passando grupo_id da pessoa verificada, significa que é um secretário acessando
+if($this->grupoIdPessoaVerificada){	
+	$stringEntidade = 'SECRETÁRIO';
+}
+
 if ($this->mostrarPrincipal) {
 	$fotos = $this->grupo->getFotosLideresAtivos(128);
 	echo '<div class="alert alert-default">';
@@ -35,7 +41,7 @@ if ($this->mostrarPrincipal) {
 <h4><?php echo $this->pessoa->getNomePrimeiroUltimo(); ?></h4>
 <small>
 <?php 
-	if($stringEntidade == 'PRESIDENCIAL' || $stringEntidade == 'NACIONAL'){
+	if($stringEntidade == 'PRESIDENCIAL' || $stringEntidade == 'NACIONAL' || $stringEntidade == 'SECRETÁRIO'){
 		echo $stringEntidade;
 	} else {
 		echo $this->entidade->getEntidadeTipo()->getNome() . ' - ' . $stringEntidade; 
@@ -48,7 +54,12 @@ if ($this->mostrarPrincipal) {
 		$funcaoOnClickPerfil = 'location.href="/perfil"';
 		echo $this->botaoSimples('<i class="fa fa-user"></i> Perfil', $this->funcaoOnClick($funcaoOnClickPerfil), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda);
 	} else {
-		$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupo->getId().')';
+		if($this->grupoIdPessoaVerificada){
+			$grupoId = $this->grupoIdPessoaVerificada;
+		} else {
+			$grupoId = $grupo->getId();
+		}
+		$funcaoOnClick = 'funcaoCircuito("principalVer", '.$grupoId.')';
 		echo $this->botaoSimples('<i class="fa fa-cog"></i>', $this->funcaoOnClick($funcaoOnClick), BotaoSimples::botaoMuitoPequenoImportante, BotaoSimples::posicaoAEsquerda); 
 	}
 ?>

@@ -55,6 +55,7 @@ class ListagemTurmas extends AbstractHelper {
 				$stringNomeDaFuncaoOnClickExclusao = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . Constantes::$PAGINA_EXCLUSAO_TURMA . '", ' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickIncluirAlunos = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CADASTRO . Constantes::$PAGINA_LISTAGEM_REVISAO_TURMA . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickAbrirAula = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
+				$stringNomeDaFuncaoOnClickEditarTurma = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'TurmaFormEdit' . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickFecharTurma = 'let resposta = confirm("confirma exclusao?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'FecharTurma' . '",' . $turma->getId() . ')}';
 				$totalAlunos = ($this->view->relatorio[$turma->getId()][Situacao::ATIVO] + $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]);
 
@@ -86,7 +87,8 @@ class ListagemTurmas extends AbstractHelper {
 					$html .= $this->view->botaoLink('<i class="fa fa-user-plus" ></i>', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickIncluirAlunos));
 				}
 				$html .= $this->view->botaoLink('<i class="fa fa-font" ></i>', Constantes::$STRING_HASHTAG, 4, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickAbrirAula));
-				$html .= $this->view->botaoLink('<i class="fa fa-times" ></i>', Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickFecharTurma));
+				$html .= $this->view->botaoLink('<i class="fa fa-pencil" ></i>', Constantes::$STRING_HASHTAG, 3, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickEditarTurma));
+				$html .= $this->view->botaoLink('<i class="fa fa-times" ></i>', Constantes::$STRING_HASHTAG, 9, $this->view->funcaoOnClick($stringNomeDaFuncaoOnClickFecharTurma));				
 				$html .= '</td>';
 				$html .= '</tr>';
 			}
