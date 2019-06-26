@@ -24,6 +24,8 @@ CREATE TABLE entidade
 WITH (
   OIDS=FALSE
 );
+ALTER TABLE entidade ADD COLUMN sigla character(3);
+ALTER TABLE entidade ADD COLUMN secretario_grupo_id bigint;
 ALTER TABLE entidade
   OWNER TO postgres;
 COMMENT ON TABLE entidade
@@ -32,11 +34,13 @@ COMMENT ON COLUMN entidade.id IS 'Identificação da entidade';
 COMMENT ON COLUMN entidade.data_criacao IS 'Data de criação da entidade';
 COMMENT ON COLUMN entidade.hora_criacao IS 'Hora de criação da entidade';
 COMMENT ON COLUMN entidade.nome IS 'Nome para as entidades: igreja, equipes';
+COMMENT ON COLUMN entidade.sigla IS 'Sigla para as entidades';
 COMMENT ON COLUMN entidade.numero IS 'Número para as entidades: região, coordenação e subs';
 COMMENT ON COLUMN entidade.data_inativacao IS 'Data de inativação da entidade';
 COMMENT ON COLUMN entidade.hora_inativacao IS 'Hora da inativação da entidade';
 COMMENT ON COLUMN entidade.tipo_id IS 'Indetificação do tipo de entidade';
 COMMENT ON COLUMN entidade.grupo_id IS 'Identificação do grupo';
+COMMENT ON COLUMN entidade.secretario_grupo_id IS 'Identificação do grupo de quem o secretario cuida';
 
 COMMENT ON CONSTRAINT fk_entidade_grupo_id ON entidade IS 'Chave estrangeira da entidade com grupo';
 COMMENT ON CONSTRAINT fk_entidade_tipo_id ON entidade IS 'Chave estrangeira de entidade com tipo da entidade';
@@ -60,4 +64,4 @@ CREATE INDEX fki_entidade_tipo_id
   USING btree
   (tipo_id);
 
-ALTER TABLE entidade ADD COLUMN sigla character(3);
+

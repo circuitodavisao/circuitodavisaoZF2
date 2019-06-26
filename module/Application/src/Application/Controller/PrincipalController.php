@@ -79,6 +79,8 @@ class PrincipalController extends CircuitoController {
 			$mostrarPrincipal = false;
 		}
 
+		$grupoIdPessoaVerificada = null;
+
 		/* verificando se estou vendo um discipulo abaixo e pegando os dados dele */
 		if($sessao->idSessao > 0){
 			$explodeIdSessao = explode('_', $sessao->idSessao);
@@ -87,6 +89,9 @@ class PrincipalController extends CircuitoController {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeIdSessao[0]);
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($explodeIdSessao[1]);
 				$grupo = $entidade->getGrupo();
+				if($entidade->getSecretario_Grupo_id()){
+					$grupoIdPessoaVerificada = $entidade->getGrupo_id();
+				}				
 				unset($sessao->idSessao);
 
 				$vendoPessoaLogada = false;
@@ -107,6 +112,7 @@ class PrincipalController extends CircuitoController {
 		}
 
 		$dados = array(
+			'grupoIdPessoaVerificada' => $grupoIdPessoaVerificada,
 			'mostrarPrincipal' => $mostrarPrincipal,
 			'grupo' => $grupo,
 			'grupoLogado' => $grupoLogado,
@@ -371,7 +377,13 @@ class PrincipalController extends CircuitoController {
 		if ($idSessao) {
 			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idSessao);
 			$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-			$hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+			if($pessoaLogada->getPessoaHierarquiaAtivo()){
+				$hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoaLogada->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
+			} else {				
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'index',
+				));				
+			}			
 			$formulario = new HierarquiaForm(Constantes::$FORM, $pessoa, $hierarquias);
 			$view = new ViewModel(
 				array(
