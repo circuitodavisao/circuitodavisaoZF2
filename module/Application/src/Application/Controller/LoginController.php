@@ -987,7 +987,7 @@ class LoginController extends CircuitoController {
 						}
 						$dados['ok'] = 'true';
 						$dados['email'] = $json->usuario;
-						$dados['senha'] = $json->senha
+						$dados['senha'] = $json->senha;
 						$dados['equipe_id'] = $idEquipe;
 						$dados['igreja_id'] = $idIgreja;
 					}
