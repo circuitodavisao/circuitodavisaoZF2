@@ -17,10 +17,11 @@ class IndexController extends AbstractRestfulController {
         $response = $this->getResponse();
         $response->getHeaders()
                 ->addHeaderLine('Access-Control-Allow-Origin', '*')
-                ->addHeaderLine('Access-Control-Allow-Methods', 'POST GET');
+                ->addHeaderLine('Access-Control-Allow-Methods', 'POST ');
     }
 
 	public function logarChurchProConsolidacaoAction() {
+        $this->setResponseWithHeader();
 		$response = $this->getResponse();
 		$request = $this->getRequest();
 
@@ -31,7 +32,7 @@ class IndexController extends AbstractRestfulController {
 		}
 
 		if ($request->isPost()) {
-			error_log('get');
+			error_log('post');
 		}
 
 		error_log(print_r($request->getPost(), true));
@@ -40,6 +41,9 @@ class IndexController extends AbstractRestfulController {
 
 			$data = Json::decode($request->getContent());
 			error_log($data);
+
+			$dataPost = Json::decode($request->getPost());
+			error_log($dataPost);
 
 			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
 			$adapter->setIdentityValue($data[Constantes::$INPUT_USUARIO]);
@@ -84,6 +88,8 @@ class IndexController extends AbstractRestfulController {
 				$response->setContent(Json::encode(
 					array('ok' => 'false')));
 			}
+			$response->setContent(Json::encode(
+				array('post' => 'passou')));
 		}else{
 			$response->setContent(Json::encode(
 				array('get' => 'true')));
