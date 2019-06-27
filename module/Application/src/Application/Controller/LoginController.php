@@ -965,9 +965,41 @@ class LoginController extends CircuitoController {
 			try {
 				$body = $request->getContent();
 				$json = Json::decode($body);
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarTimes($grupo);
-				$dados['resultado'] = $resultado;
+
+				$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+				$adapter->setIdentityValue($json[Constantes::$INPUT_USUARIO]);
+				$adapter->setCredentialValue(md5($json[Constantes::$INPUT_SENHA]));
+				$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+
+				$dados['ok'] = false;
+				if ($authenticationResult->isValid()) {
+
+					/* Verificar se existe pessoa por email informado */
+					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json[Constantes::$INPUT_USUARIO]);
+					/* Tem responsabilidade(s) */
+					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+						$idEquipe = null;
+						$idIgreja = null;
+						$grupoSelecionado = null;
+						foreach($pessoa->getResponsabilidadesAtivas() as $grupoResponsavel){
+							if($grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+								$grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+								$grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+									$grupoSelecionado = $grupoResponsavel->getGrupo();
+								}
+						}
+						if($grupoSelecionado){
+							$idEquipe = $grupoSelecionado->getGrupoEquipe()->getId();
+							$idIgreja = $grupoSelecionado->getGrupoIgreja()->getId();
+						}
+						$dados['ok'] = 'true',
+							$dados['email'] = $data[Constantes::$INPUT_USUARIO],
+							$dados['senha'] = $data[Constantes::$INPUT_SENHA],
+							$dados['equipe_id'] = $idEquipe,
+							$dados['igreja_id'] = $idIgreja,
+					}
+
+				} 
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}
@@ -975,7 +1007,5 @@ class LoginController extends CircuitoController {
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
-
-
 
 }
