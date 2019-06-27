@@ -968,7 +968,7 @@ class LoginController extends CircuitoController {
 				$json = Json::decode($body);
 
 				/* Verificar se existe pessoa por email informado */
-				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json[Constantes::$INPUT_USUARIO])){
+				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->usuario)){
 					/* Tem responsabilidade(s) */
 					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 						$idEquipe = null;
@@ -986,8 +986,8 @@ class LoginController extends CircuitoController {
 							$idIgreja = $grupoSelecionado->getGrupoIgreja()->getId();
 						}
 						$dados['ok'] = 'true';
-						$dados['email'] = $data[Constantes::$INPUT_USUARIO];
-						$dados['senha'] = $data[Constantes::$INPUT_SENHA];
+						$dados['email'] = $json->usuario;
+						$dados['senha'] = $json->senha
 						$dados['equipe_id'] = $idEquipe;
 						$dados['igreja_id'] = $idIgreja;
 					}
