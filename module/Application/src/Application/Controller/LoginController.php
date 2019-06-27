@@ -966,16 +966,10 @@ class LoginController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 
-				$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-				$adapter->setIdentityValue($json[Constantes::$INPUT_USUARIO]);
-				$adapter->setCredentialValue(md5($json[Constantes::$INPUT_SENHA]));
-				$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
-
 				$dados['ok'] = false;
-				if ($authenticationResult->isValid()) {
 
-					/* Verificar se existe pessoa por email informado */
-					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json[Constantes::$INPUT_USUARIO]);
+				/* Verificar se existe pessoa por email informado */
+				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json[Constantes::$INPUT_USUARIO])){
 					/* Tem responsabilidade(s) */
 					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 						$idEquipe = null;
@@ -998,8 +992,8 @@ class LoginController extends CircuitoController {
 							$dados['equipe_id'] = $idEquipe,
 							$dados['igreja_id'] = $idIgreja,
 					}
+				}
 
-				} 
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}
