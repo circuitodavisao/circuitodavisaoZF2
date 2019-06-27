@@ -985,11 +985,11 @@ class LoginController extends CircuitoController {
 							$idEquipe = $grupoSelecionado->getGrupoEquipe()->getId();
 							$idIgreja = $grupoSelecionado->getGrupoIgreja()->getId();
 						}
-						$dados['ok'] = 'true',
-							$dados['email'] = $data[Constantes::$INPUT_USUARIO],
-							$dados['senha'] = $data[Constantes::$INPUT_SENHA],
-							$dados['equipe_id'] = $idEquipe,
-							$dados['igreja_id'] = $idIgreja,
+						$dados['ok'] = 'true';
+						$dados['email'] = $data[Constantes::$INPUT_USUARIO];
+						$dados['senha'] = $data[Constantes::$INPUT_SENHA];
+						$dados['equipe_id'] = $idEquipe;
+						$dados['igreja_id'] = $idIgreja;
 					}
 				}
 
