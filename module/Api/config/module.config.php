@@ -11,31 +11,35 @@ return array(
             'Api\Controller\Teste' => 'Api\Controller\Factory\TesteControllerFactory',
         ),
     ),
-    'router' => array(
-        'routes' => array(
-            'api' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    'route' => '/api',
-                    'defaults' => array(
-                        'controller' => 'Api\Controller\Index',
-                    ),
-                ),
-            ),
-            'apiteste' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/api/teste[/:id]',
-                    'constraints' => array(
-                        'id' => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Api\Controller\Teste',
-                    ),
-                ),
-            ),
-        ),
-    ),
+	'router' => array(
+		'routes' => array(
+			'api' => array(
+				'type' => 'Segment',
+				'options' => array(
+					'route' => '/api[/:action]',
+					'constraints' => array(
+						'action' => '[a-zA-Z]*',
+					),
+					'defaults' => array(
+						'controller' => 'Api\Controller\Index',
+						'action' => 'index',
+					),
+				),
+			),
+			'apiteste' => array(
+				'type' => 'Segment',
+				'options' => array(
+					'route' => '/api/teste[/:id]',
+					'constraints' => array(
+						'id' => '[0-9]+',
+					),
+					'defaults' => array(
+						'controller' => 'Api\Controller\Teste',
+					),
+				),
+			),
+		),
+	),
     'view_manager' => array(
         'strategies' => array(
             'ViewJsonStrategy',
