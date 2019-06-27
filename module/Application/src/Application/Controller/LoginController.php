@@ -961,12 +961,11 @@ class LoginController extends CircuitoController {
 		$request = $this->getRequest();
 		$response = $this->getResponse();
 		$dados = array();
+		$dados['ok'] = false;
 		if ($request->isPost()) {
 			try {
 				$body = $request->getContent();
 				$json = Json::decode($body);
-
-				$dados['ok'] = false;
 
 				/* Verificar se existe pessoa por email informado */
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json[Constantes::$INPUT_USUARIO])){
