@@ -957,4 +957,25 @@ class LoginController extends CircuitoController {
         return $this->_translator;
     }
 
+	public function testeUmAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$resultado = RelatorioController::buscarTimes($grupo);
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+
+
 }
