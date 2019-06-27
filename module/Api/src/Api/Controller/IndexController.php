@@ -42,7 +42,7 @@ class IndexController extends AbstractRestfulController {
 			$data = Json::decode($request->getContent());
 			error_log($data);
 
-			$dataPost = Json::decode($request->getPost());
+			$dataPost = $request->getPost();
 			error_log($dataPost);
 
 			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
