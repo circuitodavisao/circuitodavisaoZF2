@@ -1283,7 +1283,27 @@ class LancamentoController extends CircuitoController {
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($explodeId[1]);
 				if($dadosPost['idFatoFinanceiroTipo'] == FatoFinanceiroTipo::parceiroDeDeusIndividual){
-					$individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
+                    $individualFiltrado = number_format(str_replace(',','.',$dadosPost['individual']),2,'.','');
+                    if(!checkdate($dadosPost['Mes'], $dadosPost['Dia'], $dadosPost['Ano'])){
+                        $sessao = new Container(Constantes::$NOME_APLICACAO);
+                        if($dadosPost['Mes'] < 10){
+                            $mesDaMensagem = '0'. $dadosPost['Mes'];
+                        } else {
+                            $mesDaMensagem = $dadosPost['Mes'];
+                        }
+                        if($dadosPost['Dia'] < 10){
+                            $diaDaMensagem = '0'. $dadosPost['Dia'];
+                        } else {
+                            $diaDaMensagem = $dadosPost['Dia'];
+                        }
+                        $dataMensagem = $diaDaMensagem.'-'.$mesDaMensagem.'-'.$dadosPost['Ano'];                        
+                        $sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-danger"></i>';
+                        $sessao->mensagemSemAcesso .= ' A data '. $dataMensagem .' é inválida, refaça o lançamento com uma data válida';
+                        $sessao->corDoTexto = 'text-danger';
+                        return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                            Constantes::$ACTION => 'semAcesso',
+                        ));
+                    }
 					$dataLancamento = $dadosPost['Ano'].'-'.$dadosPost['Mes'].'-'.$dadosPost['Dia'];
 					$fatoFinanceiroTipo = $this->getRepositorio()->getFatoFinanceiroTipoORM()->encontrarPorId(FatoFinanceiroTipo::parceiroDeDeusIndividual);
 					$fatoFinanceiro = new FatoFinanceiro();
