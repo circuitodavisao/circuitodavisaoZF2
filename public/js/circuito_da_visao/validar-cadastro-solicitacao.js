@@ -23,6 +23,7 @@ const stringDivObjetos = '#divObjetos';
 const stringDivSelecionarLider = '#divSelecionarLider';
 const stringDivSelecionarIgreja = '#divSelecionarIgreja';
 const stringDivSelecionarParaOndeTransferir = '#divSelecionarParaOndeTransferir';
+const stringDivSelecionarResponsabilidade = '#divSelecionarResponsabilidade';
 const stringDivSelecionarLiderIgreja = '#divSelecionarLiderIgreja';
 const stringDivSelecionarNumeracao = '#divSelecionarNumeracao';
 const stringDivSelecionarEquipe = '#divSelecionarEquipe';
@@ -63,13 +64,14 @@ const TRANSFERIR_ALUNO = 8;
 const SUBIR_LIDER = 9;
 const REMOVER_IGREJA = 10;
 const TRANSFERIR_IGREJA = 11;
+const ADICIONAR_RESPONSABILIDADE = 12;
 
 function selecionarTipo() {
 	$(stringDivSolicitacaoTipo).addClass(hidden);
 	$(stringDivObjetos).removeClass(hidden);
 	$('#divProgress').removeClass(hidden);
 	$('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
-	$('#solicitacaoTipoId').val($('#solicitacaoTipo').val());
+	$('#solicitacaoTipoId').val($('#solicitacaoTipo').val());	
 	
 	if(parseInt($('#solicitacaoTipo').val()) !== TRANSFERIR_ALUNO){
 		$('.grupoLogado').attr('disabled','disabled');
@@ -84,6 +86,7 @@ function selecionarTipo() {
 		parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
+		parseInt($('#solicitacaoTipo').val()) === ADICIONAR_RESPONSABILIDADE ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 
 		$('#blocoObjeto3').addClass(hidden);
@@ -119,7 +122,7 @@ function selecionarTipo() {
 				$('#spanMensagemDeConfirmacao').html('Confirma a remoção dessa célula? Somente após autorização do líder da igreja no próximo período será feita a mudança')
 			}
 			if (parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL) {
-				$('#spanMensagemDeConfirmacao').html('Confirma a união desse casal? Eles serão inativados e será criado um novo time, somente no próximo período será feita a mudança')
+				$('#spanMensagemDeConfirmacao').html('Confirma a união desse casal? Eles serão inativados e será criado um novo time, <b class="text-danger">somente no próximo mês</b> será feita a mudança')
 			}
 			$('#blocoObjeto2').addClass(hidden);
 		}
@@ -135,6 +138,10 @@ function selecionarTipo() {
 		}
 		if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA) {
 			$('#spanSelecioneObjeto1').html('Selecione a igreja');
+			$('#blocoObjeto2').addClass(hidden);
+		}		
+		if (parseInt($('#solicitacaoTipo').val()) === ADICIONAR_RESPONSABILIDADE) {			
+			$('#spanSelecioneObjeto1').html('Selecione a pessoa que será seu secretário(a).');
 			$('#blocoObjeto2').addClass(hidden);
 		}
 	}
@@ -188,6 +195,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 		if (qualObjeto == 2 && $('#solicitacaoTipoId').val() == TRANSFERIR_IGREJA) {
 			$(stringDivSelecionarParaOndeTransferir).removeClass(hidden);
 		}
+		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == ADICIONAR_RESPONSABILIDADE) {
+			$('#divSelecionarPessoaParaSerSecretario').removeClass(hidden);			
+		}
 	} else {
 		if ($('#solicitacaoTipoId').val() == SEPARAR) {
 			$(stringDivSelecionarQuemSaira).removeClass(hidden);
@@ -232,6 +242,15 @@ function mostrarBotaoSelecionarLiderIgreja() {
 		divBotaoSelecionarLiderIgreja.addClass(hidden);
 	} else {
 		divBotaoSelecionarLiderIgreja.removeClass(hidden);
+	}
+}
+
+function mostrarBotaoSelecionarResponsabilidade() {
+	let divBotaoSelecionarResponsabilidade = $('#divBotaoSelecionarResponsabilidade');
+	if (parseInt($('#idResponsabilidade').val()) === 0) {
+		divBotaoSelecionarResponsabilidade.addClass(hidden);
+	} else {
+		divBotaoSelecionarResponsabilidade.removeClass(hidden);
 	}
 }
 
@@ -337,6 +356,16 @@ function selecionarIgreja() {
 	let idIgreja = $('#idIgreja')
 	selecionarObjeto(idIgreja.val(), $('#idIgreja>option:selected').text())
 }
+
+function selecionarSecretario() {
+	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
+	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
+	divSelecionarPessoaParaSerSecretario.addClass(hidden);				
+	divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
+	$('#spanMensagemDeConfirmacao').html('Confirma delegar a função de secretário? <b class="text-danger">A pessoa receberá poder para alterar e visualizar dados do seu perfil</b>')	
+	continuarParaConfimacao();
+}
+
 function selecionarParaOndeTransferir() {
 	let idParaOndeTransferir = $('#idParaOndeTransferir')
 	selecionarObjeto(idParaOndeTransferir.val(), $('#idParaOndeTransferir>option:selected').text())
@@ -500,8 +529,8 @@ function selecionarObjeto(id, informacao) {
 
 							}
 							spanNomeLideres.html('Nome dos Líderes: ' + data.nomeLideres);
-							spanCelulaQuantidade.html('Quantidade de Células: ' + data.celulaQuantidade);
-							spanQuantidadeLideres.html('Quantidade de Líderes: ' + data.quantidadeLideres);
+							spanCelulaQuantidade.html('Quantidade de Células: ' + data.celulaQuantidadePessoal);
+							spanQuantidadeLideres.html('Quantidade de Líderes: ' + data.quantidadeLideresPessoal);
 							spanFotos.html(data.fotos);
 						}
 
@@ -870,4 +899,87 @@ function atualizarBarraDeProgresso(valorParaSomar) {
 
 function pegaValorBarraDeProgresso() {
 	return $('#divProgressBar').attr("aria-valuenow");
+}
+
+function isNumber(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function selecionarPessoaParaSerSecretario() {
+	var temErro = false;
+	var hidden = 'hidden';	
+	var idPessoa = $('#idPessoa');
+	var spanMensagens = $('#spanMensagens');
+	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
+	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
+	var spanPessoa = $('#spanPessoa');
+	var spanStatus = $('#spanStatus');
+	var inputCPF = $("#cpf");        	
+	var cpf = inputCPF.val();
+	if (cpf.length === 0 || !isNumber(cpf) || cpf.length !== 11) {
+		spanMensagens.removeClass(hidden);
+		spanPessoa.addClass(hidden);
+		spanMensagens.text('CPF INVÁLIDO');            
+		temErro = true;
+	}
+	if(!temErro){
+		spanMensagens.addClass(hidden);
+		
+		const url = '/cadastroVerificarCPF'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"cpf": cpf,					
+				}),
+			},
+		)
+		.then(retorno => {					
+			if(!retorno.ok){
+				alert('erro ao buscar dados principais instituto')
+			}			
+			return retorno.json()		
+		})
+		.then(json => {	
+			if(json.nome && !json.status){
+				valorParaAdicionar = 100;
+				atualizarBarraDeProgresso(valorParaAdicionar);
+				spanPessoa.removeClass(hidden);				
+				spanPessoa.text(json.nome);
+				idPessoa.val(json.idPessoa);
+				divSelecionarPessoaParaSerSecretario.addClass(hidden);				
+				divSelecionarPessoaParaSerSecretarioProsseguir.removeClass(hidden);	
+				var inputCPF = $("#cpf");   
+				inputCPF.val(null);					
+			}	
+			if(json.nome && json.status){
+				spanStatus.removeClass(hidden);
+				spanPessoa.addClass(hidden);				
+				spanStatus.text(`${json.nome} ${json.status}`);
+			}
+			if(!json.nome && json.status){
+				spanStatus.removeClass(hidden);
+				spanPessoa.addClass(hidden);				
+				spanStatus.text(`${json.status}`);
+			}	
+			
+			console.log(json)			
+		})
+		.catch(error => console.log(error))	
+	}
+}
+
+function voltarSelecionarSecretario(){
+	valorParaAdicionar = -100;
+	atualizarBarraDeProgresso(valorParaAdicionar);
+	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
+	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
+	var idPessoa = $('#idPessoa');     	
+	var spanStatus = $('#spanStatus'); 
+
+	idPessoa.val(null);
+	spanStatus.addClass(hidden);
+	divSelecionarPessoaParaSerSecretario.removeClass(hidden);				
+	divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
 }

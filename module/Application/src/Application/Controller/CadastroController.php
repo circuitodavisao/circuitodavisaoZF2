@@ -1118,12 +1118,18 @@ class CadastroController extends CircuitoController {
 			$sessao->token = explode('"', $arrayToken)[13];
 		}
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);		
 		$grupo = $entidade->getGrupo();
 
-		$mostrarCadastro = true;
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		if($entidade->getTipo_id() == 8){
+			$secretario = true;
+			$pessoa = $grupo->getPessoasAtivas()[0];
+		} else { 
+			$secretario = false;
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		}
+
+		$mostrarCadastro = true;		
 		$arrayHierarquia = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas($pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getId());
 
 		$arrayDeNumerosUsados = array();
@@ -1138,10 +1144,7 @@ class CadastroController extends CircuitoController {
 		}
 		$form = new GrupoForm(Constantes::$FORM, $arrayHierarquia, $arrayDeNumerosUsados);
 		$entidadeTipos = $this->getRepositorio()->getEntidadeTipoORM()->buscarTodosRegistrosEntidade('id', 'asc');
-		$secretario = false;
-		if($entidade->getTipo_id() == 8){
-			$secretario = true;
-		}
+		
 		$view = new ViewModel(array(
 			Constantes::$FORM => $form,
 			'tipoEntidade' => $entidade->getEntidadeTipo()->getId(),
@@ -1169,7 +1172,7 @@ class CadastroController extends CircuitoController {
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			try {
-				$this->getRepositorio()->iniciarTransacao();
+				
 				$post_data = $request->getPost();
 
 				$dataParaCriacao = Funcoes::proximaSegunda();
@@ -1178,6 +1181,45 @@ class CadastroController extends CircuitoController {
 				$idEntidadeAtual = $sessao->idEntidadeAtual;
 				$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
+				$inputEstadoCivil = intval($post_data[Constantes::$INPUT_ESTADO_CIVIL]);
+				/* Alterar dados do aluno */
+				/* Solteiro */
+				$indicePessoasInicio = 0;
+				$indicePessoasFim = 0;
+				/* Casado */
+				if ($inputEstadoCivil === 2) {
+					$indicePessoasInicio = 1;
+					$indicePessoasFim = 2;
+				}
+
+				$grupoJaCadastrado = false;
+				for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {					
+					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
+					if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {					
+						foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
+							if($grupoResponsavel->verificarSeEstaAtivo()){
+								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
+									$idPai = $grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
+									if($idPai == $entidadeLogada->getGrupo()->getId()){
+										$grupoJaCadastrado = true;
+									}																	
+								}
+							}
+						}
+					}
+				}
+
+				if($grupoJaCadastrado){
+					$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-danger"></i>';
+					$sessao->mensagemSemAcesso .= ' Pessoa já cadastrada!';
+					$sessao->corDoTexto = 'text-danger';
+					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+						Constantes::$ACTION => 'semAcesso',
+					));
+				}
+
+				$this->getRepositorio()->iniciarTransacao();
+				
 				/* Criar Grupo */
 				$grupoNovo = new Grupo();
 				$grupoNovo->setDataEHoraDeCriacao($dataParaCriacao);
@@ -1185,14 +1227,14 @@ class CadastroController extends CircuitoController {
 
 				/* Entidade abaixo do perfil selecionado/logado */
 				$tipoEntidadeAbaixo = Entidade::SUBEQUIPE; // sub equipe por padrao
-				if ($entidadeLogada->getTipo_id() != Entidade::SUBEQUIPE) {
-					$tipoEntidadeAbaixo = $entidadeLogada->getTipo_id() + 1;
+				if ($entidadeLogada->getEntidadeTipo()->getId() != Entidade::SUBEQUIPE) {
+					$tipoEntidadeAbaixo = $entidadeLogada->getEntidadeTipo()->getId() + 1;
 				}
 				/* Entidades acima da igreja */
-				if($entidadeLogada->getTipo_id() === EntidadeTipo::coordenacao
-					|| $entidadeLogada->getTipo_id() === EntidadeTipo::regiao
-					|| $entidadeLogada->getTipo_id() === EntidadeTipo::nacional
-					|| $entidadeLogada->getTipo_id() === EntidadeTipo::presidencial){
+				if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+					|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+					|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::nacional
+					|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 						$tipoEntidadeAbaixo = $post_data['idEntidadeTipo'];
 					}
 				$entidadeNova = new Entidade();
@@ -1212,17 +1254,7 @@ class CadastroController extends CircuitoController {
 				}
 				$entidadeNova->setDataEHoraDeCriacao($dataParaCriacao);
 				$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova, $mudarData = false);
-
-				$inputEstadoCivil = intval($post_data[Constantes::$INPUT_ESTADO_CIVIL]);
-				/* Alterar dados do aluno */
-				/* Solteiro */
-				$indicePessoasInicio = 0;
-				$indicePessoasFim = 0;
-				/* Casado */
-				if ($inputEstadoCivil === 2) {
-					$indicePessoasInicio = 1;
-					$indicePessoasFim = 2;
-				}
+				
 				for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
 					$mudarDataDeCriacao = true;
 					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
@@ -1231,6 +1263,14 @@ class CadastroController extends CircuitoController {
 						$pessoaSelecionada->setSenha(null, false);
 						$pessoaSelecionada->setPrecisaAtualizarDados();
 						$mudarDataDeCriacao = false;
+						foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
+							if($grupoResponsavel->verificarSeEstaAtivo()){
+								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId()
+								== $entidadeLogada->getGrupo()->getId()){
+									$grupoJaCadastrado = true;
+								}
+							}
+						}
 					} else {
 						$pessoaSelecionada = new Pessoa();
 					}
@@ -2335,6 +2375,8 @@ class CadastroController extends CircuitoController {
 			$solicitacoesTipo[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
 			$solicitacoesTipo[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
+			$solicitacoesTipo[] = $solicitacaoTipo;
 		}
 
 		foreach($solicitacoes as $solicitacaoPorData){
@@ -2440,8 +2482,8 @@ class CadastroController extends CircuitoController {
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-			//$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE);
-			//$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
+			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 			$igrejas = array();
 			$paraOndeTransferir = array();
@@ -2495,6 +2537,7 @@ class CadastroController extends CircuitoController {
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
@@ -2677,6 +2720,9 @@ class CadastroController extends CircuitoController {
 						}
 				}
 				if($temSolicitacoesPendentes){
+					$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-warning"></i>';
+					$sessao->mensagemSemAcesso .= ' O objeto selecionado em questão possui solicitações pendentes!';
+					$sessao->corDoTexto = 'text-warning';
 					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
 						Constantes::$ACTION => 'semAcesso',
 					));
@@ -2684,8 +2730,11 @@ class CadastroController extends CircuitoController {
 			}
 			if($post_data['objeto1'] == $post_data['objeto2']){
 				if($temSolicitacoesPendentes){
+					$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-warning"></i>';
+					$sessao->mensagemSemAcesso .= ' O objeto selecionado em questão possui solicitações pendentes!';
+					$sessao->corDoTexto = 'text-warning';
 					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-						Constantes::$ACTION => 'semAcesso',
+						Constantes::$ACTION => 'semAcesso',						
 					));
 				}
 			}
@@ -2758,15 +2807,12 @@ class CadastroController extends CircuitoController {
 					$solicitacao->setObjeto2($objeto2);
 				}
 				
-				// if ($solicitacaoTipo->getId() == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE) {					
-				// 	$idResponsabilidade = $post_data['idResponsabilidade'];					
-				// 	if($idResponsabilidade == 8){
-				// 		$objeto1 = $post_data['idPessoa'];						
-				// 		$objeto2 = $grupoLogado->getId();
-				// 		$solicitacao->setObjeto1($objeto1);
-				// 		$solicitacao->setObjeto2($objeto2);
-				// 	}
-				// }
+				if ($solicitacaoTipo->getId() == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO) {										
+					$objeto1 = $post_data['idPessoa'];						
+					$objeto2 = $grupoLogado->getId();
+					$solicitacao->setObjeto1($objeto1);
+					$solicitacao->setObjeto2($objeto2);					
+				}
 
 				if ($post_data['numero']) {
 					$solicitacao->setNumero($post_data['numero']);
@@ -2793,7 +2839,8 @@ class CadastroController extends CircuitoController {
 				$idEntidadeAtual = $sessao->idEntidadeAtual;
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 				if ($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-					($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
+					($solicitacaoTipo->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||

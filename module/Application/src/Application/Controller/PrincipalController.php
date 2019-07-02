@@ -740,7 +740,21 @@ class PrincipalController extends CircuitoController {
 	}
 
 	public function semAcessoAction(){
-		return new ViewModel();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$mensagem = $sessao->mensagemSemAcesso;		
+		$corDoTexto = $sessao->corDoTexto;	
+		unset($sessao->mensagemSemAcesso);	
+		unset($sessao->corDoTexto);
+		$dados = array();
+		if(!$mensagem){
+			$mensagem = 'Você não tem acesso <i class = "fa fa-thumbs-up text-danger"></i>';
+		}		
+		if(!$corDoTexto){
+			$corDoTexto = 'text-danger';
+		}		
+		$dados['corDoTexto'] = $corDoTexto;
+		$dados['mensagem'] = $mensagem;
+		return new ViewModel($dados);
 	}
 
 	public function arrumarFatoLiderAction(){
