@@ -551,6 +551,12 @@ class IndexController extends CircuitoController {
 										$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupo1);
 										$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo);
 									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO) {
+										$html .= "<br /> {$solicitacao->getId()} - ADICIONANDO SECRETÁRIO";
+										$idPessoa = $solicitacao->getObjeto1();
+										$idGrupoQueVaiGerenciar = $solicitacao->getObjeto2();
+										$this->adicionarNovaResponsabilidadeSecretario($idPessoa, $idGrupoQueVaiGerenciar);
+									}
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
 									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
@@ -3965,6 +3971,41 @@ class IndexController extends CircuitoController {
 		}
 		$dados['listaDeCelulas'] = $listaDeCelulas;
 		return new ViewModel($dados);
+	}
+	public function adicionarNovaResponsabilidadeSecretario($idPessoa, $idGrupoQueVaiGerenciar){
+		$grupoQueVaiGerenciar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoQueVaiGerenciar);
+		$pessoaSecretario = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+
+		/* Criar Grupo */
+		$grupoNovo = new Grupo();
+		$grupoNovo->setDataEHoraDeCriacao();
+		$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo, $mudarData = false);
+
+		/* Criar Entidade */
+		$entidadeNova = new Entidade();
+		$tipoSecretario = 8;
+		$entidadeNova->setEntidadeTipo(
+			$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoSecretario)
+		);
+		$entidadeNova->setGrupoSecretario($grupoQueVaiGerenciar);
+		$entidadeNova->setNome('SECRETÁRIO');
+		$entidadeNova->setGrupo($grupoNovo);
+		$entidadeNova->setDataEHoraDeCriacao();
+		$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova, $mudarData = false);
+
+		/* Criar Grupo_Responsavel */
+		$grupoResponsavelNovo = new GrupoResponsavel();
+		$grupoResponsavelNovo->setPessoa($pessoaSecretario);
+		$grupoResponsavelNovo->setGrupo($grupoNovo);
+		$grupoResponsavelNovo->setDataEHoraDeCriacao();
+		$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
+
+		/* Criar Grupo_Pai_Filho */		
+		$grupoPaiFilhoNovo = new GrupoPaiFilho();
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupoQueVaiGerenciar);
+		$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
+		$grupoPaiFilhoNovo->setDataEHoraDeCriacao();
+		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo, $mudarData = false);
 	}
 
 }

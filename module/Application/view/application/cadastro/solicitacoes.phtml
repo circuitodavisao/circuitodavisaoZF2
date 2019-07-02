@@ -64,7 +64,13 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th>Quem</th>';
 		$htmlThead .= '<th class="hidden-xs">Novo Líder</th>';
 		break;
+	case SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO:
+		$colspan = 6;
+		$htmlThead .= '<th>Secretário</th>';
+		$htmlThead .= '<th class="hidden-xs">De Quem</th>';
+		break;
 	}
+	
 	$htmlThead .= '<th>Status</th>';
 	$htmlThead .= '<th class="hidden-xs">Aceito Em</th>';
 
@@ -99,7 +105,8 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlTbody .= '<td class="hidden-xs">'.$solicitacao->getData_criacaoStringPadraoBrasil().'</td>';
 
 		if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL
-			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO){
+			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO
+				&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 				$dadosObjeto1 = '';
@@ -160,6 +167,16 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 					$htmlTbody .= '<td>'.$turmaPessoa->getPEssoa()->getNome().'</td>';
 					$htmlTbody .= '<td>'.$grupo2->getNomeLideresAtivos().'</td>';
+				}
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO){
+					$objeto1 = $solicitacao->getObjeto1();
+					$pessoaSecretario = $this->repositorio->getPessoaORM()->encontrarPorId($objeto1);
+					$objeto2 = $solicitacao->getObjeto2();
+					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+
+					$htmlTbody .= '<td>'.$pessoaSecretario->getNome().'</td>';
+					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';					
+					
 				}
 			}
 

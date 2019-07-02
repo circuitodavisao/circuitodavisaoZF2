@@ -770,7 +770,7 @@ class Grupo extends CircuitoEntity {
 		$arrayRevisoes = array();
     foreach($arrayDeGruposEventos as $grupoEventos){
   		foreach($grupoEventos as $grupoEvento){
-  			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData() . ' +2 week');
+  			$dataDoRevisao = strtotime($grupoEvento->getEvento()->getData());
   			if($dataDoRevisao >= $dataParaComparar){
   				$arrayRevisoes[] = $grupoEvento;
   			}

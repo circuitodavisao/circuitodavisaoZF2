@@ -480,7 +480,17 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Gerador de Meta';
 			$html .= '</a>';
 			$html .= '</li>';			
-			}			
+			}		
+			
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+			|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$html .= '<li>';
+				$html .= '<a href="/relatorioQuantidadeDePessoasPorRevisao" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-table"></span>';
+				$html .= 'Pessoas enviadas para o revisão';
+				$html .= '</a>';
+				$html .= '</li>';			
+				}
 
 			// if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 			// 	$html .= '<li>';

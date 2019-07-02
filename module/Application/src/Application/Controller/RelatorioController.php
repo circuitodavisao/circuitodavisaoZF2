@@ -434,8 +434,7 @@ class RelatorioController extends CircuitoController {
 						if($frequencia->getPessoa()->getGrupoPessoaAtivo()){
 							$nomeDaEquipe = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
 							getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-							$relatorioPessoasNoRevisao[$nomeDaEquipe][$eventoRevisao->getId()]++;
-							$relatorioPessoasNoRevisao[$eventoRevisao->getId()]++;
+							$relatorioPessoasNoRevisao[$nomeDaEquipe][$eventoRevisao->getId()]++;						
 							$relatorioPessoasNoRevisao['total']++;
 						}										
 					}

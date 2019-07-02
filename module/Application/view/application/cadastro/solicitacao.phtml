@@ -16,6 +16,7 @@ echo $this->form()->openTag($form);
 <div class="panel mw600">
 <div class="panel-heading text-center"><?php echo $this->titulo; ?></div>
 <div class="panel-body bg-light">
+<span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>
 	<!--divSolicitacaoTipo-->
 	<div id="divSolicitacaoTipo">
 		<div class="section-divider mt20">
@@ -314,6 +315,26 @@ echo '</div>';
 	</div>
 
 <?php } ?>
+
+<div id="divSelecionarPessoaParaSerSecretario" class="hidden">
+	<span id="spanStatus" class="quebraDeLinhaDeSpan mt50 alert alert-danger text-center hidden"></span>	
+    <input type="number" name="cpf" class="form-control" id="cpf" placeholder="Digite o CPF" pattern="\d*">	
+	<div id="divBotaoSelecionarPessoaParaSerSecretario" class="mt10">
+	<?php
+		echo $this->botaoSimples('FILTRAR', $this->funcaoOnClick('selecionarPessoaParaSerSecretario()'));
+	?>
+	</div>
+</div>
+
+<div id="divSelecionarPessoaParaSerSecretarioProsseguir" class="hidden">	
+	<span id="spanPessoa" class="quebraDeLinhaDeSpan mt50 alert alert-success text-center hidden"></span>	
+	<input type="hidden" name="idPessoa" id="idPessoa">
+	<?php
+		$botaoMenorImportancia = 2;				
+		echo $this->botaoSimples('CONFIRMAR', $this->funcaoOnClick('selecionarSecretario()'));
+		echo $this->botaoSimples('VOLTAR', $this->funcaoOnClick('voltarSelecionarSecretario()'), $botaoMenorImportancia);		
+	?>
+</div>
 
 <?php if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){ ?>
 	<div id="divSelecionarIgreja" class="hidden">
