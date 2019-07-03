@@ -957,4 +957,48 @@ class LoginController extends CircuitoController {
         return $this->_translator;
     }
 
+	public function testeUmAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$dados['ok'] = false;
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				/* Verificar se existe pessoa por email informado */
+				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->usuario)){
+					/* Tem responsabilidade(s) */
+					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+						$idEquipe = null;
+						$idIgreja = null;
+						$grupoSelecionado = null;
+						foreach($pessoa->getResponsabilidadesAtivas() as $grupoResponsavel){
+							if($grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+								$grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+								$grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+									$grupoSelecionado = $grupoResponsavel->getGrupo();
+								}
+						}
+						if($grupoSelecionado){
+							$idEquipe = $grupoSelecionado->getGrupoEquipe()->getId();
+							$idIgreja = $grupoSelecionado->getGrupoIgreja()->getId();
+						}
+						$dados['ok'] = 'true';
+						$dados['email'] = $json->usuario;
+						$dados['senha'] = $json->senha;
+						$dados['equipe_id'] = $idEquipe;
+						$dados['igreja_id'] = $idIgreja;
+					}
+				}
+
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
 }
