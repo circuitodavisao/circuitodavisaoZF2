@@ -482,8 +482,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= '</li>';			
 			}		
 			
-			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-			|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe){
 				$html .= '<li>';
 				$html .= '<a href="/relatorioQuantidadeDePessoasPorRevisao" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-table"></span>';
