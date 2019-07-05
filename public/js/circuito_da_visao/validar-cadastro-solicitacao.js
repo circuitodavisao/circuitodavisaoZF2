@@ -65,6 +65,7 @@ const SUBIR_LIDER = 9;
 const REMOVER_IGREJA = 10;
 const TRANSFERIR_IGREJA = 11;
 const ADICIONAR_RESPONSABILIDADE = 12;
+const REMOVER_RESPONSABILIDADE = 13;
 
 function selecionarTipo() {
 	$(stringDivSolicitacaoTipo).addClass(hidden);
@@ -87,6 +88,7 @@ function selecionarTipo() {
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === ADICIONAR_RESPONSABILIDADE ||
+		parseInt($('#solicitacaoTipo').val()) === REMOVER_RESPONSABILIDADE ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 
 		$('#blocoObjeto3').addClass(hidden);
@@ -144,6 +146,10 @@ function selecionarTipo() {
 			$('#spanSelecioneObjeto1').html('Selecione a pessoa que será seu secretário(a).');
 			$('#blocoObjeto2').addClass(hidden);
 		}
+		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_RESPONSABILIDADE) {			
+			$('#spanSelecioneObjeto1').html('Selecione a pessoa que deixará de ser secretário(a).');
+			$('#blocoObjeto2').addClass(hidden);
+		}
 	}
 }
 
@@ -196,7 +202,10 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 			$(stringDivSelecionarParaOndeTransferir).removeClass(hidden);
 		}
 		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == ADICIONAR_RESPONSABILIDADE) {
-			$('#divSelecionarPessoaParaSerSecretario').removeClass(hidden);			
+			$('#divSelecionarPessoa').removeClass(hidden);			
+		}
+		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == REMOVER_RESPONSABILIDADE) {
+			$('#divSelecionarPessoa').removeClass(hidden);			
 		}
 	} else {
 		if ($('#solicitacaoTipoId').val() == SEPARAR) {
@@ -357,13 +366,25 @@ function selecionarIgreja() {
 	selecionarObjeto(idIgreja.val(), $('#idIgreja>option:selected').text())
 }
 
-function selecionarSecretario() {
-	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
-	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
-	divSelecionarPessoaParaSerSecretario.addClass(hidden);				
-	divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
-	$('#spanMensagemDeConfirmacao').html('Confirma delegar a função de secretário? <b class="text-danger">A pessoa receberá poder para alterar e visualizar dados do seu perfil</b>')	
-	continuarParaConfimacao();
+function prosseguirSecretarario() {
+	var solicitacaoTipo = $('#solicitacaoTipo');
+	var divSelecionarPessoa = $('#divSelecionarPessoa');
+	var divSelecionarEntidadeSecretarioParaInativar = $('#divSelecionarEntidadeSecretarioParaInativar');
+	if(parseInt(solicitacaoTipo.val()) == 12){		
+		var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');					
+		divSelecionarPessoa.addClass(hidden);				
+		divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
+		$('#spanMensagemDeConfirmacao').html('Confirma delegar a função de secretário? <b class="text-danger">A pessoa receberá poder para alterar e visualizar dados do seu perfil</b>')	
+		continuarParaConfimacao();
+	}
+	if(parseInt(solicitacaoTipo.val()) == 13){		
+		var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');				
+		divSelecionarPessoa.addClass(hidden);				
+		divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
+		$('#spanMensagemDeConfirmacao').html('Confirma remover a função de secretário? <b class="text-danger">A pessoa perderá o poder para alterar e visualizar dados do seu perfil</b>')	
+		divSelecionarEntidadeSecretarioParaInativar.removeClass(hidden);	
+	}	
+	
 }
 
 function selecionarParaOndeTransferir() {
@@ -872,10 +893,32 @@ function pedirSenha() {
 }
 
 function voltaAosObjetos() {
-	$('#divTelaConfirmacao').addClass(hidden);
-	verificarSeMostraOBotaoDeContinuar();
-	$(stringDivObjetos).removeClass(hidden);
-	$('#divProgress').removeClass(hidden);
+	var solicitacaoTipo = parseInt($('#solicitacaoTipo').val());
+	// if(solicitacaoTipo == 12){
+	// 	valorParaAdicionar = -100;
+	// }
+	// if(solicitacaoTipo == 13){
+	// 	valorParaAdicionar = -50;
+	// }
+	if(solicitacaoTipo == 12 || solicitacaoTipo == 13){	
+		valorParaAdicionar = -100;	
+		atualizarBarraDeProgresso(valorParaAdicionar);
+		var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
+		var divSelecionarPessoa = $('#divSelecionarPessoa');		
+		var idPessoa = $('#idPessoa');     	
+		var spanStatus = $('#spanStatus'); 
+
+		idPessoa.val(null);
+		spanStatus.addClass(hidden);
+		divSelecionarPessoa.removeClass(hidden);				
+		divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);
+		$('#divTelaConfirmacao').addClass(hidden);
+	} else {
+		$('#divTelaConfirmacao').addClass(hidden);
+		verificarSeMostraOBotaoDeContinuar();
+		$(stringDivObjetos).removeClass(hidden);		
+	}
+	$('#divProgress').removeClass(hidden);	
 }
 
 /* por em funcoes */
@@ -908,22 +951,22 @@ function isNumber(n) {
 function selecionarPessoaParaSerSecretario() {
 	var temErro = false;
 	var hidden = 'hidden';	
-	var idPessoa = $('#idPessoa');
-	var spanMensagens = $('#spanMensagens');
+	var solicitacaoTipo = parseInt($('#solicitacaoTipo').val());
+	var idPessoa = $('#idPessoa');				
 	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
-	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
+	var divSelecionarPessoa = $('#divSelecionarPessoa');		
 	var spanPessoa = $('#spanPessoa');
 	var spanStatus = $('#spanStatus');
 	var inputCPF = $("#cpf");        	
 	var cpf = inputCPF.val();
 	if (cpf.length === 0 || !isNumber(cpf) || cpf.length !== 11) {
-		spanMensagens.removeClass(hidden);
-		spanPessoa.addClass(hidden);
-		spanMensagens.text('CPF INVÁLIDO');            
+		spanStatus.removeClass(hidden);
+		spanPessoa.addClass(hidden);		
+		spanStatus.text('CPF INVÁLIDO');            
 		temErro = true;
 	}
 	if(!temErro){
-		spanMensagens.addClass(hidden);
+		spanStatus.addClass(hidden);
 		
 		const url = '/cadastroVerificarCPF'
 		fetch(
@@ -943,15 +986,40 @@ function selecionarPessoaParaSerSecretario() {
 		})
 		.then(json => {	
 			if(json.nome && !json.status){
-				valorParaAdicionar = 100;
-				atualizarBarraDeProgresso(valorParaAdicionar);
-				spanPessoa.removeClass(hidden);				
-				spanPessoa.text(json.nome);
 				idPessoa.val(json.idPessoa);
-				divSelecionarPessoaParaSerSecretario.addClass(hidden);				
-				divSelecionarPessoaParaSerSecretarioProsseguir.removeClass(hidden);	
-				var inputCPF = $("#cpf");   
-				inputCPF.val(null);					
+				if(solicitacaoTipo == 12){
+					valorParaAdicionar = 100;	
+					atualizarBarraDeProgresso(valorParaAdicionar);									
+					divSelecionarPessoa.addClass(hidden);				
+					divSelecionarPessoaParaSerSecretarioProsseguir.removeClass(hidden);						  
+					inputCPF.val(null);
+				} 
+				if(solicitacaoTipo == 13){
+					if(!json.temSecretario){
+						spanStatus.removeClass(hidden);
+						spanPessoa.addClass(hidden);				
+						spanStatus.text('PESSOA NÃO POSSUI RESPONSABILIDADE DE SECRETÁRIO');
+					}	
+					if(json.temSecretario){
+						inputCPF.val(null);
+						valorParaAdicionar = 50;
+						atualizarBarraDeProgresso(valorParaAdicionar);
+						spanStatus.addClass(hidden);
+						spanPessoa.addClass(hidden);	
+						divSelecionarPessoaParaSerSecretarioProsseguir.removeClass(hidden);	
+						divSelecionarPessoa.addClass(hidden);	
+						$('#selecionarEntidadeSecretarioParaInativar').children("option").remove();
+						$('#selecionarEntidadeSecretarioParaInativar').append('<option value="0">SELECIONE</option>')						
+						for (let index = 1; index <= json.temSecretario; index++) {							
+							const infoEntidade = json.entidadeSecretario[index].infoEntidade;
+							const tipoEntidade = json.entidadeSecretario[index].tipoEntidade;
+							const entidadeId = json.entidadeSecretario[index].id;
+							$('#selecionarEntidadeSecretarioParaInativar').append('<option value="'+entidadeId+'">SECRETÁRIO '+tipoEntidade+': ' + infoEntidade +'</option>')
+						}																																							
+					}	
+				}					
+				spanPessoa.removeClass(hidden);				
+				spanPessoa.text(json.nome);								
 			}	
 			if(json.nome && json.status){
 				spanStatus.removeClass(hidden);
@@ -970,16 +1038,50 @@ function selecionarPessoaParaSerSecretario() {
 	}
 }
 
-function voltarSelecionarSecretario(){
-	valorParaAdicionar = -100;
-	atualizarBarraDeProgresso(valorParaAdicionar);
-	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');
-	var divSelecionarPessoaParaSerSecretario = $('#divSelecionarPessoaParaSerSecretario');		
-	var idPessoa = $('#idPessoa');     	
-	var spanStatus = $('#spanStatus'); 
-
+function voltarSelecionarSecretario(){		   	
+	var divSelecionarEntidadeSecretarioParaInativar = $('#divSelecionarEntidadeSecretarioParaInativar');
+	selecionarEntidadeSecretarioParaInativar = parseInt($('#selecionarEntidadeSecretarioParaInativar').val());
+	var solicitacaoTipo = parseInt($('#solicitacaoTipo').val());
+	var idPessoa = $('#idPessoa');  		
+	var inputCPF = $("#cpf");   					
 	idPessoa.val(null);
+	inputCPF.val(null);
+	if(solicitacaoTipo == 12){
+		valorParaAdicionar = -100;
+	}
+	if(solicitacaoTipo == 13){	
+		valorParaAdicionar = -50;
+	}	
+	if(selecionarEntidadeSecretarioParaInativar && selecionarEntidadeSecretarioParaInativar != 0){
+		valorParaAdicionar -= 50;		
+	}	
+	atualizarBarraDeProgresso(valorParaAdicionar);
+	var divSelecionarPessoaParaSerSecretarioProsseguir = $('#divSelecionarPessoaParaSerSecretarioProsseguir');	
+	var divSelecionarPessoa = $('#divSelecionarPessoa');			   	
+	var spanStatus = $('#spanStatus'); 
+	
 	spanStatus.addClass(hidden);
-	divSelecionarPessoaParaSerSecretario.removeClass(hidden);				
+	divSelecionarPessoa.removeClass(hidden);
+	divSelecionarEntidadeSecretarioParaInativar.addClass(hidden);				
 	divSelecionarPessoaParaSerSecretarioProsseguir.addClass(hidden);	
+}
+
+function mostrarBotaoInativarSecretario(){
+	var botaoProsseguirSecretarioParaInativar = $('#botaoProsseguirSecretarioParaInativar');    
+	var selecionarEntidadeSecretarioParaInativar = parseInt($('#selecionarEntidadeSecretarioParaInativar').val());
+	if(selecionarEntidadeSecretarioParaInativar == 0){
+		valorParaAdicionar = -50;
+		atualizarBarraDeProgresso(valorParaAdicionar);
+		botaoProsseguirSecretarioParaInativar.addClass(hidden);
+	} else {
+		valorParaAdicionar = 50;
+		atualizarBarraDeProgresso(valorParaAdicionar);
+		botaoProsseguirSecretarioParaInativar.removeClass(hidden);
+	}
+}
+
+function prosseguirInativarSecretarario(){
+	var divSelecionarEntidadeSecretarioParaInativar = $('#divSelecionarEntidadeSecretarioParaInativar');
+	divSelecionarEntidadeSecretarioParaInativar.addClass(hidden);
+	continuarParaConfimacao();
 }
