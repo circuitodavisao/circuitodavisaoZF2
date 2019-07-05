@@ -140,9 +140,7 @@ if($this->filtrado && $this->ordenacaoMetas && $this->situacaoPessoa == 'ativa')
         $html .= '</div>';
     }
     
-    foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) { 
-        // row aprovação dos critérios
-        $html .= '<div class="row">';        
+    foreach ($this->tiposDeMetasOrdenacao as $ordenacaoTipo) {               
         $pontosOrdenado = 0;                        
         foreach ($this->ordenacaoMetas as $metas) {          
             if($metas->getMetas_ordenacao_tipo_id() === $ordenacaoTipo->getId()){
@@ -183,9 +181,12 @@ if($this->filtrado && $this->ordenacaoMetas && $this->situacaoPessoa == 'ativa')
                 }
             }        
         }
+        // row aprovação dos critérios
+        $html .= '<div class="row">'; 
 
+        $ordenacaoId = $ordenacaoTipo->getId();
         $html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">';
-        $html .= '<div class="alert alert-default text-center">'. $ordenacaoTipo->getNome() .'</div>';
+        $html .= '<div style="cursor: pointer;" class="alert alert-default text-center"  onclick="mostrarMeta('.$ordenacaoId.');">'. $ordenacaoTipo->getNome() .'  <i class="fa fa-info-circle text-info"></i></div>';
         $html .= '</div>';
 
         $tipoBispo = 5;
@@ -206,6 +207,20 @@ if($this->filtrado && $this->ordenacaoMetas && $this->situacaoPessoa == 'ativa')
             $html .= '</div>';
         }
         // fim da row aprovação dos critérios
+        $html .= '</div>';
+        
+         // row para mostrar as metas da ordenação tipo         
+         $html .= '<div id="meta'.$ordenacaoId.'" class="row hidden mb20">'; 
+         $html .= '<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">METAS '.$ordenacaoTipo->getNome().'</span></div>';
+         foreach($ordenacaoTipo->getGrupoMetasOrdenacao() as $meta){
+             if($meta->verificarSeEstaAtivo()){
+                $valor = $meta->metaPorDificuldade($this->nivelDeDificuldade); 
+                $html .= '<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 ptn">';
+                $html .= '<div class="alert alert-dark text-center">'.$meta->getMetasOrdenacaoCriterio()->getNome().': '.$valor.'</div>';
+                $html .= '</div>';
+             }           
+         }
+          // fim da row para mostrar as metas da ordenação tipo
         $html .= '</div>';
     }    
 }
@@ -269,5 +284,9 @@ echo $html;
         if(!temErro){
             formConsultarOrdenacao.submit();
         }
+    }
+    function mostrarMeta(ordenacaoId){                
+        var divMeta = $('#meta'+ordenacaoId);        
+        divMeta.toggleClass('hidden');
     }
 </script>
