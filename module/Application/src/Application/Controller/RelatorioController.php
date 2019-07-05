@@ -409,7 +409,53 @@ class RelatorioController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);		
-		$gruposEventoRevisao = $entidade->getGrupo()->getGrupoIgreja()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+		$coordenacaoOuRegiao = false;
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+			$coordenacaoOuRegiao = true;
+			$gruposEventoRevisao = Array();
+			$grupoPaiFilhoFilhos12 = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+			foreach ($grupoPaiFilhoFilhos12 as $filho12) {
+				$grupoFilho12 = $filho12->getGrupoPaiFilhoFilho();
+				$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
+				if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					$gruposEventoRevisaoAuxiliar = $grupoFilho12->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+				}	
+				foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
+					$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
+				}
+				$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+				foreach ($grupoPaiFilhoFilhos144 as $filho144) {
+					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
+						$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
+						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$gruposEventoRevisaoAuxiliar = $grupoFilho144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+						}	
+						foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
+							$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
+						}
+						$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+						foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
+							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+								$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
+								$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$gruposEventoRevisaoAuxiliar = $grupoFilho1728->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+								}	
+								foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
+									$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
+								}
+							}
+						}
+					}						
+				}				
+			}		
+		}
+
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$gruposEventoRevisao = $entidade->getGrupo()->getGrupoIgreja()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
+		}		
+		
 		$grupoEventos = array();
 		$request = $this->getRequest();
 		if ($request->isPost()) {
@@ -432,9 +478,18 @@ class RelatorioController extends CircuitoController {
 				foreach($frequencias as $frequencia){
 					if($frequencia->getFrequencia() == 'S') {
 						if($frequencia->getPessoa()->getGrupoPessoaAtivo()){
-							$nomeDaEquipe = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
-							getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-							$relatorioPessoasNoRevisao[$nomeDaEquipe][$eventoRevisao->getId()]++;						
+							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+							 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+								$nomeNoRelatorio = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
+								getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+							 }
+							 if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+							 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$nomeNoRelatorio = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
+								getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+							 }
+							
+							$relatorioPessoasNoRevisao[$nomeNoRelatorio][$eventoRevisao->getId()]++;						
 							$relatorioPessoasNoRevisao['total']++;
 						}										
 					}
@@ -442,6 +497,7 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 		$dados['relatorioPessoasNoRevisao'] = $relatorioPessoasNoRevisao;
+		$dados['coordenacaoOuRegiao'] = $coordenacaoOuRegiao;
 		$dados['anoParaComparar'] = $anoParaComparar;
 		$dados['eventosNoAno'] = $eventosNoAno;
 		return new ViewModel($dados);
