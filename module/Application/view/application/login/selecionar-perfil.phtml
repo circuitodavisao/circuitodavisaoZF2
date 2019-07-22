@@ -63,7 +63,8 @@ use Application\Controller\Helper\Constantes;
 						}else{
 							$entidadeSelecionada = $grupo->getUltimaEntidadeInativa();
 							$mostrar = true;
-							if(!$entidadeSelecionada){
+							$perfilSecretario = 8;
+							if(!$entidadeSelecionada || $entidadeSelecionada->getTipo_id() == $perfilSecretario){
 								$mostrar = false;
 							}
 							if($mostrar){

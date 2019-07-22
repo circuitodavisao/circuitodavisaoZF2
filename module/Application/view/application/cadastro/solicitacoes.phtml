@@ -69,6 +69,11 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th>Secretário</th>';
 		$htmlThead .= '<th class="hidden-xs">De Quem</th>';
 		break;
+	case SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO:
+		$colspan = 6;
+		$htmlThead .= '<th>Secretário Removido</th>';
+		$htmlThead .= '<th class="hidden-xs">De Quem</th>';
+		break;
 	}
 	
 	$htmlThead .= '<th>Status</th>';
@@ -106,6 +111,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 
 		if($solicitacaoTipo->getId() !== SolicitacaoTipo::UNIR_CASAL
 			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_ALUNO
+			&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO
 				&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO){
 				$objeto = $solicitacao->getObjeto1();
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
@@ -173,9 +179,27 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$pessoaSecretario = $this->repositorio->getPessoaORM()->encontrarPorId($objeto1);
 					$objeto2 = $solicitacao->getObjeto2();
 					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+					$dadosObjeto2 = $grupo2->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+					$dadosObjeto2 .= ' ';
+					$dadosObjeto2 .= $grupo2->getEntidadeAtiva()->infoEntidade();
 
 					$htmlTbody .= '<td>'.$pessoaSecretario->getNome().'</td>';
-					$htmlTbody .= '<td class="hidden-xs">'.$grupo2->getNomeLideresAtivos().'</td>';					
+					$htmlTbody .= '<td class="hidden-xs">'.$dadosObjeto2.'</td>';					
+					
+				}
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO){
+					$objeto = $solicitacao->getObjeto1();
+					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
+					$dadosObjeto1 = $grupo->getNomeLideresAtivos();
+
+					$objeto2 = $solicitacao->getObjeto2();
+					$grupo2 = $this->repositorio->getGrupoORM()->encontrarPorId($objeto2);
+					$dadosObjeto2 = $grupo2->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+					$dadosObjeto2 .= ' ';
+					$dadosObjeto2 .= $grupo2->getEntidadeAtiva()->infoEntidade();
+										
+					$htmlTbody .= '<td>'.$dadosObjeto1.'</td>';
+					$htmlTbody .= '<td class="hidden-xs">'.$dadosObjeto2.'</td>';					
 					
 				}
 			}

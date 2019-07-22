@@ -424,8 +424,15 @@ class IndexController extends CircuitoController {
 					}else{
 						$idGrupoParaVerificar = $solicitacao->getObjeto2();
 					}
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
-					$solicitacoesPorHierarquia[$grupo->contadorDeOndeEstouNaHierarquia()][] = $solicitacao;
+					if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
+					|| $solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO){
+						$contadorDeOndeEstouNaHierarquia = 10;
+					} else {
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);
+						$contadorDeOndeEstouNaHierarquia = $grupo->contadorDeOndeEstouNaHierarquia();
+					}	
+					
+					$solicitacoesPorHierarquia[$contadorDeOndeEstouNaHierarquia][] = $solicitacao;
 				}
 			}
 
@@ -556,6 +563,11 @@ class IndexController extends CircuitoController {
 										$idPessoa = $solicitacao->getObjeto1();
 										$idGrupoQueVaiGerenciar = $solicitacao->getObjeto2();
 										$this->adicionarNovaResponsabilidadeSecretario($idPessoa, $idGrupoQueVaiGerenciar);
+									} 
+									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO) {
+										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO SECRETÁRIO";										
+										$idGrupoDaEntidadeSecretario = $solicitacao->getObjeto1();
+										$this->removerResponsabilidadeSecretario($idGrupoDaEntidadeSecretario);
 									}
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
@@ -4006,6 +4018,27 @@ class IndexController extends CircuitoController {
 		$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
 		$grupoPaiFilhoNovo->setDataEHoraDeCriacao();
 		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo, $mudarData = false);
+	}
+
+	public function removerResponsabilidadeSecretario($idGrupoDaEntidadeSecretario){
+		$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoDaEntidadeSecretario);		
+		$dataParaInativar = self::getDataParaInativacao();
+
+		/* entidade */				
+		$entidadeASerInativada = $grupo->getEntidadeAtiva();
+		$entidadeASerInativada->setDataEHoraDeInativacao($dataParaInativar);
+		$this->getRepositorio()->getEntidadeORM()->persistir($entidadeASerInativada, false);
+
+		/* grupo pai filho */
+		$grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo();
+		$grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
+		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+
+		/* responsabilidades */
+		foreach ($grupo->getResponsabilidadesAtivas() as $grupoResponsavel) {
+			$grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
+			$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+		}
 	}
 
 }

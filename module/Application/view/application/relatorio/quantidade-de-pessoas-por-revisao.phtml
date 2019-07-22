@@ -89,13 +89,16 @@ echo '</div>';
 <?php
 echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 $contadorDeEventos = 0;
-foreach($this->eventosNoAno as $evento){	
-	list($ano, $mes, $dia) = explode('-', $evento->getData());
-	$dataDoEvento = $dia . '-' . $mes . '-' . $ano;
-	echo '<th class="hidden-xs evento'.$contadorDeEventos.'" colspan="1">' . $dataDoEvento . '</th>';
-	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-	$contadorDeEventos++;
+if(!$this->coordenacaoOuRegiao){
+	foreach($this->eventosNoAno as $evento){	
+		list($ano, $mes, $dia) = explode('-', $evento->getData());
+		$dataDoEvento = $dia . '-' . $mes . '-' . $ano;
+		echo '<th class="hidden-xs evento'.$contadorDeEventos.'" colspan="1">' . $dataDoEvento . '</th>';
+		echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+		$contadorDeEventos++;
+	}
 }
+
 echo '<th colspan="1" class="evento'.$contadorDeEventos.'">TOTAL</th>';
 ?>
 						</tr>
@@ -104,11 +107,14 @@ echo '<th colspan="1" class="evento'.$contadorDeEventos.'">TOTAL</th>';
 <?php
 echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 $contadorDeEventos = 0;
-foreach($this->eventosNoAno as $evento){
-	echo '<th class="hidden-xs evento'.$contadorDeEventos.'">TOTAL</th>';	
-	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-	$contadorDeEventos++;
+if(!$this->coordenacaoOuRegiao){
+	foreach($this->eventosNoAno as $evento){
+		echo '<th class="hidden-xs evento'.$contadorDeEventos.'">TOTAL</th>';	
+		echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
+		$contadorDeEventos++;
+	}
 }
+
 echo '<th class="evento'.$contadorDeEventos.'">TOTAL</th>';
 ?>
 						</tr>
@@ -157,6 +163,7 @@ if($this->relatorioPessoasNoRevisao){
 	}
 
 	$htmlTime = '';
+	
 	foreach($chaves as $chave){	
 		$relatorioTime = $relatorioPronto[$chave];
 		$corPerformanceGeral = 'dark';
@@ -165,12 +172,14 @@ if($this->relatorioPessoasNoRevisao){
 		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
 
 		$contadorDeEventos = 0;
-		foreach($this->eventosNoAno as $evento){
-			$corPerformance = 'dark';
-			$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.' '.$corPerformance.'">' . number_format($relatorioTime[$evento->getId()]['total']) . '</td>';					
-			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-			$contadorDeEventos++;
-		}
+		if(!$this->coordenacaoOuRegiao){
+			foreach($this->eventosNoAno as $evento){
+				$corPerformance = 'dark';
+				$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.' '.$corPerformance.'">' . number_format($relatorioTime[$evento->getId()]['total']) . '</td>';					
+				$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
+				$contadorDeEventos++;
+			}
+		}		
 		$htmlTime .= '<td class="'.$corPerformanceGeral.' evento'.$contadorDeEventos.'">' . number_format($relatorioTime['total']) . '</td>';						
 		$htmlTime .= '</tr>';	
 	}
@@ -181,11 +190,14 @@ if($this->relatorioPessoasNoRevisao){
 
 	$somaPerformancesFinal = 0;
 	$contadorDeEventos = 0;
-	foreach($this->eventosNoAno as $evento){				
-		$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.'">' . number_format($relatorioFinal[$evento->getId()]['total']) . '</td>';		
-		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';		
-		$contadorDeEventos++;
+	if(!$this->coordenacaoOuRegiao){
+		foreach($this->eventosNoAno as $evento){				
+			$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.'">' . number_format($relatorioFinal[$evento->getId()]['total']) . '</td>';		
+			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';		
+			$contadorDeEventos++;
+		}
 	}
+	
 
 	$htmlTime .= '<td class="evento'.$contadorDeEventos.'">' . number_format($relatorioFinal['total']) . '</td>';
 	$htmlTime .= '</tr>';
