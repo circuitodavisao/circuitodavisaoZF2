@@ -1558,10 +1558,21 @@ class CadastroController extends CircuitoController {
 			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
 			if($pessoa){				
 				if($pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
+					$temSecretario = null;
+					foreach($pessoa->getResponsabilidadesAtivas() as $grupoResponsavel){
+						$entidadeDaPessoa = $grupoResponsavel->getGrupo()->getEntidadeAtiva();
+						if($entidadeDaPessoa->getTipo_id() == EntidadeTipo::secretario){
+							$temSecretario++;
+							$dados['entidadeSecretario'][$temSecretario]['id'] = $entidadeDaPessoa->getId();		
+							$dados['entidadeSecretario'][$temSecretario]['infoEntidade'] = $entidadeDaPessoa->infoEntidade();		
+							$dados['entidadeSecretario'][$temSecretario]['tipoEntidade'] = $entidadeDaPessoa->getEntidadeTipo()->getNome();									
+						}
+					}
 					$nome = $pessoa->getNome(); 
 					$idPessoa = $pessoa->getId();                							
-					$dados['nome'] = $nome;
+					$dados['temSecretario'] = $temSecretario;
 					$dados['idPessoa'] = $idPessoa;
+					$dados['nome'] = $nome;					
 					
 				} 
 				if(!$pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){
@@ -2377,6 +2388,8 @@ class CadastroController extends CircuitoController {
 			$solicitacoesTipo[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
 			$solicitacoesTipo[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+			$solicitacoesTipo[] = $solicitacaoTipo;
 		}
 
 		foreach($solicitacoes as $solicitacaoPorData){
@@ -2484,6 +2497,8 @@ class CadastroController extends CircuitoController {
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 			$igrejas = array();
 			$paraOndeTransferir = array();
@@ -2538,6 +2553,7 @@ class CadastroController extends CircuitoController {
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
@@ -2708,10 +2724,26 @@ class CadastroController extends CircuitoController {
 		$grupoLogado = $entidade->getGrupo();
 		CircuitoController::verificandoSessao(new Container(Constantes::$NOME_APLICACAO), $this);
 		$request = $this->getRequest();
-		if ($request->isPost()) {
+		if ($request->isPost()) {			
 			$post_data = $request->getPost();
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+			if ($solicitacaoTipo->getId() == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
+			|| $solicitacaoTipo->getId() == SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO) {		
+				$solicitacoesParaVerificar = array();
+				$solicitacoesParaVerificarAuxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['idPessoa']);								
+				foreach($solicitacoesParaVerificarAuxiliar as $solicitacao){
+					$solicitacoesParaVerificar[] = $solicitacao;
+				}
+				$solicitacoesParaVerificarAuxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupoLogado->getId());								
+				foreach($solicitacoesParaVerificarAuxiliar as $solicitacao){
+					$solicitacoesParaVerificar[] = $solicitacao;
+				}									
+			} else {
+				$solicitacoesParaVerificar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1']);
+			}
+						
 			/* validar se ja tem solicitacao */
-			if($solicitacoesParaVerificar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1'])){
+			if($solicitacoesParaVerificar){				
 				$temSolicitacoesPendentes = false;
 				foreach($solicitacoesParaVerificar as $solicitacaoParaVerificar){
 					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
@@ -2740,8 +2772,7 @@ class CadastroController extends CircuitoController {
 			}
 			try {
 				$this->getRepositorio()->iniciarTransacao();
-
-				$sessao = new Container(Constantes::$NOME_APLICACAO);
+				
 				$idPessoaAtual = $sessao->idPessoa;
 				$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaAtual);
 
@@ -2751,8 +2782,7 @@ class CadastroController extends CircuitoController {
 				}
 				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 					$grupoIgreja = $entidade->getGrupo();
-				}
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
+				}				
 
 				/* Criando */
 				$solicitacao = new Solicitacao();
@@ -2813,6 +2843,23 @@ class CadastroController extends CircuitoController {
 					$solicitacao->setObjeto1($objeto1);
 					$solicitacao->setObjeto2($objeto2);					
 				}
+				
+				if ($solicitacaoTipo->getId() == SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO) {
+					$idEntidadeASerInativada = $post_data['selecionarEntidadeSecretarioParaInativar']	;							
+					$entidadeASerInativada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeASerInativada);						
+					$objeto1 = $entidadeASerInativada->getGrupo_id();	
+					if($entidadeASerInativada->getGrupo()->getId() !== $grupoLogado->getId()){
+						$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-danger"></i>';
+						$sessao->mensagemSemAcesso .= ' Apenas quem cadastrou o secretário tem o poder de remover a responsabilidade!';
+						$sessao->corDoTexto = 'text-danger';
+						return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+							Constantes::$ACTION => 'semAcesso',						
+						));
+					}										
+					$solicitacao->setObjeto1($objeto1);
+					$objeto2 = $entidadeASerInativada->getGrupo()->getId();;
+					$solicitacao->setObjeto2($objeto2);										
+				}
 
 				if ($post_data['numero']) {
 					$solicitacao->setNumero($post_data['numero']);
@@ -2840,6 +2887,7 @@ class CadastroController extends CircuitoController {
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 				if ($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
 					($solicitacaoTipo->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||

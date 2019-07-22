@@ -16,7 +16,6 @@ echo $this->form()->openTag($form);
 <div class="panel mw600">
 <div class="panel-heading text-center"><?php echo $this->titulo; ?></div>
 <div class="panel-body bg-light">
-<span id="spanMensagens" class="quebraDeLinhaDeSpan mt10 alert text-center alert-danger hidden"></span>
 	<!--divSolicitacaoTipo-->
 	<div id="divSolicitacaoTipo">
 		<div class="section-divider mt20">
@@ -316,7 +315,7 @@ echo '</div>';
 
 <?php } ?>
 
-<div id="divSelecionarPessoaParaSerSecretario" class="hidden">
+<div id="divSelecionarPessoa" class="hidden">
 	<span id="spanStatus" class="quebraDeLinhaDeSpan mt50 alert alert-danger text-center hidden"></span>	
     <input type="number" name="cpf" class="form-control" id="cpf" placeholder="Digite o CPF" pattern="\d*">	
 	<div id="divBotaoSelecionarPessoaParaSerSecretario" class="mt10">
@@ -331,7 +330,18 @@ echo '</div>';
 	<input type="hidden" name="idPessoa" id="idPessoa">
 	<?php
 		$botaoMenorImportancia = 2;				
-		echo $this->botaoSimples('CONFIRMAR', $this->funcaoOnClick('selecionarSecretario()'));
+		echo $this->botaoSimples('CONFIRMAR', $this->funcaoOnClick('prosseguirSecretarario()'));
+		echo $this->botaoSimples('VOLTAR', $this->funcaoOnClick('voltarSelecionarSecretario()'), $botaoMenorImportancia);		
+	?>
+</div>
+
+<div id="divSelecionarEntidadeSecretarioParaInativar" class="hidden">		
+	<select class="form-control mb10" id="selecionarEntidadeSecretarioParaInativar" name="selecionarEntidadeSecretarioParaInativar"  onChange="mostrarBotaoInativarSecretario();"></select>	
+		<div class="hidden" id="botaoProsseguirSecretarioParaInativar" name="botaoProsseguirSecretarioParaInativar">
+			<?php echo $this->botaoSimples('CONFIRMAR', $this->funcaoOnClick('prosseguirInativarSecretarario()')); ?>
+		</div>
+		<?php
+		$botaoMenorImportancia = 2;				
 		echo $this->botaoSimples('VOLTAR', $this->funcaoOnClick('voltarSelecionarSecretario()'), $botaoMenorImportancia);		
 	?>
 </div>
