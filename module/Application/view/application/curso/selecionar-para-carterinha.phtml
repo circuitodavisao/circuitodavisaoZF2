@@ -73,11 +73,15 @@ if($this->filtrado){
 							$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarUltimoFatoCursoPorTurmaPessoa($turmaPessoa->getId());
 						}
 						$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
-						$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
-						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
-						if($nomeEquipe == ''){
-							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-						}						
+						$nomeEquipe = 'TIME INATIVADO';
+						if($grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo)){
+							if($grupo->getEntidadeAtiva()){
+								$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+							}
+							if($nomeEquipe == ''){
+								$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+							}						
+						}
 
 						$mostrarSituacao = false;
 						switch ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId()) {
