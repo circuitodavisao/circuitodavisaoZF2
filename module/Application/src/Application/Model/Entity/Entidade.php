@@ -109,10 +109,6 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
             if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
                 $resposta = 'COORDENAÇÃO: ' . $grupoSelecionado->getEntidadeAtiva()->getNumero();
             }
-            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== Entidade::COORDENACAO
-                || $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== Entidade::SUBEQUIPE) {
-                $resposta = $grupoSelecionado->getEntidadeAtiva()->getNome();
-            }            
         }
         return $resposta;
     }
