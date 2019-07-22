@@ -1196,6 +1196,7 @@ class CadastroController extends CircuitoController {
 				for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {					
 					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
 					if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {					
+						$pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
 						foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
 							if($grupoResponsavel->verificarSeEstaAtivo()){
 								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
