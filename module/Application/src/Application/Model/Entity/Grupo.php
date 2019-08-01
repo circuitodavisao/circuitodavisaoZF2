@@ -740,12 +740,12 @@ class Grupo extends CircuitoEntity {
 							$grupoEventos = $filho->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
 							$arrayDeGruposEventos[] = $grupoEventos;
 						}
-						$temRegiao = false;
-						$temCoordenacao = false;
 						if($filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL ||
 							$filho->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO){
 								$GrupoPaifilhoDosFilhos = $filho->getGrupoPaiFilhoFilhosAtivos(1);
 								do{
+									$temRegiao = false;
+									$temCoordenacao = false;
 									foreach($GrupoPaifilhoDosFilhos as $GrupoPaiFilhoInterior){
 										$filhoInterior = $GrupoPaiFilhoInterior->getGrupoPaiFilhoFilho();
 										if($filhoInterior->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA){
