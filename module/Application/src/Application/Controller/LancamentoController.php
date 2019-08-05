@@ -299,7 +299,7 @@ class LancamentoController extends CircuitoController {
 			}
 		}
 
-		/* dadps setenta */
+		/* dados setenta */
 		$grupoIgreja = $grupo->getGrupoIgreja();
 		$grupoEquipe = $grupo->getGrupoEquipe();
 		$relatorios = array();
@@ -340,11 +340,11 @@ class LancamentoController extends CircuitoController {
 			}
 		}
 
-		$fatosSetentaAtual = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupo($grupo, $mesAtual, $anoAtual);
+		$fatosSetentaAtual = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupo($grupo->getId(), $mesAtual, $anoAtual);
 		foreach($fatosSetentaAtual as $fato){
 			$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
 		}
-		$fatosSetentaAnterior = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupo($grupo, $mesAnterior, $anoAnterior);
+		$fatosSetentaAnterior = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupo($grupo->getId(), $mesAnterior, $anoAnterior);
 		foreach($fatosSetentaAnterior as $fato){
 			$this->getRepositorio()->getFatoSetentaORM()->remover($fato);
 		}
