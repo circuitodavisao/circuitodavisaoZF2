@@ -112,7 +112,7 @@ if($this->filtrado){
 										$mostrarSituacao = true;
 									}
 								}
-							if($mostrarSituacao){
+							if($mostrarSituacao && $turmaPessoa->verificarSeEstaAtivo()){
 								$mostrarFinanceiro = false;
 								if($this->postado['mostrarFinanceiro'] == 0){
 									$mostrarFinanceiro = true;
