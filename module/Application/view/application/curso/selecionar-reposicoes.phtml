@@ -49,9 +49,14 @@ if($this->filtrado){
 						$fatoCurso = $this->repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())[0];
 						$idGrupo = substr($fatoCurso->getNumero_identificador(), (count($fatoCurso->getNumero_identificador())-8));
 						$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($idGrupo);
-						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						$nomeEquipe = '';
+						if($grupo && $grupo->getEntidadeAtiva()){
+							$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						}
 						if($nomeEquipe == ''){
-							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+							if($grupo && $grupo->getEntidadeAtiva()){
+								$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+							}
 						}
 						$html .= '<tr>';
 						$html .= '<td>' . $turmaPessoa->getId() . '</td>';
