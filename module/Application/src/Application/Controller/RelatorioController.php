@@ -1735,6 +1735,28 @@ class RelatorioController extends CircuitoController {
 		return $relatorio;
 	}
 
+	public static function verificarLideresBeta($repositorioORM, $numeroIdentificador, $periodoInicial, $tipoRelatorio, $inativo = false) {
+		$fatosCelulaBeta = $repositorioORM->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador, $periodoInicial, $tipoRelatorio, $estrategica = true);
+		$quantidadeLideres = 0;
+		$arrayDeFatosLiderId = array();
+		if($fatosCelulaBeta){
+			foreach($fatosCelulaBeta as $fatoCelulaBeta){								
+				$fatoCiclo = $repositorioORM->getFatoCicloORM()->encontrarPorId($fatoCelulaBeta['fato_ciclo_id']);
+				$numeroIdentificadorDaCelulaBeta = $fatoCiclo->getNumero_identificador();				
+				$fatosLider = $repositorioORM->getFatoLiderORM()->encontrarVariosFatoLiderPorNumeroIdentificador($numeroIdentificadorDaCelulaBeta, $tipoRelatorio, $periodoInicial, $inativo);				
+				foreach($fatosLider as $fatoLider){
+					$fatoLiderId = $fatoLider->getId();
+					if (!in_array($fatoLiderId, $arrayDeFatosLiderId) && $fatoLider->verificarSeEstaAtivo()) { 
+						$quantidadeLideres += $fatoLider->getLideres();
+						$arrayDeFatosLiderId[] = $fatoLiderId;
+					}	
+				}							
+			}
+		}
+		
+		return $quantidadeLideres;
+	}
+
 	public static function saberQuaisDasMinhasCelulasSaoDeElitePorPeriodo(RepositorioORM $repositorioORM, Grupo $grupo, $periodo, $contagemDoPeriodo, $mes, $ano) {
 		$relatorio = array();
 		$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
@@ -3138,6 +3160,7 @@ public function alunosNaSemanaAction(){
 			$mes = $post_data['mes'];
 			$ano = $post_data['ano'];
 			$lideres = $post_data['lideres'];
+			$lideresBeta = $post_data['lideresBeta'];
 			$celulas = $post_data['celulas'];
 			$celulasBeta = $post_data['celulasBeta'];
 			$alunos1m = $post_data['alunos1m'];
@@ -3150,6 +3173,7 @@ public function alunosNaSemanaAction(){
 			$dados['nome'] = $nome;
 			$dados['quem'] = $quem;
 			$dados['lideres'] = $lideres;
+			$dados['lideresBeta'] = $lideresBeta;
 			$dados['celulas'] = $celulas;
 			$dados['celulasBeta'] = $celulasBeta;
 			$dados['alunos1m'] = $alunos1m;
@@ -3168,6 +3192,8 @@ public function alunosNaSemanaAction(){
 			$listaDeFilhos12 = array();
 			$somaTotalLideres = 0;
 			$somaTotalLideresMeta = 0;
+			$somaTotalLideresBeta = 0;
+			$somaTotalLideresBetaMeta = 0;
 			$somaTotalCelulas = 0;
 			$somaTotalCelulasMeta = 0;
 			$somaTotalCelulasBeta = 0;
@@ -3219,6 +3245,8 @@ public function alunosNaSemanaAction(){
 						$listaDeFilhos144 = array();
 						$somaParcialLideres = 0;
 						$somaParcialLideresMeta = 0;
+						$somaParcialLideresBeta = 0;
+						$somaParcialLideresBetaMeta = 0;
 						$somaParcialCelulas = 0;
 						$somaParcialCelulasMeta = 0;
 						$somaParcialCelulasBeta = 0;
@@ -3256,6 +3284,7 @@ public function alunosNaSemanaAction(){
 								$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
 								$tipoRelatorio = RelatorioController::relatorioCelulaQuantidade;
 								$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, false, $tipoRelatorio);
+								$quantidadeDeLideresBeta = RelatorioController::verificarLideresBeta($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, $inativo = false);
 								if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
 									$somaIgrejaAlunos1 = 0;
 									$somaIgrejaAlunos2 = 0;
@@ -3298,8 +3327,12 @@ public function alunosNaSemanaAction(){
 									$quantidadeDeSexos = self::pegarQuantidadeDePessoasPorSexoPorGrupo($grupoFilho144);
 								}
 
-								$dadosFilho144['lideres'] = $relatorio['quantidadeLideres'];
-								$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $relatorio['quantidadeLideres'] : 0;
+								$quantidadeDeLideresNormal = $relatorio['quantidadeLideres'] - $quantidadeDeLideresBeta;
+								$dadosFilho144['lideres'] = $quantidadeDeLideresNormal;
+								$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $quantidadeDeLideresNormal : 0;
+
+								$dadosFilho144['lideresBeta'] = $quantidadeDeLideresBeta;
+								$dadosFilho144['lideresBetaMeta'] = $lideresBeta > 0 ? $lideresBeta / 100 * $quantidadeDeLideresBeta : 0;
 
 								$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
 								$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : 0;
@@ -3329,6 +3362,8 @@ public function alunosNaSemanaAction(){
 								}
 								$somaParcialLideres += $dadosFilho144['lideres'];
 								$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
+								$somaParcialLideresBeta += $dadosFilho144['lideresBeta'];
+								$somaParcialLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
 								$somaParcialCelulas += $dadosFilho144['celulas'];
 								$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
 								$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
@@ -3354,6 +3389,8 @@ public function alunosNaSemanaAction(){
 
 								$somaTotalLideres += $dadosFilho144['lideres'];
 								$somaTotalLideresMeta += $dadosFilho144['lideresMeta'];
+								$somaTotalLideresBeta += $dadosFilho144['lideresBeta'];
+								$somaTotalLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
 								$somaTotalCelulas += $dadosFilho144['celulas'];
 								$somaTotalCelulasMeta += $dadosFilho144['celulasMeta'];
 								$somaTotalCelulasBeta += $dadosFilho144['celulasBeta'];
@@ -3384,6 +3421,8 @@ public function alunosNaSemanaAction(){
 						$total12['informacao'] = 'TOTAL PARCIAL';
 						$total12['lideres'] = $somaParcialLideres;	
 						$total12['lideresMeta'] = $somaParcialLideresMeta;
+						$total12['lideresBeta'] = $somaParcialLideresBeta;	
+						$total12['lideresBetaMeta'] = $somaParcialLideresBetaMeta;
 						$total12['celulas'] = $somaParcialCelulas;	
 						$total12['celulasMeta'] = $somaParcialCelulasMeta;	
 						$total12['celulasBeta'] = $somaParcialCelulasBeta;	
@@ -3417,6 +3456,8 @@ public function alunosNaSemanaAction(){
 			$totalGeral['informacao'] = 'TOTAL';
 			$totalGeral['lideres'] = $somaTotalLideres;	
 			$totalGeral['lideresMeta'] = $somaTotalLideresMeta;	
+			$totalGeral['lideresBeta'] = $somaTotalLideresBeta;	
+			$totalGeral['lideresBetaMeta'] = $somaTotalLideresBetaMeta;	
 			$totalGeral['celulas'] = $somaTotalCelulas;	
 			$totalGeral['celulasMeta'] = $somaTotalCelulasMeta;	
 			$totalGeral['celulasBeta'] = $somaTotalCelulasBeta;	
@@ -3567,7 +3608,7 @@ public function alunosNaSemanaAction(){
 			(
 				$grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 				||	$grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-			)
+			)  && $grupo->getGrupoResponsavelAtivo()
 		) {
 			if (!$grupo->verificaSeECasal()) {
 				if ($grupo->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
@@ -3590,7 +3631,7 @@ public function alunosNaSemanaAction(){
 				(
 					$grupo12->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 					|| $grupo12->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-				)
+				)  && $grupo12->getGrupoResponsavelAtivo()
 			) {
 
 				if (!$grupo12->verificaSeECasal()) {
@@ -3613,7 +3654,7 @@ public function alunosNaSemanaAction(){
 						(
 							$grupo144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 							||	$grupo144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-						)
+						)  && $grupo144->getGrupoResponsavelAtivo()
 					) {
 						if (!$grupo144->verificaSeECasal()) {
 							if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
@@ -3635,7 +3676,7 @@ public function alunosNaSemanaAction(){
 								(
 									$grupo1728->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 									||	$grupo1728->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-								)
+								)  && $grupo1728->getGrupoResponsavelAtivo()
 							) {
 								if (!$grupo1728->verificaSeECasal()) {
 									if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
@@ -3658,7 +3699,7 @@ public function alunosNaSemanaAction(){
 										(
 											$grupo20736->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 											||	$grupo20736->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-										)
+										)  && $grupo20736->getGrupoResponsavelAtivo()
 									) {
 										if (!$grupo20736->verificaSeECasal()) {
 											if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
@@ -3681,7 +3722,7 @@ public function alunosNaSemanaAction(){
 												(
 													$grupo248832->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)
 													||	$grupo248832->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica)
-												)
+												)  && $grupo248832->getGrupoResponsavelAtivo()
 											) {
 												if (!$grupo248832->verificaSeECasal()) {
 													if ($grupo248832->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {

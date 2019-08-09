@@ -126,6 +126,7 @@ return array(
     'application/curso/aula-form'                         => __DIR__ . '/view/application/curso/aula-form.phtml',
     'application/curso/reentrada'                         => __DIR__ . '/view/application/curso/reentrada.phtml',
     'application/curso/financeiro-por-data'               => __DIR__ . '/view/application/curso/financeiro-por-data.phtml',
+    'application/curso/financeiro-por-modulos'            => __DIR__ . '/view/application/curso/financeiro-por-modulos.phtml',
     'application/curso/gerar-faltas'                      => __DIR__ . '/view/application/curso/gerar-faltas.phtml',
     'application/curso/curso-form-edit'                   => __DIR__ . '/view/application/curso/curso-form-edit.phtml',
     'application/curso/listar-turma'                      => __DIR__ . '/view/application/curso/listar-turma.phtml',

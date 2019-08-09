@@ -1005,6 +1005,67 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
+	public function financeiroPorModulosAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
+		$grupo = $entidade->getGrupo();
+		$grupoPaiFilhoFilhos = $grupo->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
+		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
+		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+
+		$request = $this->getRequest();
+		$filtrado = false;
+		$postado = array();
+		$filhos = array();
+
+		$entidadeParaUsar = $entidade;
+		if($request->isPost()){
+			$filtrado = true;
+			$post = $request->getPost();
+			$postado['idTurma'] = $post['idTurma'];
+			$postado['idEquipe'] = $post['idEquipe'];
+			$postado['idSituacao'] = $post['idSituacao'];						
+			$postado['idSub'] = $post['idSub'];
+
+			if($postado['idEquipe'] == 0){
+				$entidadeParaUsar = $grupo->getGrupoIgreja()->getEntidadeAtiva();
+			}
+			if($postado['idEquipe'] != 0){
+				$grupoEquipe = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe']);
+				$grupoPaiFilhoFilhosEquipe = $grupoEquipe->getGrupoPaiFilhoFilhosAtivos(0);
+
+				foreach($grupoPaiFilhoFilhosEquipe as $grupoPaiFilho){
+					$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+					$dados = array();
+					$dados['id'] = $grupoFilho->getId();
+					$dados['informacao'] = $grupoFilho->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
+					$filhos[] =  $dados;
+				}
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
+			}
+			if($postado['idSub'] != 0){
+				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idSub'])->getEntidadeAtiva();
+			}
+		}
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar);
+		$turmas = $resultado[1];		
+
+		$view = new ViewModel(array(
+			'filtrado' => $filtrado,
+			'postado' => $postado,
+			'pessoa' => $pessoa,
+			'entidade' => $entidade,
+			'turmas' => $turmas,
+			'filhos' => $grupoPaiFilhoFilhos,
+			'situacoes' => $situacoes,
+			'subs' => $filhos,
+			'repositorio' => $this->getRepositorio(),
+			'relatorio' => $resultado[2],
+		));
+		self::registrarLog(RegistroAcao::VER_CHAMADA, $extra = '');
+		return $view;
+	}
+
 	public function listagemAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);

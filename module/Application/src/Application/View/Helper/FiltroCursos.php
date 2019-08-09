@@ -55,7 +55,8 @@ class FiltroCursos extends AbstractHelper {
 		$html .= '</select>';
 		$html .= '</div>';
 
-		if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem' || $urlFiltro === 'cursoSelecionarReposicoes'){
+		if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem' || $urlFiltro === 'cursoSelecionarReposicoes'
+		 || $urlFiltro === 'cursoFinanceiroPorModulos' ){
 			$html .= '<div class="form-group">';
 			$html .= '<label for="selecionarSub">' . $this->view->translate('Sub Equipe') . '<img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
 			$html .= '<select class="form-control" name="idSub" id="selecionarSub" >';
@@ -72,7 +73,8 @@ class FiltroCursos extends AbstractHelper {
 			$html .= '</select>';
 			$html .= '</div>';
 
-			if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem'){
+			if($urlFiltro === 'cursoChamada' || $urlFiltro === 'cursoListagem' || 'cursoFinanceiroPorModulos' 
+			 || $urlFiltro === 'cursoFinanceiroPorModulos'){
 				$html .= '<div class="form-group">';
 				$html .= '<label for="selecionaSituacao">' . $this->view->translate('Situa&ccedil;&atilde;o') . '</label>';
 				$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';
