@@ -174,7 +174,7 @@ class FatoCicloORM extends CircuitoORM {
 	}
 
 	public function fatoCelulaPorNumeoIdentificador($numeroIdentificador, $periodo, $tipoComparacao, $estrategica = null) {
-		$dqlBase = "SELECT c.id, c.evento_celula_id "
+		$dqlBase = "SELECT c.id, c.evento_celula_id, c.fato_ciclo_id "
 			. "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
 			. "JOIN fc.fatoCelula c "
 			. "WHERE "

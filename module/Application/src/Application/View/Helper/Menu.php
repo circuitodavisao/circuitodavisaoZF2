@@ -642,12 +642,21 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= '</a>';
 				$html .= '</li>';
 			}
+
 			$html .= '<li>';
 			$html .= '<a href="/cursoSelecionarReposicoes" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-list"></span>';
 			$html .= 'Gerar Reposições';
 			$html .= '</a>';
 			$html .= '</li>';
+
+			$html .= '<li>';
+			$html .= '<a href="/cursoFinanceiroPorModulos" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-money"></span>';
+			$html .= 'Financeiro Por Módulos';
+			$html .= '</a>';
+			$html .= '</li>';
+
 			if ($arrayOQueMostrarDosCursos['gerarFaltas']) {
 				$html .= '<li>';
 				$html .= '<a href="/cursoGerarFaltas" onClick="mostrarSplash();">';
