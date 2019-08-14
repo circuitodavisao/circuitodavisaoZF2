@@ -407,13 +407,26 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Ranking Célula';
 			$html .= '</a>';
 			$html .= '</li>';
-
-			$html .= '<li>';
-			$html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
-			$html .= '<span class="fa fa-users"></span>';
-			$html .= 'Ranking Setenta';
-			$html .= '</a>';
-			$html .= '</li>';
+			
+			//Maneira de verificar se a entidade logada está ou não abaixo da região do bispo Lucas, indenpendente do tipo, para mostrar o ranking de 70
+			$idGrupoRegiaoLucasEPriscila = 3110;
+			$contadorDeNiveis = 0;
+			$verificarSeEstaAbaixoDoBispoLucas = $this->view->entidade->getGrupo()->getGrupoRegiao();
+			while($contadorDeNiveis < 5){
+				if($verificarSeEstaAbaixoDoBispoLucas->getId() === $idGrupoRegiaoLucasEPriscila){
+					$html .= '<li>';
+					$html .= '<a href="/relatorioRankingSetenta" onClick="mostrarSplash();">';
+					$html .= '<span class="fa fa-users"></span>';
+					$html .= 'Ranking Setenta';
+					$html .= '</a>';
+					$html .= '</li>';
+					break;
+				}
+				if($verificarSeEstaAbaixoDoBispoLucas->getGrupoPaiFilhoPaiAtivo()){
+					$verificarSeEstaAbaixoDoBispoLucas = $verificarSeEstaAbaixoDoBispoLucas->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+				}				
+				$contadorDeNiveis++;				
+			}			
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 				$html .= '<li>';

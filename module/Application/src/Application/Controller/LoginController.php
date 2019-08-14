@@ -679,6 +679,11 @@ class LoginController extends CircuitoController {
     public function perfilAction() {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
         $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+        if(!$pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){          
+            return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+                Constantes::$ACTION => 'semAcesso',
+            ));
+        }
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
         $formulario = new PerfilForm('formulario', $pessoa);
         $tituloDaPagina = 'Meu Perfil';
