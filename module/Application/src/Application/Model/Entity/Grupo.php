@@ -1283,6 +1283,23 @@ class Grupo extends CircuitoEntity {
         return $grupoIgreja;
     }
 
+    function getGrupoRegiao() {
+        $grupoSelecionado = $this;
+        $grupoIgreja = null;        
+        while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
+        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE ||
+        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA ||
+        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
+            $grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+            if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL) {
+                break;
+            }
+        }
+        $grupoIgreja = $grupoSelecionado;
+        
+        return $grupoIgreja;
+    }
+
     function contadorDeOndeEstouNaHierarquia() {
         $grupoSelecionado = $this;
         $grupoIgreja = null;

@@ -774,6 +774,7 @@ class LancamentoController extends CircuitoController {
 		  $particiouDeAlgumRevisao = true;
 	  }
       $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos, $pessoa, $aluno = $particiouDeAlgumRevisao);
+      $dados[2] = $particiouDeAlgumRevisao;
       $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 
       $view = new ViewModel(array(
