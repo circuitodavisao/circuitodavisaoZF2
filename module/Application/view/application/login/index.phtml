@@ -17,6 +17,20 @@ $classMensagem = $this->hidden;
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginTop;
 ?>
+<div class="modal fade bs-example-modal-lg" aria-hidden="true" id="alertIndex">
+    <div class="modal-dialog" style="max-width: 100%; width: auto; display: table;">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div align="center" class="modal-body">                
+                    <a href="http://www.meudiscipulado.com/cv" target="blank"><img style="width: 100%; max-width: 500px; height: auto;" id="myImg" src="/img/meuDiscipuladoPontoCom.jpg" alt="Não perca! Acesse já!" class="responsive"></a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Login Panel/Form -->
 <?php echo $this->form()->openTag($formLogin); ?>
 <div class="panel mt30">
@@ -63,3 +77,4 @@ echo $this->layoutLoginTop;
 <?php
 /* Layout com botton para telas de acesso */
 echo $this->layoutLoginBotton;
+
