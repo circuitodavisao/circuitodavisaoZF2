@@ -2,92 +2,126 @@
 
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
+
+echo $this->templateFormularioTopo('<b class="text-danger">Troca</b> de Responsabilidades', '', 'style="max-width: 50%; margin-top: 0%; margin: auto;"');
 ?>
-<span id="spanCarregando">Carregando ...</span>
+<div class="panel-body bg-light">
+	<span id="spanCarregando">Carregando ...</span>
+	
+	<div id="divSelectTimes" class="hidden">
+		<div class="row p10">
+			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 1</span></div>
+			<div class="form-group col-lg-12 col-xs-12">
+				<label class="field-label text-muted text-center fs18 mb10">Times para selecionar</label>
+				<select class="form-control" id="selectTimes">
+				</select>
+			</div>
+		</div>
 
-<div id="divSelectTimes" class="hidden">
-<div class="row p10">
-<p>Passo Um</p>
-<p>Times para selecionar</p>
-<select id="selectTimes">
-</select>
-</div>
-<div class="row p10">
-<button onClick="adicionarTime()">ADICIONAR</button>
-</div>
-</div>
+		<div class="row p10">
+			<button type="button" onClick="adicionarTime()" class="btn ladda-button btn-primary pull-right ml10 " data-style="zoom-in">
+				<span class="ladda-label">Adicionar</span>
+				<span class="ladda-spinner"></span>
+			</button>
+		</div>
+	</div>
 
-<div id="divListaDeTimesSelecionados" class="hidden">
-<p>Times Selecionados</p>
-<ul id="listaDeTimesSelecionados">
-	<li>Nenhum time selecionado</li>
-</ul>
-<button id="botaoSegundoPasso" onClick="mostrarSegundoPasso()" class="hidden">PROXIMO PASSO</button>
-</div>
+	<div id="divListaDeTimesSelecionados" class="hidden">
+		<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Times Selecionados</span></div>
+		<ul class="fa-ul" id="listaDeTimesSelecionados">
+			<li>Nenhum time selecionado</li>
+		</ul>
+		<button id="botaoSegundoPasso" type="button" onClick="mostrarSegundoPasso()" class="btn ladda-button btn-primary pull-right ml10 hidden" data-style="zoom-in">
+			<span class="ladda-label">Próximo Passo</span>
+			<span class="ladda-spinner"></span>
+		</button>
+		
+	</div>
 
-<div id="divSegundoPasso" class="hidden">
+	<div id="divSegundoPasso" class="hidden">
+		<div class="row p10">
+			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 2</span></div>
+			<div id="divSelectTimesSelecionados">
+				<div class="form-group col-lg-12 col-xs-12">
+					<label class="field-label text-muted text-center fs18 mb10">Selecione o time e as responsabilidades para ele</label>
+					<select class="form-control" id="selectTimesSelecionados">
+					</select>
+				</div>				
+				<div class="row p10">					
+					<button id="botaoSegundoPasso" type="button" onClick="mostrarResponsabilidadesParaSelecionar()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
+						<span class="ladda-label">Selecionar</span>
+						<span class="ladda-spinner"></span>
+					</button>		
+					<button id="botaoSegundoPasso" type="button" onClick="voltarPassoUm()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
+						<span class="ladda-label">Voltar</span>
+						<span class="ladda-spinner"></span>
+					</button>			
+				</div>
+			</div>
+		</div>
+	</div>
 
-<div class="row p10">
-<p>Segundo Passo</p>
-<div id="divSelectTimesSelecionados">
-<p>Selecione o time e as responsabilidades para ele</p>
-<select id="selectTimesSelecionados"></select>
-<div class="row p10">
-<button onClick="voltarPassoUm()">VOLTAR</button>
-<button onClick="mostrarResponsabilidadesParaSelecionar()">SELECIONAR</button>
-</div>
-</div>
-<!-- fim divSelectTimesSelecionado -->
+	<!-- fim divSelectTimesSelecionado -->
 
-<div id="divResponsabilidadesDisponiveis" class="hidden">	
-<div class="row p10">
-<p>Responsabilidades Disponiveis</p>
-<p>Time: <span id="spanTimeSelecionadoParaIncluirResponsabilidades"></span></p>
-<select id="selectResponsabilidadesDisponiveis"></select>
-<button onClick="selecionarResponsabilidadeParaOGrupo()">SELECIONAR</button>
-</div>
-<div class="row p10">
-<button onClick="mostrarSelectTimesSelecionados()">VOLTAR</button>
-</div>
-</div>
+	<div id="divResponsabilidadesDisponiveis" class="hidden">	
+		<div class="row p10">			
+			<div class="form-group col-lg-12 col-xs-12">
+				<label class="field-label text-muted text-center fs18 mb10">
+					Responsabilidades Disponiveis - Time: <span id="spanTimeSelecionadoParaIncluirResponsabilidades"></span>
+				</label>
+				<select class="form-control" id="selectResponsabilidadesDisponiveis">
+				</select>
+			</div>
+			<button type="button" onClick="selecionarResponsabilidadeParaOGrupo()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
+				<span class="ladda-label">Selecionar</span>
+				<span class="ladda-spinner"></span>
+			</button>
+			<button type="button" onClick="mostrarSelectTimesSelecionados()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
+				<span class="ladda-label">Voltar</span>
+				<span class="ladda-spinner"></span>
+			</button>			
+		</div>	
+		<div class="row p10">
+			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Como Ficará</span></div>
+			<ul class="fa-ul" id="listaDeTimesEResponsabilidades">
+				<li>Nenhuma Responsabilidade Atribuida</li>
+			</ul>
+		</div>
+	</div>
 
-<div class="row p10">
-<p>Como ficará</p>
-<ul id="listaDeTimesEResponsabilidades">
-	<li>Nenhuma Responsabilidade Atribuida</li>
-</ul>
-</div>
-
-</div>
-<div id="divBotaoFinalizar" class="row p10 hidden">
-	<button class="btn btn-warning" onClick="recomecar()">RECOMEÇAR</button>
-	<button id="botaoFinalizar" class="btn btn-success" onClick="finalizar()">FINALIZAR</button>
-	<!--divSenha-->
-<div id="divSenha" class="hidden">
-<div class="">
-<div class="section-divider">
-<span>Confirma essa solicitação?</span>
-</div>
-<?php echo $this->divMensagens(); ?>
-<div class="row">
-<div class="col-sm-12 col-xs-12">
-<div class="section text-center mb10">
-<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
-</div>
-	<div class="text-right" style="height:65px;">
-<?php
-/* Botões */
-$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
-$stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha()';
-echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);
-?>
+	<div id="divBotaoFinalizar" class="row p10 hidden">			
+		<button id="botaoFinalizar" class="btn btn-success ladda-button pull-right ml10" onClick="finalizar()">FINALIZAR</button>
+		<!--divSenha-->
+		<div id="divSenha" class="hidden">
+			<div class="">
+				<div class="section-divider">
+					<span>Confirma essa solicitação?</span>
+				</div>
+				<?php echo $this->divMensagens(); ?>
+				<div class="row">
+					<div class="col-sm-12 col-xs-12">
+						<div class="section text-center mb10">
+							<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+						</div>
+						<div class="text-right" style="height:65px;">
+							<?php
+							/* Botões */
+							$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+							$stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha()';
+							echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);							
+							?>							
+							<button class="btn btn-warning ladda-button pull-right ml10" onClick="recomecar()">RECOMEÇAR</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
 	</div>
 </div>
-</div>
-</div>
-</div>
 
-</div>
+<?php
+echo $this->templateFormularioRodape();
+?>
 <script>
 	let listaDeTimesSelecionados = []
 	let times = []
@@ -159,10 +193,14 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 		document.getElementById('selectTimes').innerHTML = html
 	}
 
-	function escreverListaDeTimesSelecionados(){
+	function escreverListaDeTimesSelecionados(){		
 		let html = ''
-		listaDeTimesSelecionados.forEach(item => {
-			html += `<li>${item.entidade}: ${item.informacao} - ${item.lideres} <button onClick="removerTime(${item.id})">REMOVER</button></li>`
+		listaDeTimesSelecionados.forEach(item => {	
+			let button = `<button type="button" onClick="removerTime(${item.id})" class="btn ladda-button btn-danger dark btn-xs mr5 " data-style="zoom-in"><span class="ladda-label"><i class="fa fa-times"></i></span><span class="ladda-spinner"></span></button>`
+			html += `<li class="mb5">`
+			html += button
+			html += `${item.entidade}: ${item.informacao} - ${item.lideres}`
+			html += `</li>`
 		})
 		document.getElementById('listaDeTimesSelecionados').innerHTML = html
 	}
@@ -245,6 +283,7 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 			}
 
 			/* validar se todas as responsabilidades foram redirecionadas */
+			alert(responsabilidadesParaSelecionar.length);
 			if(responsabilidadesParaSelecionar.length === 0){
 				if(listaDeTimesEResponsabilidades.length !== listaDeTimesSelecionados.length){
 					let listaDeNaoInclusos = []
@@ -277,13 +316,13 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 		let html = ''
 		listaDeTimesEResponsabilidades.forEach(item => {
 			const time = listaDeTimesSelecionados.find(time => parseInt(time.id) === parseInt(item.idTime))
-			html += `<li>${time.lideres}:`
-			html += `<ul>`
+			html += `<li class="mb10"><i class="fa-li fa fa-circle"></i>${time.lideres}:`
+			html += `<ul class="fa-ul">`
 			item.responsabilidades.forEach(responsabilidade => {
 				if(responsabilidade.entidade){
-					html += `<li>${responsabilidade.entidade} - ${responsabilidade.informacao}</li>`
+					html += `<li class="text-success mt5"><i class="fa-li fa fa-arrow-right"></i><b>${responsabilidade.entidade} - ${responsabilidade.informacao}</b></li>`
 				}else{
-					html += `<li>Remover</li>`
+					html += `<li class="text-danger mt5"><i class="fa-li fa fa-arrow-right"></i><b>REMOVER</b></li>`
 				}
 			})
 			html += `</ul>`
@@ -295,6 +334,7 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 	function mostrarSelectTimesSelecionados(){
 		document.getElementById('selectTimesSelecionados').value = 0
 		document.getElementById('selectResponsabilidadesDisponiveis').value = 0
+		document.getElementById('divBotaoFinalizar').classList.add('hidden')
 		document.getElementById('divSelectTimesSelecionados').classList.remove('hidden')
 		document.getElementById('divResponsabilidadesDisponiveis').classList.add('hidden')
 	}
@@ -355,6 +395,7 @@ echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFunc
 			        divMensagens.classList.add('hidden')
 					//mostrarSplash()
 					const url = '/cadastroTrocarResponsabilidadesFinalizar'
+					console.log(listaDeTimesEResponsabilidades);
 					fetch(
 						url,
 						{

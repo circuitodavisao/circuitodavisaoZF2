@@ -424,8 +424,8 @@ class IndexController extends CircuitoController {
 					}else{
 						$idGrupoParaVerificar = $solicitacao->getObjeto2();
 					}
-					if($solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
-					|| $solicitacao->getSolicitacaoTipo()->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO){
+					if($solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
+					|| $solicitacao->getSolicitacaoTipo()->getId() === SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO){
 						$contadorDeOndeEstouNaHierarquia = 10;
 					} else {
 						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoParaVerificar);

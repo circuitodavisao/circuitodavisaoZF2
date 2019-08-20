@@ -1796,7 +1796,7 @@ class CursoController extends CircuitoController {
 
 									$naoEncontreiPresencaNaAula = true;
 									foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-										if ($turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+										if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
 											$naoEncontreiPresencaNaAula = false;
 										}
 									}
