@@ -4040,5 +4040,70 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
 		}
 	}
+	public function removerFatosLideresFantasmasAction(){
+		$html = '';
+		$fatosLideresAtivos = $this->getRepositorio()->getFatoLiderORM()->encontrarTodosFatosLideresAtivos();
+		foreach($fatosLideresAtivos as $fatoLider){
+			$idGrupo = substr($fatoLider->getNumero_identificador(), (count($fatoLider->getNumero_identificador())-8));					
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);	
+			if(!$grupo){
+				$dataParaInativar = self::getDataParaInativacao();				
+				$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
+				$html .= '<br />Fato líder fantasma inativado: ID ' . $fatoLider->getId();
+			}
+			if($grupo && count($grupo->getResponsabilidadesAtivas()) === 0){
+				$dataParaInativar = self::getDataParaInativacao();				
+				$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
+				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
+				$html .= '<br />Fato líder fantasma inativado: ID ' . $fatoLider->getId();
+			}	
+		}	
+		return new ViewModel(array('html' => $html));	
+	}
+
+	public function corrigirFatosLideresDosGruposAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_start = (float) $sec + (float) $usec;
+		$html = '';
+		$somenteAtivos = true;
+		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
+		if ($grupos) {						
+			foreach ($grupos as $grupo) {
+				$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
+				if ($numeroIdentificador) {
+					$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
+					if($fatoLiderAtual){						
+						if($fatoLiderAtual->getLideres() != $quantidadeDeLideres){						
+							$html .= "<br />Ajustando fato lider id: " . $fatoLiderAtual->getId();
+							$html .= 'Quantidade antiga: ' . $fatoLiderAtual->getLideres();								
+							$fatoLiderAtual->setLideres($quantidadeDeLideres);							
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderAtual, false);	
+							$html .= 'Quantidade atualizada: ' . $fatoLiderAtual->getLideres();						
+						}
+					} 
+					if(!$fatoLiderAtual){
+						if($grupo && $quantidadeDeLideres !== 0){
+							$fatoLiderNovo = new FatoLider();
+							$fatoLiderNovo->setLideres($quantidadeDeLideres);
+							$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
+							$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
+							$html .= "<br />Novo fato líder criado " . $fatoLiderAtual->getId();
+							$html .= 'Quantidade atualizada: ' . $fatoLiderAtual->getLideres();	
+							
+						}
+					}												
+				}
+			}
+		}
+		return new ViewModel(array('html' => $html));	
+	}
+	
 
 }
