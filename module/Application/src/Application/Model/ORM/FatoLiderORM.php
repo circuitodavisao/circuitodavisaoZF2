@@ -82,6 +82,20 @@ class FatoLiderORM extends CircuitoORM {
 			echo $exc->getTraceAsString();
 		}
 	}
+	
+	public function encontrarTodosFatosLideresAtivos(){
+        $dqlBase = "SELECT fl "
+                . "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "                
+                . "WHERE "                
+                . "fl.data_inativacao is null ";                                
+         try {
+            $result = $this->getEntityManager()->createQuery($dqlBase)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+	}
 
 	public function encontrarFatoLiderPorNumeroGrupo($numeroIdentificador) {
 		$dql = "SELECT fl "

@@ -467,6 +467,7 @@ class Constantes {
     public static $INPUT_TELEFONE = 'telefone';
     public static $INPUT_NUCLEO_PERFEITO = 'nucleoPerfeito';
     public static $INPUT_SEXO = 'sexo';
+    public static $INPUT_PROFISSAO = 'profissao';
     public static $INPUT_VOLTAR = 'voltar';
     public static $INPUT_CADASTRAR = 'cadastrar';
     public static $CLASS_BTN_DANGER_DARK = 'btn-danger dark';
