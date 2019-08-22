@@ -2729,29 +2729,38 @@ class CadastroController extends CircuitoController {
 			$post_data = $request->getPost();
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
 			if ($solicitacaoTipo->getId() == SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
-			|| $solicitacaoTipo->getId() == SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO) {		
-				$solicitacoesParaVerificar = array();
-				$solicitacoesParaVerificarAuxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['idPessoa']);								
-				foreach($solicitacoesParaVerificarAuxiliar as $solicitacao){
-					$solicitacoesParaVerificar[] = $solicitacao;
+			|| $solicitacaoTipo->getId() == SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO) {				
+				$solicitacoesParaVerificarObjeto1 = array();
+				$solicitacoesParaVerificarObjeto1Auxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['idPessoa']);								
+				foreach($solicitacoesParaVerificarObjeto1Auxiliar as $solicitacao){
+					$solicitacoesParaVerificarObjeto1[] = $solicitacao;
 				}
-				$solicitacoesParaVerificarAuxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupoLogado->getId());								
-				foreach($solicitacoesParaVerificarAuxiliar as $solicitacao){
-					$solicitacoesParaVerificar[] = $solicitacao;
+				$solicitacoesParaVerificarObjeto1Auxiliar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($grupoLogado->getId());								
+				foreach($solicitacoesParaVerificarObjeto1Auxiliar as $solicitacao){
+					$solicitacoesParaVerificarObjeto1[] = $solicitacao;
 				}									
-			} else {
-				$solicitacoesParaVerificar = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1']);
+			} else {				
+				$solicitacoesParaVerificarObjeto1 = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($post_data['objeto1']);
+				//Nota importante: Verificando o objeto 2 através do parametro $post_data['objeto1'] pois se há solicitação pendente do objeto 1 recebendo, o mesmo não pode estar sendo transferido
+				$solicitacoesParaVerificarObjeto2 = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto2($post_data['objeto1']);				
 			}
 						
 			/* validar se ja tem solicitacao */
-			if($solicitacoesParaVerificar){				
+			if($solicitacoesParaVerificarObjeto1 || $solicitacoesParaVerificarObjeto2){					
 				$temSolicitacoesPendentes = false;
-				foreach($solicitacoesParaVerificar as $solicitacaoParaVerificar){
+				foreach($solicitacoesParaVerificarObjeto1 as $solicitacaoParaVerificar){					
 					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
-						&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){
-							$temSolicitacoesPendentes = true;
-						}
-				}
+						&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
+						$temSolicitacoesPendentes = true;
+					}
+				}	
+				foreach($solicitacoesParaVerificarObjeto2 as $solicitacaoParaVerificar){					
+					if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
+						&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
+						$temSolicitacoesPendentes = true;
+					}
+				}			
+				
 				if($temSolicitacoesPendentes){
 					$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-warning"></i>';
 					$sessao->mensagemSemAcesso .= ' O objeto selecionado em questão possui solicitações pendentes!';
