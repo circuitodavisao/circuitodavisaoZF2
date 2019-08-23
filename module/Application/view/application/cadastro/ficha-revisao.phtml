@@ -36,8 +36,24 @@ use Application\Controller\Helper\Funcoes;
 
                 </tr>
                 <tr>
-                    <td>L&Iacute;DER DIRETO: <?php echo $this->pessoaLider->getNome(); ?></td>
-                    <td>CELULAR: <?php echo $this->pessoaLider->getTelefone(); ?></td>
+                <?php
+                    $nomeLideres = '';
+                    $telefoneLideres = '';
+                    foreach($this->pessoaLider as $lider){
+                        if($nomeLideres == ''){
+                            $nomeLideres = $lider->getNomePrimeiroUltimo();
+                        } else {
+                            $nomeLideres .= ' e ' . $lider->getNomePrimeiroUltimo();
+                        }
+                        if($telefoneLideres == ''){
+                            $telefoneLideres = $lider->getTelefone();
+                        } else {
+                            $telefoneLideres .= ' / ' . $lider->getTelefone();
+                        }
+                    }
+                ?>
+                    <td>L&Iacute;DER(ES) DIRETO(S): <?php echo $nomeLideres; ?></td>
+                    <td>CELULAR(ES): <?php echo $telefoneLideres; ?></td>
                 </tr>
             </table>
             <br />

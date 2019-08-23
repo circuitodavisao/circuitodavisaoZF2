@@ -22,7 +22,11 @@ CREATE TABLE pessoa
   data_revisao date, -- Data que a pessoa foi ao revisão de vidas
   sexo enummf, -- Sexo da pessoa
   atualizar_dados enumsn NOT NULL DEFAULT 'S'::enumsn, -- Variável para verificar se precisa de atualização de dados
-  CONSTRAINT pk_pessoa PRIMARY KEY (id)
+  profissao_id integer NOT NULL, -- Indetificação da profissao da pessoa
+  CONSTRAINT pk_pessoa PRIMARY KEY (id),
+  CONSTRAINT fk_pessoa_profissao_id FOREIGN KEY (profissao_id)
+      REFERENCES profissao (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION, -- Chave estrangeira da entidade com profissao
 )
 WITH (
   OIDS=FALSE
@@ -49,6 +53,7 @@ COMMENT ON COLUMN pessoa.foto IS 'Nome do arquivo com a foto da pessoa';
 COMMENT ON COLUMN pessoa.data_revisao IS 'Data que a pessoa foi ao revisão de vidas';
 COMMENT ON COLUMN pessoa.sexo IS 'Sexo da pessoa';
 COMMENT ON COLUMN pessoa.atualizar_dados IS 'Variável para verificar se precisa de atualização de dados';
+COMMENT ON COLUMN pessoa.profissao_id IS 'Profissao da pessoa';
 
 
 -- Index: index_pessoa_data_nascimento
@@ -74,3 +79,14 @@ COMMENT ON INDEX index_pessoa_documento
   IS 'Index para recuperar email de acesso atravez do documento';
 
 ALTER TABLE pessoa ADD COLUMN evento_id INTEGER NULL;
+ALTER TABLE pessoa ADD COLUMN profissao_id INTEGER NULL;
+ALTER TABLE pessoa ADD FOREIGN KEY (profissao_id) REFERENCES profissao(id);
+
+-- Index: fki_pessoa_profissao_id
+
+-- DROP INDEX fki_pessoa_profissao_id
+
+CREATE INDEX fki_pessoa_profissao_id
+  ON pessoa
+  USING btree
+  (profissao_id);

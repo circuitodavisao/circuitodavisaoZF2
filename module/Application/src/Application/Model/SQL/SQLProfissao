@@ -1,0 +1,28 @@
+-- Table: profissao
+
+-- DROP TABLE profissao;
+
+CREATE TABLE profissao
+(
+  id serial NOT NULL, -- Identificador das profissões
+  nome character varying(80) NOT NULL, -- Nome da profissao  
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da profissao
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da profissao
+  data_inativacao date, -- Data de inativação da profissao
+  hora_inativacao time without time zone, -- Hora da inativação
+  CONSTRAINT pk_profissao PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE profissao
+  OWNER TO postgres;
+COMMENT ON TABLE profissao
+  IS 'Tabela com as profissao';
+COMMENT ON COLUMN profissao.id IS 'Identificador das profissao';
+COMMENT ON COLUMN profissao.nome IS 'Nome da profissao';
+COMMENT ON COLUMN profissao.sigla IS 'Sigla da profissao';
+COMMENT ON COLUMN profissao.data_criacao IS 'Data de criação da profissao';
+COMMENT ON COLUMN profissao.hora_criacao IS 'Hora de criação da profissao';
+COMMENT ON COLUMN profissao.data_inativacao IS 'Data de inativação da profissao';
+COMMENT ON COLUMN profissao.hora_inativacao IS 'Hora da inativação';

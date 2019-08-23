@@ -58,6 +58,7 @@ class RepositorioORM {
     private $_fatoRankingORM;
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
+    private $_profissaoORM;
 	private $_fatoFinanceiro;
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelulaORM;
@@ -310,6 +311,17 @@ class RepositorioORM {
             $this->_turmaPessoaVistoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PESSOA_VISTO);
         }
         return $this->_turmaPessoaVistoORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do GrupoMetasOrdenacao
+     * @return CircuitoORM
+     */
+    public function getProfissaoORM() {
+        if (is_null($this->_profissaoORM)) {
+            $this->_profissaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PROFISSAO);
+        }
+        return $this->_profissaoORM;
     }
 
     /**

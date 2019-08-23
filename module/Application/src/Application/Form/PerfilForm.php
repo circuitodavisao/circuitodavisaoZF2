@@ -24,7 +24,7 @@ class PerfilForm extends Form {
      * @param String $name
      * @param array $grupoPessoaTipos
      */
-    public function __construct($name = null, Pessoa $pessoa) {
+    public function __construct($name = null, Pessoa $pessoa, $profissoes = null) {
         parent::__construct($name);
 
         /**
@@ -182,6 +182,23 @@ class PerfilForm extends Form {
         $inputSelectSexo->setValueOptions($arraySexo);
         $inputSelectSexo->setValue($pessoa->getSexo());
         $this->add($inputSelectSexo);
+        
+        $arrayDeProfissoes = array(); 
+        $arrayDeProfissoes[0] = Constantes::$TRADUCAO_SELECIONE; 
+        foreach($profissoes as $profissao){            
+            $arrayDeProfissoes[$profissao->getId()] = $profissao->getNome();
+        }        
+        $inputSelectProfissao = new Select();
+        $inputSelectProfissao->setName(Constantes::$INPUT_PROFISSAO);
+        $inputSelectProfissao->setAttributes(array(
+            Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+            Constantes::$FORM_ID => Constantes::$INPUT_PROFISSAO,
+        ));       
+        if($pessoa->getProfissao()){
+            $inputSelectProfissao->setValue($pessoa->getProfissao()->getId());
+        } 
+        $inputSelectProfissao->setValueOptions($arrayDeProfissoes);        
+        $this->add($inputSelectProfissao);
 
         $this->add(
                 (new Csrf())

@@ -52,11 +52,17 @@ class Perfil extends AbstractHelper {
             }
             $stringDoAvisoChato .= ' Preencha sua Data de Nascimento';
         }
+        if(!$pessoa->getProfissao()){
+            if($stringDoAvisoChato != ''){
+                $stringDoAvisoChato .= ', ';
+            }
+            $stringDoAvisoChato .= ' Preencha sua Profissão';
+        }
         if($stringDoAvisoChato != ''){
             $stringDoAvisoChato .= ' e clique em Salvar';
         }
         
-        if(!$pessoa->getData_nascimento() || !$pessoa->getSexo()){
+        if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao()){
             $html .= '<div id="divSexoDataDeNascimento" class="alert alert-danger p15" role="alert">';
             $html .= $stringDoAvisoChato;
             $html .= '</div>';
@@ -131,12 +137,14 @@ class Perfil extends AbstractHelper {
             $elementoDDD = $formulario->get(Constantes::$INPUT_DDD);
             $elementoTelefone = $formulario->get(Constantes::$INPUT_TELEFONE);
             $elementoSexo = $formulario->get(Constantes::$INPUT_SEXO);
+            $elementoProfissao = $formulario->get(Constantes::$INPUT_PROFISSAO);
             $elementoDia = $formulario->get(Constantes::$FORM_INPUT_DIA);
             $elementoMes = $formulario->get(Constantes::$FORM_INPUT_MES);
             $elementoAno = $formulario->get(Constantes::$FORM_INPUT_ANO);
 
             $elementoDDD->setAttribute('disabled', true);
             $elementoTelefone->setAttribute('disabled', true);
+            $elementoProfissao->setAttribute('disabled', true);
             $elementoSexo->setAttribute('disabled', true);
             $elementoDia->setAttribute('disabled', true);
             $elementoMes->setAttribute('disabled', true);
@@ -153,6 +161,7 @@ class Perfil extends AbstractHelper {
         $html .= $this->view->inputFormularioSimples(-1, $formulario->get(Constantes::$FORM_INPUT_DIA), 4, 2);
         $html .= $this->view->inputFormularioSimples(-1, $formulario->get(Constantes::$FORM_INPUT_MES), 4, 2);
         $html .= $this->view->inputFormularioSimples(-1, $formulario->get(Constantes::$FORM_INPUT_ANO), 4, 2);
+        $html .= $this->view->inputFormularioSimples('Profissão', $formulario->get(Constantes::$INPUT_PROFISSAO ), 12, 2);
 
         if ($this->getMostrarOpcoes()) {
             $funcaoVerificarPerfil = $this->view->funcaoOnClick('validarPerfil(this.form)');
