@@ -555,13 +555,14 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 		$validacaoGeral = 1;		
 		foreach ($this->turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
 			if ($disciplina->getId() !== Disciplina::POS_REVISAO) {
+				$situacaoDoAluno = $this->turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId();
 				$labelAprovacao = '<span class="label label-danger">Reprovado</span>';		
 				$html .= '<tr>';
 				$html .= '<td>' . $disciplina->getNome() . '</td>';
-				if ($pontosPresenca[$disciplina->getNome()] > 8) {				
+				if ($pontosPresenca[$disciplina->getNome()] > 8 || $situacaoDoAluno === Situacao::ESPECIAL) {				
 					$labelAprovacao = '<span class="label label-success">Aprovado</span>';										
 				}
-				if ($pontosPresenca[$disciplina->getNome()] < 9) {				
+				if ($pontosPresenca[$disciplina->getNome()] < 9 && $situacaoDoAluno !== Situacao::ESPECIAL) {				
 					$validacaoGeral = 0;										
 				}	
 				$html .= '<td class="text-center">';
