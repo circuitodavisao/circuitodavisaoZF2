@@ -684,8 +684,9 @@ class LoginController extends CircuitoController {
                 Constantes::$ACTION => 'semAcesso',
             ));
         }
-        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();
-        $formulario = new PerfilForm('formulario', $pessoa);
+        $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();        
+        $profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade();                  
+        $formulario = new PerfilForm('formulario', $pessoa, $profissoes);
         $tituloDaPagina = 'Meu Perfil';
         $dados = array(
             'pessoa' => $pessoa,
@@ -709,7 +710,9 @@ class LoginController extends CircuitoController {
                 $pessoa->setTelefone($post_data['ddd'] . $post_data['telefone']);
                 $pessoa->setSexo($post_data[Constantes::$INPUT_SEXO]);
                 $pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
-			    $post_data[Constantes::$FORM_INPUT_DIA]);
+                $post_data[Constantes::$FORM_INPUT_DIA]);
+                $profissao = $this->getRepositorio()->getProfissaoORM()->encontrarPorId($post_data['profissao']);
+                $pessoa->setProfissao($profissao);
                 $this->getRepositorio()->getPessoaORM()->persistir($pessoa, $mudarDataDeCadastro = false);
                 $this->getRepositorio()->fecharTransacao();
 
