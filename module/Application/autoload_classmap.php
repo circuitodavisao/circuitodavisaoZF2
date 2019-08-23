@@ -14,6 +14,7 @@ return array(
     'Application\Model\Entity\FatoParceiroDeDeus'                => __DIR__ . '/src/Application/Model/Entity/FatoParceiroDeDeus.php',
     'Application\Model\Entity\FatoFinanceiroAcesso'              => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiroAcesso.php',
     'Application\Model\Entity\TurmaPessoaAvaliacao'              => __DIR__ . '/src/Application/Model/Entity/TurmaPessoaAvaliacao.php',
+    'Application\Model\Entity\Profissao'                         => __DIR__ . '/src/Application/Model/Entity/Profissao.php',
     'Application\Model\Entity\GrupoPessoa'                       => __DIR__ . '/src/Application/Model/Entity/GrupoPessoa.php',
     'Application\Model\Entity\GrupoMetasOrdenacao'               => __DIR__ . '/src/Application/Model/Entity/GrupoMetasOrdenacao.php',
     'Application\Model\Entity\MetasOrdenacaoCriterio'            => __DIR__ . '/src/Application/Model/Entity/MetasOrdenacaoCriterio.php',
