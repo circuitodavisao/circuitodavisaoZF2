@@ -685,7 +685,7 @@ class LoginController extends CircuitoController {
             ));
         }
         $hierarquias = $this->getRepositorio()->getHierarquiaORM()->encontrarTodas();        
-        $profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade();                  
+        $profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade('nome', 'asc');                  
         $formulario = new PerfilForm('formulario', $pessoa, $profissoes);
         $tituloDaPagina = 'Meu Perfil';
         $dados = array(

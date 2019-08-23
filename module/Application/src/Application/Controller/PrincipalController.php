@@ -168,7 +168,7 @@ class PrincipalController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
-		$profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade();
+		$profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade('nome', 'asc');  		
 		$grupo = $entidadeLogada->getGrupo();
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
