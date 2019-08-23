@@ -59,7 +59,7 @@ class PrincipalController extends CircuitoController {
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
 			}
 		}
-		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo()){			
+		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao()){			
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfil'));			
 		}
 		/* fim formulario */
@@ -168,6 +168,7 @@ class PrincipalController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$profissoes = $this->getRepositorio()->getProfissaoORM()->buscarTodosRegistrosEntidade();
 		$grupo = $entidadeLogada->getGrupo();
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
@@ -199,6 +200,7 @@ class PrincipalController extends CircuitoController {
 			}
 
 			$dados = array();
+			$dados['profissoes'] = $profissoes;
 			$dados['idGrupo'] = $idSessao;
 			$dados['entidade'] = $entidade;
 			$dados['grupoLogado'] = $grupoLogado;

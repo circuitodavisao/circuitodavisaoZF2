@@ -1908,7 +1908,7 @@ class CadastroController extends CircuitoController {
 		$view = new ViewModel(array(
 			Constantes::$PESSOA_REVISAO => $pessoaRevisionista,
 			Constantes::$REVISAO_VIEW => $eventoRevisao,
-			Constantes::$PESSOA_LIDER_REVISAO => $pessoas[0],
+			Constantes::$PESSOA_LIDER_REVISAO => $pessoas,
 			Constantes::$ENTIDADE_REVISAO => $nomeEntidadeLider,
 			Constantes::$NOME_IGREJA_FICHA_REVISAO => $nomeIgreja,
 			Constantes::$STRING_ID_EVENTO_FREQUENCIA => $idEventoFrequencia,

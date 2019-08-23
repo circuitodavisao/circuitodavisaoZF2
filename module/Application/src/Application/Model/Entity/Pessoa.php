@@ -30,6 +30,12 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $inputFilter;
     protected $inputFilterPessoaFrequencia;
 
+     /**
+     * @ORM\ManyToOne(targetEntity="Profissao", inversedBy="pessoa")
+     * @ORM\JoinColumn(name="profissao_id", referencedColumnName="id")
+     */
+    private $profissao;
+
     /**
      * @ORM\OneToMany(targetEntity="GrupoResponsavel", mappedBy="pessoa", fetch="EXTRA_LAZY")
      */
@@ -160,6 +166,9 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="integer") */
     protected $evento_id;
 
+    /** @ORM\Column(type="integer") */
+    protected $profissao_id;
+
     public function exchangeArray($data) {
         $this->nome = (!empty($data['nome']) ? strtoupper($data['nome']) : null);
     }
@@ -182,6 +191,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         $this->evento_id = $evento_id;
     }
 
+    function getProfissao_id() {
+        return $this->profissao_id;
+    }
+
+    function setProfissao_id($profissao_id) {
+        $this->profissao_id = $profissao_id;
+    }
+
     function getNoRevisao() {
         return $this->noRevisao;
     }
@@ -196,6 +213,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
     function setEntidade($entidade) {
         $this->entidade = $entidade;
+    }
+
+    function getProfissao() {
+        return $this->profissao;
+    }
+
+    function setProfissao($profissao) {
+        $this->profissao = $profissao;
     }
 
     /**

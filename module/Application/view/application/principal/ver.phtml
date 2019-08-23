@@ -19,7 +19,7 @@ if (count($this->responsabilidades) == 2) {
 }
 foreach ($this->responsabilidades as $responsavel) {
 	$pessoa = $responsavel->getPessoa();
-	$formulario = new PerfilForm('formulario', $pessoa);
+	$formulario = new PerfilForm('formulario', $pessoa, $this->profissoes);
 	echo '<div class="admin-form col-xs-12 col-sm-12 col-md-' . $tamangoMdELg . ' col-lg-' . $tamangoMdELg . '">';
 	echo $this->perfil($pessoa, $formulario, $naoMostrarOpcoes = false);
 	echo '</div>';
