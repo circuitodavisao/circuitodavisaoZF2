@@ -241,7 +241,7 @@ class IndexController extends CircuitoController {
 					}
 				}
 		//	}
-			$this->getRepositorio()->fecharTransacao();
+		//	$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			Funcoes::var_dump($exc->getTraceAsString());
