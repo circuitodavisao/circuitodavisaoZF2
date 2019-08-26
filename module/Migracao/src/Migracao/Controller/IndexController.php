@@ -64,7 +64,7 @@ class IndexController extends CircuitoController {
 	private $entidadeTipoSub;
 	private $entidadeTipoCoordenacao;
 
-	const DATA_CRIACAO = '2019-06-10';
+	const DATA_CRIACAO = '2019-08-26';
 
 	/**
 	 * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -106,24 +106,24 @@ class IndexController extends CircuitoController {
 
 			//(78, 83, 84, 131, 132, 133, 175, 214)
 			//(41, 43, 37) 
-			$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (37)');
-			while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
-				$html .= '<br />Coordenacao: ' . $rowC['numero'];
+			//$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (37)');
+			//while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
+			//	$html .= '<br />Coordenacao: ' . $rowC['numero'];
 				$idPerfilCoordenacao = 21;
 				$numeroIdentificadorCoordenacao = "$codigoRegiao$codigoCoordenacao";
 				$informacaoEntidade = $rowC['numero'];
 
-				$idGrupoPai = 9272; // santa catarina
+				$idGrupoPai = 7694; // Tocantins
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
-				$grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
+				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $rowC['id']);
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 684');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 					$html .= '<br />Igreja: ' . $row['nome'];
 					$idPerfilIgreja = 18;
 					$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
 					$informacaoEntidade = $row[$stringNome];
-					$grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, $grupoCoordenacao, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja, null);
+					$grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, $grupoRegiao, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja, null);
 					$this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
 					$eventosCulto = $this->cadastrarCulto($row['id'], $grupoIgreja);
 					$this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
@@ -240,8 +240,8 @@ class IndexController extends CircuitoController {
 						}
 					}
 				}
-			}
-			//$this->getRepositorio()->fecharTransacao();
+		//	}
+			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			Funcoes::var_dump($exc->getTraceAsString());
@@ -2847,13 +2847,13 @@ class IndexController extends CircuitoController {
 	private function cadastrarCultoEquipe($eventosCulto, $idEquipe, $grupoEquipe) {
 		if ($eventosCulto) {
 			foreach ($eventosCulto as $eventoCulto) {
-				if ($this->consultarSeExiteCultoParaEquipe($eventoCulto->getIdAntigo(), $idEquipe)) {
+				//if ($this->consultarSeExiteCultoParaEquipe($eventoCulto->getIdAntigo(), $idEquipe)) {
 					$grupoEvento = new GrupoEvento();
 					$grupoEvento->setGrupo($grupoEquipe);
 					$grupoEvento->setEvento($eventoCulto);
 					$grupoEvento->setDataEHoraDeCriacao(self::DATA_CRIACAO);
 					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
-				}
+				//}
 			}
 		}
 	}
