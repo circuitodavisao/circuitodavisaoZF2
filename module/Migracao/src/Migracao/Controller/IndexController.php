@@ -4074,7 +4074,18 @@ class IndexController extends CircuitoController {
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
 		if ($grupos) {						
 			foreach ($grupos as $grupo) {
-				$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
+				$grupoDeLideres = false;
+				$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+				$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+				if($grupoEventoCelulas || $grupoEventoCelulasEstrategicas){
+					$grupoDeLideres = true;
+				}
+				if($grupoDeLideres){
+					$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
+				}				
+				if(!$grupoDeLideres){
+					$quantidadeDeLideres = 0;
+				}
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
 				if ($numeroIdentificador) {
 					$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
@@ -4087,7 +4098,7 @@ class IndexController extends CircuitoController {
 							$html .= 'Quantidade atualizada: ' . $fatoLiderAtual->getLideres();						
 						}
 					} 
-					if(!$fatoLiderAtual){
+					if(!$fatoLiderAtual && $grupoDeLideres){
 						if($grupo && $quantidadeDeLideres !== 0){
 							$fatoLiderNovo = new FatoLider();
 							$fatoLiderNovo->setLideres($quantidadeDeLideres);
