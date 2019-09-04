@@ -66,12 +66,16 @@ class RelatorioController extends CircuitoController {
 			//unset($sessao->idSessao);
 		}
 
+		$defaultEquipe = 2;
+		$pessoalOuEquipe = $defaultEquipe;
+
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');		
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
 			$mes = $post_data['mes'];
 			$ano = $post_data['ano'];
+			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		}
 		if (empty($mes)) {
 			$mes = (int) $this->params()->fromRoute('mes', 0);
@@ -88,7 +92,7 @@ class RelatorioController extends CircuitoController {
 
 		if($request->isPost()){
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano);
+			$relatorio = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano, $true = true, $pessoalOuEquipe);
 
 			switch($tipoRelatorio){
 			case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = $grupo->getId()); break;
@@ -103,6 +107,7 @@ class RelatorioController extends CircuitoController {
 			'mes' => $mes,
 			'ano' => $ano,
 			'relatorio' => $relatorio,
+			'pessoalOuEquipe' => $pessoalOuEquipe,
 			'periodoInicial' => $arrayPeriodoDoMes[0],
 			'periodoFinal' => $arrayPeriodoDoMes[1],
 			'tipoRelatorio' => $tipoRelatorio,
@@ -896,7 +901,7 @@ class RelatorioController extends CircuitoController {
 	const parceiroDeDeusValor = 12;
 	const celulaQuantidadeEstrategica = 13;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $somado = false, $periodo = 0) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $equipeOuPessoal = 2, $periodo = 0) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
@@ -928,18 +933,14 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
-		$tipoRelatorioPessoal = 1;
-		$tipoRelatorioSomado = 2;
+		
 		$relatorioDiscipulos = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 		$soma = array();
 		$somaTotal = array();
 		$contagemDeArray = 1;
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-			$qualRelatorioParaUsar = $tipoRelatorioPessoal;
-			if($somado){
-				$qualRelatorioParaUsar = $tipoRelatorioSomado;
-			}
+			$qualRelatorioParaUsar = $equipeOuPessoal;				
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
@@ -1005,11 +1006,11 @@ class RelatorioController extends CircuitoController {
 						if($tipoRelatorio === self::relatorioParceiroDeDeus){
 
 							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]
-								= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
+								= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
 							$soma[$grupoFilho->getId()][self::parceiroDeDeusValor] += $relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays]['valor'];
 
 						}else{
-							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
+							$relatorioDiscipulos[$grupoFilho->getId()][$indiceDeArrays] = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho, $indiceDeArrays, $qualRelatorioParaUsar, $estaInativo, $tipoRelatorio);
 						}
 
 					}else{
@@ -1049,7 +1050,7 @@ class RelatorioController extends CircuitoController {
 								$numeroIdentificadorFilho1 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho1, $dataInativacao);
 								if($tipoRelatorio === self::relatorioParceiroDeDeus){
 									$relatorioDiscipulos1
-										= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho1,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
+										= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho1,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
 									$relatorioParceiroDiscipulos['valor'] += $relatorioDiscipulos1['valor'];									
 								}else{
 									$dataInativacao = null;
@@ -1060,7 +1061,7 @@ class RelatorioController extends CircuitoController {
 									if(!$filho1->verificarSeEstaAtivo()){
 										$estaInativo = true;
 									}
-									$relatorioDiscipulos1 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho1, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
+									$relatorioDiscipulos1 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho1, $indiceDeArrays, $qualRelatorioParaUsar, $estaInativo, $tipoRelatorio);
 									foreach($relatorioDiscipulos1 as $key => $val){
 										$relatorioSomado1[$key] += $val;
 									}
@@ -1100,7 +1101,7 @@ class RelatorioController extends CircuitoController {
 										$numeroIdentificadorFilho2 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho2, $dataInativacao);
 										if($tipoRelatorio === self::relatorioParceiroDeDeus){				
 											$relatorioDiscipulos2
-												= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho2,$indiceDeArrays, $mes, $ano, $tipoRelatorioSomado);
+												= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificadorFilho2,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
 											$relatorioParceiroDiscipulos['valor'] += $relatorioDiscipulos2['valor'];	
 										}else{
 											$dataInativacao = null;
@@ -1111,7 +1112,7 @@ class RelatorioController extends CircuitoController {
 											if(!$filho2->verificarSeEstaAtivo()){
 												$estaInativo = true;
 											}
-											$relatorioDiscipulos2 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho2, $indiceDeArrays, $tipoRelatorioSomado, $estaInativo, $tipoRelatorio);
+											$relatorioDiscipulos2 = RelatorioController::montaRelatorio($repositorio, $numeroIdentificadorFilho2, $indiceDeArrays, $qualRelatorioParaUsar, $estaInativo, $tipoRelatorio);
 											foreach($relatorioDiscipulos2 as $key => $val){
 												$relatorioSomado1[$key] += $val;
 											}
@@ -2370,10 +2371,10 @@ public function alunosAction(){
 
 	foreach($relatorioInicial as $relatorio){
 		if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 			foreach($turmas as $turma){
-				if($relatorio->getTurma_id() === $turma->getId()){
-					if($turma->getTurmaAulaAtiva()){
-						$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+				if($relatorio->getTurma_id() === $turma->getId() && $turmaPessoa->verificarSeEstaAtivo()){
+					if($turma->getTurmaAulaAtiva()){						
 
 						$linkWhatsapp = '<i class="btn btn-xs btn-default btn-disabled fa fa-ban"></i>';
 						$telefone = 'SEM TELEFONE';
