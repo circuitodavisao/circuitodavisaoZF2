@@ -74,8 +74,80 @@ echo '</div>';
 echo '</div>';
 
 echo '<form action="/relatorio/' . $url . '" method="post">';
-echo $this->cabecalhoDeMeses();
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2017;
+$anoFinal = date('Y');
+
+?>
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="mes" id="mes" class="form-control">
+				<?php 
+					for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+						$selected = '';
+						if ($this->mes == $indice) {
+							$selected = 'selected';
+						}
+			
+						echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+					}
+				?>
+			</select>
+		</div>
+		<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="ano" id="ano" class="form-control">
+				<?php 					
+					for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+						$selected = '';
+						if ($this->ano == $indice) {
+							$selected = 'selected';
+						}
+						echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+					}
+				?>
+			</select>
+		</div>
+		<?php
+			$checked1 = '';
+			$checked2 = '';
+			switch ($this->pessoalOuEquipe) {
+				case 1:
+					$checked1 = 'checked';
+					break;
+				case 2:
+					$checked2 = 'checked';
+					break;
+				default:
+					$checked2 = 'checked';					
+					break;
+			}
+		?>
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+			<div class="option-group field text-center pb10 pt10">
+				<label class="option option-primary">
+					<input type="radio" name="pessoalOuEquipe" value="1" <?php echo $checked1;?>>
+					<span class="radio"></span>Pessoal
+				</label>
+				<label class="option option-primary">
+					<input type="radio" name="pessoalOuEquipe" value="2" <?php echo $checked2;?>>
+					<span class="radio"></span>Equipe
+				</label>
+			</div>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+		<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+			<span class="ladda-label">Filtrar</span>
+			<span class="ladda-spinner"></span>
+		</button>
+	</div>
+</div>
+<?php
 echo '</form>';
+
+
 
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';

@@ -230,11 +230,23 @@ if($this->filtrado){
 												if ($mostrar) {
 													$icone = 'fa-times';
 													$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;
+													$pontosDoFinanceiro = 0;
 													if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
 														foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
 															if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
-																$icone = 'fa-check';
-																$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+																if($turmaPessoaFinanceiro->getValor1() == 'S'){
+																	$pontosDoFinanceiro += 1;
+																}
+																if($turmaPessoaFinanceiro->getValor2() == 'S'){
+																	$pontosDoFinanceiro += 1;
+																}
+																if($turmaPessoaFinanceiro->getValor3() == 'S'){
+																	$pontosDoFinanceiro += 1;
+																}
+																if($pontosDoFinanceiro == 3){
+																	$icone = 'fa-check';
+																	$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+																}																
 															}
 														}
 													}

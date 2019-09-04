@@ -247,6 +247,8 @@ class Constantes {
     public static $ENTITY_GRUPO_PAI_FILHO = 'Application\Model\Entity\GrupoPaiFilho';
     public static $ENTITY_GRUPO_PESSOA_TIPO = 'Application\Model\Entity\GrupoPessoaTipo';
     public static $ENTITY_PROFISSAO = 'Application\Model\Entity\Profissao';
+    public static $ENTITY_RESOLUCAO_RESPONSABILIDADE = 'Application\Model\Entity\ResolucaoResponsabilidade';
+    public static $ENTITY_TROCA_RESPONSAVEL = 'Application\Model\Entity\TrocaResponsavel';
     public static $ENTITY_GRUPO_METAS_ORDENACAO = 'Application\Model\Entity\GrupoMetasOrdenacao';
     public static $ENTITY_METAS_ORDENACAO_CRITERIO = 'Application\Model\Entity\MetasOrdenacaoCriterio';
     public static $ENTITY_METAS_ORDENACAO_TIPO = 'Application\Model\Entity\MetasOrdenacaoTipo';
