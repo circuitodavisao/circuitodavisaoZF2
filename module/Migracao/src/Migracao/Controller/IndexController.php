@@ -64,7 +64,7 @@ class IndexController extends CircuitoController {
 	private $entidadeTipoSub;
 	private $entidadeTipoCoordenacao;
 
-	const DATA_CRIACAO = '2019-08-26';
+	const DATA_CRIACAO = '2019-09-02';
 
 	/**
 	 * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -3939,7 +3939,7 @@ class IndexController extends CircuitoController {
 
 	public function transformarCelulaBetaAction(){
 		$dados = array();
-		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = -10, $tipoComparacao = 2, $estrategica = true);
+		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = 0, $tipoComparacao = 2, $estrategica = true);
 		$listaDeCelulas = array();
 		foreach($fatoCelulasBeta as $valor){
 			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($valor['evento_celula_id']);
