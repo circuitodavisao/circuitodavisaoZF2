@@ -940,6 +940,7 @@ class RelatorioController extends CircuitoController {
 		$somaTotal = array();
 		$contagemDeArray = 1;
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+			$relatorioPessoal = 1; // setado de forma fixa, para não dobrar o relatório do líder (toda a equipe) mais a equipe.
 			$qualRelatorioParaUsar = $equipeOuPessoal;				
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
@@ -951,7 +952,7 @@ class RelatorioController extends CircuitoController {
 						$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 					}else{
 						$relatorio[self::dadosPessoais][$indiceDeArrays]
-							= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $qualRelatorioParaUsar, false, $tipoRelatorio);
+							= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $relatorioPessoal, false, $tipoRelatorio);
 						$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
 						$soma[self::dadosPessoais][self::membresiaPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaPerformance'];
 						$soma[self::dadosPessoais][self::celula] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celula'];
