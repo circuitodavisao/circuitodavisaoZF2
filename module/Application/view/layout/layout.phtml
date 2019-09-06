@@ -1,6 +1,6 @@
 <?php
 echo $this->doctype();
-$versao = '?v=1.6.11';
+$versao = '?v=1.6.12';
 
 use Application\Controller\Helper\Constantes;
 ?>
@@ -104,12 +104,15 @@ use Application\Controller\Helper\Constantes;
                 // Init FooTable Examples
                 $('.footable').footable({paginate: false});
 
-                $(document).ready(function () {
-                    let ls = localStorage.getItem("modalIndexx");
-                    if(!ls){
-                        $('#alertIndex').modal('show');
-                    }
-                });
+                // Modal de publicidade na página de login
+
+                // $(document).ready(function () {
+                //     let ls = localStorage.getItem("modalIndexx");
+                //     if(!ls){
+                //         $('#alertIndex').modal('show');
+                //     }
+                // });
+
                 $('#alertIndex').on('shown.bs.modal', function(){
                     localStorage.setItem("modalIndex", false);
                 });
