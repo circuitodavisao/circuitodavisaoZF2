@@ -15,16 +15,23 @@ use Exception;
  */
 class FatoCursoORM extends CircuitoORM {
 
-	public function encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador) {
+	public function encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador, $tipoComparacao = 2) {
 		$resposta = null;
-		try {
-			$dql = "SELECT fc "
+		$dqlBase = "SELECT fc "
 				. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
 				. "WHERE "
-				. " fc.numero_identificador LIKE ?1 "
+				. "fc.numero_identificador #tipoComparacao ?1 "				
 				. "AND fc.data_inativacao is null ";
-				$resposta = $this->getEntityManager()->createQuery($dql)
-				->setParameter(1, $numeroIdentificador . '%')
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}
+				$resposta = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
 				->getResult();
 			return $resposta;
 		} catch (Exception $exc) {

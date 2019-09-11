@@ -165,28 +165,31 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
                     ),
                 ),
             ));
-            $inputFilter->add(array(
-                'name' => 'sigla',
-                'required' => true,
-                'filter' => array(
-                    array('name' => 'StripTags'), // removel xml e html string
-                    array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
-                    array('name' => 'StringToUpper'), // transforma em maiusculo
-                ),
-                'validators' => array(
-                    array(
-                        'name' => 'NotEmpty',
+            if($this->getEntidadeTipo() && $this->getEntidadeTipo()->getId() === Entidade::EQUIPE){                
+                $inputFilter->add(array(
+                    'name' => 'sigla',
+                    'required' => true,
+                    'filter' => array(
+                        array('name' => 'StripTags'), // removel xml e html string
+                        array('name' => 'StringTrim'), // removel espaco do inicio e do final da string
+                        array('name' => 'StringToUpper'), // transforma em maiusculo
                     ),
-                    array(
-                        'name' => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min' => 3,
-                            'max' => 3,
+                    'validators' => array(
+                        array(
+                            'name' => 'NotEmpty',
+                        ),
+                        array(
+                            'name' => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min' => 3,
+                                'max' => 3,
+                            ),
                         ),
                     ),
-                ),
-            ));
+                ));
+            }
+            
             $this->inputFilterPessoaFrequencia = $inputFilter;
         }
         return $this->inputFilterPessoaFrequencia;

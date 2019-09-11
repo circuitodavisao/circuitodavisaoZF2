@@ -23,10 +23,10 @@ if($this->filtrado){
 			echo '<div>';
 			$entidadeDoFilho = $grupoFilho->getEntidadeAtiva();			
 			if($entidadeDoFilho->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-				echo 'COORDENAÇÃO ' . $entidadeDoFilho->getNumero();
+				echo 'COORDENAÇÃO ' . $entidadeDoFilho->getNumero() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 			}
 			if($entidadeDoFilho->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
-				echo $entidadeDoFilho->infoEntidade();
+				echo $entidadeDoFilho->infoEntidade() . ' - ' . $grupoFilho->getNomeLideresAtivos();
 			} 			
 			echo '</div>';
 			foreach($grupoFilho->getPessoasAtivas() as $pessoa){

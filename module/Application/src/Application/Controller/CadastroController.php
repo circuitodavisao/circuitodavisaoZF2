@@ -31,6 +31,8 @@ use Application\Model\Entity\GrupoMetasOrdenacao;
 use Application\Model\Entity\MetasOrdenacaoCriterio;
 use Application\Model\Entity\MetasOrdenacaoTipo;
 use Application\Model\Entity\Pessoa;
+use Application\Model\Entity\ResolucaoResponsabilidade;
+use Application\Model\Entity\TrocaResponsavel;
 use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Solicitacao;
@@ -169,6 +171,11 @@ class CadastroController extends CircuitoController {
 		if ($pagina == Constantes::$PAGINA_SOLICITACAO_RECUSAR) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_SOLICITACAO_RECUSAR,
+			));
+		}
+		if ($pagina == Constantes::$PAGINA_TROCA_DE_RESPONSAVEL_RECUSAR) {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_TROCA_DE_RESPONSAVEL_RECUSAR,
 			));
 		}
 		if ($pagina == Constantes::$PAGINA_SOLICITACAO) {
@@ -2391,6 +2398,9 @@ class CadastroController extends CircuitoController {
 			$solicitacoesTipo[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
 			$solicitacoesTipo[] = $solicitacaoTipo;
+
+			$trocaDeResponsaveis = $this->getRepositorio()->getTrocaResponsavelORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
+			$dados['trocaDeResponsaveis'] = $trocaDeResponsaveis;
 		}
 
 		foreach($solicitacoes as $solicitacaoPorData){
@@ -2422,7 +2432,7 @@ class CadastroController extends CircuitoController {
 
 
 		$dados['grupo'] = $entidade->getGrupo();
-		$dados['entidade'] = $entidade;
+		$dados['entidade'] = $entidade;		
 		$dados['solicitacoes'] = $solicitacoesDivididasPorTipo;
 		$dados['solicitacoesTipo'] = $solicitacoesTipo;
 		$dados['titulo'] = 'Solicitações';
@@ -2455,8 +2465,21 @@ class CadastroController extends CircuitoController {
 		));
 	}
 
+	public function trocaDeResponsavelRecusarAction(){
+		self::validarSeSouRegiao();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		if($idSessao = $sessao->idSessao){
+			$trocaDeResponsaveisAtivas = $this->getRepositorio()->getTrocaResponsavelORM()->encontrarPorId($idSessao);						
+			$trocaDeResponsaveisAtivas->setDataEHoraDeInativacao();
+			$this->getRepositorio()->getTrocaResponsavelORM()->persistir($trocaDeResponsaveisAtivas, $mudarDataDeCriacao = false);			
+		}
+		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+			Constantes::$PAGINA => Constantes::$PAGINA_SOLICITACOES,
+		));
+	}
+
 	public function solicitacaoRecusarAction(){
-		self::validarSeSouIgreja();
+		self::validarSeSouRegiaoOuIgreja();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		if($idSessao = $sessao->idSessao){
 			$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($idSessao);
@@ -3307,15 +3330,29 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function trocarResponsabilidadesFinalizarAction(){
+		self::validarSeSouRegiao();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
+		$grupoLogado = $entidade->getGrupo();
 		$request = $this->getRequest();
 		$response = $this->getResponse();
 		$dados = array();
 		if ($request->isPost()) {
 			try {
+				$this->getRepositorio()->iniciarTransacao();
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$dataParaInativar = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") - 1, date("Y")));
-				foreach($json->listaDeTimesEResponsabilidades as $item){
+				$operacaoAdicionar = 'A'; // Adicionando nova responsabilidade
+				$operacaoRemover = 'R'; // Remover responsabilidade
+				$situacaoPendente = 'P'; // Troca de responsavel pendente
+				$trocaResponsavel = new TrocaResponsavel();
+				$trocaResponsavel->setDataEHoraDeCriacao();
+				$trocaResponsavel->setSituacao($situacaoPendente);							
+				$trocaResponsavel->setRegiao_id($grupoLogado->getId());
+				$this->getRepositorio()->getTrocaResponsavelORM()->persistir($trocaResponsavel);	
+
+				foreach($json->listaDeTimesEResponsabilidades as $item){			
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($item->idTime);	
 					$pessoas = array();
 					foreach($grupo->getResponsabilidadesAtivas() as  $grupoResponsavel){
@@ -3323,7 +3360,42 @@ class CadastroController extends CircuitoController {
 					}
 
 					foreach($item->responsabilidades as $responsabilidade){
-						if($responsabilidade->id !== 'removido'){
+						if($responsabilidade->id !== 'removido'){							
+
+							// Se o grupo envolvido na troca de responsabilidade estiver passando por solicitacao, não pode ser trocado
+							$solicitacoesParaVerificarObjeto1 = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto1($responsabilidade->id);							
+							$solicitacoesParaVerificarObjeto2 = $this->getRepositorio()->getSolicitacaoORM()->encontrarSolicitacoesPorObjeto2($responsabilidade->id);				
+						
+									
+							/* validar se ja tem solicitacao */
+							if($solicitacoesParaVerificarObjeto1 || $solicitacoesParaVerificarObjeto2){					
+								$temSolicitacoesPendentes = false;
+								foreach($solicitacoesParaVerificarObjeto1 as $solicitacaoParaVerificar){					
+									if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
+										&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
+										$temSolicitacoesPendentes = true;
+									}
+								}	
+								foreach($solicitacoesParaVerificarObjeto2 as $solicitacaoParaVerificar){					
+									if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
+										&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
+										$temSolicitacoesPendentes = true;
+									}
+								}	
+								
+								$resolucaoResponsabilidadesPendentes = $this->getRepositorio()->getResolucaoResponsabilidadeORM()->encontrarResolucaoResponsabilidadePorGrupo($responsabilidade->id);
+								foreach($resolucaoResponsabilidadesPendentes as $resolucaoResponsabilidade){																
+									if($resolucaoResponsabilidade->getTrocaResponsavel()->verificarSeEstaAtivo() 
+									&& $resolucaoResponsabilidade->getTrocaResponsavel()->getSituacao() == $situacaoPendente){										
+										$temSolicitacoesPendentes = true;
+									}
+								}
+								
+								if($temSolicitacoesPendentes){
+									$dados['solicitacoesPendentes'] = true;									
+								}
+							}									
+													
 							$grupoParaNovaResponsabilidades = $this->getRepositorio()->getGrupoORM()->encontrarPorId($responsabilidade->id);	
 
 							$criarNovo = true;
@@ -3334,42 +3406,43 @@ class CadastroController extends CircuitoController {
 									}
 								}
 							}
-							if($criarNovo){
-								/* Adicionar Responsabilidade */
-//								$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
-//								$solicitacao = new Solicitacao();
-//								$solicitacao->setSolicitante($pessoaLogada);
-//								$solicitacao->setGrupo($grupoIgreja);
-//								$solicitacao->setSolicitacaoTipo($solicitacaoTipo);
-//								$solicitacao->setObjeto1($post_data['objeto1']);
-//								$solicitacao->setObjeto2($post_data['objeto1']);
-//								$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
-//
-//								$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
-//								$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
-//								$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-//								$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
+							if($criarNovo){			
+								$pessoasResponsaveisAnteriormente = array();
+								foreach($grupoParaNovaResponsabilidades->getResponsabilidadesAtivas() as  $grupoResponsavel){
+									$pessoasResponsaveisAnteriormente[] = $grupoResponsavel->getPessoa();
+								}	
+								
+								/* Removendo responsabilidade dos antigos lideres do grupo*/
+								foreach($pessoasResponsaveisAnteriormente as $responsavelAnterior){
+									$resolucaoRemoverResponsabilidade = new ResolucaoResponsabilidade();
+									$resolucaoRemoverResponsabilidade->setTrocaResponsavel($trocaResponsavel);
+									$resolucaoRemoverResponsabilidade->setPessoa_id($responsavelAnterior->getId());
+									$resolucaoRemoverResponsabilidade->setGrupo_id($responsabilidade->id);
+									$resolucaoRemoverResponsabilidade->setOperacao($operacaoRemover);	
+									$resolucaoRemoverResponsabilidade->setDataEHoraDeCriacao();	
+									$this->getRepositorio()->getResolucaoResponsabilidadeORM()->persistir($resolucaoRemoverResponsabilidade);																	
+								}
+
+								/* Adicionando responsabilidade para os novos lideres do grupo*/
+								foreach($pessoas as $pessoaEnvolvidaNaTroca){
+									$resolucaoNovaResponsabilidade = new ResolucaoResponsabilidade();
+									$resolucaoNovaResponsabilidade->setTrocaResponsavel($trocaResponsavel);
+									$resolucaoNovaResponsabilidade->setPessoa_id($pessoaEnvolvidaNaTroca->getId());
+									$resolucaoNovaResponsabilidade->setGrupo_id($responsabilidade->id);
+									$resolucaoNovaResponsabilidade->setOperacao($operacaoAdicionar);	
+									$resolucaoNovaResponsabilidade->setDataEHoraDeCriacao();	
+									$this->getRepositorio()->getResolucaoResponsabilidadeORM()->persistir($resolucaoNovaResponsabilidade);																	
+								}																							
 							}
-						}else{
-							/* Remover Responsabilidade */
-//							$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId($post_data['solicitacaoTipoId']);
-//							$solicitacao = new Solicitacao();
-//							$solicitacao->setSolicitante($pessoaLogada);
-//							$solicitacao->setGrupo($grupoIgreja);
-//							$solicitacao->setSolicitacaoTipo($solicitacaoTipo);
-//							$solicitacao->setObjeto1($post_data['objeto1']);
-//							$solicitacao->setObjeto2($post_data['objeto1']);
-//							$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);
-//
-//							$solicitacaoSituacaoAceito = new SolicitacaoSituacao();
-//							$solicitacaoSituacaoAceito->setSolicitacao($solicitacao);
-//							$solicitacaoSituacaoAceito->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::ACEITO_AGENDADO));
-//							$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAceito);
-						}
+						}					
 					}
 				}
-
+				if(!$dados['solicitacoesPendentes']){
+					$this->getRepositorio()->fecharTransacao();				
+				}				
 			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();				
+				echo $exc->getMessage();
 				$dados['message'] = $exc->getMessage();
 			}
 			$response->setContent(Json::encode($dados));

@@ -537,6 +537,7 @@ class Constantes {
     public static $PAGINA_SOLICITACOES = 'Solicitacoes';
     public static $PAGINA_SOLICITACAO_ACEITAR = 'SolicitacaoAceitar';
     public static $PAGINA_SOLICITACAO_RECUSAR = 'SolicitacaoRecusar';
+    public static $PAGINA_TROCA_DE_RESPONSAVEL_RECUSAR = 'TrocaDeResponsavelRecusar';
     public static $PAGINA_SOLICITACAO = 'Solicitacao';
     public static $PAGINA_SOLICITACAO_FINALIZAR = 'SolicitacaoFinalizar';
     public static $PAGINA_SOLICITACAO_RECEBER = 'SolicitacaoReceber';

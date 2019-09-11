@@ -672,11 +672,11 @@ class RelatorioController extends CircuitoController {
 		));
 	}
 
-	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true){		
+	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true, $pessoalOuEquipe = 2){		
 		$relatorioAjustado = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo());
 
-		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe);
 		$turmasComAulaAberta = array();
 		if($turmasAtivas){				
 			$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
@@ -735,11 +735,11 @@ class RelatorioController extends CircuitoController {
 
 	}
 
-	static public function totalDeAlunos($repositorio, $grupo){		
+	static public function totalDeAlunos($repositorio, $grupo, $pessoalOuEquipe = 2){		
 		$alunos = 0;
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 
-		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+		$relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe);
 		$turmasComAulaAberta = array();
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 
@@ -901,7 +901,7 @@ class RelatorioController extends CircuitoController {
 	const parceiroDeDeusValor = 12;
 	const celulaQuantidadeEstrategica = 13;
 
-	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $equipeOuPessoal = 2, $periodo = 0) {
+	public static function relatorioCompleto($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $pessoalOuEquipe = 2, $periodo = 0, $relatorioDoLider = 1) {
 		$relatorio = array();
 		$todosFilhos = array();
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
@@ -939,9 +939,8 @@ class RelatorioController extends CircuitoController {
 		$soma = array();
 		$somaTotal = array();
 		$contagemDeArray = 1;
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-			$relatorioPessoal = 1; // setado de forma fixa, para não dobrar o relatório do líder (toda a equipe) mais a equipe.
-			$qualRelatorioParaUsar = $equipeOuPessoal;				
+		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {			
+			$qualRelatorioParaUsar = $pessoalOuEquipe;				
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
@@ -952,7 +951,7 @@ class RelatorioController extends CircuitoController {
 						$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 					}else{
 						$relatorio[self::dadosPessoais][$indiceDeArrays]
-							= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $relatorioPessoal, false, $tipoRelatorio);
+							= RelatorioController::montaRelatorio($repositorio, $numeroIdentificador, $indiceDeArrays, $relatorioDoLider, false, $tipoRelatorio);
 						$soma[self::dadosPessoais][self::membresia] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresia'];
 						$soma[self::dadosPessoais][self::membresiaPerformance] += $relatorio[self::dadosPessoais][$indiceDeArrays]['membresiaPerformance'];
 						$soma[self::dadosPessoais][self::celula] += $relatorio[self::dadosPessoais][$indiceDeArrays]['celula'];
@@ -3756,7 +3755,7 @@ public function alunosNaSemanaAction(){
 		return $dados;
 	}
 
-	static function buscarDadosPrincipais($repositorio, $grupo, $mes, $ano){
+	static function buscarDadosPrincipais($repositorio, $grupo, $mes, $ano, $pessoalOuEquipe = 2){
 		$celulas = 0;
 		$lideres = 0;
 		$discipulados = 0;
@@ -3782,10 +3781,8 @@ public function alunosNaSemanaAction(){
 			if($mes == date('m') && $ano == date('Y')){
 				$arrayPeriodoDoMes[1] = 0;
 			}
-			$periodoParaUsar = $arrayPeriodoDoMes[1];
-			$tipoSomado = 2;
-
-			$tipoRelatorio = $tipoSomado;
+			$periodoParaUsar = $arrayPeriodoDoMes[1];		
+			$tipoRelatorio = $pessoalOuEquipe;
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 				$numeroIdentificador = '';
 			} else {
@@ -3796,7 +3793,7 @@ public function alunosNaSemanaAction(){
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 					/* Líderes */
 					$fatoLider = 
-						$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+						$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);						
 					$lideres = $fatoLider[0]['lideres'];
 
 					/* Células */
@@ -3809,14 +3806,15 @@ public function alunosNaSemanaAction(){
 					$celulas = $quantidadeCelulas + $quantidadeCelulasEstrategicas;
 
 					/* Discipulados */
-					$discipulados = $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador);
+					$discipulados = $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);					
+					
 					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 						/* Alunos */
-						$alunos = RelatorioController::totalDeAlunos($repositorio, $grupo);
+						$alunos = RelatorioController::totalDeAlunos($repositorio, $grupo, $tipoRelatorio);						
 					}					
 
 					/* Parceiro de Deus */
-					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];					
+					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $tipoRelatorio)['valor'];					
 				}
 
 			/* Contado Regiões, Coordenações e Igrejas */
@@ -4059,7 +4057,7 @@ public function alunosNaSemanaAction(){
 		return $dados;
 	}
 
-	static function buscarDadosPrincipaisMembresia($repositorio, $grupo, $mes, $ano){
+	static function buscarDadosPrincipaisMembresia($repositorio, $grupo, $mes, $ano, $pessoalOuEquipe = 2){
 		$mediaCultos = 0;
 		$mediaArena = 0;
 		$mediaDomingo = 0;
@@ -4074,11 +4072,11 @@ public function alunosNaSemanaAction(){
 			$arrayPeriodoDoMes[1] = 0;
 		}
 		$periodoParaUsar = $arrayPeriodoDoMes[1];
-		$tipoSomado = 2;
+		$tipoSomado = 2;		
 
 		$tipoRelatorio = $tipoSomado;
 
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual', $pessoalOuEquipe);
 		$indiceParaVer = count($relatorio) - 1;
 
 		$mediaCultos = $relatorio[$indiceParaVer]['mediaMembresiaCulto'];
@@ -4105,7 +4103,7 @@ public function alunosNaSemanaAction(){
 		return $dados;
 	}
 
-	static function buscarDadosPrincipaisCelula($repositorio, $grupo, $mes, $ano){
+	static function buscarDadosPrincipaisCelula($repositorio, $grupo, $mes, $ano, $pessoalOuEquipe = 2){
 		$mediaCelulaQuantidade = 0;
 		$mediaPessoasFrequentes = 0;
 		$mediaCelulaRealizadas = 0;
@@ -4122,7 +4120,7 @@ public function alunosNaSemanaAction(){
 
 		$tipoRelatorio = $tipoSomado;
 
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual');
+		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual', $pessoalOuEquipe);
 		$indiceParaVer = count($relatorio) - 1;
 
 		$mediaCelulaQuantidade = $relatorio[$indiceParaVer]['mediaCelulaQuantidade'];
@@ -4145,14 +4143,14 @@ public function alunosNaSemanaAction(){
 		return $dados;
 	}
 
-	static function buscarDadosPrincipaisInstituto($repositorio, $grupo, $mes, $ano){
+	static function buscarDadosPrincipaisInstituto($repositorio, $grupo, $mes, $ano, $pessoalOuEquipe){
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		if($mes == date('m') && $ano == date('Y')){
 			$arrayPeriodoDoMes[1] = 0;
 		}
 		$periodoParaUsar = $arrayPeriodoDoMes[1];
 
-		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($repositorio, $grupo->getEntidadeAtiva())[0];
+		$relatorioCursos = RelatorioController::relatorioAlunosETurmas($repositorio, $grupo->getEntidadeAtiva(), $turmasAtivas = true, $pessoalOuEquipe)[0];
 		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$turmasAbertas = array();
 		foreach($turmas as $turma){

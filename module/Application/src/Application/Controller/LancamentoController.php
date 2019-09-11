@@ -964,6 +964,10 @@ class LancamentoController extends CircuitoController {
         $idEntidadeAtual = $sessao->idEntidadeAtual;
         $entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
         $grupo = $entidade->getGrupo();
+        $arrayDePessoas = array();
+        foreach($grupo->getPessoasAtivas() as $pessoa){
+            $arrayDePessoas[] = $pessoa->getId();
+        }
 
         $request = $this->getRequest();		
 		if($request->isPost()){
@@ -984,18 +988,26 @@ class LancamentoController extends CircuitoController {
             $grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
             if ($grupoPaiFilhoFilhos) {
                 foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-                    $adicionar = true;
+                    $adicionar1 = true;
                     if (count($todosFilhos) > 0) {
                         foreach ($todosFilhos as $filho) {
                             if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-                                $adicionar = false;
+                                $adicionar1 = false;
                                 break;
                             }
                         }
                     }
-                    if ($adicionar) {
-                        $todosFilhos[] = $grupoPaiFilhoFilho;
-                    }
+                    if ($adicionar1) {
+                        foreach($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getPessoasAtivas() as $pessoa){
+                            $adicionar2 = true;
+                            if (in_array($pessoa->getId(), $arrayDePessoas)) { 
+                                $adicionar2 = false;
+                            }                            
+                        }
+                        if($adicionar2){
+                            $todosFilhos[] = $grupoPaiFilhoFilho;						
+                        }                        
+					}
                 }
             }
         }

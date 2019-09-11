@@ -3,125 +3,152 @@
 use Application\Controller\Helper\Constantes;
 use Application\View\Helper\BotaoSimples;
 
-echo $this->templateFormularioTopo('<b class="text-danger">Troca</b> de Responsabilidades', '', 'style="max-width: 50%; margin-top: 0%; margin: auto;"');
 ?>
-<div class="panel-body bg-light">
-	<span id="spanCarregando">Carregando ...</span>
-	
-	<div id="divSelectTimes" class="hidden">
-		<div class="row p10">
-			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 1</span></div>
-			<div class="form-group col-lg-12 col-xs-12">
-				<label class="field-label text-muted text-center fs18 mb10">Times para selecionar</label>
-				<select class="form-control" id="selectTimes">
-				</select>
-			</div>
-		</div>
-
-		<div class="row p10">
-			<button type="button" onClick="adicionarTime()" class="btn ladda-button btn-primary pull-right ml10 " data-style="zoom-in">
-				<span class="ladda-label">Adicionar</span>
-				<span class="ladda-spinner"></span>
-			</button>
-		</div>
-	</div>
-
-	<div id="divListaDeTimesSelecionados" class="hidden">
-		<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Times Selecionados</span></div>
-		<ul class="fa-ul" id="listaDeTimesSelecionados">
-			<li>Nenhum time selecionado</li>
-		</ul>
-		<button id="botaoSegundoPasso" type="button" onClick="mostrarSegundoPasso()" class="btn ladda-button btn-primary pull-right ml10 hidden" data-style="zoom-in">
-			<span class="ladda-label">Próximo Passo</span>
-			<span class="ladda-spinner"></span>
-		</button>
 		
-	</div>
-
-	<div id="divSegundoPasso" class="hidden">
-		<div class="row p10">
-			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 2</span></div>
-			<div id="divSelectTimesSelecionados">
-				<div class="form-group col-lg-12 col-xs-12">
-					<label class="field-label text-muted text-center fs18 mb10">Selecione o time e as responsabilidades para ele</label>
-					<select class="form-control" id="selectTimesSelecionados">
-					</select>
-				</div>				
-				<div class="row p10">					
-					<button id="botaoSegundoPasso" type="button" onClick="mostrarResponsabilidadesParaSelecionar()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
-						<span class="ladda-label">Selecionar</span>
-						<span class="ladda-spinner"></span>
-					</button>		
-					<button id="botaoSegundoPasso" type="button" onClick="voltarPassoUm()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
-						<span class="ladda-label">Voltar</span>
-						<span class="ladda-spinner"></span>
-					</button>			
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- fim divSelectTimesSelecionado -->
-
-	<div id="divResponsabilidadesDisponiveis" class="hidden">	
-		<div class="row p10">			
-			<div class="form-group col-lg-12 col-xs-12">
-				<label class="field-label text-muted text-center fs18 mb10">
-					Responsabilidades Disponiveis - Time: <span id="spanTimeSelecionadoParaIncluirResponsabilidades"></span>
-				</label>
-				<select class="form-control" id="selectResponsabilidadesDisponiveis">
-				</select>
-			</div>
-			<button type="button" onClick="selecionarResponsabilidadeParaOGrupo()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
-				<span class="ladda-label">Selecionar</span>
-				<span class="ladda-spinner"></span>
-			</button>
-			<button type="button" onClick="mostrarSelectTimesSelecionados()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
-				<span class="ladda-label">Voltar</span>
-				<span class="ladda-spinner"></span>
-			</button>			
-		</div>	
-		<div class="row p10">
-			<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Como Ficará</span></div>
-			<ul class="fa-ul" id="listaDeTimesEResponsabilidades">
-				<li>Nenhuma Responsabilidade Atribuida</li>
-			</ul>
-		</div>
-	</div>
-
-	<div id="divBotaoFinalizar" class="row p10 hidden">			
-		<button id="botaoFinalizar" class="btn btn-success ladda-button pull-right ml10" onClick="finalizar()">FINALIZAR</button>
-		<!--divSenha-->
-		<div id="divSenha" class="hidden">
-			<div class="">
-				<div class="section-divider">
-					<span>Confirma essa solicitação?</span>
-				</div>
-				<?php echo $this->divMensagens(); ?>
-				<div class="row">
-					<div class="col-sm-12 col-xs-12">
-						<div class="section text-center mb10">
-							<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+<div class="center-block col-lg-6 col-md-6 col-sm-12 col-xs-12">
+   	<div class="admin-form theme-primary">	    
+        <blockquote class = "blockquote-primary">
+			<small id="tituloDaPagina">
+				<b class="text-danger">Troca</b> de Responsabilidades
+			</small>
+        </blockquote>
+		<div class="panel heading-border panel-primary">
+			<div class="panel-body bg-light">
+				<span id="spanCarregando">Carregando ...</span>				
+				
+				<div id="divSelectTimes" class="hidden">
+					<div class="row p10">
+						<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 1</span></div>
+						<div class="form-group col-lg-12 col-xs-12">
+							<label class="field-label text-muted text-center fs18 mb10">Times para selecionar</label>
+							<select class="form-control" id="selectTimes">
+							</select>
 						</div>
-						<div class="text-right" style="height:65px;">
-							<?php
-							/* Botões */
-							$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
-							$stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha()';
-							echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);							
-							?>							
-							<button class="btn btn-warning ladda-button pull-right ml10" onClick="recomecar()">RECOMEÇAR</button>
+					</div>
+
+					<div class="row p10">
+						<button type="button" onClick="adicionarTime()" class="btn ladda-button btn-primary pull-right ml10 " data-style="zoom-in">
+							<span class="ladda-label">Adicionar</span>
+							<span class="ladda-spinner"></span>
+						</button>
+					</div>
+				</div>
+
+				<div id="divListaDeTimesSelecionados" class="hidden">
+					<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Times Selecionados</span></div>
+					<ul class="fa-ul" id="listaDeTimesSelecionados">
+						<li>Nenhum time selecionado</li>
+					</ul>
+					<button id="botaoSegundoPasso" type="button" onClick="mostrarSegundoPasso()" class="btn ladda-button btn-primary pull-right ml10 hidden" data-style="zoom-in">
+						<span class="ladda-label">Próximo Passo</span>
+						<span class="ladda-spinner"></span>
+					</button>
+					
+				</div>
+
+				<div id="divSegundoPasso" class="hidden">
+					<div class="row p10">
+						<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Passo 2</span></div>
+						<div id="divSelectTimesSelecionados">
+							<div class="form-group col-lg-12 col-xs-12">
+								<label class="field-label text-muted text-center fs18 mb10">Selecione o time e as responsabilidades para ele</label>
+								<select class="form-control" id="selectTimesSelecionados">
+								</select>
+							</div>				
+							<div class="row p10">					
+								<button id="botaoSegundoPasso" type="button" onClick="mostrarResponsabilidadesParaSelecionar()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
+									<span class="ladda-label">Selecionar</span>
+									<span class="ladda-spinner"></span>
+								</button>		
+								<button id="botaoSegundoPasso" type="button" onClick="voltarPassoUm()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
+									<span class="ladda-label">Voltar</span>
+									<span class="ladda-spinner"></span>
+								</button>			
+							</div>
 						</div>
 					</div>
 				</div>
+
+				<!-- fim divSelectTimesSelecionado -->
+
+				<div id="divResponsabilidadesDisponiveis" class="hidden">	
+					<div class="row p10">			
+						<div class="form-group col-lg-12 col-xs-12">
+							<label class="field-label text-muted text-center fs18 mb10">
+								Responsabilidades Disponiveis - Time: <span id="spanTimeSelecionadoParaIncluirResponsabilidades"></span>
+							</label>
+							<select class="form-control" id="selectResponsabilidadesDisponiveis">
+							</select>
+						</div>
+						<button type="button" onClick="selecionarResponsabilidadeParaOGrupo()" class="btn ladda-button btn-primary pull-right ml10" data-style="zoom-in">
+							<span class="ladda-label">Selecionar</span>
+							<span class="ladda-spinner"></span>
+						</button>
+						<button type="button" onClick="mostrarSelectTimesSelecionados()" class="btn ladda-button btn-default pull-right ml10" data-style="zoom-in">
+							<span class="ladda-label">Voltar</span>
+							<span class="ladda-spinner"></span>
+						</button>			
+					</div>	
+					<div class="row p10">
+						<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Como Ficará</span></div>
+						<ul class="fa-ul" id="listaDeTimesEResponsabilidades">
+							<li>Nenhuma Responsabilidade Atribuida</li>
+						</ul>
+					</div>
+				</div>
+
+				<div id="divBotaoFinalizar" class="row p10 hidden">			
+					<button id="botaoFinalizar" class="btn btn-success ladda-button pull-right ml10" onClick="finalizar()">Finalizar</button>
+					<!--divTelaConfirmacao-->
+					<div id="divTelaConfirmacao" class="hidden">
+						<div class="section-divider mt20 mb30" id="spy5"><span style="color: red;">Confirmação</span></div>	
+						<div class="panel heading-border panel-danger">
+							<div class="panel-body">
+								<address id="spanMensagemDeConfirmacao">Confirma realizar essa troca de responsável? Essa operação não poderá ser desfeita após concluída. Somente no próximo período será feito a troca!</address>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-xs-12">
+								<div class="section text-center">
+									<label class="option option-success block mt15">
+										<input type="checkbox" name="checked" value="checked" onclick="pedirSenha();">
+										<span class="checkbox"></span>
+										Confirmo isso
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--divSenha-->
+					<div id="divSenha" class="hidden">
+						<div class="">				
+							<?php echo $this->divMensagens(); ?>
+							<div class="row">
+								<div class="col-sm-12 col-xs-12">
+									<div class="form-group col-lg-12 col-xs-12">
+										<label class="field-label text-muted text-center fs18 mb10">Digite sua senha para prosseguir</label>
+										<input id="senha" type="password" class="form-control" placeholder="<?php echo $this->translate(Constantes::$TRADUCAO_SENHA); ?>" />
+									</div>
+									<div class="text-right" style="height:65px;">
+										<?php
+										/* Botões */
+										$labelConfirmar = $this->translate(Constantes::$TRADUCAO_CONFIRMACAO);
+										$stringNomeDaFuncaoOnClickConfimarSolicitacao = 'validarSenha()';
+										echo $this->botaoSimples($labelConfirmar, $this->funcaoOnClick($stringNomeDaFuncaoOnClickConfimarSolicitacao), BotaoSimples::botaoPerigoso);							
+										?>							
+										<button class="btn btn-warning ladda-button pull-right ml10" onClick="recomecar()">Recomeçar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>		
 	</div>
 </div>
 
-<?php
-echo $this->templateFormularioRodape();
-?>
 <script>
 	let listaDeTimesSelecionados = []
 	let times = []
@@ -176,6 +203,11 @@ echo $this->templateFormularioRodape();
 				mostrarBotaoSegundoPasso()
 			}
 		}
+	}
+
+	function pedirSenha() {
+		$('#divTelaConfirmacao').addClass('hidden');
+		$('#divSenha').removeClass('hidden');
 	}
 
 	function removerTime(id){
@@ -282,8 +314,7 @@ echo $this->templateFormularioRodape();
 				listaDeTimesEResponsabilidades.push(item)
 			}
 
-			/* validar se todas as responsabilidades foram redirecionadas */
-			alert(responsabilidadesParaSelecionar.length);
+			/* validar se todas as responsabilidades foram redirecionadas */			
 			if(responsabilidadesParaSelecionar.length === 0){
 				if(listaDeTimesEResponsabilidades.length !== listaDeTimesSelecionados.length){
 					let listaDeNaoInclusos = []
@@ -340,9 +371,12 @@ echo $this->templateFormularioRodape();
 	}
 
 	function finalizar(){
-		document.getElementById('divSenha').classList.remove('hidden')
+		//document.getElementById('divSenha').classList.remove('hidden')
 		document.getElementById('divResponsabilidadesDisponiveis').classList.add('hidden')
 		document.getElementById('botaoFinalizar').classList.add('hidden')
+		$('#divSegundoPasso').addClass('hidden');
+		$('#divTelaConfirmacao').removeClass('hidden');
+		$('#divSenha').addClass('hidden');
 	}
 
 	function recomecar(){
@@ -393,7 +427,7 @@ echo $this->templateFormularioRodape();
 			.then(json => {
 				if(json.response){
 			        divMensagens.classList.add('hidden')
-					//mostrarSplash()
+					mostrarSplash()
 					const url = '/cadastroTrocarResponsabilidadesFinalizar'
 					console.log(listaDeTimesEResponsabilidades);
 					fetch(
@@ -406,6 +440,7 @@ echo $this->templateFormularioRodape();
 						},
 					)
 					.then(resultado => {
+						console.log(resultado);
 						if(!resultado.ok){
 							alert('erro ao salvar')
 						}
@@ -413,6 +448,15 @@ echo $this->templateFormularioRodape();
 					})
 					.then(json => {
 						console.log(json)
+						if(json.solicitacoesPendentes){
+							divMensagens.innerHTML = 'Alguma das pessoas envolvidas nessa troca possui solicitações pendentes. Por favor, clique em recomeçar.'
+							divMensagens.classList.remove('alert-success')
+							divMensagens.classList.remove('hidden')
+							divMensagens.classList.add('alert-danger')
+						}
+						if(!json.solicitacoesPendentes){
+							window.location.href = '/cadastroSolicitacoes';
+						}
 					})
 				}else{
 	        		divMensagens.innerHTML = 'Senha Invalida'

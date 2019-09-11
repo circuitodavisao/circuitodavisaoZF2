@@ -1,0 +1,37 @@
+-- Table: resolucao_responsabilidade
+
+-- DROP TABLE resolucao_responsabilidade;
+
+CREATE TABLE resolucao_responsabilidade
+(
+ id serial NOT NULL, -- identificacao da solicitacao para resolucao responsabilidade
+ troca_responsavel_id integer NOT NULL, -- identificacao da troca de responsabilidade
+ pessoa_id integer NOT NULL, -- identificacao da pessoa que receberá a resolucao responsabilidade 
+ grupo_id integer NOT NULL, -- identificacao do grupo que será recebido 
+ operacao enumar, -- Informa se é para adicionar (A) ou remover (R) a responsabilidade
+ data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da solicitacao da resolucao responsabilidade
+ hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da solicitacao da resolucao responsabilidade
+ data_inativacao date, -- Data da inativação da solicitacao de resolucao responsabilidade
+ hora_inativacao time without time zone, -- Hora da inativação da solicitacao da resolucao responsabilidade
+ CONSTRAINT pk_resolucao_responsabilidade PRIMARY KEY (id),
+ CONSTRAINT fk_resolucao_responsabilidade_troca_responsavel_id FOREIGN KEY (troca_responsavel_id)
+ REFERENCES troca_responsavel (id) MATCH SIMPLE
+ ON UPDATE NO ACTION ON DELETE NO ACTION
+ )
+WITH (
+		OIDS=FALSE
+	 );
+ALTER TABLE resolucao_responsabilidade
+OWNER TO postgres;
+COMMENT ON TABLE resolucao_responsabilidade
+IS 'Tabela que indica quem vai receber uma resolucao responsabilidade de acordo com a troca de responsaveis';
+COMMENT ON COLUMN resolucao_responsabilidade.id IS 'identificacao da solicitacao da resolucao responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.troca_responsavel_id IS 'identificacao da troca de responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.grupo_id IS 'identificacao do grupo que será recebido pelo novo responsável';
+COMMENT ON COLUMN resolucao_responsabilidade.pessoa_id IS 'identificacao da pessoa que receberá a resolucao responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.operacao IS 'Informa se é para adicionar (A) ou remover (R) a responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.data_criacao IS 'Data de criação da solicitacao da resolucao responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.hora_criacao IS 'Hora de criação da solicitacao da resolucao responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.data_inativacao IS 'Data da inativação da solicitacao da resolucao responsabilidade';
+COMMENT ON COLUMN resolucao_responsabilidade.hora_inativacao IS 'Hora da inativação da solicitacao da resolucao responsabilidade';
+

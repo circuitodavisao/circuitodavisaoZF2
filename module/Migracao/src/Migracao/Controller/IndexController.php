@@ -272,11 +272,12 @@ class IndexController extends CircuitoController {
 //coordenacões santa catarina (41, 43)
 //coordenacao florianópolis (37)
 			$idCoordenacao = 37;
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE idCoordenacao = ' . $idCoordenacao);
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 684');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
-				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
-				$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				//$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
+				//$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				$this->alunos($row['id'], 8372, $html);
 				//$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
@@ -591,6 +592,53 @@ class IndexController extends CircuitoController {
 				$this->getRepositorio()->desfazerTransacao();
 				$html .= $exc->getTraceAsString();
 			}
+		}
+
+		$html .= "<br /><br /><br />Buscando Todas Trocas de Responsavel Pendentes";
+		$trocaDeResponsaveisAtivas = $this->getRepositorio()->getTrocaResponsavelORM()->encontrarTrocasDeResponsavelAtivasEPendentes();		
+		if ($trocaDeResponsaveisAtivas) {
+			$this->getRepositorio()->iniciarTransacao();
+			try {
+				foreach($trocaDeResponsaveisAtivas as $trocaDeResponsavel){
+					$html .= "<br /><br />Troca ativa, id: " . $trocaDeResponsavel->getId();
+					foreach($trocaDeResponsavel->getResolucaoResponsabilidade() as $resolucaoResponsabilidade){
+						if($resolucaoResponsabilidade){
+							if($resolucaoResponsabilidade->getOperacao() === 'A'){
+								$grupoRecebido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
+								$pessoaQueRecebera = $this->getRepositorio()->getPessoaORM()->encontrarPorId($resolucaoResponsabilidade->getPessoa_id());
+								$html .= "<br />Nova responsabilidade, Grupo: " . $grupoRecebido->getId() . " Pessoa: " . $pessoaQueRecebera->getId();
+								/* Criar Grupo_Responsavel */
+								$grupoResponsavelNovo = new GrupoResponsavel();
+								$grupoResponsavelNovo->setPessoa($pessoaQueRecebera);
+								$grupoResponsavelNovo->setGrupo($grupoRecebido);
+								$grupoResponsavelNovo->setDataEHoraDeCriacao();
+								$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
+							}
+
+							if($resolucaoResponsabilidade->getOperacao() === 'R'){
+								$grupoASerRemovido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
+								$dataParaInativar = self::getDataParaInativacao();
+								$html .= "<br />Responsabilidade Removida, Grupo: " . $grupoASerRemovido->getId() . " Pessoa: " . $resolucaoResponsabilidade->getPessoa_id();								
+
+								/* responsabilidades */
+								foreach ($grupoASerRemovido->getResponsabilidadesAtivas() as $grupoResponsavel) {
+									if($grupoResponsavel->getPessoa()->getId() === $resolucaoResponsabilidade->getPessoa_id()){
+										$grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
+										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+									}								
+								}
+							}
+						}
+					}
+					$situacaoConcluida = 'C';
+					$trocaDeResponsavel->setSituacao($situacaoConcluida);
+					$this->getRepositorio()->getTrocaResponsavelORM()->persistir($trocaDeResponsavel);
+				}
+			$this->getRepositorio()->fecharTransacao();
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				$html .= $exc->getTraceAsString();
+			}			
 		}
 
 		list($usec, $sec) = explode(' ', microtime());
@@ -913,6 +961,24 @@ class IndexController extends CircuitoController {
 					$eventoCelulaNovo->setCep($eventoCelulaAtual->getCep());
 					$eventoCelulaNovo->setEvento($eventoNovo);
 					$this->getRepositorio()->getEventoCelulaORM()->persistir($eventoCelulaNovo,false);
+
+					$grupoEventoNovo = new GrupoEvento();
+					$grupoEventoNovo->setGrupo($grupoNovo);
+					$grupoEventoNovo->setEvento($eventoNovo);
+					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEventoNovo);
+				}
+			}
+
+			if($grupoEventoDiscipulado = $grupoQueSeraSemeado->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoDiscipulado, $ativo = 1)){
+				$temAlgumaDiscipulado = true;
+				foreach($grupoEventoDiscipulado as $grupoEventoDiscipulado){
+					/* criar novo evento, evento_celula e grupo_evento */
+					$eventoAtual = $grupoEventoDiscipulado->getEvento();
+					$eventoNovo = new Evento();
+					$eventoNovo->setHora($eventoAtual->getHora());
+					$eventoNovo->setDia($eventoAtual->getDia());
+					$eventoNovo->setEventoTipo($eventoAtual->getEventoTipo());
+					$this->getRepositorio()->getEventoORM()->persistir($eventoNovo);
 
 					$grupoEventoNovo = new GrupoEvento();
 					$grupoEventoNovo->setGrupo($grupoNovo);
@@ -3101,7 +3167,7 @@ class IndexController extends CircuitoController {
 	function reprovarAlunosAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '180');
 
 		$html = '';
 		$turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade();
@@ -3184,7 +3250,8 @@ class IndexController extends CircuitoController {
 								}
 							}
 						// REPROVAÇÃO POR FALTA
-							if(!$reprovadoPorFinanceiro && $fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){
+							if(!$reprovadoPorFinanceiro && ($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO 
+							|| $fatoCurso[0]->getSituacao_id() === Situacao::ESPECIAL)){
 								$contagemDeFaltas = 0;
 								foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
 									if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
@@ -3204,7 +3271,8 @@ class IndexController extends CircuitoController {
 											if(!$turmaPessoaAula->verificarSeEstaAtivo()){
 												$contagemDeFaltas++;
 											}else{
-												if($turmaPessoaAula->getReposicao() == 'S'){
+												if($turmaPessoaAula->getReposicao() == 'S' 
+												&& $fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){													
 													$contagemDeFaltas++;
 												}
 											}
@@ -3939,7 +4007,7 @@ class IndexController extends CircuitoController {
 
 	public function transformarCelulaBetaAction(){
 		$dados = array();
-		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = -10, $tipoComparacao = 2, $estrategica = true);
+		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = 0, $tipoComparacao = 2, $estrategica = true);
 		$listaDeCelulas = array();
 		foreach($fatoCelulasBeta as $valor){
 			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($valor['evento_celula_id']);
@@ -3965,8 +4033,10 @@ class IndexController extends CircuitoController {
 		}
 		$this->getRepositorio()->iniciarTransacao();		
 		try{
-			foreach($listaDeCelulas as $item){
-				if($item['diferenca'] >= 180){					
+			$itensAcimaDe180Dias = array();
+			foreach($listaDeCelulas as $item){				
+				if($item['diferenca'] >= 180){	
+					$itensAcimaDe180Dias[] = $item;				
 					$fatoCelula = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorId($item['idFatoCelula']);
 					$fatoCelula->setEstrategica('N');
 					$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, $trocarDataDeCriacao = false);
@@ -3974,16 +4044,16 @@ class IndexController extends CircuitoController {
 					$eventoTipoCelula = $this->getRepositorio()->getEventoTipoORM()->encontrarPorId(EventoTipo::tipoCelula);
 					$eventoParaAlterar->setEventoTipo($eventoTipoCelula);
 					$this->getRepositorio()->getEventoORM()->persistir($eventoParaAlterar, $trocarDataDeCriacao = false);
-
 				}
 			}
 			$this->getRepositorio()->fecharTransacao();
 		} catch(Exception $e){
 			$this->getRepositorio()->desfazerTransacao();
 		}
-		$dados['listaDeCelulas'] = $listaDeCelulas;
+		$dados['listaDeCelulas'] = $itensAcimaDe180Dias;
 		return new ViewModel($dados);
 	}
+	
 	public function adicionarNovaResponsabilidadeSecretario($idPessoa, $idGrupoQueVaiGerenciar){
 		$grupoQueVaiGerenciar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoQueVaiGerenciar);
 		$pessoaSecretario = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);

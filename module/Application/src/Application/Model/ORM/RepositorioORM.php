@@ -59,6 +59,8 @@ class RepositorioORM {
     private $_cursoAcessoORM;
     private $_pessoaCursoAcessoORM;
     private $_profissaoORM;
+    private $_resolucaoResponsabilidadeORM;
+    private $_trocaResponsavelORM;
 	private $_fatoFinanceiro;
 	private $_fatoFinanceiroTipo;
 	private $_fatoRankingCelulaORM;
@@ -312,9 +314,9 @@ class RepositorioORM {
         }
         return $this->_turmaPessoaVistoORM;
     }
-
+   
     /**
-     * Metodo public para obter a instancia do GrupoMetasOrdenacao
+     * Metodo public para obter a instancia do Profissao
      * @return CircuitoORM
      */
     public function getProfissaoORM() {
@@ -355,6 +357,28 @@ class RepositorioORM {
             $this->_metasOrdenacaoCriterioORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_METAS_ORDENACAO_CRITERIO);
         }
         return $this->_metasOrdenacaoCriterioORM;
+    }
+
+     /**
+     * Metodo public para obter a instancia do TrocaResponsavel
+     * @return TrocaResponsavelORM
+     */
+    public function getTrocaResponsavelORM() {
+        if (is_null($this->_trocaResponsavelORM)) {
+            $this->_trocaResponsavelORM = new TrocaResponsavelORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TROCA_RESPONSAVEL);
+        }
+        return $this->_trocaResponsavelORM;
+    }
+
+    /**
+     * Metodo public para obter a instancia do NovaResponsabilidade
+     * @return ResolucaoResponsabilidadeORM
+     */
+    public function getResolucaoResponsabilidadeORM() {
+        if (is_null($this->_resolucaoResponsabilidadeORM)) {
+            $this->_resolucaoResponsabilidadeORM = new ResolucaoResponsabilidadeORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_RESOLUCAO_RESPONSABILIDADE);
+        }
+        return $this->_resolucaoResponsabilidadeORM;
     }
     
     /**

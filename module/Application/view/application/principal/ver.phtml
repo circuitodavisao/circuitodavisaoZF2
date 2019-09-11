@@ -119,6 +119,27 @@ if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe) {
 	echo '</div>';
 }
 
+if ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja) {
+	echo '<div class="panel panel-primary mw1000 center-block">';
+	echo '<div class="panel-heading">';
+	echo 'Time';
+	echo '</div>';
+
+	echo '<div class="panel-body center-block">';
+	$extraAlterarNumeracao = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("principalNome", ' . $this->idGrupo . ')');
+	$botaoAlterarNumeracao = $this->botaoSimples('Alterar Dados', $extraAlterarNumeracao, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo '<div class="btn btn-default btn-block" disabled>'.$this->entidade->infoEntidade().'</div>';
+	echo '</div>';
+	echo '<div class="col-lg-6 col-md-6 col-sm-6">';
+	echo $botaoAlterarNumeracao;
+	echo '</div>';
+
+	echo '</div>';
+	echo '</div>';
+}
+
 echo '<div class="panel panel-primary mw1000 center-block">';
 echo '<div class="panel-heading">';
 echo 'Ajustes';

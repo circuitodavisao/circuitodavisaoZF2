@@ -12,10 +12,14 @@ use Application\Controller\Helper\Constantes;
     <?php
       echo $this->divMensagens();
       echo $this->inputFormularioSimples(Constantes::$TRADUCAO_NOME, $formulario->get(Constantes::$INPUT_NOME));
-      echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SIGLA, $formulario->get(Constantes::$INPUT_SIGLA));
+      $entidadeTipoEquipe = 6;
+      $entidadeTipoDaEntidadeAlterada = $this->grupo->getEntidadeAtiva()->getEntidadeTipo()->getId();
+      if($entidadeTipoDaEntidadeAlterada == $entidadeTipoEquipe){        
+        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SIGLA, $formulario->get(Constantes::$INPUT_SIGLA));
+      }     
       echo $this->formHidden($formulario->get(Constantes::$INPUT_CSRF));
       echo $this->formHidden($formulario->get(Constantes::$FORM_ID));
-      $funcaoAlterar = $this->funcaoOnClick('validarPrincipalAlterarNomeEquipe(this.form)');
+      $funcaoAlterar = $this->funcaoOnClick('validarPrincipalAlterarNomeEquipe(this.form, '.$entidadeTipoDaEntidadeAlterada.')');
       echo '<div class="form-group mbn col-lg-12 col-xs-12">';
       echo $this->botaoSimples(Constantes::$TRADUCAO_ALTERAR, $funcaoAlterar);
       echo '</div>';

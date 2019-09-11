@@ -361,7 +361,7 @@ class Grupo extends CircuitoEntity {
 					for($j = 0; $j < $totalDeFilhos; $j++){
 						$grupo1 = $grupoPaiFilhoFilhosAtivos[$i];
 						$grupo2 = $grupoPaiFilhoFilhosAtivos[$j];
-						if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva() && $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()){
+						if($grupo1->getgrupoPaiFilhoFilho()->getEntidadeAtiva() && $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()){
 							if($grupo1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero() < $grupo2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNumero()){
 								$grupoPaiFilhoFilhosAtivos[$i] = $grupo2;
 								$grupoPaiFilhoFilhosAtivos[$j] = $grupo1;
@@ -375,23 +375,35 @@ class Grupo extends CircuitoEntity {
 	}
 
     function getGrupoPaiFilhoFilhosPorMesEAno($mes, $ano) {
+        $arrayDePessoas = array();
+        foreach($this->getPessoasAtivas() as $pessoa){
+            $arrayDePessoas[] = $pessoa->getId();
+        }
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$todosFilhos = array();
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 			$grupoPaiFilhoFilhos = $this->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays);
 			if ($grupoPaiFilhoFilhos) {
 				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-					$adicionar = true;
+					$adicionar1 = true;
 					if (count($todosFilhos) > 0) {
 						foreach ($todosFilhos as $filho) {
 							if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
-								$adicionar = false;
+								$adicionar1 = false;
 								break;
 							}
 						}
 					}
-					if ($adicionar) {
-						$todosFilhos[] = $grupoPaiFilhoFilho;
+					if ($adicionar1) {
+                        foreach($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getPessoasAtivas() as $pessoa){
+                            $adicionar2 = true;
+                            if (in_array($pessoa->getId(), $arrayDePessoas)) { 
+                                $adicionar2 = false;
+                            }                            
+                        }
+                        if($adicionar2){
+                            $todosFilhos[] = $grupoPaiFilhoFilho;						
+                        }                        
 					}
 				}
 			}

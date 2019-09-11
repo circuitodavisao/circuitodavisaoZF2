@@ -230,21 +230,27 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_LIDER
 			|| $solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_CELULA){
 				if($solicitacao->getSolicitacaoSituacaoAtiva()
-					&& $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
-					&& $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+					&& ($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO
+						|| $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::ACEITO_AGENDADO)
+					&& ($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja
+					 	|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao)){
 						$funcaoAceitar = $this->funcaoOnClick('if(confirm("Realmente deseja aceitar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoAceitar", '.$solicitacao->getId().');}');						
 						$funcaoRecusar = $this->funcaoOnClick('if(confirm("Realmente deseja recusar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroSolicitacaoRecusar", '.$solicitacao->getId().');}');
 						$botaoAceitar = $this->botaoSimples('Aceitar', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
 						$botaoRecusar = $this->botaoSimples('Recusar', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);						
 						$botaoAceitarIcone = $this->botaoSimples('<i class="fa fa-check" ></i>', $funcaoAceitar, BotaoSimples::botaoMuitoPequenoImportante);
 						$botaoRecusarIcone = $this->botaoSimples('<i class="fa fa-times" ></i>', $funcaoRecusar, BotaoSimples::botaoMuitoPequenoPerigoso);
-						$htmlTbody .= '<td class="hidden-xs">';						
+						$htmlTbody .= '<td class="hidden-xs">';	
 						$htmlTbody .= $botaoRecusar;
-						$htmlTbody .= $botaoAceitar;
+						if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO){
+							$htmlTbody .= $botaoAceitar;
+						}																	
 						$htmlTbody .= '</td>';
 						$htmlTbody .= '<td class="hidden-sm hidden-md hidden-lg">';						
 						$htmlTbody .= $botaoRecusarIcone;
-						$htmlTbody .= $botaoAceitarIcone;
+						if($solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() === Situacao::PENDENTE_DE_ACEITACAO){
+							$htmlTbody .= $botaoAceitarIcone;
+						}						
 						$htmlTbody .= '</td>';
 					}else{
 						$htmlTbody .= '<td></td>';
@@ -285,6 +291,100 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 	$html .= '</div>';
 }
 
-
-
 echo $html;
+
+if($this->trocaDeResponsaveis){
+	?>
+		<div class="panel-heading bg-primary mt20">
+			<span class="panel-title"><span class="fa fa-table"></span>TROCA DE RESPONSÁVEL</span>
+		</div>
+		<div class="panel-body pn">
+			<div class="bs-component">
+				<table style="font-size:10px;" class="table table-condensed table-hover bg-light mt15 footable footable-loaded" data-filter="#fooFilter">
+					<thead>
+						<tr>
+							<th class="hidden-xs footable-sortable">
+								<span class="footable-sort-indicator"></span>
+							</th>
+							<th class="footable-sortable">
+								Solicitado em<span class="footable-sort-indicator"></span>
+							</th>
+							<th class="footable-sortable">
+								Status<span class="footable-sort-indicator"></span>
+							</th>
+							<th class="hidden-xs footable-sortable">
+								Aceito Em<span class="footable-sort-indicator"></span>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$htmlBody = '';
+							foreach($this->trocaDeResponsaveis as $trocaDeResponsavel){
+								if($trocaDeResponsavel->getSituacao() == 'P' && $trocaDeResponsavel->verificarSeEstaAtivo()){
+									$spanTrocaDeResponsavel = '<span class="label label-info">ACEITO</span>';
+								}
+								if($trocaDeResponsavel->getSituacao() == 'C' && $trocaDeResponsavel->verificarSeEstaAtivo()){
+									$spanTrocaDeResponsavel = '<span class="label label-success">CONCLUIDO</span>';
+								}
+								if(!$trocaDeResponsavel->verificarSeEstaAtivo()){
+									$spanTrocaDeResponsavel = '<span class="label label-danger">RECUSADO</span>';
+								}
+								$htmlBody .= '<tr>';
+								$htmlBody .= '<td class="hidden-xs">'.$trocaDeResponsavel->getId().'</td>';
+								$htmlBody .= '<td class="hidden-xs">'.$trocaDeResponsavel->getData_criacaoStringPadraoBrasil().'</td>';
+								$htmlBody .= '<td onclick="mostrarTroca('.$trocaDeResponsavel->getId().');" style="cursor: pointer;">'.$spanTrocaDeResponsavel.' <i style="vertical-align: middle;" class="fa fa-info-circle fa-2x text-info"></i></td>';
+								$htmlBody .= '<td>'.$trocaDeResponsavel->getData_criacaoStringPadraoBrasil().'</td>';
+
+								if($trocaDeResponsavel->verificarSeEstaAtivo() && $trocaDeResponsavel->getSituacao() == 'P'){
+									$funcaoRecusarTroca = $this->funcaoOnClick('if(confirm("Realmente deseja recusar essa solicitação?")){mostrarSplash(); funcaoCircuito("cadastroTrocaDeResponsavelRecusar", '.$trocaDeResponsavel->getId().');}');								
+									$botaoRecusar = $this->botaoSimples('Recusar', $funcaoRecusarTroca, BotaoSimples::botaoMuitoPequenoPerigoso);														
+									$botaoRecusarIcone = $this->botaoSimples('<i class="fa fa-times" ></i>', $funcaoRecusarTroca, BotaoSimples::botaoMuitoPequenoPerigoso);
+									$htmlBody .= '<td class="hidden-xs"><span class="ladda-label">'.$botaoRecusar.'</span></td>';
+									$htmlBody .= '<td class="hidden-sm hidden-md hidden-lg text-center">'.$botaoRecusarIcone.'</td>';
+								} else {
+									$htmlBody .= '<td></td>';
+								}
+								$htmlBody .= '</tr>';
+
+								$htmlBody .= '<tr class="hidden troca'.$trocaDeResponsavel->getId().'">';
+								$htmlBody .= '<th class="hidden-xs">#</th>';
+								$htmlBody .= '<th>Quem</th>';
+								$htmlBody .= '<th>Responsabilidade</th>';
+								$htmlBody .= '<th>Operação</th>';
+								$htmlBody .= '</tr>';
+
+								foreach($trocaDeResponsavel->getResolucaoResponsabilidade() as $resolucaoResponsabilidade){
+									$pessoa = $this->repositorio->getPessoaORM()->encontrarPorId($resolucaoResponsabilidade->getPessoa_id());
+									$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());									
+									if($resolucaoResponsabilidade->getOperacao() == 'R'){
+										$spanResolucaoResponsabilidade = '<span class="label label-danger">REMOVER</span>';
+									}
+									if($resolucaoResponsabilidade->getOperacao() == 'A'){
+										$spanResolucaoResponsabilidade = '<span class="label label-success">ADICIONAR</span>';
+									}
+									$htmlBody .= '<tr class="hidden troca'.$trocaDeResponsavel->getId().'">';
+									$htmlBody .= '<td class="hidden-xs"></td>';
+									$htmlBody .= '<td>'.$pessoa->getNomePrimeiroUltimo().'</td>';
+									$htmlBody .= '<td>'.$grupo->getEntidadeAtiva()->infoEntidade().'</td>';
+									$htmlBody .= '<td>'.$spanResolucaoResponsabilidade.'</td>';									
+									$htmlBody .= '</tr>';
+								}														
+							}
+							echo $htmlBody;
+						?>		
+					</tbody>
+				</table>
+			</div>
+		</div>
+	<?php
+}
+
+?>
+<script>
+function mostrarTroca(trocaId){     
+		let classeTroca = ".troca" + trocaId;         
+		let trTroca = $(classeTroca).toggleClass('hidden');			   				
+    }
+</script>

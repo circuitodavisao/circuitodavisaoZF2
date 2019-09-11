@@ -1,0 +1,30 @@
+-- Table: troca_responsavel
+
+-- DROP TABLE troca_responsavel;
+
+CREATE TABLE troca_responsavel
+(
+ id serial NOT NULL, -- identificacao da troca de responsavel
+ regiao_id integer NOT NULL, -- Id que identifica o região que cadastrou a solicitacao
+ situacao enumcp, -- Informa se a troca foi concluída (C) ou está pendente (P)
+ data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação da solicitacao da troca de responsavel
+ hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação da solicitacao da troca de responsavel
+ data_inativacao date, -- Data da inativação da solicitacao da troca de responsavel
+ hora_inativacao time without time zone, -- Hora da inativação da solicitacao da troca de responsavel
+ CONSTRAINT pk_troca_responsavel PRIMARY KEY (id)
+ )
+WITH (
+		OIDS=FALSE
+	 );
+ALTER TABLE troca_responsavel
+OWNER TO postgres;
+COMMENT ON TABLE troca_responsavel
+IS 'Tabela que identifica as trocas de responsabilidade';
+COMMENT ON COLUMN troca_responsavel.id IS 'identificacao da troca de responsavel';
+COMMENT ON COLUMN troca_responsavel.regiao_id IS 'Informa grupo_id do regiao que cadastrou a troca';
+COMMENT ON COLUMN troca_responsavel.situacao IS 'Informa se a troca foi concluida (C) ou esta pendente (P)';
+COMMENT ON COLUMN troca_responsavel.data_criacao IS 'Data de criação da solicitacao da troca de responsavel';
+COMMENT ON COLUMN troca_responsavel.hora_criacao IS 'Hora de criação da solicitacao da troca de  responsavel';
+COMMENT ON COLUMN troca_responsavel.data_inativacao IS 'Data da inativação da solicitacao da troca de responsavel';
+COMMENT ON COLUMN troca_responsavel.hora_inativacao IS 'Hora da inativação da solicitacao da troca de responsavel';
+

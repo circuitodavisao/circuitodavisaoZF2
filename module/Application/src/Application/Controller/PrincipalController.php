@@ -103,12 +103,16 @@ class PrincipalController extends CircuitoController {
 			$post_data = $request->getPost();
 			$mes = $post_data['mes'];
 			$ano = $post_data['ano'];
+			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		}
 		if (empty($mes)) {
 			$mes = date('m');
 		}
 		if (empty($ano)) {
 			$ano = date('Y');
+		}
+		if (empty($pessoalOuEquipe)) {
+			$pessoalOuEquipe = 2; // Trazer os dados da equipe
 		}
 
 		$dados = array(
@@ -120,6 +124,7 @@ class PrincipalController extends CircuitoController {
 			'entidade' => $entidade,
 			'pessoa' => $pessoa,
 			'vendoPessoaLogada' => $vendoPessoaLogada,
+			'pessoalOuEquipe' => $pessoalOuEquipe,
 			'mes' => $mes,
 			'ano' => $ano,
 			'mesInicial' => $mesInicial,
@@ -532,26 +537,26 @@ class PrincipalController extends CircuitoController {
 				$post_data = $request->getPost();
 				$idGrupo = $post_data[Constantes::$FORM_ID];
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+				$entidade = $grupo->getEntidadeAtiva();
 				$entidadeNova = new Entidade();
+				$entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($entidade->getEntidadeTipo()->getId()));
 				$formNome = new NomeForm(Constantes::$FORM, $grupo);
 				$formNome->setInputFilter($entidadeNova->getInputFilterAlterarNome());
 				$formNome->setData($post_data);
 
-				/* validação */
-
-				if ($formNome->isValid()) {
+				/* validação */				
+				if ($formNome->isValid()) {					
 					$validatedData = $formNome->getData();
 					$nome = trim($validatedData[Constantes::$INPUT_NOME]);
-					$sigla = trim($validatedData[Constantes::$INPUT_SIGLA]);
-					$entidade = $grupo->getEntidadeAtiva();
+					$sigla = trim($validatedData[Constantes::$INPUT_SIGLA]);					
+					$entidadeNova->setGrupo($grupo);
+					$entidadeNova->setNome($nome);
+					$entidadeNova->setSigla($sigla);					
+					$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
+					
 					$entidade->setDataEHoraDeInativacao();
 					$setarDataEHora = false;
 					$this->getRepositorio()->getEntidadeORM()->persistir($entidade, $setarDataEHora);
-					$entidadeNova->setGrupo($grupo);
-					$entidadeNova->setNome($nome);
-					$entidadeNova->setSigla($sigla);
-					$entidadeNova->setEntidadeTipo($this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
-					$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova);
 
 					$this->getRepositorio()->fecharTransacao();
 					$sessao->idSessao = $idGrupo;
@@ -824,7 +829,7 @@ class PrincipalController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
@@ -862,7 +867,7 @@ class PrincipalController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarDadosPrincipaisMembresia($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$resultado = RelatorioController::buscarDadosPrincipaisMembresia($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
@@ -881,7 +886,7 @@ class PrincipalController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarDadosPrincipaisCelula($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$resultado = RelatorioController::buscarDadosPrincipaisCelula($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
@@ -900,7 +905,7 @@ class PrincipalController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarDadosPrincipaisInstituto($this->getRepositorio(), $grupo, $json->mes, $json->ano);
+				$resultado = RelatorioController::buscarDadosPrincipaisInstituto($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();

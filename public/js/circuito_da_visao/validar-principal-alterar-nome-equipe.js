@@ -1,7 +1,8 @@
 
-function validarPrincipalAlterarNomeEquipe(form) {
+function validarPrincipalAlterarNomeEquipe(form, entidadeTipo) {
+    const entidadeTipoEquipe = 6;
     let nome = $('#nome').val();
-    let sigla = $('#sigla').val();
+    let sigla = $('#sigla').val(); 
 
     let temErro = false;
     let divMensagens = $('#divMensagens');
@@ -36,30 +37,33 @@ function validarPrincipalAlterarNomeEquipe(form) {
             }
             mensagem += 'Nome precisa ter no mínimo 3 caracteres';
         }
-    }    
-    if (sigla.trim().length === 0) {
-        temErro = true;
-        if (mensagem !== '') {
-            mensagem += ', ';
-        }
-        mensagem += 'Sigla';
-    } else {
-        let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ0-9 ]+$/;
-        if (!reg.exec(sigla)) {
-            temErro = true;
-            if (mensagem !== '') {
-                mensagem += ', ';
-            }
-            mensagem += 'Sigla Inválido';
-        }
-        if (sigla.length > 3 || sigla.trim().length < 3) {
-            temErro = true;
-            if (mensagem !== '') {
-                mensagem += ', ';
-            }
-            mensagem += 'Sigla precisa ter exatamente 3 caracteres';
-        }
     }
+    if(entidadeTipo == entidadeTipoEquipe){
+        if (sigla.trim().length === 0) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Sigla';
+        } 
+        if (sigla.trim().length !== 0) {
+            let reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ0-9 ]+$/;
+            if (!reg.exec(sigla)) {
+                temErro = true;
+                if (mensagem !== '') {
+                    mensagem += ', ';
+                }
+                mensagem += 'Sigla Inválido';
+            }
+            if (sigla.length > 3 || sigla.trim().length < 3) {
+                temErro = true;
+                if (mensagem !== '') {
+                    mensagem += ', ';
+                }
+                mensagem += 'Sigla precisa ter exatamente 3 caracteres';
+            }
+        }
+    }    
 
     if (temErro) {
         divMensagens

@@ -53,28 +53,33 @@ class FatoFinanceiroORM extends CircuitoORM {
 		return $fatos;
 	}
 
-	public function fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano) {		
+	public function fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $tipoComparacao = 2) {	
 		$fatos = null;
-		try {
-			$dql = "SELECT "
+		$dqlBase = "SELECT "
 			. "SUM(ff.valor) valor "
 			. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
-                . "WHERE "
-                . "ff.numero_identificador LIKE ?1 "
-                . "AND ff.data_inativacao is null "
-                . "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
-
-				$numeroAjustado = $numeroIdentificador . '%';
-				$dataInicial = $ano . '-' . $mes . '-01';
-				$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataInicial);
-				$ultimo_dia = date("t", mktime(0,0,0,$mes,'01',$ano));
-				$dataFinal = $ano . '-' . $mes . '-' . $ultimo_dia;
-				$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataFinal);
-				$result = $this->getEntityManager()->createQuery($dql)
-					->setParameter(1, $numeroAjustado)
-					->setParameter(2, $dataInicialFormatada)
-					->setParameter(3, $dataFinalFormatada)
-					->getResult();
+            . "WHERE "
+            . " ff.numero_identificador #tipoComparacao ?1 "
+			. "AND ff.data_inativacao is null "
+			. "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}			
+			$dataInicial = $ano . '-' . $mes . '-01';
+			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataInicial);
+			$ultimo_dia = date("t", mktime(0,0,0,$mes,'01',$ano));
+			$dataFinal = $ano . '-' . $mes . '-' . $ultimo_dia;
+			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataFinal);
+			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
+				->setParameter(2, $dataInicialFormatada)
+				->setParameter(3, $dataFinalFormatada)
+				->getResult();
 			} catch (Exception $exc) {
 				echo $exc->getMessage();
 			}
