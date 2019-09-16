@@ -110,7 +110,6 @@ class LancamentoController extends CircuitoController {
         }
 
 
-		echo 'periodo: ' + $periodo;
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
         $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());       
 		$validacaoPessoasCadastradas = 1;
