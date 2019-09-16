@@ -109,7 +109,6 @@ class LancamentoController extends CircuitoController {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
-
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
         $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());       
 		$validacaoPessoasCadastradas = 1;
@@ -1279,9 +1278,7 @@ class LancamentoController extends CircuitoController {
 		$layoutJS->setTemplate('layout/layout-js-lancamento-parceiro-de-deus');
 		$view->addChild($layoutJS, 'layoutJsLancamentoParceiroDeDeus');
 
-
 		return $view;
-
 	}
 
 	public function parceiroDeDeusFinalizarAction(){
