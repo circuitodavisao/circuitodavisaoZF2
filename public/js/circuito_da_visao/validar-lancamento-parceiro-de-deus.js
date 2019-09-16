@@ -165,7 +165,7 @@ function selecionarCelula(){
 	let data = new Date()
 	let diferencaDeDiaDaSemana = diaDaSemana - data.getDay()
 	$('#data').html('<option value="0">SELECIONE</option>')
-	for(let i = 0; i <= 10; i++){
+	for(let i = -1; i <= 10; i++){
 		let dataTemporaria = new Date()
 		dataTemporaria.setDate(dataTemporaria.getDate()-(diferencaDeDiaDaSemana+(i*7)))
 		let ano = dataTemporaria.getFullYear()
