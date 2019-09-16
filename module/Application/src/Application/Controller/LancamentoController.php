@@ -109,6 +109,10 @@ class LancamentoController extends CircuitoController {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
+		if($periodo < 100){
+			$periodo = -1;
+		}
+
 		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
         $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());       
 		$validacaoPessoasCadastradas = 1;
