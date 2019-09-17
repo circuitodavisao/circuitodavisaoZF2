@@ -1,0 +1,62 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+
+$label = 'Resumo idiota';
+echo $this->templateFormularioTopo($label);
+echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+echo '<form action="/relatorioResumo" method="post">';
+echo $this->cabecalhoDeMeses();
+echo '</form>';
+
+$html = '';
+if($this->filtrado){
+	$html .= '<table class="table table-condesend">';
+	$html .= '<thead>';
+	$html .= '<tr>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Líderes</th>';
+	for($i = 1; $i <= 4; $i++){
+		for($j = 1; $j <= 5; $j++){
+			$label = '';
+			switch($i){
+			case 1: $label = 'C'; break;
+			case 2: $label = 'CU'; break;
+			case 3: $label = 'A'; break;
+			case 4: $label = 'D'; break;
+			}
+			$html .= '<th>' . $label . $j . '</trhr>';
+		}
+	}
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->relatorios as $relatorio){
+		$corLinha = '';
+		if($relatorio[12] == true){
+			$corLinha = 'primary';
+		}
+		$html .= '<tr class="'.$corLinha.'">';
+		$html .= '<td>'.$relatorio['info'].'</td>';
+		$html .= '<td>'.$relatorio['lideres'].'</td>';
+		for($i = 1; $i <= 4; $i++){
+			$contagem = 0;
+			foreach($relatorio[$i] as $ciclos){
+				$html .= '<td>'.$ciclos.'</td>';
+				$contagem++;
+			}
+			if($contagem !== 5){
+
+				for($x = $contagem; $x <= 4; $x++){
+					$html .= '<td><i class="fa fa-ban"></i></td>';
+				}
+			}
+		}
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+
+	echo $html;
+}
+

@@ -474,12 +474,50 @@ class FatoCicloORM extends CircuitoORM {
 	}
 
 	public function fatoCicloExcluirRelatorioSegunda() {
-    $dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-    $dataEmString = $dateFormatada->format('Y-m-d');
-    $dqlExcluirFatoCiclo = "DELETE from ".Constantes::$ENTITY_FATO_CICLO." fcic where fcic.data_criacao = ?1";
-    $result = $this->getEntityManager()->createQuery($dqlExcluirFatoCiclo)
-    ->setParameter(1, $dataEmString)
-    ->getResult();
+		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+		$dataEmString = $dateFormatada->format('Y-m-d');
+		$dqlExcluirFatoCiclo = "DELETE from ".Constantes::$ENTITY_FATO_CICLO." fcic where fcic.data_criacao = ?1";
+		$result = $this->getEntityManager()->createQuery($dqlExcluirFatoCiclo)
+			->setParameter(1, $dataEmString)
+			->getResult();
+	}
+
+	public function  montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao){
+		$dqlBase = "SELECT "
+			. "(d.lider + d.visitante + d.consolidacao + d.membro) valor "
+			. "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
+			. "JOIN fc.dimensao d "
+			. "WHERE "
+			. "d.dimensaoTipo = #dimensaoTipo "
+			. "AND fc.numero_identificador #tipoComparacao ?1 "
+			. "AND fc.data_inativacao is null "
+			. "AND fc.data_criacao = ?2 ";
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}
+
+			$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
+			$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+			$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+
+			$dimensaoTipoCelula = 1;
+			$dimensaoTipoDomingo = 4;
+			for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
+				$dqlAjustada = str_replace('#dimensaoTipo', $indice, $dqlAjustadaTipoComparacao);
+				$result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
+					->setParameter(1, $numeroIdentificador)
+					->setParameter(2, $dataDoPeriodoFormatada)
+					->getResult();
+			}
+			return $result;
+		} catch (Exception $exc) {
+			var_dump($exc->getMessage());
+		}
 	}
 
 }
