@@ -371,10 +371,41 @@ class FatoCicloORM extends CircuitoORM {
 		return $somaResultado;
 	}
 
-	public function verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($periodo, $idEvento, $repositorio) {
+	public function verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($periodo, $idEvento, $repositorio, $mes = null) {
 		$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
 		$dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
 		$dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+
+		if($mes){
+			/* começo do mes */
+			if($resultadoPeriodo[5] == $mes && $resultadoPeriodo[2] != $mes){
+				$dataDoPeriodoInicial = $resultadoPeriodo[3].'-'.$resultadoPeriodo[2].'-01';
+			}
+			/* fim do mes */
+			if($resultadoPeriodo[2] == $mes && $resultadoPeriodo[5] != $mes){
+				$ultimoDiaDomes = 28;
+				if(
+					$mes == 1 ||
+					$mes == 3 ||
+					$mes == 5 ||
+					$mes == 7 ||
+					$mes == 8 ||
+					$mes == 10 ||
+					$mes == 12
+				){
+					$ultimoDiaDomes = 31;
+				}
+				if(
+					$mes == 4 ||
+					$mes == 6 ||
+					$mes == 9 ||
+					$mes == 11
+				){
+					$ultimoDiaDomes = 30;
+				}
+				//$dataDoPeriodoFinal = $resultadoPeriodo[6].'-'.$resultadoPeriodo[5].'-'.$ultimoDiaDomes;
+			}
+		}
 
 		$dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
 		$dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);

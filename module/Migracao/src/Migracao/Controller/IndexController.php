@@ -3866,10 +3866,10 @@ class IndexController extends CircuitoController {
 						$arrayPeriodos[$contadorDePeriodos] = $resultado;
 						$soma += $resultado;
 					}else{
-						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM);
+						$resultado = $repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $eventoId, $repositorioORM, $mes);
 						if($grupoEventoCelula->getEvento()->getEvento_id()){
 							$resultado2 = 
-								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM);								
+								$repositorioORM->getFatoCicloORM()->verificaFrequenciasPorCelulaEPeriodoESeTemVisitante($indiceDeArrays, $grupoEventoCelula->getEvento()->getEvento_id(), $repositorioORM, $mes);
 						}
 						$arrayPeriodos[$contadorDePeriodos]['arregimentacao'] = $resultado['arregimentacao'];
 						$arrayPeriodos[$contadorDePeriodos]['visitantes'] = $resultado['visitantes'];
