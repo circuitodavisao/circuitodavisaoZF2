@@ -4264,7 +4264,8 @@ public function alunosNaSemanaAction(){
 			$relatorio = array();
 			$relatorio['info'] = $grupo->getEntidadeAtiva()->infoEntidade();
 			$relatorio['lideres'] = $grupo->getNomeLideresAtivos();
-			$relatorio[12] = true;
+			$relatorio['pessoal'] = true;
+			$relatorio['idGrupo'] = $grupo->getId();
 			$tipoComparacao = 1; // pessoal
 			$dimensaoTipoCelula = 1;
 			$dimensaoTipoDomingo = 4;
@@ -4284,32 +4285,17 @@ public function alunosNaSemanaAction(){
 					$relatorio['info'] = '-- '.$grupo12->getEntidadeAtiva()->infoEntidade();
 					$relatorio['lideres'] = $grupo12->getNomeLideresAtivos();
 					$relatorio[12] = true;
+					$relatorio['idGrupo'] = $grupo12->getId();
+					$relatorio['profundidade'] = 2;
 					$numeroIdentificador12 = $numeroIdentificador . str_pad($grupo12->getId(), 8, 0, STR_PAD_LEFT);
 					for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-						$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $indiceDeArrays, $tipoComparacao);
-						for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
-							$relatorio[$indice][$indiceDeArrays] = $retorno[$indice][0]['valor'];
-						}
+						$tipoComparacao = 2; // somado
+						//$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $indiceDeArrays, $tipoComparacao);
+						//for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
+						//	$relatorio[$indice][$indiceDeArrays] = $retorno[$indice][0]['valor'];
+						//}
 					}
-
 					$relatorios[] = $relatorio;
-					$grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
-					if ($grupoPaiFilhoFilhos144) {
-						foreach ($grupoPaiFilhoFilhos144 as $gpFilho144) {
-							$grupo144 = $gpFilho144->getGrupoPaiFilhoFilho();
-							$relatorio = array();
-							$relatorio['info'] = '---- '.$grupo144->getEntidadeAtiva()->infoEntidade();
-							$relatorio['lideres'] = $grupo144->getNomeLideresAtivos();
-							$numeroIdentificador144 = $numeroIdentificador12 . str_pad($grupo144->getId(), 8, 0, STR_PAD_LEFT);
-							for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
-								$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador144, $indiceDeArrays, $tipoComparacao);
-								for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
-									$relatorio[$indice][$indiceDeArrays] = $retorno[$indice][0]['valor'];
-								}
-							}
-							$relatorios[] = $relatorio;
-						}
-					}
 				}
 			}
 
@@ -4319,5 +4305,48 @@ public function alunosNaSemanaAction(){
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
 		return new ViewModel($dados);
+	}
+
+	public function resumoDiscipulosAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$relatorio = array();
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->idGrupo);
+			$grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($json->mes, $json->ano);
+			$dimensaoTipoCelula = 1;
+			$dimensaoTipoDomingo = 4;
+			if ($grupoPaiFilhoFilhos12) {
+				foreach ($grupoPaiFilhoFilhos12 as $gpFilho12) {
+					$grupo12 = $gpFilho12->getGrupoPaiFilhoFilho();
+					$relatorio = array();
+					$stringProfundidade = '--';
+					$relatorio['info'] = str_repeat($stringProfundidade, $json->profundidade) . '&nbsp; '.$grupo12->getEntidadeAtiva()->infoEntidade();
+					$relatorio['lideres'] = $grupo12->getNomeLideresAtivos();
+					$relatorio['idGrupo'] = $grupo12->getId();
+					$relatorio['profundidade'] = $json->profundidade + 1;
+					$numeroIdentificador12 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo12);
+					for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+						$tipoComparacao = 2; // somado
+						$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $indiceDeArrays, $tipoComparacao);
+						for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
+							$relatorio[$indice][] = $retorno[$indice][0]['valor'];
+						}
+					}
+					$relatorios[] = $relatorio;
+				}
+			}
+				$dados['relatorios'] = $relatorios;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
 	}
 }

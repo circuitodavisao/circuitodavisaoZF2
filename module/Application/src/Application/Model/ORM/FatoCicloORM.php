@@ -484,7 +484,7 @@ class FatoCicloORM extends CircuitoORM {
 
 	public function  montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao){
 		$dqlBase = "SELECT "
-			. "(d.lider + d.visitante + d.consolidacao + d.membro) valor "
+			. "(SUM(d.lider) + SUM(d.visitante) + SUM(d.consolidacao) + SUM(d.membro)) valor "
 			. "FROM  " . Constantes::$ENTITY_FATO_CICLO . " fc "
 			. "JOIN fc.dimensao d "
 			. "WHERE "
