@@ -150,4 +150,29 @@ class FatoLiderORM extends CircuitoORM {
 		}
 	}
 
+	public function  montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $tipoComparacao){
+		$dqlBase = "SELECT "
+			. "SUM(fc.lideres) valor "
+			. "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fc "
+			. "WHERE "
+			. "fc.numero_identificador #tipoComparacao ?1 "
+			. "AND fc.data_inativacao is null ";
+		try {
+			if ($tipoComparacao == 1) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', '=', $dqlBase);
+			}
+			if ($tipoComparacao == 2) {
+				$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+				$numeroIdentificador .= '%';
+			}
+
+			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
+				->getResult();
+			return $result[0]['valor'];
+		} catch (Exception $exc) {
+			var_dump($exc->getMessage());
+		}
+	}
+
 }

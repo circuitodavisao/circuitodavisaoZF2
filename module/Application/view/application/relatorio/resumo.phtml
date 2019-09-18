@@ -17,19 +17,20 @@ if($this->filtrado){
 	$html .= '<th>Time</th>';
 	$html .= '<th>Líderes</th>';
 			$html .= '<td class="default"></td>';
-	for($i = 1; $i <= 4; $i++){
-		for($j = 1; $j <= 5; $j++){
-			$label = '';
-			switch($i){
-			case 1: $label = 'C'; break;
-			case 2: $label = 'CU'; break;
-			case 3: $label = 'A'; break;
-			case 4: $label = 'D'; break;
-			}
-			$html .= '<th>' . $label . $j . '</trhr>';
-		}
-			$html .= '<td class="default"></td>';
-	}
+	$html .= '<th>Quantidade de Líderes</th>';
+//	for($i = 1; $i <= 4; $i++){
+//		for($j = 1; $j <= 5; $j++){
+//			$label = '';
+//			switch($i){
+//			case 1: $label = 'C'; break;
+//			case 2: $label = 'CU'; break;
+//			case 3: $label = 'A'; break;
+//			case 4: $label = 'D'; break;
+//			}
+//			$html .= '<th>' . $label . $j . '</th>';
+//		}
+//			$html .= '<td class="default"></td>';
+//	}
 	$html .= '<th></th>';
 	$html .= '</tr>';
 	$html .= '</thead>';
@@ -43,20 +44,22 @@ if($this->filtrado){
 		$html .= '<td>'.$relatorio['info'].'</td>';
 		$html .= '<td>'.$relatorio['lideres'].'</td>';
 		$html .= '<td class="default"></td>';
-		for($i = 1; $i <= 4; $i++){
-			$contagem = 0;
-			foreach($relatorio[$i] as $ciclos){
-				$html .= '<td>'.$ciclos.'</td>';
-				$contagem++;
-			}
-			if($contagem !== 5){
+		$html .= '<td>'.$relatorio['quantidadeDeLideres'].'</td>';
 
-				for($x = $contagem; $x <= 4; $x++){
-					$html .= '<td><i class="fa fa-ban"></i></td>';
-				}
-			}
-			$html .= '<td class="default"></td>';
-		}
+//		for($i = 1; $i <= 4; $i++){
+//			$contagem = 0;
+//			foreach($relatorio[$i] as $ciclos){
+//				$html .= '<td>'.$ciclos.'</td>';
+//				$contagem++;
+//			}
+//			if($contagem !== 5){
+//
+//				for($x = $contagem; $x <= 4; $x++){
+//					$html .= '<td><i class="fa fa-ban"></i></td>';
+//				}
+//			}
+//			$html .= '<td class="default"></td>';
+//		}
 		if(!$relatorio['pessoal']){
 			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');" class="btn btn-dark btn-xs"><i class="fa fa-chevron-down"></i></span></td>';
 		}
@@ -106,22 +109,22 @@ if($this->filtrado){
 			html += '<td>Times</td>';
 			html += '<td>Líderes</td>';
 			html += '<td class="default"></td>';
-			for(let i = 1; i <= 4; i++){
-				let label = ''
-				switch(i){
-					case 1: label = 'C'; break;
-					case 2: label = 'CU'; break;
-					case 3: label = 'A'; break;
-					case 4: label = 'D'; break;
-				}
-				contagem = 0;
-				if(contagem !== 5){
-					for(x = contagem; x <= 4; x++){
-						html += '<td>'+label+x+'</td>';
-					}
-				}
-				html += '<td class="default"></td>';
-			}
+//			for(let i = 1; i <= 4; i++){
+//				let label = ''
+//				switch(i){
+//					case 1: label = 'C'; break;
+//					case 2: label = 'CU'; break;
+//					case 3: label = 'A'; break;
+//					case 4: label = 'D'; break;
+//				}
+//				contagem = 0;
+//				if(contagem !== 5){
+//					for(x = contagem; x <= 4; x++){
+//						html += '<td>'+label+x+'</td>';
+//					}
+//				}
+//				html += '<td class="default"></td>';
+//			}
 			html += '</tr>'
 	
 			json.relatorios.forEach(relatorio => {
@@ -129,24 +132,24 @@ if($this->filtrado){
 			html += '<td>'+relatorio['info']+'</td>';
 			html += '<td>'+relatorio['lideres']+'</td>';
 			html += '<td class="default"></td>';
-			for(let i = 1; i <= 4; i++){
-				contagem = 0;
-				if(relatorio[i]){
-					relatorio[i].forEach(valor => {
-						if(valor === null){
-							valor = 0
-						}
-						html += '<td>'+valor+'</td>';
-						contagem++;
-					})
-				}
-				if(contagem !== 5){
-					for(x = contagem; x <= 4; x++){
-						html += '<td><i class="fa fa-ban"></i></td>';
-					}
-				}
-				html += '<td class="default"></td>';
-			}
+//			for(let i = 1; i <= 4; i++){
+//				contagem = 0;
+//				if(relatorio[i]){
+//					relatorio[i].forEach(valor => {
+//						if(valor === null){
+//							valor = 0
+//						}
+//						html += '<td>'+valor+'</td>';
+//						contagem++;
+//					})
+//				}
+//				if(contagem !== 5){
+//					for(x = contagem; x <= 4; x++){
+//						html += '<td><i class="fa fa-ban"></i></td>';
+//					}
+//				}
+//				html += '<td class="default"></td>';
+//			}
 			html += '</tr>'
 			})
 			html += '</table>'
