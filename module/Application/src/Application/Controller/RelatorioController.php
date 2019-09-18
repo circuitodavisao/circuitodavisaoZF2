@@ -4290,10 +4290,10 @@ public function alunosNaSemanaAction(){
 					$numeroIdentificador12 = $numeroIdentificador . str_pad($grupo12->getId(), 8, 0, STR_PAD_LEFT);
 					for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 						$tipoComparacao = 2; // somado
-						//$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $indiceDeArrays, $tipoComparacao);
-						//for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
-						//	$relatorio[$indice][$indiceDeArrays] = $retorno[$indice][0]['valor'];
-						//}
+						$retorno = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $indiceDeArrays, $tipoComparacao);
+						for ($indice = $dimensaoTipoCelula; $indice <= $dimensaoTipoDomingo; $indice++) {
+							$relatorio[$indice][$indiceDeArrays] = $retorno[$indice][0]['valor'];
+						}
 					}
 					$relatorios[] = $relatorio;
 				}
