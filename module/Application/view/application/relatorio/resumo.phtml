@@ -1,8 +1,8 @@
 <?php
 
-use Arenapplication\Célulaontroller\Helper\Funcoes;
+use Application\Controller\Helper\Funcoes;
 
-$label = 'Resumo idiota';
+$label = 'Resumo';
 echo $this->templateFormularioTopo($label);
 echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 echo '<form action="/relatorioResumo" method="post">';
@@ -32,27 +32,18 @@ if($this->filtrado){
 	$html .= '</thead>';
 	$html .= '<tbody id="tbody">';
 	foreach($this->relatorios as $relatorio){
-		$corLinha = '';
-		if($relatorio[12] == true){
-			$corLinha = 'primary';
-		}
-
+		$corLinha = $relatorio['corDaLinha'];
 		$html .= '<tr id="tr'.$relatorio['idGrupo'].'" class="'.$corLinha.'">';
 		$html .= '<td>'.$relatorio['info'].'</td>';
 		$html .= '<td>'.$relatorio['lideres'].'</td>';
 		$html .= '<td>'.$relatorio['quantidadeDeLideres'].'</td>';
-	for($i = 1; $i <= 4; $i++){
-		$label = '';
-		switch($i){
-		case 1: $label = 'Célula'; break;
-		case 2: $label = 'Culto'; break;
-		case 3: $label = 'Arena'; break;
-		case 4: $label = 'Domingo'; break;
+		for($i = 1; $i <= 4; $i++){
+			$html .= '<th>' . $relatorio['valores'][$i]['valor'] . '</th>';
 		}
-		$html .= '<th>' . $label . '</th>';
-	}
-		if(!$relatorio['pessoal']){
+		if($relatorio['mostrarOpcao']){
 			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');" class="btn btn-dark btn-xs"><i class="fa fa-chevron-down"></i></span></td>';
+		}else{
+			$html .= '<td></td>';
 		}
 		$html .= '</tr>';
 	}
@@ -90,20 +81,38 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			elementoIcone.innerHTML = ''
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
+				let contagem = 0
 				json.relatorios.forEach(relatorio => {
 					let quantidadeDeLideres = relatorio['quantidadeDeLideres']
 					if(quantidadeDeLideres == null){
 						quantidadeDeLideres = 0
 					}
+					const corDaLinha = relatorio['corDaLinha']
 					let html = ''
-					html += '<tr>'
+					html += '<tr class="'+corDaLinha+'">'
 					html += '<td>'+relatorio['info']+'</td>';
 					html += '<td>'+relatorio['lideres']+'</td>';
 					html += '<td>'+quantidadeDeLideres+'</td>';
+					for(let i = 1; i <= 4; i++){
+						let valor = relatorio['valores'][i]['valor']
+						if(valor == null){
+							valor = 0
+						}
+						html += '<td>'+valor+'</td>';
+					}
+
+					if(relatorio['mostrarOpcao']){
+						html += '<td id="icone'+relatorio['idGrupo']+'"><span onClick="buscarDiscipulos('+relatorio['idGrupo']+', '+relatorio['profundidade']+', '+mes+', '+ano+');" class="btn btn-dark btn-xs"><i class="fa fa-chevron-down"></i></span></td>';
+					}else{
+						html += '<td></td>'
+					}
 					html += '</tr>'
 
-					let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex)
+					let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex + contagem)
+					contagem++
 					novaLinha.innerHTML = html
+					novaLinha.id = `tr${relatorio['idGrupo']}` 
+					novaLinha.classList.add(corDaLinha)
 				})
 			})
 	}

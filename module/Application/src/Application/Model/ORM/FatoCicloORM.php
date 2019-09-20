@@ -512,7 +512,7 @@ class FatoCicloORM extends CircuitoORM {
 				$result[$indice] = $this->getEntityManager()->createQuery($dqlAjustada)
 					->setParameter(1, $numeroIdentificador)
 					->setParameter(2, $dataDoPeriodoFormatada)
-					->getResult();
+					->getResult()[0];
 			}
 			return $result;
 		} catch (Exception $exc) {
