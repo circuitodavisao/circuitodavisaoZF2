@@ -81,6 +81,9 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			elementoIcone.innerHTML = ''
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
+				elementoTr.innerHTML = '<td colspan="8"></td>';
+				elementoTr.classList.remove('primary')
+				elementoTr.classList.add('dark')
 				let contagem = 0
 				json.relatorios.forEach(relatorio => {
 					let quantidadeDeLideres = relatorio['quantidadeDeLideres']

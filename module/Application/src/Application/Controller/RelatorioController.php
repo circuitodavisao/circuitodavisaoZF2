@@ -4351,7 +4351,6 @@ public function alunosNaSemanaAction(){
 						$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $tipoComparacao);
 						$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $periodo, $tipoComparacao);
 						$relatorio['mostrarOpcao'] = true;
-						$relatorio['corDaLinha'] = 'success';
 						$relatorios[] = $relatorio;
 					}
 				}
