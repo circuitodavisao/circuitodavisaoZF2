@@ -11,13 +11,15 @@ echo '</form>';
 
 $html = '';
 if($this->filtrado){
-	$html .= '<table style="text-align: \'center\'; font-size: 10px;" class="table table-hover table-responsive table-condensed">';
-	$html .= '<thead class="dark">';
+	$html .= '<table style="text-align: center; font-size: 10px;" class="table table-hover table-responsive table-condensed">';
+	$html .= '<thead class="dark" style="text-align: center">';
 	$html .= '<tr>';
 	$html .= '<th>Time</th>';
 	$html .= '<th>Líderes</th>';
 	$html .= '<th>Quantidade de Líderes</th>';
 	$html .= '<th>Quantidade de Células</th>';
+	$html .= '<th>Quantidade de Células Betas</th>';
+	$html .= '<th>Quantidade de Discipulados</th>';
 	for($i = 1; $i <= 4; $i++){
 		$label = '';
 		switch($i){
@@ -31,7 +33,7 @@ if($this->filtrado){
 	$html .= '<th></th>';
 	$html .= '</tr>';
 	$html .= '</thead>';
-	$html .= '<tbody id="tbody">';
+	$html .= '<tbody id="tbody" style="text-align: center">';
 	foreach($this->relatorios as $relatorio){
 		$corLinha = $relatorio['corDaLinha'];
 		$html .= '<tr id="tr'.$relatorio['idGrupo'].'" class="'.$corLinha.'">';
@@ -39,11 +41,13 @@ if($this->filtrado){
 		$html .= '<td>'.$relatorio['lideres'].'</td>';
 		$html .= '<td>'.$relatorio['quantidadeDeLideres'].'</td>';
 		$html .= '<td>'.$relatorio['quantidadeDeCelulas'].'</td>';
+		$html .= '<td>'.$relatorio['quantidadeDeCelulasBetas'].'</td>';
+		$html .= '<td>'.$relatorio['quantidadeDeDiscipulados'].'</td>';
 		for($i = 1; $i <= 4; $i++){
 			$html .= '<th>' . $relatorio['valores'][$i]['valor'] . '</th>';
 		}
 		if($relatorio['mostrarOpcao']){
-			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');" class="btn btn-dark btn-xs"><i class="fa fa-chevron-down"></i></span></td>';
+			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');"><i class="fa fa-plus"></i></span></td>';
 		}else{
 			$html .= '<td></td>';
 		}
@@ -80,10 +84,10 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			return resultado.json()
 		})
 		.then(json => {
-			elementoIcone.innerHTML = ''
+				elementoIcone.innerHTML = '<i class="fa fa-minus"></i>'
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
-				elementoTr.innerHTML = '<td colspan="9"></td>';
+				elementoTr.innerHTML = '<td colspan="11"></td>';
 				elementoTr.classList.remove('primary')
 				elementoTr.classList.add('dark')
 				let contagem = 0
@@ -96,6 +100,14 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					if(quantidadeDeCelulas == null){
 						quantidadeDeCelulas = 0
 					}
+					let quantidadeDeCelulasBetas = relatorio['quantidadeDeCelulasBetas']
+					if(quantidadeDeCelulasBetas == null){
+						quantidadeDeCelulasBetas = 0
+					}
+					let quantidadeDeDiscipulados = relatorio['quantidadeDeDiscipulados']
+					if(quantidadeDeDiscipulados == null){
+						quantidadeDeDiscipulados = 0
+					}
 	
 					const corDaLinha = relatorio['corDaLinha']
 					let html = ''
@@ -104,6 +116,8 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					html += '<td>'+relatorio['lideres']+'</td>';
 					html += '<td>'+quantidadeDeLideres+'</td>';
 					html += '<td>'+quantidadeDeCelulas+'</td>';
+					html += '<td>'+quantidadeDeCelulasBetas+'</td>';
+					html += '<td>'+quantidadeDeDiscipulados+'</td>';
 					for(let i = 1; i <= 4; i++){
 						let valor = relatorio['valores'][i]['valor']
 						if(valor == null){
@@ -113,7 +127,7 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					}
 
 					if(relatorio['mostrarOpcao']){
-						html += '<td id="icone'+relatorio['idGrupo']+'"><span onClick="buscarDiscipulos('+relatorio['idGrupo']+', '+relatorio['profundidade']+', '+mes+', '+ano+');" class="btn btn-dark btn-xs"><i class="fa fa-chevron-down"></i></span></td>';
+						html += '<td id="icone'+relatorio['idGrupo']+'"><span onClick="buscarDiscipulos('+relatorio['idGrupo']+', '+relatorio['profundidade']+', '+mes+', '+ano+');" ><i class="fa fa-plus"></i></span></td>';
 					}else{
 						html += '<td></td>'
 					}
