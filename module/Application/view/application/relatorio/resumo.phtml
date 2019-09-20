@@ -17,6 +17,7 @@ if($this->filtrado){
 	$html .= '<th>Time</th>';
 	$html .= '<th>Líderes</th>';
 	$html .= '<th>Quantidade de Líderes</th>';
+	$html .= '<th>Quantidade de Células</th>';
 	for($i = 1; $i <= 4; $i++){
 		$label = '';
 		switch($i){
@@ -37,6 +38,7 @@ if($this->filtrado){
 		$html .= '<td>'.$relatorio['info'].'</td>';
 		$html .= '<td>'.$relatorio['lideres'].'</td>';
 		$html .= '<td>'.$relatorio['quantidadeDeLideres'].'</td>';
+		$html .= '<td>'.$relatorio['quantidadeDeCelulas'].'</td>';
 		for($i = 1; $i <= 4; $i++){
 			$html .= '<th>' . $relatorio['valores'][$i]['valor'] . '</th>';
 		}
@@ -81,7 +83,7 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			elementoIcone.innerHTML = ''
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
-				elementoTr.innerHTML = '<td colspan="8"></td>';
+				elementoTr.innerHTML = '<td colspan="9"></td>';
 				elementoTr.classList.remove('primary')
 				elementoTr.classList.add('dark')
 				let contagem = 0
@@ -90,12 +92,18 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					if(quantidadeDeLideres == null){
 						quantidadeDeLideres = 0
 					}
+					let quantidadeDeCelulas = relatorio['quantidadeDeCelulas']
+					if(quantidadeDeCelulas == null){
+						quantidadeDeCelulas = 0
+					}
+	
 					const corDaLinha = relatorio['corDaLinha']
 					let html = ''
 					html += '<tr class="'+corDaLinha+'">'
 					html += '<td>'+relatorio['info']+'</td>';
 					html += '<td>'+relatorio['lideres']+'</td>';
 					html += '<td>'+quantidadeDeLideres+'</td>';
+					html += '<td>'+quantidadeDeCelulas+'</td>';
 					for(let i = 1; i <= 4; i++){
 						let valor = relatorio['valores'][i]['valor']
 						if(valor == null){

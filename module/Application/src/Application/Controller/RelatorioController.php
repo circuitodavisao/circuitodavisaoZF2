@@ -4274,6 +4274,7 @@ public function alunosNaSemanaAction(){
 			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 			$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $tipoComparacao);
 			$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao);
+			$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao)[0]['quantidade'];
 			$relatorios[] = $relatorio;
 
 			$grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
@@ -4289,6 +4290,7 @@ public function alunosNaSemanaAction(){
 					$tipoComparacao = 2; // somado
 					$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $tipoComparacao);
 					$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $periodo, $tipoComparacao);
+					$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador12, $periodo, $tipoComparacao)[0]['quantidade'];
 					$relatorio['corDaLinha'] = 'primary';
 					$relatorio['mostrarOpcao'] = true;
 					$relatorios[] = $relatorio;
@@ -4301,6 +4303,7 @@ public function alunosNaSemanaAction(){
 			$tipoComparacao = 2; // somado
 			$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $tipoComparacao);
 			$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao);
+			$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao)[0]['quantidade'];
 			$relatorio['corDaLinha'] = 'dark';
 			$relatorios[] = $relatorio;
 
@@ -4336,6 +4339,7 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 				$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $tipoComparacao);
 				$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao);
+				$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao)[0]['quantidade'];
 				$relatorios[] = $relatorio;
 
 				if ($grupoPaiFilhoFilhos12) {
@@ -4350,6 +4354,7 @@ public function alunosNaSemanaAction(){
 						$tipoComparacao = 2; //somado
 						$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $tipoComparacao);
 						$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador12, $periodo, $tipoComparacao);
+						$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador12, $periodo, $tipoComparacao)[0]['quantidade'];
 						$relatorio['mostrarOpcao'] = true;
 						$relatorios[] = $relatorio;
 					}
@@ -4361,6 +4366,7 @@ public function alunosNaSemanaAction(){
 				$tipoComparacao = 2; // somado
 				$relatorio['quantidadeDeLideres'] = $this->getRepositorio()->getFatoLiderORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $tipoComparacao);
 				$relatorio['valores'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioResumoPorNumeroIdentificadoEPeriodo($numeroIdentificador, $periodo, $tipoComparacao);
+				$relatorio['quantidadeDeCelulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodo, $tipoComparacao)[0]['quantidade'];
 				$relatorio['corDaLinha'] = 'dark';
 				$relatorios[] = $relatorio;
 
