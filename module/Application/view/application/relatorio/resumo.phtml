@@ -44,7 +44,7 @@ if($this->filtrado){
 		$html .= '<td>'.$relatorio['quantidadeDeCelulasBetas'].'</td>';
 		$html .= '<td>'.$relatorio['quantidadeDeDiscipulados'].'</td>';
 		for($i = 1; $i <= 4; $i++){
-			$html .= '<th>' . $relatorio['valores'][$i]['valor'] . '</th>';
+			$html .= '<td>' . $relatorio['valores'][$i]['valor'] . '</td>';
 		}
 		if($relatorio['mostrarOpcao']){
 			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');"><i class="fa fa-plus"></i></span></td>';
