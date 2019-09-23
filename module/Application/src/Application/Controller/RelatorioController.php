@@ -4393,4 +4393,79 @@ public function alunosNaSemanaAction(){
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
+
+	public function melhorDozeAction(){
+			set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
+
+		$mes = 8;
+		$ano = 2019;
+		$listaDeGrupos = array();
+		$listaDeGrupos[] = 2; // black belt teste
+		
+		$relatorios = array();
+		foreach($listaDeGrupos as $idGrupo){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+			$relatorio = array();
+			$nomeEntidade = '';
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				$nomeEntidade = 'IGREJA ' . $grupo->getEntidadeAtiva()->infoEntidade();
+			}
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$grupoIgreja = $grupo->getGrupoIgreja();
+				$nomeEntidade = 'IGREJA ' . $grupoIgreja->getEntidadeAtiva()->infoEntidade();
+				$nomeEntidade .= ' EQUIPE ' . $grupo->getEntidadeAtiva()->infoEntidade();
+			}
+			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$grupoIgreja = $grupo->getGrupoIgreja();
+				$nomeEntidade = 'IGREJA ' . $grupoIgreja->getEntidadeAtiva()->infoEntidade();
+				$nomeEntidade .= ' EQUIPE ' . $grupo->getEntidadeAtiva()->infoEntidade();
+			}
+			$relatorio['nome'] = $nomeEntidade;
+			$relatorio['lideres'] = $grupo->getNomeLideresAtivos(); 
+
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($arrayPeriodoDoMes[1]);
+			$grupoSelecionado = null;
+			$quantidadeMaior = 0;
+			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
+				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
+				$grupoPaiFilhoFilhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($arrayPeriodoDoMes[1]);
+				$quantosDozes = 0;
+				foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
+					if(
+						count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) > 0 ||
+						count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)) > 0
+					){
+						$quantosDozes++;
+					}
+				}
+				if($quantosDozes > $quantidadeMaior){
+					$quantidadeMaior = $quantosDozes;
+					$grupoSelecionado = $grupoFilho;
+				}
+			}
+			if($grupoSelecionado){
+				$relatorio['doze'] = $grupoSelecionado->getNomeLideresAtivos();
+				$relatorio['diretos'] = $quantidadeMaior;
+
+				$tipoComparacao = 2;// somado
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoSelecionado);
+				$relatorio['celulas'] = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $arrayPeriodoDoMes[1], $tipoComparacao)[0]['quantidade'];
+				$relatorio['celulas'] += $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $arrayPeriodoDoMes[1], $tipoComparacao, $beta = true)[0]['quantidade'];
+
+				$tipoRelatorio = RelatorioController::relatorioMembresia;
+				$relatorioCompleto = RelatorioController::relatorioCompleto($this->getRepositorio(), $grupoSelecionado, $tipoRelatorio, $mes, $ano, $true = true, $tipoComparacao);
+				$relatorio['membresia'] = $relatorioCompleto[count($relatorioCompleto) - 1]['mediaMembresia'];
+			}
+			$relatorios[] = $relatorio;
+		}
+
+		$dados = array();
+		$dados['relatorios'] = $relatorios;
+
+		return new ViewModel($dados);
+	}
+
 }

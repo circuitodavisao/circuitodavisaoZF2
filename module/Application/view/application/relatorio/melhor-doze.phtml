@@ -1,0 +1,36 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+
+$label = 'Melhor Doze';
+echo $this->templateFormularioTopo($label);
+echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+
+$html = '';
+$html .= '<table style="text-align: center; font-size: 10px;" class="table table-hover table-responsive table-condensed">';
+$html .= '<thead class="dark" style="text-align: center">';
+$html .= '<tr>';
+$html .= '<th>Igreja/Equipe</th>';
+$html .= '<th>Líderes</th>';
+$html .= '<th>Doze</th>';
+$html .= '<th>Diretos</th>';
+$html .= '<th>Células</th>';
+$html .= '<th>Membresia</th>';
+$html .= '</tr>';
+$html .= '</thead>';
+$html .= '<tbody id="tbody" style="text-align: center">';
+foreach($this->relatorios as $relatorio){
+	$corLinha = $relatorio['corDaLinha'];
+	$html .= '<tr id="tr'.$relatorio['idGrupo'].'" class="'.$corLinha.'">';
+	$html .= '<td>'.$relatorio['nome'].'</td>';
+	$html .= '<td>'.$relatorio['lideres'].'</td>';
+	$html .= '<td>'.$relatorio['doze'].'</td>';
+	$html .= '<td>'.$relatorio['diretos'].'</td>';
+	$html .= '<td>'.$relatorio['celulas'].'</td>';
+	$html .= '<td>'.$relatorio['membresia'].'</td>';
+	$html .= '</tr>';
+}
+$html .= '</tbody>';
+$html .= '</table>';
+
+echo $html;
