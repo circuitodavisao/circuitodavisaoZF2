@@ -7,7 +7,7 @@ echo $this->templateFormularioTopo($label);
 echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 
 $html = '';
-$html .= '<table style="text-align: center; font-size: 10px;" class="table table-hover table-responsive table-condensed">';
+$html .= '<table style="text-align: center; font-size: 10px;" class="table table-hover table-responsive table-condensed table-striped">';
 $html .= '<thead class="dark" style="text-align: center">';
 $html .= '<tr>';
 $html .= '<th>Igreja/Equipe</th>';
@@ -20,8 +20,7 @@ $html .= '</tr>';
 $html .= '</thead>';
 $html .= '<tbody id="tbody" style="text-align: center">';
 foreach($this->relatorios as $relatorio){
-	$corLinha = $relatorio['corDaLinha'];
-	$html .= '<tr id="tr'.$relatorio['idGrupo'].'" class="'.$corLinha.'">';
+	$html .= '<tr>';
 	$html .= '<td>'.$relatorio['nome'].'</td>';
 	$html .= '<td>'.$relatorio['lideres'].'</td>';
 	$html .= '<td>'.$relatorio['doze'].'</td>';
