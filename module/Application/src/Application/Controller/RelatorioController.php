@@ -4402,34 +4402,34 @@ public function alunosNaSemanaAction(){
 		$mes = 8;
 		$ano = 2019;
 		$listaDeGrupos = array();
-		$listaDeGrupos[] = 2; // black belt teste
-		$listaDeGrupos[] = 4674;
-		$listaDeGrupos[] = 8923;
-		$listaDeGrupos[] = 9214;
-		$listaDeGrupos[] = 3262;
-		$listaDeGrupos[] = 2666;
-		$listaDeGrupos[] = 2667;
-		$listaDeGrupos[] = 3068;
-		$listaDeGrupos[] = 2605;
-		$listaDeGrupos[] = 2665;
-		$listaDeGrupos[] = 2688;
-		$listaDeGrupos[] = 3067;
-		$listaDeGrupos[] = 5683;
-		$listaDeGrupos[] = 4508;
-		$listaDeGrupos[] = 4042;
-		$listaDeGrupos[] = 529;
+//		$listaDeGrupos[] = 2; // black belt teste
+//		$listaDeGrupos[] = 4674;
+//		$listaDeGrupos[] = 8923;
+//		$listaDeGrupos[] = 9214;
+//		$listaDeGrupos[] = 3262;
+//		$listaDeGrupos[] = 2666;
+//		$listaDeGrupos[] = 2667;
+//		$listaDeGrupos[] = 3068;
+//		$listaDeGrupos[] = 2605;
+//		$listaDeGrupos[] = 2665;
+//		$listaDeGrupos[] = 2688;
+//		$listaDeGrupos[] = 3067;
+//		$listaDeGrupos[] = 5683;
+//		$listaDeGrupos[] = 4508;
+//		$listaDeGrupos[] = 4042;
+//		$listaDeGrupos[] = 529;
 		$listaDeGrupos[] = 1;
-		$listaDeGrupos[] = 1225;
-		$listaDeGrupos[] = 9274;
-		$listaDeGrupos[] = 9496;
-		$listaDeGrupos[] = 9758;
-		$listaDeGrupos[] = 3636;
-		$listaDeGrupos[] = 1846;
-		$listaDeGrupos[] = 1683;
-		$listaDeGrupos[] = 4186;
-		$listaDeGrupos[] = 830;
-		$listaDeGrupos[] = 1226;
-		$listaDeGrupos[] = 4897;
+//		$listaDeGrupos[] = 1225;
+//		$listaDeGrupos[] = 9274;
+//		$listaDeGrupos[] = 9496;
+//		$listaDeGrupos[] = 9758;
+//		$listaDeGrupos[] = 3636;
+//		$listaDeGrupos[] = 1846;
+//		$listaDeGrupos[] = 1683;
+//		$listaDeGrupos[] = 4186;
+//		$listaDeGrupos[] = 830;
+//		$listaDeGrupos[] = 1226;
+//		$listaDeGrupos[] = 4897;
 
 		$relatorios = array();
 		foreach($listaDeGrupos as $idGrupo){
@@ -4459,13 +4459,15 @@ public function alunosNaSemanaAction(){
 			foreach($grupoPaiFilhoFilhos as $grupoPaiFilho){
 				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 				$grupoPaiFilhoFilhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($arrayPeriodoDoMes[1]);
+
 				$quantosDozes = 0;
 				foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
 					$quantasCelulas = $grupoPaiFilho2->getGrupoPaiFilhoFilho()->getCelulasPorPeriodo($arrayPeriodoDoMes[1]);
 					if($quantasCelulas > 0){
-						$quantosDozes += count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoResponsavel());
+						$quantosDozes += $grupoPaiFilho2->getGrupoPaiFilhoFilho()->getPessoasPorPeriodo($arrayPeriodoDoMes[1]);
 					}
 				}
+
 				if($quantosDozes > $quantidadeMaior){
 					$quantidadeMaior = $quantosDozes;
 					$grupoSelecionado = $grupoFilho;

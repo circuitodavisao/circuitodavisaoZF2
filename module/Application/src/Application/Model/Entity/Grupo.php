@@ -414,6 +414,35 @@ class Grupo extends CircuitoEntity {
 		return $resposta;
 	}
 
+    function getPessoasPorPeriodo($periodo = -1) {
+        $resposta = 0;
+        /* Responsabilidades */
+		$grupoResponsavel = $this->getGrupoResponsavel();
+        if ($grupoResponsavel) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+            $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+            $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoResponsavel as $ge) {
+                if ($ge->verificarSeEstaAtivo()) {
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($ge->getData_criacaoStringPadraoBanco());
+                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                        $resposta++;
+                    }
+                } else {
+                    /* Inativo */
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                    $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($ge->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                        $resposta++;
+                    }
+                }
+            }
+		}
+		return $resposta;
+	}
+
     function getGrupoPaiFilhoFilhosPorMesEAno($mes, $ano) {
         $arrayDePessoas = array();
         foreach($this->getPessoasAtivas() as $pessoa){
