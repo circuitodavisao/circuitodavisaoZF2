@@ -375,7 +375,7 @@ class Grupo extends CircuitoEntity {
 	}
 
     function getCelulasPorPeriodo($periodo = -1) {
-        $resposta = array();
+        $resposta = 0;
         /* Responsabilidades */
 		$grupoEvento = array();
         $array1 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
@@ -399,14 +399,14 @@ class Grupo extends CircuitoEntity {
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
                     $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($ge->getData_criacaoStringPadraoBanco());
                     if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-                        $resposta[] = $ge;
+                        $resposta++;
                     }
                 } else {
                     /* Inativo */
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
                     $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($ge->getData_inativacaoStringPadraoBanco());
                     if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-                        $resposta[] = $ge;
+                        $resposta++;
                     }
                 }
             }
