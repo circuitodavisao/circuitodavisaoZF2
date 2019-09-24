@@ -374,6 +374,46 @@ class Grupo extends CircuitoEntity {
 		return $grupoPaiFilhoFilhosAtivos;
 	}
 
+    function getCelulasPorPeriodo($periodo = -1) {
+        $resposta = array();
+        /* Responsabilidades */
+		$grupoEvento = array();
+        $array1 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+        $array2 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica);
+		if($array1 && !$array2){
+			$grupoEvento = $array1;
+		}
+		if($array1 && $array2){
+			$grupoEvento = array_merge($array1, $array2);
+		}
+		if(!$array1 && $array2){
+			$grupoEvento = $array2;
+		}
+        if ($grupoEvento) {
+            $arrayPeriodo = Funcoes::montaPeriodo($periodo);
+            $stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+            $stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+            /* Verificar responsabilidades ativas */
+            foreach ($grupoEvento as $ge) {
+                if ($ge->verificarSeEstaAtivo()) {
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($ge->getData_criacaoStringPadraoBanco());
+                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+                        $resposta[] = $ge;
+                    }
+                } else {
+                    /* Inativo */
+                    $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+                    $dataDoGrupoGrupoPaiFilhoInativadoParaComparar = strtotime($ge->getData_inativacaoStringPadraoBanco());
+                    if ($dataDoGrupoGrupoPaiFilhoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+                        $resposta[] = $ge;
+                    }
+                }
+            }
+		}
+		return $resposta;
+	}
+
     function getGrupoPaiFilhoFilhosPorMesEAno($mes, $ano) {
         $arrayDePessoas = array();
         foreach($this->getPessoasAtivas() as $pessoa){

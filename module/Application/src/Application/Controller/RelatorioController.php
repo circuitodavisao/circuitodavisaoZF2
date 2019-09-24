@@ -4395,7 +4395,7 @@ public function alunosNaSemanaAction(){
 	}
 
 	public function melhorDozeAction(){
-			set_time_limit(0);
+		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '180');
 
@@ -4403,7 +4403,33 @@ public function alunosNaSemanaAction(){
 		$ano = 2019;
 		$listaDeGrupos = array();
 		$listaDeGrupos[] = 2; // black belt teste
-		
+		$listaDeGrupos[] = 3186;
+		$listaDeGrupos[] = 8877;
+		$listaDeGrupos[] = 8581;
+		$listaDeGrupos[] = 3181;
+		$listaDeGrupos[] = 2666;
+		$listaDeGrupos[] = 2667;
+		$listaDeGrupos[] = 3068;
+		$listaDeGrupos[] = 2605;
+		$listaDeGrupos[] = 2665;
+		$listaDeGrupos[] = 2688;
+		$listaDeGrupos[] = 3067;
+		$listaDeGrupos[] = 5683;
+		$listaDeGrupos[] = 4508;
+		$listaDeGrupos[] = 3185;
+		$listaDeGrupos[] = 529;
+		$listaDeGrupos[] = 3110;
+		$listaDeGrupos[] = 9273;
+		$listaDeGrupos[] = 9496;
+		$listaDeGrupos[] = 9757;
+		$listaDeGrupos[] = 3182;
+		$listaDeGrupos[] = 1846;
+		$listaDeGrupos[] = 1683;
+		$listaDeGrupos[] = 3183;
+		$listaDeGrupos[] = 830;
+		$listaDeGrupos[] = 1226;
+		$listaDeGrupos[] = 4781;
+
 		$relatorios = array();
 		foreach($listaDeGrupos as $idGrupo){
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
@@ -4433,13 +4459,13 @@ public function alunosNaSemanaAction(){
 				$grupoFilho = $grupoPaiFilho->getGrupoPaiFilhoFilho();
 				$grupoPaiFilhoFilhos2 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($arrayPeriodoDoMes[1]);
 				$quantosDozes = 0;
+				$contagem = 0;
 				foreach($grupoPaiFilhoFilhos2 as $grupoPaiFilho2){
-					if(
-						count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)) > 0 ||
-						count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)) > 0
-					){
-						$quantosDozes++;
+					$celulas = $grupoPaiFilho2->getGrupoPaiFilhoFilho()->getCelulasPorPeriodo($arrayPeriodoDoMes[1]);
+					if(count($celulas) > 0){
+						$quantosDozes += count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoResponsavel());
 					}
+					$contagem += count($grupoPaiFilho2->getGrupoPaiFilhoFilho()->getGrupoResponsavel());
 				}
 				if($quantosDozes > $quantidadeMaior){
 					$quantidadeMaior = $quantosDozes;
