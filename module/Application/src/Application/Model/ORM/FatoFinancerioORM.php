@@ -133,10 +133,41 @@ class FatoFinanceiroORM extends CircuitoORM {
         }
     }
 
-	public function valorPorEventoEPEriodo($idEvento, $periodo) {
+	public function valorPorEventoEPEriodo($idEvento, $periodo, $mes = null) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
+
+		if($mes){
+			/* começo do mes */
+			if($resultadoPeriodo[5] == $mes && $resultadoPeriodo[2] != $mes){
+				$dataDoPeriodoInicial = $resultadoPeriodo[3].'-'.str_pad($mes, 2, '0', STR_PAD_LEFT).'-01';
+			}
+			/* fim do mes */
+			if($resultadoPeriodo[2] == $mes && $resultadoPeriodo[5] != $mes){
+				$ultimoDiaDomes = 28;
+				if(
+					$mes == 1 ||
+					$mes == 3 ||
+					$mes == 5 ||
+					$mes == 7 ||
+					$mes == 8 ||
+					$mes == 10 ||
+					$mes == 12
+				){
+					$ultimoDiaDomes = 31;
+				}
+				if(
+					$mes == 4 ||
+					$mes == 6 ||
+					$mes == 9 ||
+					$mes == 11
+				){
+					$ultimoDiaDomes = 30;
+				}
+				$dataDoPeriodoFinal = $resultadoPeriodo[6].'-'.str_pad($mes, 2, '0', STR_PAD_LEFT).'-'.$ultimoDiaDomes;
+			}
+		}
 		$dql= "SELECT "
 			. "SUM(ff.valor) valor "
 			. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
