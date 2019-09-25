@@ -4249,8 +4249,6 @@ public function alunosNaSemanaAction(){
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupo = $entidade->getGrupo();
 
-		$mes = date('m');
-		$ano = date('Y');
 		$periodo = -1;
 
 		$request = $this->getRequest();
@@ -4258,12 +4256,8 @@ public function alunosNaSemanaAction(){
 		$dados['filtrado'] = false;
 		if($request->isPost()){
 			$post_data = $request->getPost();
-			$mes = $post_data['mes'];
-			$ano = $post_data['ano'];
 			$periodo = $post_data['periodo'];
-
 			$dados['filtrado'] = true;
-
 			$relatorios = array();
 			$relatorio = array();
 			$relatorio['info'] = $grupo->getEntidadeAtiva()->infoEntidade();
@@ -4318,8 +4312,6 @@ public function alunosNaSemanaAction(){
 			$dados['relatorios'] = $relatorios;
 		}
 
-		$dados['mes'] = $mes;
-		$dados['ano'] = $ano;
 		$dados['periodo'] = $periodo;
 		return new ViewModel($dados);
 	}
@@ -4334,7 +4326,7 @@ public function alunosNaSemanaAction(){
 				$json = Json::decode($body);
 				$relatorios = array();
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->idGrupo);
-				$periodo = -2;
+				$periodo = $json->periodo;
 				$grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo);
 				$dimensaoTipoCelula = 1;
 				$dimensaoTipoDomingo = 4;

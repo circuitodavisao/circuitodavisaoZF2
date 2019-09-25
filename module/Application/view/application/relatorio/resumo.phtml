@@ -68,7 +68,7 @@ if($this->filtrado){
 			$html .= '<td>' . $relatorio['valores'][$i]['valor'] . '</td>';
 		}
 		if($relatorio['mostrarOpcao']){
-			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->mes.', '.$this->ano.');"><i class="fa fa-plus"></i></span></td>';
+			$html .= '<td id="icone'.$relatorio['idGrupo'].'"><span onClick="buscarDiscipulos('.$relatorio['idGrupo'].', '.$relatorio['profundidade'].', '.$this->periodo.');"><i class="fa fa-plus"></i></span></td>';
 		}else{
 			$html .= '<td></td>';
 		}
@@ -81,20 +81,19 @@ if($this->filtrado){
 }
 ?>
 <script type='text/javascript'>
-function buscarDiscipulos(idGrupo, profundidade, mes, ano){
+function buscarDiscipulos(idGrupo, profundidade, periodo){
 
 	const elementoIcone = document.getElementById('icone'+idGrupo)
 		elementoIcone.innerHTML = '<img src="/img/loader.gif" />'
 		const url = '/relatorioResumoDiscipulos'
 		fetch(
 			url,
-{
-	method: 'POST',	
-		body: JSON.stringify({
-			idGrupo,
+			{
+			method: 'POST',	
+			body: JSON.stringify({
+				idGrupo,
 				profundidade,
-				mes,
-				ano,
+				periodo,
 				}),
 			},
 		)
@@ -105,13 +104,18 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			return resultado.json()
 		})
 		.then(json => {
-			elementoIcone.innerHTML = '<i class="fa fa-minus"></i>'
+				elementoIcone.innerHTML = '<span onClick="buscarDiscipulos('+idGrupo+', '+profundidade+', '+periodo+');"><i class="fa fa-plus"></i></span>'
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
-				elementoTr.innerHTML = '<td colspan="11"></td>';
-			elementoTr.classList.remove('primary')
-				elementoTr.classList.add('dark')
+				elementoTr.classList.add('hidden')
 				let contagem = 0
+				let html = ''
+				html += '<tr><td colSpan="10"></td><td onClick="esconderDiscipulos('+idGrupo+')"><i class="fa fa-minus"></i></td></tr>'
+				let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex + contagem)
+				novaLinha.innerHTML = html
+				novaLinha.classList.add('dark')
+				novaLinha.classList.add('item'+idGrupo)
+				contagem++
 				json.relatorios.forEach(relatorio => {
 					let quantidadeDeLideres = relatorio['quantidadeDeLideres']
 						if(quantidadeDeLideres == null){
@@ -148,18 +152,25 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					}
 
 					if(relatorio['mostrarOpcao']){
-						html += '<td id="icone'+relatorio['idGrupo']+'"><span onClick="buscarDiscipulos('+relatorio['idGrupo']+', '+relatorio['profundidade']+', '+mes+', '+ano+');" ><i class="fa fa-plus"></i></span></td>';
+						html += '<td id="icone'+relatorio['idGrupo']+'"><span onClick="buscarDiscipulos('+relatorio['idGrupo']+', '+relatorio['profundidade']+', '+periodo+');" ><i class="fa fa-plus"></i></span></td>';
 					}else{
 						html += '<td></td>'
 					}
 					html += '</tr>'
 
 						let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex + contagem)
-						contagem++
 						novaLinha.innerHTML = html
 						novaLinha.id = `tr${relatorio['idGrupo']}` 
 						novaLinha.classList.add(corDaLinha)
+						novaLinha.classList.add('item'+idGrupo)
+						contagem++
 				})
 			})
+	}
+
+	function esconderDiscipulos(idGrupo){
+		const elementosParaEsconder = document.getElementsByClassName('item'+idGrupo)	
+		Array.prototype.forEach.call(elementosParaEsconder, item => item.classList.add('hidden'))
+		document.getElementById('tr'+idGrupo).classList.remove('hidden')
 	}
 </script>
