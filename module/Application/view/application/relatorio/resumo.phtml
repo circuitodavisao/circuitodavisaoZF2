@@ -1,12 +1,33 @@
 <?php
 
 use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
 
 $label = 'Resumo';
 echo $this->templateFormularioTopo($label);
 echo '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
 echo '<form action="/relatorioResumo" method="post">';
-echo $this->cabecalhoDeMeses();
+$html = '';
+$html .= '<div class="row p5">';
+$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+$html .= 'Período';
+$html .= '</div>';
+$html .= '<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">';
+$html .= '<select name="periodo" id="periodo" class="form-control">';
+for ($indice = -1; $indice >= -48; $indice--){
+	$selected = '';
+	if ($this->periodo == $indice) {
+		$selected = 'selected';
+	}
+
+	$html .= '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::montaPeriodo($indice)[0] . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">';
+$html .= $this->botaoSimples('Filtrar', $this->funcaoOnClick('this.form.submit()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+$html .= '</div>';
+echo $html;
 echo '</form>';
 
 $html = '';
@@ -67,13 +88,13 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 		const url = '/relatorioResumoDiscipulos'
 		fetch(
 			url,
-			{
-				method: 'POST',	
-				body: JSON.stringify({
-					idGrupo,
-					profundidade,
-					mes,
-					ano,
+{
+	method: 'POST',	
+		body: JSON.stringify({
+			idGrupo,
+				profundidade,
+				mes,
+				ano,
 				}),
 			},
 		)
@@ -84,35 +105,35 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 			return resultado.json()
 		})
 		.then(json => {
-				elementoIcone.innerHTML = '<i class="fa fa-minus"></i>'
+			elementoIcone.innerHTML = '<i class="fa fa-minus"></i>'
 				const elementoTbody = document.getElementById('tbody')
 				const elementoTr = document.getElementById('tr'+idGrupo)
 				elementoTr.innerHTML = '<td colspan="11"></td>';
-				elementoTr.classList.remove('primary')
+			elementoTr.classList.remove('primary')
 				elementoTr.classList.add('dark')
 				let contagem = 0
 				json.relatorios.forEach(relatorio => {
 					let quantidadeDeLideres = relatorio['quantidadeDeLideres']
-					if(quantidadeDeLideres == null){
-						quantidadeDeLideres = 0
+						if(quantidadeDeLideres == null){
+							quantidadeDeLideres = 0
 					}
 					let quantidadeDeCelulas = relatorio['quantidadeDeCelulas']
-					if(quantidadeDeCelulas == null){
-						quantidadeDeCelulas = 0
+						if(quantidadeDeCelulas == null){
+							quantidadeDeCelulas = 0
 					}
 					let quantidadeDeCelulasBetas = relatorio['quantidadeDeCelulasBetas']
-					if(quantidadeDeCelulasBetas == null){
-						quantidadeDeCelulasBetas = 0
+						if(quantidadeDeCelulasBetas == null){
+							quantidadeDeCelulasBetas = 0
 					}
 					let quantidadeDeDiscipulados = relatorio['quantidadeDeDiscipulados']
-					if(quantidadeDeDiscipulados == null){
-						quantidadeDeDiscipulados = 0
+						if(quantidadeDeDiscipulados == null){
+							quantidadeDeDiscipulados = 0
 					}
-	
+
 					const corDaLinha = relatorio['corDaLinha']
-					let html = ''
-					html += '<tr class="'+corDaLinha+'">'
-					html += '<td>'+relatorio['info']+'</td>';
+						let html = ''
+						html += '<tr class="'+corDaLinha+'">'
+						html += '<td>'+relatorio['info']+'</td>';
 					html += '<td>'+relatorio['lideres']+'</td>';
 					html += '<td>'+quantidadeDeLideres+'</td>';
 					html += '<td>'+quantidadeDeCelulas+'</td>';
@@ -120,8 +141,8 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					html += '<td>'+quantidadeDeDiscipulados+'</td>';
 					for(let i = 1; i <= 4; i++){
 						let valor = relatorio['valores'][i]['valor']
-						if(valor == null){
-							valor = 0
+							if(valor == null){
+								valor = 0
 						}
 						html += '<td>'+valor+'</td>';
 					}
@@ -133,11 +154,11 @@ function buscarDiscipulos(idGrupo, profundidade, mes, ano){
 					}
 					html += '</tr>'
 
-					let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex + contagem)
-					contagem++
-					novaLinha.innerHTML = html
-					novaLinha.id = `tr${relatorio['idGrupo']}` 
-					novaLinha.classList.add(corDaLinha)
+						let novaLinha = elementoTbody.insertRow(elementoTr.rowIndex + contagem)
+						contagem++
+						novaLinha.innerHTML = html
+						novaLinha.id = `tr${relatorio['idGrupo']}` 
+						novaLinha.classList.add(corDaLinha)
 				})
 			})
 	}

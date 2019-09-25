@@ -4251,6 +4251,7 @@ public function alunosNaSemanaAction(){
 
 		$mes = date('m');
 		$ano = date('Y');
+		$periodo = -1;
 
 		$request = $this->getRequest();
 		$dados = array();
@@ -4261,8 +4262,6 @@ public function alunosNaSemanaAction(){
 			$ano = $post_data['ano'];
 			$periodo = $post_data['periodo'];
 
-			// todo
-			$periodo = -2;
 			$dados['filtrado'] = true;
 
 			$relatorios = array();
@@ -4321,6 +4320,7 @@ public function alunosNaSemanaAction(){
 
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
+		$dados['periodo'] = $periodo;
 		return new ViewModel($dados);
 	}
 

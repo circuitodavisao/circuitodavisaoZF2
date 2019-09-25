@@ -468,6 +468,14 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 			$html .= 'Setenta';
 			$html .= '</a>';
 			$html .= '</li>';
+
+				$html .= '<li>';
+				$html .= '<a href="/relatorioResumo" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-list"></span>';
+				$html .= 'Resumo';
+				$html .= '</a>';
+				$html .= '</li>';
+
 			}
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe){
