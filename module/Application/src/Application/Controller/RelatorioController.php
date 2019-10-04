@@ -947,7 +947,7 @@ class RelatorioController extends CircuitoController {
 
 					if($tipoRelatorio === self::relatorioParceiroDeDeus){
 						$relatorio[self::dadosPessoais][$indiceDeArrays]
-							= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $qualRelatorioParaUsar);
+							= $repositorio->getFatoFinanceiroORM()->fatosPorNumeroIdentificador($numeroIdentificador,$indiceDeArrays, $mes, $ano, $pessoa = 1);
 						$soma[self::dadosPessoais][self::parceiroDeDeusValor] += $relatorio[self::dadosPessoais][$indiceDeArrays]['valor'];
 					}else{
 						$relatorio[self::dadosPessoais][$indiceDeArrays]
