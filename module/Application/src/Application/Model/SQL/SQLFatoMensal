@@ -1,0 +1,111 @@
+-- Table: fato_mensal
+
+-- DROP TABLE fato_mensal;
+
+CREATE TABLE fato_mensal
+(
+  id serial NOT NULL, -- Identificação
+  numero_identificador character varying(64) NOT NULL, -- Número para saber de qual igreja pertenço...
+  mes integer NOT NULL, -- Mês do relatório
+  ano integer NOT NULL, -- Ano do relatório
+  entidade character varying(64) NOT NULL,
+  lideres character varying(64) NOT NULL,
+  cu1 integer NOT NULL DEFAULT 0, 
+  cu2 integer NOT NULL DEFAULT 0, 
+  cu3 integer NOT NULL DEFAULT 0,
+  cu4 integer NOT NULL DEFAULT 0,
+  cu5 integer NOT NULL DEFAULT 0,
+  a1 integer NOT NULL DEFAULT 0,
+  a2 integer NOT NULL DEFAULT 0,
+  a3 integer NOT NULL DEFAULT 0,
+  a4 integer NOT NULL DEFAULT 0,
+  a5 integer NOT NULL DEFAULT 0,
+  d1 integer NOT NULL DEFAULT 0,
+  d2 integer NOT NULL DEFAULT 0,
+  d3 integer NOT NULL DEFAULT 0,
+  d4 integer NOT NULL DEFAULT 0,
+  d5 integer NOT NULL DEFAULT 0,
+  mem1 integer NOT NULL DEFAULT 0,
+  mem2 integer NOT NULL DEFAULT 0,
+  mem3 integer NOT NULL DEFAULT 0,
+  mem4 integer NOT NULL DEFAULT 0,
+  mem5 integer NOT NULL DEFAULT 0,
+  memp1 real NOT NULL DEFAULT 0,
+  memp2 real NOT NULL DEFAULT 0,
+  memp3 real NOT NULL DEFAULT 0,
+  memp4 real NOT NULL DEFAULT 0,
+  memp5 real NOT NULL DEFAULT 0,
+  mediamem real NOT NULL DEFAULT 0,
+  mediamemp real NOT NULL DEFAULT 0,
+  pd1 integer NOT NULL DEFAULT 0,
+  pd2 integer NOT NULL DEFAULT 0,
+  pd3 integer NOT NULL DEFAULT 0,
+  pd4 integer NOT NULL DEFAULT 0,
+  pd5 integer NOT NULL DEFAULT 0,
+  c1 integer NOT NULL DEFAULT 0,
+  c2 integer NOT NULL DEFAULT 0,
+  c3 integer NOT NULL DEFAULT 0,
+  c4 integer NOT NULL DEFAULT 0,
+  c5 integer NOT NULL DEFAULT 0,
+  cp1 real NOT NULL DEFAULT 0,
+  cp2 real NOT NULL DEFAULT 0,
+  cp3 real NOT NULL DEFAULT 0,
+  cp4 real NOT NULL DEFAULT 0,
+  cp5 real NOT NULL DEFAULT 0,
+  mediac real NOT NULL DEFAULT 0,
+  mediacp real NOT NULL DEFAULT 0,
+  cq1 integer NOT NULL DEFAULT 0,
+  cq2 integer NOT NULL DEFAULT 0,
+  cq3 integer NOT NULL DEFAULT 0,
+  cq4 integer NOT NULL DEFAULT 0,
+  cq5 integer NOT NULL, DEFAULT 0
+  cqmeta1 integer NOT NULL DEFAULT 0,
+  cqmeta2 integer NOT NULL DEFAULT 0,
+  cqmeta3 integer NOT NULL DEFAULT 0,
+  cqmeta4 integer NOT NULL DEFAULT 0,
+  cqmeta5 integer NOT NULL DEFAULT 0,
+  cbq1 integer NOT NULL DEFAULT 0,
+  cbq2 integer NOT NULL DEFAULT 0,
+  cbq3 integer NOT NULL DEFAULT 0,
+  cbq4 integer NOT NULL DEFAULT 0,
+  cbq5 integer NOT NULL DEFAULT 0,
+  cbqmeta1 real NOT NULL DEFAULT 0,
+  cbqmeta2 real NOT NULL DEFAULT 0,
+  cbqmeta3 real NOT NULL DEFAULT 0,
+  cbqmeta4 real NOT NULL DEFAULT 0,
+  cbqmeta5 real NOT NULL DEFAULT 0,
+  realizada1 integer NOT NULL DEFAULT 0,
+  realizada2 integer NOT NULL DEFAULT 0,
+  realizada3 integer NOT NULL DEFAULT 0,
+  realizada4 integer NOT NULL DEFAULT 0,
+  realizada5 integer NOT NULL DEFAULT 0,
+  realizadap1 real NOT NULL DEFAULT 0,
+  realizadap2 real NOT NULL DEFAULT 0,
+  realizadap3 real NOT NULL DEFAULT 0,
+  realizadap4 real NOT NULL DEFAULT 0,
+  realizadap5 real NOT NULL DEFAULT 0,
+  mediarealizada real NOT NULL DEFAULT 0,
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do fato
+  data_inativacao date, -- Data de inativação
+  hora_inativacao time without time zone, -- Hora de inativação do fato
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do fato
+  CONSTRAINT pk_fato_mensal PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_mensal
+  OWNER TO postgres;
+
+CREATE INDEX index_fato_mensal_numero_identificador
+  ON fato_mensal
+  USING btree
+  (numero_identificador COLLATE pg_catalog."default");
+CREATE INDEX index_fato_mensal_mes
+  ON mes
+  USING btree
+  (numero_identificador COLLATE pg_catalog."default");
+CREATE INDEX index_fato_mensal_ano
+  ON ano
+  USING btree
+  (numero_identificador COLLATE pg_catalog."default");
