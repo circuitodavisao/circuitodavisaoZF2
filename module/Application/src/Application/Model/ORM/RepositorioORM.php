@@ -74,6 +74,7 @@ class RepositorioORM {
 	private $_registroAcaoORM;
 	private $_fatoDiscipuladoORM;
 	private $_fatoCelulaDiscipuladoORM;
+	private $_fatoMensalORM;
 
     /**
      * Contrutor
@@ -434,6 +435,13 @@ class RepositorioORM {
             $this->_fatoCicloORM = new FatoCicloORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CICLO);
         }
         return $this->_fatoCicloORM;
+    }
+
+    public function getFatoMensalORM() {
+        if (is_null($this->_fatoMensalORM)) {
+            $this->_fatoMensalORM = new FatoMensalORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_MENSAL);
+        }
+        return $this->_fatoMensalORM;
     }
 
     /**
