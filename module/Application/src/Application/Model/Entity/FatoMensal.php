@@ -41,6 +41,42 @@ class FatoMensal extends CircuitoEntity {
 	protected $cu5;
 
 	/** @ORM\Column(type="integer") */
+	protected $c1;
+
+	/** @ORM\Column(type="integer") */
+	protected $c2;
+
+	/** @ORM\Column(type="integer") */
+	protected $c3;
+
+	/** @ORM\Column(type="integer") */
+	protected $c4;
+
+	/** @ORM\Column(type="integer") */
+	protected $c5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cp1;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cp2;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cp3;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cp4;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cp5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $mediac;
+
+	/** @ORM\Column(type="decimal") */
+	protected $mediacp;
+
+	/** @ORM\Column(type="integer") */
 	protected $a1;
 
 	/** @ORM\Column(type="integer") */
@@ -121,19 +157,19 @@ class FatoMensal extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $cq5;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cqmeta1;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cqmeta2;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cqmeta3;
 	
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cqmeta4;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cqmeta5;
 
 	/** @ORM\Column(type="integer") */
@@ -151,25 +187,117 @@ class FatoMensal extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $cbq5;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta1;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta2;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta3;
 	
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta4;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta5;
 
+	/** @ORM\Column(type="integer") */
+	protected $realizada1;
+
+	/** @ORM\Column(type="integer") */
+	protected $realizada2;
+
+	/** @ORM\Column(type="integer") */
+	protected $realizada3;
+
+	/** @ORM\Column(type="integer") */
+	protected $realizada4;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizada5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizadap1;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizadap2;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizadap3;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizadap4;
+
+	/** @ORM\Column(type="decimal") */
+	protected $realizadap5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $mediarealizada;
+
+	/** @ORM\Column(type="decimal") */
+	protected $mediarealizadap;
+
+	function getRealizada1(){
+		return $this->realizada1;
+	}
+	function getRealizada2(){
+		return $this->realizada2;
+	}
+	function getRealizada3(){
+		return $this->realizada3;
+	}
+	function getRealizada4(){
+		return $this->realizada4;
+	}
+	function getRealizada5(){
+		return $this->realizada5;
+	}
+	function getRealizadap1(){
+		return $this->realizadap1;
+	}
+	function getRealizadap2(){
+		return $this->realizadap2;
+	}
+	function getRealizadap3(){
+		return $this->realizadap3;
+	}
+	function getRealizadap4(){
+		return $this->realizadap4;
+	}
+	function getRealizadap5(){
+		return $this->realizadap5;
+	}
+	function getMediarealizada(){
+		return $this->mediarealizada;
+	}
+	function getMediarealizadap(){
+		return $this->mediarealizadap;
+	}
+	function getCp1(){
+		return $this->cp1;
+	}
+	function getCp2(){
+		return $this->cp2;
+	}
+	function getCp3(){
+		return $this->cp3;
+	}
+	function getCp4(){
+		return $this->cp4;
+	}
+	function getCp5(){
+		return $this->cp5;
+	}
+	function getMediac(){
+		return $this->mediac;
+	}
+	function getMediacp(){
+		return $this->mediacp;
+	}
 	function getNumero_identificador() {
 		return $this->numero_identificador;
 	}
-
 	function getEntidade(){
 		return $this->entidade;
 	}
@@ -339,6 +467,42 @@ class FatoMensal extends CircuitoEntity {
 		return $this->cbqmeta5;
 	}
 
+	function setRealizada1($item){
+		$this->realizada1 = $item;
+	}
+	function setRealizada2($item){
+		$this->realizada2 = $item;
+	}
+	function setRealizada3($item){
+		$this->realizada3 = $item;
+	}
+	function setRealizada4($item){
+		$this->realizada4 = $item;
+	}
+	function setRealizada5($item){
+		$this->realizada5 = $item;
+	}
+	function setRealizadap1($item){
+		$this->realizadap1 = $item;
+	}
+	function setRealizadap2($item){
+		$this->realizadap2 = $item;
+	}
+	function setRealizadap3($item){
+		$this->realizadap3 = $item;
+	}
+	function setRealizadap4($item){
+		$this->realizadap4 = $item;
+	}
+	function setRealizadap5($item){
+		$this->realizadap5 = $item;
+	}
+	function setMediarealizada($item){
+		$this->mediarealizada = $item;
+	}
+	function setMediarealizadap($item){
+		$this->mediarealizadap = $item;
+	}
 	function setEntidade($item){
 		$this->entidade = $item;
 	}
@@ -509,5 +673,26 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setCbqmeta5($item){
 		$this->cbqmeta5 = $item;
+	}
+	function setCp1($item){
+		$this->cp1 = $item;
+	}
+	function setCp2($item){
+		$this->cp2 = $item;
+	}
+	function setCp3($item){
+		$this->cp3 = $item;
+	}
+	function setCp4($item){
+		$this->cp4 = $item;
+	}
+	function setCp5($item){
+		$this->cp5 = $item;
+	}
+	function setMediac($item){
+		$this->mediac = $item;
+	}
+	function setMediacp($item){
+		$this->mediacp = $item;
 	}
 }
