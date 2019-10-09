@@ -695,4 +695,14 @@ class FatoMensal extends CircuitoEntity {
 	function setMediacp($item){
 		$this->mediacp = $item;
 	}
+
+	public function __set($name,$value) {
+		$functionname='set'.ucfirst($name);
+		return $this->$functionname($value);
+	}
+	public function __get($name) {
+		$functionname='get'.ucfirst($name);
+		return $this->$functionname();
+	}
+
 }

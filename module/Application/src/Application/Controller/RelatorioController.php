@@ -6,6 +6,7 @@ use Migracao\Controller\IndexController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Model\Entity\EventoTipo;
+use Application\Model\Entity\FatoMensal;
 use Application\Model\Entity\Grupo;
 use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
@@ -4487,4 +4488,164 @@ public function alunosNaSemanaAction(){
 		return new ViewModel($dados);
 	}
 
+	public function novoAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+		$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+		$grupoLogado = $grupo;
+
+		if($sessao->idSessao > 0){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
+			//unset($sessao->idSessao);
+		}
+
+		$defaultEquipe = 2;
+		$pessoalOuEquipe = $defaultEquipe;
+
+		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');		
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			$post_data = $request->getPost();
+			$mes = $post_data['mes'];
+			$ano = $post_data['ano'];
+			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
+		}
+		if (empty($mes)) {
+			$mes = (int) $this->params()->fromRoute('mes', 0);
+			if ($mes == 0) {
+				$mes = date('m');
+			}
+		}
+		if (empty($ano)) {
+			$ano = (int) $this->params()->fromRoute('ano', 0);
+			if ($ano == 0) {
+				$ano = date('Y');
+			}
+		}
+
+		if($request->isPost()){
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$relatorio = RelatorioController::relatorioCompletoNovo($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano, $true = true, $pessoalOuEquipe);
+
+			switch($tipoRelatorio){
+			case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = $grupo->getId()); break;
+			case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = $grupo->getId()); break;
+			}
+		}
+
+		$dados = array(
+			'mes' => $mes,
+			'ano' => $ano,
+			'relatorio' => $relatorio,
+			'pessoalOuEquipe' => $pessoalOuEquipe,
+			'periodoInicial' => $arrayPeriodoDoMes[0],
+			'periodoFinal' => $arrayPeriodoDoMes[1],
+			'tipoRelatorio' => $tipoRelatorio,
+			'entidade' => $entidade,
+			'grupo' => $grupo,
+			'grupoLogado' => $grupoLogado,
+			'repositorio' => $this->getRepositorio(),
+			'pessoaLogada' => $pessoaLogada,
+		);
+
+		$view = new ViewModel($dados);
+
+		return $view;
+	
+	}
+
+	public static function relatorioCompletoNovo($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $pessoalOuEquipe = 2, $periodo = 0, $relatorioDoLider = 1) {
+		$relatorio = array();
+		$todosFilhos = array();
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		if($periodo > 0){
+			$arrayPeriodoDoMes[0] = $periodo;
+			$arrayPeriodoDoMes[1] = $periodo;
+		}		
+		if($mes == date('m') && $ano == date('Y') && $periodo === 'atual'){
+			$arrayPeriodoDoMes[1] = 0;
+		}
+		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
+		if($tudo){
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
+					foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
+						$adicionar = true;
+						if (count($todosFilhos) > 0) {
+							foreach ($todosFilhos as $filho) {
+								if ($filho->getId() === $grupoPaiFilhoFilho->getId()) {
+									$adicionar = false;
+									break;
+								}
+							}
+						}
+						if ($adicionar) {
+							$todosFilhos[] = $grupoPaiFilhoFilho;
+						}
+					}
+				}
+			}
+		}
+		
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+		$fatoFinal = new FatoMensal();
+
+		// dados pessoais
+		$fatoMensal = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+		$relatorio[] = $fatoMensal;
+
+		$arrayFatoMensal = (array)$fatoMensal;
+		foreach($arrayFatoMensal as $k => $v){
+			$aux = explode ("\0", $k);
+			$k = $aux[count($aux)-1];
+			if(
+				$k !== 'id' &&
+				$k !== 'numero_identificador' &&
+				$k !== 'entidade' &&
+				$k !== 'lideres' &&
+				$k !== 'mes' &&
+				$k !== 'ano' &&
+				$k !== 'data_criacao' &&
+				$k !== 'hora_criacao' &&
+				$k !== 'data_inativacao' &&
+				$k !== 'hora_inativacao'
+			){
+				$fatoFinal->$k = $v;
+			}
+		}
+		// dados discipulos
+		$relatorioDiscipulos = array();
+		if(count($todosFilhos)){
+			foreach($todosFilhos as $filho){
+				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+				if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+					&& $grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao ){
+						$dataInativacao = null;
+						if ($filho->getData_inativacao()) {
+							$dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
+						}
+						$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
+						$fatoMensal = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano);
+						$relatorio[] = $fatoMensal;
+						$fatoMensal = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano, $pessoalOuEquipe);
+						foreach($fatoMensal as $k => $v){
+							$fatoFinal->$k = $fatoFinal->$k + $v;
+						}
+					}
+			}
+		}
+		// ordernar os malucos
+		// final
+		$relatorio[] = $fatoFinal;
+
+		return $relatorio;
+	}
 }

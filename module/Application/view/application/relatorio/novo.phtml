@@ -1,0 +1,316 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+use Application\Model\Entity\EntidadeTipo;
+use Application\View\Helper\BotaoSimples;
+
+$dimensaoTipoCelula = 1;
+$dimensaoTipoCulto = 2;
+$dimensaoTipoArena = 3;
+$dimensaoTipoDomingo = 4;
+
+$somaGeral[1] = 0;
+$somaGeral[2] = 0;
+$somaGeral[3] = 0;
+$somaGeral[4] = 0;
+$somaGeralLideres = 0;
+$somaQuantidadeCelulas = 0;
+$somaQuantidadeCelulasRealizadas = 0;
+$somaQuantidadeCelulasDeElite = 0;
+$somaMedia = array();
+$somaLideres = 0;
+$somaMeta = 0;
+?>
+<style type="text/css">
+	th {
+		text-align: center;
+	}
+	.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+		padding: 0px;
+	}
+	.table-condensed>tbody>tr:hover{
+		font-weight: bold;
+	}
+</style>
+<?php
+if ($this->tipoRelatorio == 1) {
+	$label = 'Membresia';
+}
+if ($this->tipoRelatorio == 2) {
+	$label = 'Células Realizadas';
+}
+if ($this->tipoRelatorio == 3) {
+	$label = 'Células Quantitativo';
+}
+echo $this->templateFormularioTopo($label);
+?>
+	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+<?php
+$url = $this->tipoRelatorio . '/' . $this->mes . '/' . $this->ano;
+echo '<div class="p5">';
+echo '<div class="alert alert-default mn">';
+echo $this->sitemap('relatorioNovo/'.$url);
+echo '</div>';
+echo '</div>';
+
+echo '<form action="/relatorioNovo/' . $url . '" method="post">';
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2017;
+$anoFinal = date('Y');
+
+?>
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="mes" id="mes" class="form-control">
+				<?php 
+					for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+						$selected = '';
+						if ($this->mes == $indice) {
+							$selected = 'selected';
+						}
+			
+						echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+					}
+				?>
+			</select>
+		</div>
+		<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="ano" id="ano" class="form-control">
+				<?php 					
+					for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+						$selected = '';
+						if ($this->ano == $indice) {
+							$selected = 'selected';
+						}
+						echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+					}
+				?>
+			</select>
+		</div>
+		<?php
+			$checked1 = '';
+			$checked2 = '';
+			switch ($this->pessoalOuEquipe) {
+				case 1:
+					$checked1 = 'checked';
+					break;
+				case 2:
+					$checked2 = 'checked';
+					break;
+				default:
+					$checked2 = 'checked';					
+					break;
+			}
+		?>
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+			<div class="option-group field text-center pb10 pt10">
+				<label class="option option-primary">
+					<input type="radio" name="pessoalOuEquipe" value="1" <?php echo $checked1;?>>
+					<span class="radio"></span>Pessoal
+				</label>
+				<label class="option option-primary">
+					<input type="radio" name="pessoalOuEquipe" value="2" <?php echo $checked2;?>>
+					<span class="radio"></span>Equipe
+				</label>
+			</div>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+		<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+			<span class="ladda-label">Filtrar</span>
+			<span class="ladda-spinner"></span>
+		</button>
+	</div>
+</div>
+<?php
+echo '</form>';
+
+
+
+for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+	$classeBase = 'periodo' . $indiceDeArrays . ' ';
+	if ($indiceDeArrays != -1) {
+		$classeBase .= 'hidden-xs';
+	}
+	$mostrarBotaoEsquerdo = true;
+	if ($indiceDeArrays == $this->periodoInicial) {
+		$mostrarBotaoEsquerdo = false;
+	}
+	$mostrarBotaoDireito = true;
+	if ($indiceDeArrays == $this->periodoFinal) {
+		$mostrarBotaoDireito = false;
+	}
+	$funcaoEsquerda = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays - 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+	$funcaoDireita = $this->funcaoOnClick('$(".periodo' . ($indiceDeArrays + 1) . '").removeClass("hidden-xs");$(".periodo' . $indiceDeArrays . '").addClass("hidden-xs");');
+	$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
+	$botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
+	echo '<div class="p5 hidden-lg hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
+	if ($mostrarBotaoEsquerdo) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
+	}
+	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+	if ($mostrarBotaoDireito) {
+		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
+	}
+	echo '</div>';
+}
+?>
+
+	<div class="p5">
+	<div class="alert alert-info mn"><i class="fa fa-retweet"></i><span style="font-size: 10px; font-weight: bold;"> - Cadastrado / Transferido / Unido / Removido</span></div>
+	</div>
+		<div class="p5">
+			<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+				<thead>
+					<tr class="dark hidden-xs">
+<?php
+echo '<th>Periodos</th>';
+for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+	$classePeriodoAtual = '';
+	if ($indiceDeArrays == -1) {
+		$classePeriodoAtual = 'bg-info';
+	}
+	if ($this->tipoRelatorio == 1) {
+		$colspan = 10;
+	}
+	if ($this->tipoRelatorio == 2) {
+		$colspan = 4;
+	}
+	if ($this->tipoRelatorio == 7) {
+		$colspan = 3;
+	}
+	if ($this->tipoRelatorio == 3){		
+			$colspan = 7;
+		}
+	if ($this->tipoRelatorio == 4 ||
+		$this->tipoRelatorio == 5 ||
+		$this->tipoRelatorio == 6) {
+			$colspan = 2;
+		}
+	if($this->tipoRelatorio == 8) {
+		$colspan = 6;
+	}
+
+	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
+	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
+	echo '</th>';
+}
+if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+	echo '<th colspan="2"></th>';
+}
+if ($this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 3) {
+		echo '<th></th>';
+	}
+echo '<th></th>';
+?>
+					</tr>
+					<tr class="dark">
+<?php
+echo '<th>TIMES</th>';
+
+for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+	$classeBase = 'periodo' . $indiceDeArrays . ' ';
+	if ($indiceDeArrays != -1) {
+		$classeBase .= 'hidden-xs';
+	}
+	$classePeriodoAtual = '';
+	if ($indiceDeArrays == -1) {
+		$classePeriodoAtual = 'bg-info';
+	}
+	if ($this->tipoRelatorio == 1) {
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">CÉL BETA</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET BETA</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+	}
+	if ($this->tipoRelatorio == 7) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
+	}
+	if ($this->tipoRelatorio == 2 ||
+		$this->tipoRelatorio == 7 ||
+		$this->tipoRelatorio == 8) {
+			echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS</th>';
+		}
+	if ($this->tipoRelatorio == 2) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">REALIZADAS</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">NÃO</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+	}
+	if ($this->tipoRelatorio == 3) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BET.</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="hidden-xs ' . $classePeriodoAtual . '">MET BET</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+	}
+	if ($this->tipoRelatorio == 4 ||
+		$this->tipoRelatorio == 5 ||
+		$this->tipoRelatorio == 6) {
+			echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
+		}
+	if ($this->tipoRelatorio == 7) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
+	}
+	if ($this->tipoRelatorio == 8) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BETA</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET BETA</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+	}
+	if ($this->tipoRelatorio == 4 ||
+		$this->tipoRelatorio == 5 ||
+		$this->tipoRelatorio == 6) {
+			echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
+		}
+	if ($this->tipoRelatorio == 9) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">Semanal</th>';
+	}
+
+}
+if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+	echo '<th class="' . $classeBase . '">Meta</th>';
+}
+if ($this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 3) {
+		echo '<th>MÉDIA</th>';
+	}
+if ($this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 2 ||
+	$this->tipoRelatorio == 3 ||
+	$this->tipoRelatorio == 8 ||
+	$this->tipoRelatorio == 9) {
+		echo '<th>FINAL</th>';
+	}
+if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
+	echo '<th class="' . $classeBase . '">%</th>';
+}
+?>
+					</tr>
+				</thead>
+				<tbody>
+<?php
+$contagemRanking = 0;
+$totalDeRelatorios = count($this->relatorio);
+
+Funcoes::var_dump($this->relatorio);
+?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+<?php
+echo $this->templateFormularioRodape();
+?>
