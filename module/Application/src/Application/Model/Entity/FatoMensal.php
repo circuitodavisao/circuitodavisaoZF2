@@ -41,6 +41,9 @@ class FatoMensal extends CircuitoEntity {
 	protected $cu5;
 
 	/** @ORM\Column(type="integer") */
+	protected $cu6;
+
+	/** @ORM\Column(type="integer") */
 	protected $c1;
 
 	/** @ORM\Column(type="integer") */
@@ -54,6 +57,9 @@ class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="integer") */
 	protected $c5;
+
+	/** @ORM\Column(type="integer") */
+	protected $c6;
 
 	/** @ORM\Column(type="decimal") */
 	protected $cp1;
@@ -71,10 +77,16 @@ class FatoMensal extends CircuitoEntity {
 	protected $cp5;
 
 	/** @ORM\Column(type="decimal") */
+	protected $cp6;
+
+	/** @ORM\Column(type="decimal") */
 	protected $mediac;
 
 	/** @ORM\Column(type="decimal") */
 	protected $mediacp;
+
+	/** @ORM\Column(type="string") */
+	protected $mediacpclass;
 
 	/** @ORM\Column(type="integer") */
 	protected $a1;
@@ -92,6 +104,9 @@ class FatoMensal extends CircuitoEntity {
 	protected $a5;
 
 	/** @ORM\Column(type="integer") */
+	protected $a6;
+
+	/** @ORM\Column(type="integer") */
 	protected $d1;
 
 	/** @ORM\Column(type="integer") */
@@ -105,6 +120,9 @@ class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="integer") */
 	protected $d5;
+
+	/** @ORM\Column(type="integer") */
+	protected $d6;
 
 	/** @ORM\Column(type="decimal") */
 	protected $mem1;
@@ -122,6 +140,9 @@ class FatoMensal extends CircuitoEntity {
 	protected $mem5;
 
 	/** @ORM\Column(type="decimal") */
+	protected $mem6;
+
+	/** @ORM\Column(type="decimal") */
 	protected $memp1;
 
 	/** @ORM\Column(type="decimal") */
@@ -137,10 +158,16 @@ class FatoMensal extends CircuitoEntity {
 	protected $memp5;
 
 	/** @ORM\Column(type="decimal") */
+	protected $memp6;
+
+	/** @ORM\Column(type="decimal") */
 	protected $mediamem;
 
 	/** @ORM\Column(type="decimal") */
 	protected $mediamemp;
+
+	/** @ORM\Column(type="string") */
+	protected $mediamempclass;
 
 	/** @ORM\Column(type="integer") */
 	protected $cq1;
@@ -157,6 +184,9 @@ class FatoMensal extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $cq5;
 
+	/** @ORM\Column(type="integer") */
+	protected $cq6;
+
 	/** @ORM\Column(type="decimal") */
 	protected $cqmeta1;
 
@@ -171,6 +201,9 @@ class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="decimal") */
 	protected $cqmeta5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cqmeta6;
 
 	/** @ORM\Column(type="integer") */
 	protected $cbq1;
@@ -187,6 +220,9 @@ class FatoMensal extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $cbq5;
 
+	/** @ORM\Column(type="integer") */
+	protected $cbq6;
+
 	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta1;
 
@@ -201,6 +237,9 @@ class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="decimal") */
 	protected $cbqmeta5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $cbqmeta6;
 
 	/** @ORM\Column(type="integer") */
 	protected $realizada1;
@@ -218,6 +257,9 @@ class FatoMensal extends CircuitoEntity {
 	protected $realizada5;
 
 	/** @ORM\Column(type="decimal") */
+	protected $realizada6;
+
+	/** @ORM\Column(type="decimal") */
 	protected $realizadap1;
 
 	/** @ORM\Column(type="decimal") */
@@ -233,10 +275,16 @@ class FatoMensal extends CircuitoEntity {
 	protected $realizadap5;
 
 	/** @ORM\Column(type="decimal") */
+	protected $realizadap6;
+
+	/** @ORM\Column(type="decimal") */
 	protected $mediarealizada;
 
 	/** @ORM\Column(type="decimal") */
 	protected $mediarealizadap;
+
+	/** @ORM\Column(type="string") */
+	protected $mediarealizadapclass;
 
 	function getRealizada1(){
 		return $this->realizada1;
@@ -253,6 +301,9 @@ class FatoMensal extends CircuitoEntity {
 	function getRealizada5(){
 		return $this->realizada5;
 	}
+	function getRealizada6(){
+		return $this->realizada6;
+	}
 	function getRealizadap1(){
 		return $this->realizadap1;
 	}
@@ -268,11 +319,17 @@ class FatoMensal extends CircuitoEntity {
 	function getRealizadap5(){
 		return $this->realizadap5;
 	}
+	function getRealizadap6(){
+		return $this->realizadap6;
+	}
 	function getMediarealizada(){
 		return $this->mediarealizada;
 	}
 	function getMediarealizadap(){
 		return $this->mediarealizadap;
+	}
+	function getMediarealizadapclass(){
+		return $this->mediarealizadapclass;
 	}
 	function getCp1(){
 		return $this->cp1;
@@ -289,11 +346,17 @@ class FatoMensal extends CircuitoEntity {
 	function getCp5(){
 		return $this->cp5;
 	}
+	function getCp6(){
+		return $this->cp6;
+	}
 	function getMediac(){
 		return $this->mediac;
 	}
 	function getMediacp(){
 		return $this->mediacp;
+	}
+	function getMediacpclass(){
+		return $this->mediacpclass;
 	}
 	function getNumero_identificador() {
 		return $this->numero_identificador;
@@ -325,6 +388,9 @@ class FatoMensal extends CircuitoEntity {
 	function getCu5(){
 		return $this->cu5;
 	}
+	function getCu6(){
+		return $this->cu6;
+	}
 	function getC1(){
 		return $this->c1;
 	}
@@ -339,6 +405,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getC5(){
 		return $this->c5;
+	}
+	function getC6(){
+		return $this->c6;
 	}
 	function getA1(){
 		return $this->a1;
@@ -355,6 +424,9 @@ class FatoMensal extends CircuitoEntity {
 	function getA5(){
 		return $this->a5;
 	}
+	function getA6(){
+		return $this->a6;
+	}
 	function getD1(){
 		return $this->d1;
 	}
@@ -369,6 +441,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getD5(){
 		return $this->d5;
+	}
+	function getD6(){
+		return $this->d6;
 	}
 	function getMem1(){
 		return $this->mem1;
@@ -385,6 +460,9 @@ class FatoMensal extends CircuitoEntity {
 	function getMem5(){
 		return $this->mem5;
 	}
+	function getMem6(){
+		return $this->mem6;
+	}
 	function getMemp1(){
 		return $this->memp1;
 	}
@@ -400,11 +478,17 @@ class FatoMensal extends CircuitoEntity {
 	function getMemp5(){
 		return $this->memp5;
 	}
+	function getMemp6(){
+		return $this->memp6;
+	}
 	function getMediamem(){
 		return $this->mediamem;
 	}
 	function getMediamemp(){
 		return $this->mediamemp;
+	}
+	function getMediamempclass(){
+		return $this->mediamempclass;
 	}
 	function getCq1(){
 		return $this->cq1;
@@ -421,6 +505,9 @@ class FatoMensal extends CircuitoEntity {
 	function getCq5(){
 		return $this->cq5;
 	}
+	function getCq6(){
+		return $this->cq6;
+	}
 	function getCqmeta1(){
 		return $this->cqmeta1;
 	}
@@ -435,6 +522,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getCqmeta5(){
 		return $this->cqmeta5;
+	}
+	function getCqmeta6(){
+		return $this->cqmeta6;
 	}
 	function getCbq1(){
 		return $this->cbq1;
@@ -451,6 +541,9 @@ class FatoMensal extends CircuitoEntity {
 	function getCbq5(){
 		return $this->cbq5;
 	}
+	function getCbq6(){
+		return $this->cbq6;
+	}
 	function getCbqmeta1(){
 		return $this->cbqmeta1;
 	}
@@ -465,6 +558,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getCbqmeta5(){
 		return $this->cbqmeta5;
+	}
+	function getCbqmeta6(){
+		return $this->cbqmeta6;
 	}
 
 	function setRealizada1($item){
@@ -482,6 +578,9 @@ class FatoMensal extends CircuitoEntity {
 	function setRealizada5($item){
 		$this->realizada5 = $item;
 	}
+	function setRealizada6($item){
+		$this->realizada6 = $item;
+	}
 	function setRealizadap1($item){
 		$this->realizadap1 = $item;
 	}
@@ -497,11 +596,17 @@ class FatoMensal extends CircuitoEntity {
 	function setRealizadap5($item){
 		$this->realizadap5 = $item;
 	}
+	function setRealizadap6($item){
+		$this->realizadap6 = $item;
+	}
 	function setMediarealizada($item){
 		$this->mediarealizada = $item;
 	}
 	function setMediarealizadap($item){
 		$this->mediarealizadap = $item;
+	}
+	function setMediarealizadapclass($item){
+		$this->mediarealizadapclass = $item;
 	}
 	function setEntidade($item){
 		$this->entidade = $item;
@@ -530,6 +635,9 @@ class FatoMensal extends CircuitoEntity {
 	function setCu5($item){
 		$this->cu5 = $item;
 	}
+	function setCu6($item){
+		$this->cu6 = $item;
+	}
 	function setC1($item){
 		$this->c1 = $item;
 	}
@@ -544,6 +652,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setC5($item){
 		$this->c5 = $item;
+	}
+	function setC6($item){
+		$this->c6 = $item;
 	}
 	function setA1($item){
 		$this->a1 = $item;
@@ -560,6 +671,9 @@ class FatoMensal extends CircuitoEntity {
 	function setA5($item){
 		$this->a5 = $item;
 	}
+	function setA6($item){
+		$this->a6 = $item;
+	}
 	function setD1($item){
 		$this->d1 = $item;
 	}
@@ -574,6 +688,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setD5($item){
 		$this->d5 = $item;
+	}
+	function setD6($item){
+		$this->d6 = $item;
 	}
 	function setMem1($item){
 		$this->mem1 = $item;
@@ -590,6 +707,9 @@ class FatoMensal extends CircuitoEntity {
 	function setMem5($item){
 		$this->mem5 = $item;
 	}
+	function setMem6($item){
+		$this->mem6 = $item;
+	}
 	function setMemp1($item){
 		$this->memp1 = $item;
 	}
@@ -605,11 +725,17 @@ class FatoMensal extends CircuitoEntity {
 	function setMemp5($item){
 		$this->memp5 = $item;
 	}
+	function setMemp6($item){
+		$this->memp6 = $item;
+	}
 	function setMediamem($item){
 		$this->mediamem = $item;
 	}
 	function setMediamemp($item){
 		$this->mediamemp = $item;
+	}
+	function setMediamempclass($item){
+		$this->mediamempclass = $item;
 	}
 	function setNumero_identificador($numero_identificador) {
 		$this->numero_identificador = $numero_identificador;
@@ -629,6 +755,9 @@ class FatoMensal extends CircuitoEntity {
 	function setCq5($item){
 		$this->cq5 = $item;
 	}
+	function setCq6($item){
+		$this->cq6 = $item;
+	}
 	function setCqmeta1($item){
 		$this->cqmeta1 = $item;
 	}
@@ -643,6 +772,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setCqmeta5($item){
 		$this->cqmeta5 = $item;
+	}
+	function setCqmeta6($item){
+		$this->cqmeta6 = $item;
 	}
 	function setCbq1($item){
 		$this->cbq1 = $item;
@@ -659,6 +791,9 @@ class FatoMensal extends CircuitoEntity {
 	function setCbq5($item){
 		$this->cbq5 = $item;
 	}
+	function setCbq6($item){
+		$this->cbq6 = $item;
+	}
 	function setCbqmeta1($item){
 		$this->cbqmeta1 = $item;
 	}
@@ -673,6 +808,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setCbqmeta5($item){
 		$this->cbqmeta5 = $item;
+	}
+	function setCbqmeta6($item){
+		$this->cbqmeta6 = $item;
 	}
 	function setCp1($item){
 		$this->cp1 = $item;
@@ -689,11 +827,17 @@ class FatoMensal extends CircuitoEntity {
 	function setCp5($item){
 		$this->cp5 = $item;
 	}
+	function setCp6($item){
+		$this->cp6 = $item;
+	}
 	function setMediac($item){
 		$this->mediac = $item;
 	}
 	function setMediacp($item){
 		$this->mediacp = $item;
+	}
+	function setMediacpclass($item){
+		$this->mediacpclass = $item;
 	}
 
 	public function __set($name,$value) {

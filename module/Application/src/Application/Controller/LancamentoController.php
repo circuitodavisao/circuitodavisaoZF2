@@ -173,8 +173,8 @@ class LancamentoController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 
 		$fatosMensal = array();
-		$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
-		$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+		$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+		$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 
 		for($indiceDePeriodos = $arrayPeriodoDoMesAnterior[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 
@@ -309,6 +309,7 @@ class LancamentoController extends CircuitoController {
 					$contadorDePeriodo[0] = 1;
 					$contadorDePeriodo[1] = 1;
 					$soma = $dimensao->getLider() + $dimensao->getVisitante() + $dimensao->getConsolidacao() + $dimensao->getMembro();
+
 					if($indiceDePeriodos <= $arrayPeriodoDoMesAnterior[1]){
 						for($indiceAnterior = $arrayPeriodoDoMesAnterior[0]; $indiceAnterior <= $arrayPeriodoDoMesAnterior[1]; $indiceAnterior++){
 							if($indiceDePeriodos == $indiceAnterior){
@@ -327,7 +328,7 @@ class LancamentoController extends CircuitoController {
 							$contadorDePeriodo[1]++;
 						}
 					}
-					for($indiceFatoMensal = 0; $indiceFatoMensal <= 1; $indiceFatoMensal++){
+				for($indiceFatoMensal = 0; $indiceFatoMensal <= 1; $indiceFatoMensal++){
 						if($temNoMes[$indiceFatoMensal]){
 							if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CELULA) {
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
@@ -350,6 +351,10 @@ class LancamentoController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setC5($soma);
 									$fatosMensal[$indiceFatoMensal]->setRealizada5($contadorCelulasRealizadas);
 								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 6){
+									$fatosMensal[$indiceFatoMensal]->setC6($soma);
+									$fatosMensal[$indiceFatoMensal]->setRealizada6($contadorCelulasRealizadas);
+								}
 							}
 							if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CULTO) {
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
@@ -366,6 +371,9 @@ class LancamentoController extends CircuitoController {
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setCu5($soma);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 6){
+									$fatosMensal[$indiceFatoMensal]->setCu6($soma);
 								}
 							}
 							if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::ARENA) {
@@ -384,6 +392,9 @@ class LancamentoController extends CircuitoController {
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setA5($soma);
 								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 6){
+									$fatosMensal[$indiceFatoMensal]->setA6($soma);
+								}
 							}
 							if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::DOMINGO) {
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
@@ -401,9 +412,13 @@ class LancamentoController extends CircuitoController {
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setD5($soma);
 								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 6){
+									$fatosMensal[$indiceFatoMensal]->setD6($soma);
+								}
 							}
 						}
 					}
+
 				}
 
 				// membresia para fato mensal
@@ -476,6 +491,16 @@ class LancamentoController extends CircuitoController {
 							$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
 							$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
 						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD6();
+							$valorArena = $fatosMensal[$indiceFatoMensal]->getA6();
+							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu6();
+							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC6();
+							$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
+							$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
+							$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
+							$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
+						}
 						$membresia = RelatorioController::calculaMembresia($valorCulto, $valorArena, $valorDomingo);
 						$somaCelulas = $quantidadeCelulas + $quantidadeCelulasEstrategicas;
 						if($contadorDePeriodo[$indiceFatoMensal] === 1){
@@ -508,7 +533,12 @@ class LancamentoController extends CircuitoController {
 							$fatosMensal[$indiceFatoMensal]->setCp5($valorCelula / $membresiaMetaSomada * 100);
 							$fatosMensal[$indiceFatoMensal]->setRealizadap5($contadorCelulasRealizadas / $somaCelulas * 100);
 						}
-
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$fatosMensal[$indiceFatoMensal]->setMem6($membresia);
+							$fatosMensal[$indiceFatoMensal]->setMemp6($membresia / $membresiaMetaSomada * 100);
+							$fatosMensal[$indiceFatoMensal]->setCp6($valorCelula / $membresiaMetaSomada * 100);
+							$fatosMensal[$indiceFatoMensal]->setRealizadap6($contadorCelulasRealizadas / $somaCelulas * 100);
+						}
 					}
 				}
 			}
@@ -602,9 +632,11 @@ class LancamentoController extends CircuitoController {
 
 		$infoEntidade = $entidade->infoEntidade();
 		$nomeLideres = $grupo->getNomeLideresAtivos();
+		$fotos = $grupo->getFotosLideresAtivos();
 		for($x = 0; $x <= 1; $x++){
 			$fatosMensal[$x]->setEntidade($infoEntidade);
 			$fatosMensal[$x]->setLideres($nomeLideres);
+			//$fatosMensal[$x]->setFotos($fotos);
 			$fatosMensal[$x]->setNumero_identificador($numeroIdentificador);
 			if($x === 0){
 				$fatosMensal[$x]->setMes($mesAnterior);
@@ -613,22 +645,27 @@ class LancamentoController extends CircuitoController {
 				$fatosMensal[$x]->setMes($mesAtual);
 				$fatosMensal[$x]->setAno($anoAtual);
 			}
-			$somaMembresia = $fatosMensal[$x]->getMem1() + $fatosMensal[$x]->getMem2() + $fatosMensal[$x]->getMem3() + $fatosMensal[$x]->getMem4() + $fatosMensal[$x]->getMem5();
-			$somaMembresiap = $fatosMensal[$x]->getMemp1() + $fatosMensal[$x]->getMemp2() + $fatosMensal[$x]->getMemp3() + $fatosMensal[$x]->getMemp4() + $fatosMensal[$x]->getMemp5();
-			$somaC = $fatosMensal[$x]->getC1() + $fatosMensal[$x]->getC2() + $fatosMensal[$x]->getC3() + $fatosMensal[$x]->getC4() + $fatosMensal[$x]->getC5();
-			$somaCp = $fatosMensal[$x]->getCp1() + $fatosMensal[$x]->getCp2() + $fatosMensal[$x]->getCp3() + $fatosMensal[$x]->getCp4() + $fatosMensal[$x]->getCp5();
-			$somaRealizada = $fatosMensal[$x]->getRealizada1() + $fatosMensal[$x]->getRealizada2() + $fatosMensal[$x]->getRealizada3() + $fatosMensal[$x]->getRealizada4() + $fatosMensal[$x]->getRealizada5();
-			$somaRealizadap = $fatosMensal[$x]->getRealizadap1() + $fatosMensal[$x]->getRealizadap2() + $fatosMensal[$x]->getRealizadap3() + $fatosMensal[$x]->getRealizadap4() + $fatosMensal[$x]->getRealizadap5();
+			$somaMembresia = $fatosMensal[$x]->getMem1() + $fatosMensal[$x]->getMem2() + $fatosMensal[$x]->getMem3() + $fatosMensal[$x]->getMem4() + $fatosMensal[$x]->getMem5()  + $fatosMensal[$x]->getMem6();
+			$somaMembresiap = $fatosMensal[$x]->getMemp1() + $fatosMensal[$x]->getMemp2() + $fatosMensal[$x]->getMemp3() + $fatosMensal[$x]->getMemp4() + $fatosMensal[$x]->getMemp5() + $fatosMensal[$x]->getMemp6();
+			$somaC = $fatosMensal[$x]->getC1() + $fatosMensal[$x]->getC2() + $fatosMensal[$x]->getC3() + $fatosMensal[$x]->getC4() + $fatosMensal[$x]->getC5() + $fatosMensal[$x]->getC6();
+			$somaCp = $fatosMensal[$x]->getCp1() + $fatosMensal[$x]->getCp2() + $fatosMensal[$x]->getCp3() + $fatosMensal[$x]->getCp4() + $fatosMensal[$x]->getCp5() + $fatosMensal[$x]->getCp6();
+			$somaRealizada = $fatosMensal[$x]->getRealizada1() + $fatosMensal[$x]->getRealizada2() + $fatosMensal[$x]->getRealizada3() + $fatosMensal[$x]->getRealizada4() + $fatosMensal[$x]->getRealizada5() + $fatosMensal[$x]->getRealizada6();
+			$somaRealizadap = $fatosMensal[$x]->getRealizadap1() + $fatosMensal[$x]->getRealizadap2() + $fatosMensal[$x]->getRealizadap3() + $fatosMensal[$x]->getRealizadap4() + $fatosMensal[$x]->getRealizadap5() + $fatosMensal[$x]->getRealizadap6();
 			$fatosMensal[$x]->setMediamem($somaMembresia/$contadorDePeriodo[$x]);
 			$fatosMensal[$x]->setMediamemp($somaMembresiap/$contadorDePeriodo[$x]);
+			$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatosMensal[$x]->getMediamemp());
+			$fatosMensal[$x]->setMediamempclass($mediaMemPClass);
 			$fatosMensal[$x]->setMediac($somaC/$contadorDePeriodo[$x]);
 			$fatosMensal[$x]->setMediacp($somaCp/$contadorDePeriodo[$x]);
+			$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatosMensal[$x]->getMediamemp());
+			$fatosMensal[$x]->setMediacpclass($mediaCPClass);
 			$fatosMensal[$x]->setMediarealizada($somaRealizada/$contadorDePeriodo[$x]);
 			$fatosMensal[$x]->setMediarealizadap($somaRealizadap/$contadorDePeriodo[$x]);
+			$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatosMensal[$x]->getMediamemp());
+			$fatosMensal[$x]->setMediarealizadapclass($mediaRealizadaPClass);
 
 			$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$x], false);
 		}
-
 
 		$this->getRepositorio()->fecharTransacao();
 

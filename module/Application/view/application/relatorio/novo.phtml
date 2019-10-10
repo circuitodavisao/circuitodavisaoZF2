@@ -65,47 +65,47 @@ $anoFinal = date('Y');
 	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
 		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 			<select name="mes" id="mes" class="form-control">
-				<?php 
-					for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
-						$selected = '';
-						if ($this->mes == $indice) {
-							$selected = 'selected';
-						}
-			
-						echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
-					}
-				?>
+<?php 
+for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+	$selected = '';
+	if ($this->mes == $indice) {
+		$selected = 'selected';
+	}
+
+	echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+}
+?>
 			</select>
 		</div>
 		<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
 		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 			<select name="ano" id="ano" class="form-control">
-				<?php 					
-					for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
-						$selected = '';
-						if ($this->ano == $indice) {
-							$selected = 'selected';
-						}
-						echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
-					}
-				?>
+<?php 					
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
+	}
+	echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+}
+?>
 			</select>
 		</div>
-		<?php
-			$checked1 = '';
-			$checked2 = '';
-			switch ($this->pessoalOuEquipe) {
-				case 1:
-					$checked1 = 'checked';
-					break;
-				case 2:
-					$checked2 = 'checked';
-					break;
-				default:
-					$checked2 = 'checked';					
-					break;
-			}
-		?>
+<?php
+$checked1 = '';
+$checked2 = '';
+switch ($this->pessoalOuEquipe) {
+case 1:
+	$checked1 = 'checked';
+	break;
+case 2:
+	$checked2 = 'checked';
+	break;
+default:
+	$checked2 = 'checked';					
+	break;
+}
+?>
 		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 			<div class="option-group field text-center pb10 pt10">
 				<label class="option option-primary">
@@ -127,8 +127,6 @@ $anoFinal = date('Y');
 </div>
 <?php
 echo '</form>';
-
-
 
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
@@ -179,39 +177,22 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($this->tipoRelatorio == 2) {
 		$colspan = 4;
 	}
-	if ($this->tipoRelatorio == 7) {
-		$colspan = 3;
-	}
 	if ($this->tipoRelatorio == 3){		
-			$colspan = 7;
-		}
-	if ($this->tipoRelatorio == 4 ||
-		$this->tipoRelatorio == 5 ||
-		$this->tipoRelatorio == 6) {
-			$colspan = 2;
-		}
-	if($this->tipoRelatorio == 8) {
-		$colspan = 6;
+		$colspan = 7;
 	}
-
 	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
 	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
 	echo '</th>';
-}
-if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-	echo '<th colspan="2"></th>';
 }
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 3) {
 		echo '<th></th>';
 	}
 echo '<th></th>';
-?>
-					</tr>
-					<tr class="dark">
-<?php
-echo '<th>TIMES</th>';
+echo '</tr>';
 
+echo '<tr class="dark">';
+echo '<th>TIMES</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
 	if ($indiceDeArrays != -1) {
@@ -233,14 +214,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MEM</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
-	if ($this->tipoRelatorio == 7) {
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
+	if ($this->tipoRelatorio == 2){
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS</th>';
 	}
-	if ($this->tipoRelatorio == 2 ||
-		$this->tipoRelatorio == 7 ||
-		$this->tipoRelatorio == 8) {
-			echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉLULAS</th>';
-		}
 	if ($this->tipoRelatorio == 2) {
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">REALIZADAS</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">NÃO</th>';
@@ -255,33 +231,6 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
-	if ($this->tipoRelatorio == 4 ||
-		$this->tipoRelatorio == 5 ||
-		$this->tipoRelatorio == 6) {
-			echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
-		}
-	if ($this->tipoRelatorio == 7) {
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARENA</th>';
-	}
-	if ($this->tipoRelatorio == 8) {
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BETA</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET CÉL</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET BETA</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ELITE</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
-	}
-	if ($this->tipoRelatorio == 4 ||
-		$this->tipoRelatorio == 5 ||
-		$this->tipoRelatorio == 6) {
-			echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
-		}
-	if ($this->tipoRelatorio == 9) {
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">Semanal</th>';
-	}
-
-}
-if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-	echo '<th class="' . $classeBase . '">Meta</th>';
 }
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 3) {
@@ -289,27 +238,98 @@ if ($this->tipoRelatorio == 1 ||
 	}
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 2 ||
-	$this->tipoRelatorio == 3 ||
-	$this->tipoRelatorio == 8 ||
-	$this->tipoRelatorio == 9) {
+	$this->tipoRelatorio == 3) {
 		echo '<th>FINAL</th>';
 	}
-if($this->tipoRelatorio == 9 && ($this->entidade->getGrupo()->getId() === 1 || $this->entidade->getGrupo()->getId() === 1225)){
-	echo '<th class="' . $classeBase . '">%</th>';
-}
-?>
-					</tr>
-				</thead>
-				<tbody>
-<?php
-$contagemRanking = 0;
-$totalDeRelatorios = count($this->relatorio);
+echo '</tr>';
+echo '</thead>';
 
-Funcoes::var_dump($this->relatorio);
+echo '<tbody>';
+$contagemRanking = 0;
+foreach($this->relatorio as $relatorio){
+	$class = '';
+	if ($this->tipoRelatorio == 1) {
+		$class = $relatorio->mediamempclass;
+	}
+	if ($this->tipoRelatorio == 2) {
+		$class = $relatorio->mediacpclass;
+	}
+	if ($this->tipoRelatorio == 3) {
+		$class = $relatorio->mediarealizadapclass;
+	}
+
+	echo '<tr class="'.$class.'">';
+	echo '<td>'.$relatorio->entidade.' - '.$relatorio->lideres.'</td>';
+	$contadorDePeriodos = 1;
+	for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+		$classeBase = 'periodo' . $indiceDeArrays . ' ';
+		if ($indiceDeArrays != -1) {
+			$classeBase .= 'hidden-xs';
+		}
+		$classePeriodoAtual = '';
+		if ($indiceDeArrays == -1) {
+			$classePeriodoAtual = 'bg-info';
+		}
+		$cq = 'cq' . $contadorDePeriodos;
+		$cbq = 'cbq' . $contadorDePeriodos;
+		$cqmeta = 'cqmeta' . $contadorDePeriodos;
+		$cbqmeta = 'cbqmeta' . $contadorDePeriodos;
+
+		if ($this->tipoRelatorio == 1) {
+			$cu = 'cu' . $contadorDePeriodos;
+			$a = 'a' . $contadorDePeriodos;
+			$d = 'd' . $contadorDePeriodos;
+			$mem = 'mem' . $contadorDePeriodos;
+			$memp = 'memp' . $contadorDePeriodos;
+			echo '<td class="hidden-xs">'.$relatorio->$cq.'</td>';
+			echo '<td class="hidden-xs">'.$relatorio->$cbq.'</td>';
+			echo '<td class="hidden-xs">'.$relatorio->$cqmeta.'</td>';
+			echo '<td class="hidden-xs">'.$relatorio->$cbqmeta.'</td>';
+			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$cu.'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$a.'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$d.'</td>';
+			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem,2,',','.').'</td>';
+			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp,2,',','.').'</td>';
+		}
+		if ($this->tipoRelatorio == 2){
+			$realizada = 'realizada' . $contadorDePeriodos;
+			$realizadap = 'realizadap' . $contadorDePeriodos;
+			echo '<td class="' . $classeBase . '">'.($relatorio->$cq+$relatorio->$cbq).'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$realizada.'</td>';
+			echo '<td class="' . $classeBase . '">'.($relatorio->$realizada-$relatorio->$cq+$relatorio->$cbq).'</td>';
+			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizadap,2,',','.').' %</td>';
+		}
+		if ($this->tipoRelatorio == 3) {
+			$c = 'c' . $contadorDePeriodos;
+			$cp = 'cp' . $contadorDePeriodos;
+			echo '<td>'.$relatorio->$cq.'</td>';
+			echo '<td>'.$relatorio->$cbq.'</td>';
+			echo '<td class="hidden-xs">'.$relatorio->$cqmeta.'</td>';
+			echo '<td class="hidden-xs">'.$relatorio->$cbqmeta.'</td>';
+			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$c.'</td>';
+			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp,2,',','.').' %</td>';
+		}
+		$contadorDePeriodos++;
+	}
+	if ($this->tipoRelatorio == 1 ||
+		$this->tipoRelatorio == 3) {
+			echo '<td>'.number_format($relatorio->mediamem,2,',','.').'</td>';
+		}
+	if ($this->tipoRelatorio == 1 ||
+		$this->tipoRelatorio == 2 ||
+		$this->tipoRelatorio == 3) {
+			echo '<td>'.number_format($relatorio->mediamemp,2,',','.').' %</td>';
+		}
+	echo '</tr>';
+}
+
+echo '</tbody>';
+echo '</table>';
+
 ?>
-				</tbody>
-			</table>
-		</div>
+	</div>
 	</div>
 <?php
 echo $this->templateFormularioRodape();
