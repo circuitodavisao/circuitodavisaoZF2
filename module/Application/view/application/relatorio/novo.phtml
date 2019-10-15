@@ -259,7 +259,7 @@ foreach($this->relatorio as $relatorio){
 	}
 
 	echo '<tr class="'.$class.'">';
-	echo '<td>'.$relatorio->entidade.' - '.$relatorio->lideres.'</td>';
+	echo '<td class="text-right">'.$relatorio->entidade.' - '.$relatorio->lideres.'</td>';
 	$contadorDePeriodos = 1;
 	for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 		$classeBase = 'periodo' . $indiceDeArrays . ' ';

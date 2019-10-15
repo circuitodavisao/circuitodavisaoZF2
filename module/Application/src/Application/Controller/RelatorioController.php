@@ -4648,6 +4648,10 @@ public function alunosNaSemanaAction(){
 						}
 						$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
 						$fatoFilho = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano);
+						if($fatoFilho->entidade === null){
+							$fatoFilho->entidade = $grupoFilho->getEntidadeAtiva()->infoEntidade();
+							$fatoFilho->lideres = $grupoFilho->getNomeLideresAtivos();
+						}
 						$fatoSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano, $pessoalOuEquipe);
 						foreach($fatoSomado as $k => $v){
 							$fatoFilho->$k = $v;

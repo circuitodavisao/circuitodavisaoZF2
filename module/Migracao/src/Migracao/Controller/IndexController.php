@@ -4186,6 +4186,156 @@ class IndexController extends CircuitoController {
 		}
 		return new ViewModel(array('html' => $html));	
 	}
-	
+
+
+		public function fatoMensalAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_start = (float) $sec + (float) $usec;
+		$html = '';
+
+		/* rodar toda segunda */
+		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
+
+		$somenteAtivos = true;
+		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+		$this->getRepositorio()->iniciarTransacao();
+		$html .= "<br />###### iniciarTransacao ";
+		try {
+			if ($grupos) {
+				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
+				// verificando os meses do periodo
+				$periodo = Funcoes::montaPeriodo(0);
+				$mesAtual = $periodo[5];
+				$anoAtual = $periodo[6];
+				$mesAnterior = null;
+				$anoAnterior = null;
+				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
+				$contadorDePeriodo[1] = 0 - $arrayPeriodoDoMesAtual[0] + 1;
+				$contadorDePeriodo[0] = 0;
+				if($periodo[2] !== $mesAtual){
+					$mesAnterior = $periodo[2];
+					$anoAnterior = $periodo[3];
+					$arrayPeriodoDoMesAnterior = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+					$contadorDePeriodo[0] = $arrayPeriodoDoMesAnterior[1] - $arrayPeriodoDoMesAnterior[0];
+				}
+				$html .= '<br />contador mes atual: ' . $contadorDePeriodo[1];
+				$html .= '<br />contador mes anterior: ' . $contadorDePeriodo[0];
+
+				$cont = 0;
+				foreach ($grupos as $grupo) {
+					if($cont === 4){
+						break;
+					}
+					$cont++;
+					$gerar = true;
+					if ($gerar) {
+						$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
+						if ($grupo->getEntidadeAtiva()) {
+							$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
+						}
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
+						if ($numeroIdentificador) {
+							$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
+							if($fatosMensal[1]->entidade === null){
+								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
+								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
+							}
+							if($mesAnterior !== null){
+								$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+								if($fatosMensal[0]->entidade === null){
+									$fatosMensal[0]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
+									$fatosMensal[0]->lideres = $grupo->getNomeLideresAtivos();
+								}
+							}
+
+							$periodo = 0;
+							$apenasCelulas = true;
+
+							$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+							$quantidadeCelulas = count($grupoEventosCelula);
+
+							$grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+							$quantidadeCelulasEstrategicas = count($grupoEventosCelulaEstrategica);
+							$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
+							$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
+
+							$indiceComeco = 1;
+							if($mesAnterior !== null){
+								$indiceComeco = 0;
+							}
+
+							for($indiceFatoMensal = $indiceComeco; $indiceFatoMensal <= 1; $indiceFatoMensal++){
+								if($contadorDePeriodo[$indiceFatoMensal] === 1){
+									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 2){
+									$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 3){
+									$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 4){
+									$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 5){
+									$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
+								}
+								if($contadorDePeriodo[$indiceFatoMensal] === 6){
+									$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
+									$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
+									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
+									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
+								}
+
+								if($indiceFatoMensal === 0){
+									$fatosMensal[$indiceFatoMensal]->setMes($mesAnterior);
+									$fatosMensal[$indiceFatoMensal]->setAno($anoAnterior);
+								}else{
+									$fatosMensal[$indiceFatoMensal]->setMes($mesAtual);
+									$fatosMensal[$indiceFatoMensal]->setAno($anoAtual);
+								}
+
+								$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
+							}
+						}
+					}
+				}
+			}
+			$this->getRepositorio()->fecharTransacao();
+			$html .= "<br />###### fecharTransacao ";
+		} catch (Exception $exc) {
+			$html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getTraceAsString();
+		}
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_end = (float) $sec + (float) $usec;
+		$elapsed_time = round($script_end - $script_start, 5);
+
+		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
+		return new ViewModel(array('html' => $html));
+	}
 
 }
