@@ -4226,12 +4226,7 @@ class IndexController extends CircuitoController {
 				$html .= '<br />contador mes atual: ' . $contadorDePeriodo[1];
 				$html .= '<br />contador mes anterior: ' . $contadorDePeriodo[0];
 
-				$cont = 0;
 				foreach ($grupos as $grupo) {
-					if($cont === 4){
-						break;
-					}
-					$cont++;
 					$gerar = true;
 					if ($gerar) {
 						$html .= "<br /><br /><br />Grupo: " . $grupo->getId();

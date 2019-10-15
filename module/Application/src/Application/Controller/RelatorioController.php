@@ -927,6 +927,9 @@ class RelatorioController extends CircuitoController {
 								}
 							}
 						}
+						if($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getId() === EntidadeTipo::secretario){
+							$adicionar = false;
+						}
 						if ($adicionar) {
 							$todosFilhos[] = $grupoPaiFilhoFilho;
 						}
