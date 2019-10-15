@@ -927,7 +927,7 @@ class RelatorioController extends CircuitoController {
 								}
 							}
 						}
-						if($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::secretario){
+						if($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() === EntidadeTipo::secretario){
 							$adicionar = false;
 						}
 						if ($adicionar) {
@@ -938,11 +938,6 @@ class RelatorioController extends CircuitoController {
 			}
 		}
 
-		foreach($todosFilhos as $filho){
-			echo '### nome: ' . $filho->getGrupoPaiFilhoFilho()->getNomeLideresAtivos();
-			echo '### entidade tipo nome: ' . $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getNome();
-		}
-		
 		$relatorioDiscipulos = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 		$soma = array();

@@ -199,25 +199,33 @@ class Entidade extends CircuitoEntity implements InputFilterAwareInterface {
      * Retorna a entidade tipo da entidade
      * @return EntidadeTipo
      */
-    function getEntidadeTipo() {
-        if($this->grupoSecretario){
-            return $this->getGrupo()->getEntidadeAtiva()->getEntidadeTipo();
-        } else {
-            return $this->entidadeTipo;
-        }        
-    }
+	function getEntidadeTipo($original = false) {
+		if($original === false){
+			if($this->grupoSecretario){
+				return $this->getGrupo()->getEntidadeAtiva()->getEntidadeTipo();
+			} else {
+				return $this->entidadeTipo;
+			}        
+		}else{
+			return $this->entidadeTipo;
+		}
+	}
 
     /**
      * Retorna o grupo da Entidade
      * @return Grupo
      */
-    function getGrupo() {
-        if($this->grupoSecretario){
-            return $this->grupoSecretario;
-        } else {
-            return $this->grupo;
-        }        
-    }
+	function getGrupo($original = false) {
+		if($original === false){
+			if($this->grupoSecretario){
+				return $this->grupoSecretario;
+			} else {
+				return $this->grupo;
+			}        
+		}else{
+			return $this->grupo;
+		}
+	}
 
     function getNome() {
         return $this->nome;
