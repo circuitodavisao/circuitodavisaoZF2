@@ -70,6 +70,9 @@ if ($this->mostrarPrincipal) {
 </div>
 </div>
 
+<?php
+	if($this->vendoPessoaLogada){
+?>
 <!-- fim panel meus dados -->
 <div class="alert alert-default text-center">
 	<div class="admin-form theme-primary">
@@ -162,7 +165,7 @@ if ($this->mostrarPrincipal) {
 		</form>	
 	</div>
 </div>
-
+<?php } ?>
 
 <?php
 echo '<div class="row mb10">';

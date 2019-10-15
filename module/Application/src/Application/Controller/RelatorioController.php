@@ -937,6 +937,11 @@ class RelatorioController extends CircuitoController {
 				}
 			}
 		}
+
+		foreach($todosFilhos as $filho){
+			echo '### nome: ' . $filho->getGrupoPaiFilhoFilho()->getNomeLideresAtivos();
+			echo '### entidade tipo nome: ' . $filho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+		}
 		
 		$relatorioDiscipulos = array();
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
