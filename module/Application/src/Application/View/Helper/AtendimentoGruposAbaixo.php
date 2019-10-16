@@ -316,14 +316,16 @@ class AtendimentoGruposAbaixo extends AbstractHelper {
         $html .= '<div class="col-md-3 hidden-xs">';
         if (!$discipuloAbaixo) {
             $quantidadeDeLideres = 1;
-            foreach ($grupo->getGrupoResponsavel() as $grupoResponsavel) {
-                if ($quantidadeDeLideres === 2) {
-                    $html .= Constantes::$NBSP;
-                }
-                $pessoa = $grupoResponsavel->getPessoa();
-                $html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, AtendimentoGruposAbaixo::tamanhoDaFoto, '%');
-                $quantidadeDeLideres++;
-            }
+			foreach ($grupo->getGrupoResponsavel() as $grupoResponsavel) {
+if($grupoResponsavel->verificarSeEstaAtivo()){
+				if ($quantidadeDeLideres === 2) {
+					$html .= Constantes::$NBSP;
+				}
+				$pessoa = $grupoResponsavel->getPessoa();
+				$html .= FuncoesEntidade::tagImgComFotoDaPessoa($pessoa, AtendimentoGruposAbaixo::tamanhoDaFoto, '%');
+				$quantidadeDeLideres++;
+}
+			}
         }
         $html .= '</div>';
 
