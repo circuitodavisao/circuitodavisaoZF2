@@ -2071,28 +2071,8 @@ class CadastroController extends CircuitoController {
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
 		$formAtivarFicha = new AtivarFichaForm(Constantes::$FORM_ATIVAR_FICHA, null);
 
-		$listas = array();
-		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
-			foreach ($eventoFrequencias as $eventoFrequencia) {
-				/* Revisionistas */
-				if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-					if ($eventoFrequencia->getFrequencia() == 'S') {
-						$listas['revisionistas'][] = $eventoFrequencia;
-					}
-				} else {
-					/* Lideres */
-					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-						if ($eventoFrequencia->getFrequencia() == 'S') {
-							$listas['lideres'][] = $eventoFrequencia;
-						}
-					}
-				}
-			}
-		}
-
 		$view = new ViewModel(array(
 			Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
-			'listas' => $listas,
 			'evento' => $eventoRevisao,
 		));
 
