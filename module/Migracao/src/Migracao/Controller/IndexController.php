@@ -4212,19 +4212,10 @@ class IndexController extends CircuitoController {
 				$periodo = Funcoes::montaPeriodo(0);
 				$mesAtual = $periodo[5];
 				$anoAtual = $periodo[6];
-				$mesAnterior = null;
-				$anoAnterior = null;
 				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
 				$contadorDePeriodo[1] = 0 - $arrayPeriodoDoMesAtual[0] + 1;
 				$contadorDePeriodo[0] = 0;
-				if($periodo[2] !== $mesAtual){
-					$mesAnterior = $periodo[2];
-					$anoAnterior = $periodo[3];
-					$arrayPeriodoDoMesAnterior = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
-					$contadorDePeriodo[0] = $arrayPeriodoDoMesAnterior[1] - $arrayPeriodoDoMesAnterior[0];
-				}
 				$html .= '<br />contador mes atual: ' . $contadorDePeriodo[1];
-				$html .= '<br />contador mes anterior: ' . $contadorDePeriodo[0];
 
 				foreach ($grupos as $grupo) {
 					$gerar = true;
@@ -4241,13 +4232,6 @@ class IndexController extends CircuitoController {
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
 							}
-							if($mesAnterior !== null){
-								$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
-								if($fatosMensal[0]->entidade === null){
-									$fatosMensal[0]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
-									$fatosMensal[0]->lideres = $grupo->getNomeLideresAtivos();
-								}
-							}
 
 							$periodo = 0;
 							$apenasCelulas = true;
@@ -4261,9 +4245,6 @@ class IndexController extends CircuitoController {
 							$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
 
 							$indiceComeco = 1;
-							if($mesAnterior !== null){
-								$indiceComeco = 0;
-							}
 
 							for($indiceFatoMensal = $indiceComeco; $indiceFatoMensal <= 1; $indiceFatoMensal++){
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
