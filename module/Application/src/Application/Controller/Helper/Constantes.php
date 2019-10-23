@@ -368,6 +368,7 @@ class Constantes {
     public static $STRING_ID_EVENTO_FREQUENCIA = 'idEventoFrequencia';
     public static $PAGINA_FICHA_REVISAO = 'FichaRevisao';
     public static $PAGINA_ATIVAR_FICHA_REVISAO = 'AtivarFichaRevisao';
+    public static $PAGINA_FICHAS_ATIVAS = 'FichasAtivas';
     public static $PAGINA_RELATORIO_FICHAS_REVISAO = 'RelatorioFichasRevisao';
     public static $PAGINA_ATIVAR_LIDERES_REVISAO = 'AtivarLideresRevisao';
     public static $PAGINA_SELECIONAR_REVISAO_CRACHA = 'SelecionarRevisaoCracha';

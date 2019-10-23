@@ -38,6 +38,9 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             <?php
                             $funcaoRelatorio = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroRelatorioFichasRevisao",' . $this->evento->getId() . ')');
                             echo $this->botaoSimples('Relatório', $funcaoRelatorio, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
+
+                            $funcaoFichasAtivas = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroFichasAtivas",' . $this->evento->getId() . ')');
+                            echo $this->botaoSimples('Fichas Ativas', $funcaoFichasAtivas, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
                             ?>
                             <span id='botaoLimparCampos' class='hidden'>
                                 <?php

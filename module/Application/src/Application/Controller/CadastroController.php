@@ -250,6 +250,12 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_ATIVAR_FICHA_REVISAO,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_FICHAS_ATIVAS){
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_FICHAS_ATIVAS,
+			));
+		}
+	
 		if ($pagina == Constantes::$PAGINA_RELATORIO_FICHAS_REVISAO) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_RELATORIO_FICHAS_REVISAO,
@@ -2074,6 +2080,43 @@ class CadastroController extends CircuitoController {
 		$view = new ViewModel(array(
 			Constantes::$FORM_ATIVAR_FICHA => $formAtivarFicha,
 			'evento' => $eventoRevisao,
+		));
+
+		/* Javascript especifico */
+		$layoutJS = new ViewModel();
+		$layoutJS->setTemplate(Constantes::$TEMPLATE_JS_ATIVAR_FICHA);
+		$view->addChild($layoutJS, Constantes::$STRING_JS_ATIVAR_FICHA_REVISAO);
+
+		return $view;
+	}
+
+	public function fichasAtivasAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idRevisao = $sessao->idSessao;
+		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+
+		$listas = array();
+		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
+			foreach ($eventoFrequencias as $eventoFrequencia) {
+				/* Revisionistas */
+				if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
+					if ($eventoFrequencia->getFrequencia() == 'S') {
+						$listas['revisionistas'][] = $eventoFrequencia;
+					}
+				} else {
+					/* Lideres */
+					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
+						if ($eventoFrequencia->getFrequencia() == 'S') {
+							$listas['lideres'][] = $eventoFrequencia;
+						}
+					}
+				}
+			}
+		}
+		$view = new ViewModel(array(
+			'evento' => $eventoRevisao,
+			'listas' => $listas,
 		));
 
 		/* Javascript especifico */

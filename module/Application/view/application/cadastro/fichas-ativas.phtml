@@ -1,0 +1,34 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+?>
+<div class="mw1000 center-block p10">
+    <div class="row ">
+        <div id="content" class="animated fadeIn">
+            <div class="row">
+                <!-- Cadastro de Pessoa -->
+                <div class="admin-form " id="register1" role="tabpanel">
+                    <blockquote class="blockquote-primary">
+                        <p>Fichas Ativas</p>
+                    </blockquote>
+<?php
+                            $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroAtivarFichaRevisao",' . $this->evento->getId() . ')');
+                            echo $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
+?>
+ 
+                    <br />
+                    <br />
+                    <br />
+ <?php echo $this->listagemFichasAtivasRevisao(); ?>
+					<!-- end .admin-form section -->
+                </div>
+                <!-- end: .admin-form -->
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSAtivarFichaRevisao;
