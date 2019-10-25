@@ -4248,6 +4248,19 @@ public function alunosNaSemanaAction(){
 						$time['informacao'] = $grupo144->getEntidadeAtiva()->getNome() ? $grupo144->getEntidadeAtiva()->getNome() : $grupo144->getEntidadeAtiva()->getNumero();
 						$time['lideres'] = $grupo144->getNomeLideresAtivos();
 						$times[] = $time;
+						if($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							if($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()){
+								foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+									$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+									$time = array();
+									$time['id'] = $grupo1728->getId();
+									$time['entidade'] = $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+									$time['informacao'] = $grupo1728->getEntidadeAtiva()->getNome() ? $grupo1728->getEntidadeAtiva()->getNome() : $grupo1728->getEntidadeAtiva()->getNumero();
+									$time['lideres'] = $grupo1728->getNomeLideresAtivos();
+									$times[] = $time;
+								}
+							}
+						}
 					}
 				}
 			}
