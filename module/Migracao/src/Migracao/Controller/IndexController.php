@@ -4144,7 +4144,11 @@ class IndexController extends CircuitoController {
 		$somenteAtivos = true;
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
 		if ($grupos) {						
+			$contador = 1;
 			foreach ($grupos as $grupo) {
+				if($contador === 3000){
+					break;
+				}
 				$grupoDeLideres = false;
 				$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 				$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
@@ -4182,6 +4186,7 @@ class IndexController extends CircuitoController {
 						}
 					}												
 				}
+				$contador++;
 			}
 		}
 		return new ViewModel(array('html' => $html));	
