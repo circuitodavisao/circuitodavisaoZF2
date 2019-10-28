@@ -4147,35 +4147,42 @@ class IndexController extends CircuitoController {
 		$html = '';
 		$somenteAtivos = true;
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
-		if ($grupos) {						
-			foreach ($grupos as $grupo) {
-				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
-				if ($numeroIdentificador) {
-					$fatos = $this->getRepositorio()->getFatoLiderORM()->encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador);
-					if($fatos){						
-						foreach($fatos as $fato){
-							$fato->setDataEHoraDeInativacao(self::getDataParaInativacao());
-							$this->getRepositorio()->getFatoLiderORM()->persistir($fato, false);	
-						}
-					} 
+		if ($grupos) {
+			try{
+				$this->getRepositorio()->iniciarTransacao();
+				foreach ($grupos as $grupo) {
+					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
+					if ($numeroIdentificador) {
+						$fatos = $this->getRepositorio()->getFatoLiderORM()->encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador);
+						if($fatos){						
+							foreach($fatos as $fato){
+								$fato->setDataEHoraDeInativacao(self::getDataParaInativacao());
+								$this->getRepositorio()->getFatoLiderORM()->persistir($fato, false);	
+							}
+						} 
 
-					$grupoDeLideres = false;
-					$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-					$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
-					if($grupoEventoCelulas || $grupoEventoCelulasEstrategicas){
-						$grupoDeLideres = true;
+						$grupoDeLideres = false;
+						$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+						$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+						if($grupoEventoCelulas || $grupoEventoCelulasEstrategicas){
+							$grupoDeLideres = true;
+						}
+						if($grupoDeLideres){
+							$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
+						}				
+						if(!$grupoDeLideres){
+							$quantidadeDeLideres = 0;
+						}
+						$fatoLiderNovo = new FatoLider();
+						$fatoLiderNovo->setLideres($quantidadeDeLideres);
+						$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
+						$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 					}
-					if($grupoDeLideres){
-						$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
-					}				
-					if(!$grupoDeLideres){
-						$quantidadeDeLideres = 0;
-					}
-					$fatoLiderNovo = new FatoLider();
-					$fatoLiderNovo->setLideres($quantidadeDeLideres);
-					$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
-					$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 				}
+
+				$this->getRepositorio()->fecharTransacao();
+			}catch(Exception $e){
+				$this->getRepositorio()->desfazerTransacao();
 			}
 		}
 		return new ViewModel(array('html' => $html));	
