@@ -4149,42 +4149,32 @@ class IndexController extends CircuitoController {
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
 		if ($grupos) {						
 			foreach ($grupos as $grupo) {
-				$grupoDeLideres = false;
-				$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-				$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
-				if($grupoEventoCelulas || $grupoEventoCelulasEstrategicas){
-					$grupoDeLideres = true;
-				}
-				if($grupoDeLideres){
-					$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
-				}				
-				if(!$grupoDeLideres){
-					$quantidadeDeLideres = 0;
-				}
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);				
 				if ($numeroIdentificador) {
-					$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
-					if($fatoLiderAtual){						
-						if($fatoLiderAtual->getLideres() != $quantidadeDeLideres){						
-							$html .= "<br />Ajustando fato lider id: " . $fatoLiderAtual->getId();
-							$html .= 'Quantidade antiga: ' . $fatoLiderAtual->getLideres();								
-							$fatoLiderAtual->setLideres($quantidadeDeLideres);							
-							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderAtual, false);	
-							$html .= 'Quantidade atualizada: ' . $fatoLiderAtual->getLideres();						
+					$fatos = $this->getRepositorio()->getFatoLiderORM()->encontrarMultiplosFatosLiderPorNumeroIdentificador($numeroIdentificador);
+					if($fatos){						
+						foreach($fatos as $fato){
+							$fato->setDataEHoraDeInativacao(self::getDataParaInativacao());
+							$this->getRepositorio()->getFatoLiderORM()->persistir($fato, false);	
 						}
 					} 
-					if(!$fatoLiderAtual && $grupoDeLideres){
-						if($grupo && $quantidadeDeLideres !== 0){
-							$fatoLiderNovo = new FatoLider();
-							$fatoLiderNovo->setLideres($quantidadeDeLideres);
-							$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
-							$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
-							$fatoLiderAtual = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderPorNumeroIdentificador($numeroIdentificador);
-							$html .= "<br />Novo fato líder criado " . $fatoLiderAtual->getId();
-							$html .= 'Quantidade atualizada: ' . $fatoLiderAtual->getLideres();	
-							
-						}
-					}												
+
+					$grupoDeLideres = false;
+					$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
+					$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+					if($grupoEventoCelulas || $grupoEventoCelulasEstrategicas){
+						$grupoDeLideres = true;
+					}
+					if($grupoDeLideres){
+						$quantidadeDeLideres = count($grupo->getResponsabilidadesAtivas());
+					}				
+					if(!$grupoDeLideres){
+						$quantidadeDeLideres = 0;
+					}
+					$fatoLiderNovo = new FatoLider();
+					$fatoLiderNovo->setLideres($quantidadeDeLideres);
+					$fatoLiderNovo->setNumero_identificador($numeroIdentificador);
+					$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 				}
 			}
 		}
