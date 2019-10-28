@@ -4112,6 +4112,10 @@ class IndexController extends CircuitoController {
 		}
 	}
 	public function removerFatosLideresFantasmasAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '60');
+
 		$html = '';
 		$fatosLideresAtivos = $this->getRepositorio()->getFatoLiderORM()->encontrarTodosFatosLideresAtivos();
 		foreach($fatosLideresAtivos as $fatoLider){
@@ -4144,11 +4148,7 @@ class IndexController extends CircuitoController {
 		$somenteAtivos = true;
 		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);	
 		if ($grupos) {						
-			$contador = 1;
 			foreach ($grupos as $grupo) {
-				if($contador === 3000){
-					break;
-				}
 				$grupoDeLideres = false;
 				$grupoEventoCelulas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 				$grupoEventoCelulasEstrategicas = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
@@ -4186,14 +4186,12 @@ class IndexController extends CircuitoController {
 						}
 					}												
 				}
-				$contador++;
 			}
 		}
 		return new ViewModel(array('html' => $html));	
 	}
 
-
-		public function fatoMensalAction() {
+	public function fatoMensalAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
