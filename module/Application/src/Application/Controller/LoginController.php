@@ -829,7 +829,6 @@ class LoginController extends CircuitoController {
 
 						// Media de Membresia e Média de Pessoas em Célula
 						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
-						//Funcoes::var_dump($relatorio);
 						$indiceParaVer = 0;	
 						$tamanhoDoArray = count($relatorio);
 						$mediaMembresia = $relatorio[$tamanhoDoArray-1]['mediaMembresia'];
@@ -847,13 +846,13 @@ class LoginController extends CircuitoController {
 						/* Parceiro de Deus */
 						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
 						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
-						$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
+						$dados['mediaPessoasFrequentes'] = number_format($mediaPessoasFrequentes, 2, '.', ',');
 						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
 						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
 						if(!$dados['parceiroDeDeus']){
 							$dados['parceiroDeDeus'] = $parceiro;				
 						}						
-						$dados['membresia'] = $mediaMembresia;
+						$dados['membresia'] = number_format($mediaMembresia, 2, '.', ',');
 						$dados['lideres'] = $lideres;																					
 					}
 					if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
