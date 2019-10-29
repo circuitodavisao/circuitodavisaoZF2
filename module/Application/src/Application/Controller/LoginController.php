@@ -829,6 +829,7 @@ class LoginController extends CircuitoController {
 
 						// Media de Membresia e Média de Pessoas em Célula
 						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+						Funcoes::var_dump($relatorio);
 						$indiceParaVer = 0;	
 						$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
 						$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];				
@@ -840,8 +841,7 @@ class LoginController extends CircuitoController {
 						}
 						$periodoParaUsar = $arrayPeriodoDoMes[1];				
 						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
-						$fatoLider = 				
-									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
+						$fatoLider = $repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);
 						$lideres = $fatoLider[0]['lideres'];
 						/* Parceiro de Deus */
 						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
