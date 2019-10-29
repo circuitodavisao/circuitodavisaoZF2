@@ -846,13 +846,13 @@ class LoginController extends CircuitoController {
 						/* Parceiro de Deus */
 						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
 						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
-						$dados['mediaPessoasFrequentes'] = number_format($mediaPessoasFrequentes, 2, '.', ',');
+						$dados['mediaPessoasFrequentes'] = number_format($mediaPessoasFrequentes);
 						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
 						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
 						if(!$dados['parceiroDeDeus']){
 							$dados['parceiroDeDeus'] = $parceiro;				
 						}						
-						$dados['membresia'] = number_format($mediaMembresia, 2, '.', ',');
+						$dados['membresia'] = number_format($mediaMembresia);
 						$dados['lideres'] = $lideres;																					
 					}
 					if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
