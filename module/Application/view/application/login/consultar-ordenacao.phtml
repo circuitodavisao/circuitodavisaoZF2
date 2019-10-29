@@ -97,7 +97,7 @@ if($this->filtrado && $this->ordenacaoMetas && $this->situacaoPessoa == 'ativa')
     for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
         switch($indiceNumeroGrandes){
             case 1: 
-                $valor = number_format($this->membresia, 2);
+                $valor = number_format($this->membresia);
                 $label = 'Membresia';
                 break;
             case 2:                 
@@ -109,7 +109,7 @@ if($this->filtrado && $this->ordenacaoMetas && $this->situacaoPessoa == 'ativa')
                 $label = 'Parceiro de Deus';
                 break;
             case 4: 
-                $valor = number_format($this->mediaPessoasFrequentes, 2);
+                $valor = number_format($this->mediaPessoasFrequentes);
                 $label = 'Pessoas em Célula';
                 break; 
         }
