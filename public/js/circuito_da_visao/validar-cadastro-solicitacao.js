@@ -73,7 +73,7 @@ function selecionarTipo() {
 	$('#divProgress').removeClass(hidden);
 	$('#tituloDaPagina').html($('#tituloDaPagina').html() + ' - ' + $('#solicitacaoTipo option:selected').text());
 	$('#solicitacaoTipoId').val($('#solicitacaoTipo').val());	
-	
+
 	if(parseInt($('#solicitacaoTipo').val()) !== TRANSFERIR_ALUNO){
 		$('.grupoLogado').attr('disabled','disabled');
 	}	
@@ -151,6 +151,13 @@ function selecionarTipo() {
 			$('#blocoObjeto2').addClass(hidden);
 		}
 	}
+
+	if ( parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_ALUNO){
+		buscarAlunos();
+		buscarDiscipulosIgreja();
+}else{
+	buscarDiscipulos(parseInt($('#solicitacaoTipo').val()));
+}
 }
 
 function abrirSelecionarObjeto(qualObjeto, idLider) {
@@ -363,6 +370,7 @@ function selecionarAluno() {
 
 function selecionarIgreja() {
 	let idIgreja = $('#idIgreja')
+	$('#divSelecionarIgreja').addClass(hidden)
 	selecionarObjeto(idIgreja.val(), $('#idIgreja>option:selected').text())
 }
 
@@ -389,6 +397,7 @@ function prosseguirSecretarario() {
 
 function selecionarParaOndeTransferir() {
 	let idParaOndeTransferir = $('#idParaOndeTransferir')
+	$('#divSelecionarParaOndeTransferir').addClass(hidden)
 	selecionarObjeto(idParaOndeTransferir.val(), $('#idParaOndeTransferir>option:selected').text())
 }
 
@@ -1084,4 +1093,78 @@ function prosseguirInativarSecretarario(){
 	var divSelecionarEntidadeSecretarioParaInativar = $('#divSelecionarEntidadeSecretarioParaInativar');
 	divSelecionarEntidadeSecretarioParaInativar.addClass(hidden);
 	continuarParaConfimacao();
+}
+
+function buscarDiscipulos(idSolicitacaoTipo){
+	const url = '/principalBuscarLideresSolicitacao'
+	const idGrupo = document.getElementById('idGrupo').value
+	fetch(
+		url,
+		{
+			method: 'POST',	
+			body: JSON.stringify({
+				"token": idGrupo,
+				"idSolicitacaoTipo": idSolicitacaoTipo,
+			}),
+		},
+	)
+		.then(resultado => {
+			if(!resultado.ok){
+				console.log('erro ao buscar discipulos para solicitacao')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('idLider').innerHTML = json.resultado.discipulos
+			document.getElementById('idEquipe').innerHTML = json.resultado.equipes
+			document.getElementById('idHomem').innerHTML = json.resultado.homens
+			document.getElementById('idMulher').innerHTML = json.resultado.mulheres
+			document.getElementById('idCasal').innerHTML = json.resultado.casais
+		})
+}
+
+function buscarAlunos(){
+	const url = '/principalBuscarAlunosSolicitacao'
+	const idGrupo = document.getElementById('idGrupo').value
+	fetch(
+		url,
+		{
+			method: 'POST',	
+			body: JSON.stringify({
+				"token": idGrupo,
+			}),
+		},
+	)
+		.then(resultado => {
+			if(!resultado.ok){
+				console.log('erro ao buscar alunos para solicitacao')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('idAluno').innerHTML = json.resultado.alunos
+		})
+}
+
+function buscarDiscipulosIgreja(){
+	const url = '/principalBuscarDiscipulosIgrejaSolicitacao'
+	const idGrupo = document.getElementById('idGrupo').value
+	fetch(
+		url,
+		{
+			method: 'POST',	
+			body: JSON.stringify({
+				"token": idGrupo,
+			}),
+		},
+	)
+		.then(resultado => {
+			if(!resultado.ok){
+				console.log('erro ao buscar discipulos igreja para solicitacao')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('idLiderIgreja').innerHTML = json.resultado.discipulos
+		})
 }

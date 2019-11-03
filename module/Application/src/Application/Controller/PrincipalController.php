@@ -16,7 +16,9 @@ use Application\Model\Entity\PessoaHierarquia;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\GrupoPessoa;
+use Application\Model\Entity\SolicitacaoTipo;
 use Application\Controller\RelatorioController;
+use Application\Controller\CursoController;
 use Exception;
 use Zend\Json\Json;
 use Zend\Session\Container;
@@ -934,4 +936,243 @@ class PrincipalController extends CircuitoController {
 		return $response;
 	}
 
+	public function buscarLideresSolicitacaoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dadosFinal = array();
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$idTipoSolicitacao = $json->idSolicitacaoTipo;
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$entidade = $grupo->getEntidadeAtiva();
+
+
+				if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					$discipulos = '<option value="0">SELECIONE</option>';
+					$nomeLideres = $grupo->getNomeLideresAtivos();
+					$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
+					$disabled = '';
+					if($idTipoSolicitacao === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE || 
+						$idTipoSolicitacao === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
+						$idTipoSolicitacao === SolicitacaoTipo::REMOVER_LIDER){
+							$disabled = 'disabled="disabled"';
+						}
+					$discipulos .= '<option class="grupoLogado" '.$disabled.' value="' . $grupo->getId() . '">' . $informacao . '</option>';
+
+					$grupoIgreja = $grupo->getGrupoIgreja();
+					$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+					$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+					$equipes = '<option value="0">SELECIONE</option>';
+					foreach($grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe){
+						$grupoEquipe = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
+						if($grupoEquipe->getId() !== $grupo->getId()){
+							$nomeLideres = $grupoEquipe->getNomeLideresAtivos();
+							$informacao = $grupoEquipe->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+							$equipes .= '<option value="' . $grupoEquipe->getId() . '">' . $informacao . '</option>';
+						}
+					}
+
+					$homens = '<option value="0">SELECIONE</option>';
+					$mulheres = '<option value="0">SELECIONE</option>';
+					$casais = '<option value="0">SELECIONE</option>';
+					foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+						$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+						if ($grupo12->verificarSeEstaAtivo()) {
+							$nomeLideres = $grupo12->getNomeLideresAtivos();
+							$informacao = $grupo12->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+							$discipulos .= '<option class="lider grupoEquipe grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+
+							if (!$grupo12->verificaSeECasal()) {
+								if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+									$homens .= '<option id="homem'.$grupo12->getId().'" class="'.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+								}
+								if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+									$mulheres .= '<option class="mulheres '.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+								}
+							} else {
+								$casais .= '<option value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+							}
+						}
+						if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+							foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+								$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+								if ($grupo144->verificarSeEstaAtivo()) {
+									$nomeLideres = $grupo144->getNomeLideresAtivos();
+									$informacao = $grupo144->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+									$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+									if (!$grupo144->verificaSeECasal()) {
+										if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+											$homens .= '<option id="homem'.$grupo144->getId().'" class="'.$grupo12->getId().'"  value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+										}
+										if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+											$mulheres .= '<option class="mulheres '.$grupo12->getId().'" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+										}
+									} else {
+										$casais .= '<option value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+									}
+								}
+								if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+									foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+										$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+										if ($grupo1728->verificarSeEstaAtivo()) {
+											$nomeLideres = $grupo1728->getNomeLideresAtivos();
+											$informacao = $grupo1728->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+											$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+											if (!$grupo1728->verificaSeECasal()) {																																					
+												if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+													$homens .= '<option id="homem'.$grupo1728->getId().'" class="'.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+												}
+												if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+													$mulheres .= '<option class="mulheres '.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+												}
+											} else {
+												$casais .= '<option value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+											}
+										}
+
+										if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+											foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+												$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+												if ($grupo20736->verificarSeEstaAtivo()) {
+													$nomeLideres = $grupo20736->getNomeLideresAtivos();
+													$informacao = $grupo20736->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+													$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . ' grupo' . $grupo1728->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+
+													if (!$grupo20736->verificaSeECasal()) {	
+
+														if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+															$homens .= '<option id="homem'.$grupo20736->getId().'" class="'.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+														}
+														if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+															$mulheres .= '<option class="mulheres '.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+														}
+													} else {
+														$casais .= '<option value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					$resultado['discipulos'] = $discipulos;
+					$resultado['equipes'] = $equipes;
+					$resultado['homens'] = $homens;
+					$resultado['mulheres'] = $mulheres;
+					$resultado['casais'] = $casais;
+				}
+
+				$dadosFinal['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dadosFinal['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dadosFinal));
+		return $response;
+	}
+
+	public function buscarAlunosSolicitacaoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+
+				$alunos = '<option value="0">SELECIONE</option>';
+				foreach($relatorioInicial as $relatorio){
+					$aluno = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+					if($aluno->verificarSeEstaAtivo() && $aluno->getTurma()->verificarSeEstaAtivo()){
+						$grupoPessoaAtivo = $aluno->getPessoa()->getGrupoPessoaAtivo();
+						$pessoa = $aluno->getPessoa();
+						$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($aluno, $grupoPessoaAtivo);
+						$alunos .= '<option  value="' . $aluno->getId() . '" >' . $aluno->getId() . ' - ' . $nomeEquipe . ' - '.  $pessoa->getNome() . '</option>';
+					}
+				}
+				$resultado['alunos'] = $alunos;
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDiscipulosIgrejaSolicitacaoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+
+				$discipulos = '<option value="0">SELECIONE</option>';
+				$grupoIgreja = $grupo->getGrupoIgreja();
+				$grupoPaiFilhoFilhos = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
+				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+					$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+					if ($grupo12->verificarSeEstaAtivo()) {
+						$nomeLideres = $grupo12->getNomeLideresAtivos();
+						$informacao = $grupo12->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+						$discipulos .= '<option class="lider grupoEquipe grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+					}
+					if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+						foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+							$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+							if ($grupo144->verificarSeEstaAtivo()) {
+								$nomeLideres = $grupo144->getNomeLideresAtivos();
+								$informacao = $grupo144->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+								$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+							}
+							if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+								foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+									$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+									if ($grupo1728->verificarSeEstaAtivo()) {
+										$nomeLideres = $grupo1728->getNomeLideresAtivos();
+										$informacao = $grupo1728->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+										$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+									}
+
+									if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+										foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+											$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+											if ($grupo20736->verificarSeEstaAtivo()) {
+												$nomeLideres = $grupo20736->getNomeLideresAtivos();
+												$informacao = $grupo20736->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
+												$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . ' grupo' . $grupo1728->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$resultado['discipulos'] = $discipulos;
+
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
 }

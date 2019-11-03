@@ -12,6 +12,7 @@ $form->prepare();
 $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'SolicitacaoFinalizar');
 echo $this->form()->openTag($form);
 ?>
+<input type="hidden" id="idGrupo" value="<?php echo $this->grupo->getId(); ?>"/>
 <div align="center">
 <div class="panel mw600">
 <div class="panel-heading text-center"><?php echo $this->titulo; ?></div>
@@ -96,12 +97,10 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 ?>
 	</div>
 
-<?php if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){ ?>
 	<!--divSelecionarLider-->
 	<div id="divSelecionarLider" class="hidden">
 	<select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
-	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-	<?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarLider" class="hidden mt10">
 	<?php
@@ -112,13 +111,7 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 	<!--divSelecionarEquipe-->
 	<div id="divSelecionarEquipe" class="hidden">
 	<select id="idEquipe" class="form-control" onChange="mostrarBotaoSelecionarEquipe();">
-		<option value="0">SELECIONE</option>
-	<?php
-		foreach ($this->grupoPaiFilhoEquipes as $grupoPaiFilhoEquipe) {
-			$grupo = $grupoPaiFilhoEquipe->getGrupoPaiFilhoFilho();
-			echo '<option value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . '</option>';
-		}
-	?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarEquipe" class="hidden mt10">
 	<?php
@@ -128,108 +121,58 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 	</div>
 	<!--divSelecionarHomem-->
 	<div id="divSelecionarHomem" class="hidden">
-<?php
-if (count($this->grupoPaiFilhoHomens) === 0) {
-	echo 'Sem homens para casar';
-} else {
-?>
 	<select id="idHomem" class="form-control" onChange="mostrarBotaoSelecionarHomem();">
-		<option value="0">SELECIONE</option>
-<?php
-	foreach ($this->grupoPaiFilhoHomens as $grupoPaiFilhoHomem) {
-		$grupo = $grupoPaiFilhoHomem['grupo']->getGrupoPaiFilhoFilho();
-		echo '<option id="homem'.$grupo->getId().'" class="'.$grupoPaiFilhoHomem['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo().'</option>';
-}
-?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarHomem" class="hidden mt10">
 	<?php
 		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarHomem()'));
 	?>
 	</div>	
-	<?php } ?>
 	</div>
 	<!--divSelecionarMulher-->
 	<div id="divSelecionarMulher" class="hidden">
-<?php
-if (count($this->grupoPaiFilhoMulheres) === 0) {
-	echo 'Sem mulheres para casar';
-} else {
-?>
 	<h2>Somente aparecerá para unir mulheres discípulas do mesmo líder</h2>
 	<select id="idMulher" class="form-control" onChange="mostrarBotaoSelecionarMulher();">
-		<option value="0">SELECIONE</option>
-<?php
-	foreach ($this->grupoPaiFilhoMulheres as $grupoPaiFilhoMulher) {
-		$grupo = $grupoPaiFilhoMulher['grupo']->getGrupoPaiFilhoFilho();
-		echo '<option class="mulheres '.$grupoPaiFilhoMulher['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade() . ' - ' . $grupo->getGrupoResponsavelAtivo()->getPessoa()->getNomePrimeiroUltimo().'</option>';
-}
-?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarMulher" class="hidden mt10">
 	<?php
 		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarMulher()'));
 	?>
 	</div>
-	<?php } ?>
 	</div>
 
 	<!--divSelecionarCasal-->
 	<div id="divSelecionarCasal" class="hidden">
-<?php
-if (count($this->grupoPaiFilhoCasais) === 0) {
-	echo 'Sem casais para a solicitação';
-} else {
-?>
 	<h3>Selecione o casal</h3>
 	<select id="idCasal" class="form-control" onChange="mostrarBotaoSelecionarCasal();">
-		<option value="0">SELECIONE</option>
-<?php
-	foreach ($this->grupoPaiFilhoCasais as $grupoPaiFilhoCasal) {
-		$grupo = $grupoPaiFilhoCasal['grupo']->getGrupoPaiFilhoFilho();
-		echo '<option class="casais '.$grupoPaiFilhoCasal['hierarquia'].'" value="' . $grupo->getId() . '" >' . $grupo->getEntidadeAtiva()->infoEntidade(). ' - ' . $grupo->getNomeLideresAtivos().'</option>';
-}
-?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarCasal" class="hidden mt10">
 	<?php
 		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarCasal()'));
 	?>
 	</div>
-	<?php } ?>
+
 	</div>
 
 	<!--divSelecionarAluno-->
 	<div id="divSelecionarAluno" class="hidden">
-<?php
-if (count($this->alunos) === 0) {
-	echo 'Sem alunos para transferir';
-} else {
-?>
 	<select id="idAluno" class="form-control" onChange="mostrarBotaoSelecionarAluno();">
-		<option value="0">SELECIONE</option>
-<?php
-	foreach ($this->alunos as $aluno) {
-		$grupoPessoaAtivo = $aluno->getPessoa()->getGrupoPessoaAtivo();
-		$pessoa = $aluno->getPessoa();
-		$nomeEquipe = CursoController::nomeEquipeTurmaPessoa($aluno, $grupoPessoaAtivo);
-		echo '<option  value="' . $aluno->getId() . '" >' . $aluno->getId() . ' - ' . $nomeEquipe . ' - '.  $pessoa->getNome() . '</option>';
-}
-?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarAluno" class="hidden mt10">
 	<?php
 		echo $this->botaoSimples(Constantes::$TRADUCAO_SELECIONAR, $this->funcaoOnClick('selecionarAluno()'));
 	?>
 	</div>
-	<?php } ?>
 	</div>
 
 	<!--divSelecionarLideresIgreja-->
 	<div id="divSelecionarLiderIgreja" class="hidden">
 	<select id="idLiderIgreja" class="form-control" onChange="mostrarBotaoSelecionarLiderIgreja();">
-	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-	<?php echo $this->listagemLideresTransferencia($this->discipulosIgreja); ?>
+	<option value="0">Aguarde Processando ...</option>
 	</select>
 	<div id="divBotaoSelecionarLiderIgreja" class="hidden mt10">
 	<?php
@@ -313,8 +256,6 @@ echo '</div>';
 	</button>
 	</div>
 
-<?php } ?>
-
 <div id="divSelecionarPessoa" class="hidden">
 	<span id="spanStatus" class="quebraDeLinhaDeSpan mt50 alert alert-danger text-center hidden"></span>	
     <input type="number" name="cpf" class="form-control" id="cpf" placeholder="Digite o CPF" pattern="\d*">	
@@ -346,7 +287,6 @@ echo '</div>';
 	?>
 </div>
 
-<?php if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){ ?>
 	<div id="divSelecionarIgreja" class="hidden">
 <?php
 if (count($this->igrejas) === 0) {
@@ -399,8 +339,6 @@ if (count($this->igrejas) === 0) {
 	</div>
 	<?php } ?>
 	</div>
-
-<?php } ?>
 
 
 	<!--divBotaoContinuar-->

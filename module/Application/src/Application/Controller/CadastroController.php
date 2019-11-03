@@ -2531,8 +2531,6 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
-		$grupoIgreja = $grupo->getGrupoIgreja();
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 
 		$solicitacaoTiposSemAjuste = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$solicitacaoTiposAjustado = array();
@@ -2547,6 +2545,7 @@ class CadastroController extends CircuitoController {
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
+			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 			$igrejas = array();
 			$paraOndeTransferir = array();
 			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
@@ -2584,6 +2583,7 @@ class CadastroController extends CircuitoController {
 						}
 					}
 			}
+
 		}
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
@@ -2607,141 +2607,17 @@ class CadastroController extends CircuitoController {
 				}	
 			}
 
-			$grupoPaiFilhoEquipes = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
-			$discipulosIgreja = $grupoPaiFilhoEquipes;
-			$chaveParaRemover = null;
-			foreach ($grupoPaiFilhoEquipes as $key => $grupoPaiFilhoFilho) {
-				if ($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() == $grupo->getId()) {
-					$chaveParaRemover = $key;
-				}
-			}
-			unset($grupoPaiFilhoEquipes[$chaveParaRemover]);
-
-			$arrayHomens = array();
-			$arrayMulheres = array();
-			$arrayCasais = array();
-			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
-				if ($grupo12->verificarSeEstaAtivo()) {
-					if (!$grupo12->verificaSeECasal()) {
-						if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-							$dados = array();
-							$dados['grupo'] = $grupoPaiFilhoFilho12;
-							$dados['hierarquia'] = $grupo->getId();
-							$arrayHomens[] = $dados;
-						}
-						if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-							$dados = array();
-							$dados['grupo'] = $grupoPaiFilhoFilho12;
-							$dados['hierarquia'] = $grupo->getId();
-							$arrayMulheres[] = $dados;
-						}
-					} else {
-						$dados = array();
-						$dados['grupo'] = $grupoPaiFilhoFilho12;
-						$dados['hierarquia'] = $grupo->getId();
-						$arrayCasais[] = $dados;
-					}
-				}
-				if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
-					foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
-						$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
-						if ($grupo144->verificarSeEstaAtivo()) {
-							if (!$grupo144->verificaSeECasal()) {
-								if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-									$dados = array();
-									$dados['grupo'] = $grupoPaiFilhoFilho144;
-									$dados['hierarquia'] = $grupo12->getId();
-									$arrayHomens[] = $dados;
-								}
-								if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-									$dados = array();
-									$dados['grupo'] = $grupoPaiFilhoFilho144;
-									$dados['hierarquia'] = $grupo12->getId();
-									$arrayMulheres[] = $dados;
-								}
-							} else {
-								$dados = array();
-								$dados['grupo'] = $grupoPaiFilhoFilho144;
-								$dados['hierarquia'] = $grupo->getId();
-								$arrayCasais[] = $dados;
-							}
-						}
-						if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
-							foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
-								$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
-								if ($grupo1728->verificarSeEstaAtivo()) {
-									if (!$grupo1728->verificaSeECasal()) {																																					
-										if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-											$dados = array();
-											$dados['grupo'] = $grupoPaiFilhoFilho1728;
-											$dados['hierarquia'] = $grupo144->getId();
-											$arrayHomens[] = $dados;
-										}
-										if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-											$dados = array();
-											$dados['grupo'] = $grupoPaiFilhoFilho1728;
-											$dados['hierarquia'] = $grupo144->getId();
-											$arrayMulheres[] = $dados;
-										}
-									} else {
-										$dados = array();
-										$dados['grupo'] = $grupoPaiFilhoFilho1728;
-										$dados['hierarquia'] = $grupo->getId();
-										$arrayCasais[] = $dados;
-									}
-								}
-
-								if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
-									foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-										$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
-										if ($grupo20736->verificarSeEstaAtivo()) {
-											if (!$grupo20736->verificaSeECasal()) {	
-																						
-												if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-													$dados = array();
-													$dados['grupo'] = $grupoPaiFilhoFilho20736;
-													$dados['hierarquia'] = $grupo1728->getId();
-													$arrayHomens[] = $dados;
-												}
-												if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-													$dados = array();
-													$dados['grupo'] = $grupoPaiFilhoFilho20736;
-													$dados['hierarquia'] = $grupo1728->getId();
-													$arrayMulheres[] = $dados;
-												}
-											} else {
-												$dados = array();
-												$dados['grupo'] = $grupoPaiFilhoFilho20736;
-												$dados['hierarquia'] = $grupo->getId();
-												$arrayCasais[] = $dados;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
-			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-			$relatorioInicial = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
-			$alunos = array();
-			foreach($relatorioInicial as $relatorio){
-				$alunos[] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-			}
 		}
 		$formSolicitacao = new SolicitacaoForm('formSolicitacao');
 
 		$view = new ViewModel(array(
 			'entidade' => $entidade,
 			'grupo' => $grupo,
-			'discipulos' => $grupoPaiFilhoFilhos,
-			'discipulosIgreja' => $discipulosIgreja,
 			'solicitacaoTipos' => $solicitacaoTiposAjustado,
 			Constantes::$FORM => $formSolicitacao,
 			'titulo' => 'Solicitação',
+			'discipulos' => $grupoPaiFilhoFilhos,
+			'discipulosIgreja' => $discipulosIgreja,
 			'grupoPaiFilhoEquipes' => $grupoPaiFilhoEquipes,
 			'grupoPaiFilhoHomens' => $arrayHomens,
 			'grupoPaiFilhoMulheres' => $arrayMulheres,

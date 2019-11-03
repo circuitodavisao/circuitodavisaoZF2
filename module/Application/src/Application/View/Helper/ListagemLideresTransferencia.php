@@ -38,7 +38,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 		$entidade = $this->view->grupo->getEntidadeAtiva();
 		$nomeLideres = $this->view->grupo->getNomeLideresAtivos();
 		$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
-		$html .= '<option class="grupoLogado" value="' . $this->view->grupo->getId() . '">' . $informacao . '</option>';
+		$html .= '<option disabled="disabled" class="grupoLogado" value="' . $this->view->grupo->getId() . '">' . $informacao . '</option>';
 		foreach ($this->getDiscipulos() as $gpFilho) {
 			$grupo = $gpFilho->getGrupoPaiFilhoFilho();
 			$entidade = $grupo->getEntidadeAtiva();
