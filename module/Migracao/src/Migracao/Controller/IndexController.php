@@ -4197,6 +4197,8 @@ class IndexController extends CircuitoController {
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
 
+		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
+
 		/* rodar toda segunda */
 		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
 		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
@@ -4207,17 +4209,30 @@ class IndexController extends CircuitoController {
 		$html .= "<br />###### iniciarTransacao ";
 		try {
 			if ($grupos) {
-				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
-				// verificando os meses do periodo
-				$periodo = Funcoes::montaPeriodo(0);
-				$mesAtual = $periodo[5];
-				$anoAtual = $periodo[6];
-				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
-				$contadorDePeriodo[1] = 0 - $arrayPeriodoDoMesAtual[0] + 1;
-				$contadorDePeriodo[0] = 0;
-				$html .= '<br />contador mes atual: ' . $contadorDePeriodo[1];
+				$totalDeGrupos = count($grupos);
+				$gruposParaMontar = array();
+				$contadorDeGrupos = 1;
+				$fracaoParaMontar = $totalDeGrupos/10;
+				if($qualParte > 1){
+					$inicio = $fracaoParaMontar * ($qualParte - 1);
+					$fim = $fracaoParaMontar * $qualParte;
+				}
+				foreach($grupos as $grupo){
+					if($qualParte == 1 && $contadorDeGrupos <= $fracaoParaMontar){
+						$gruposParaMontar[] = $grupo;
+					}
+					if($qualParte > 1 && $contadorDeGrupos > $inicio && $contadorDeGrupos <= $fim){
+						$gruposParaMontar[] = $grupo;
+					}
+					$contadorDeGrupos++;
+				}
 
-				foreach ($grupos as $grupo) {
+				// verificando os meses do periodo
+				$mesAtual = date('m');
+				$anoAtual = date('Y');
+				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
+
+				foreach ($gruposParaMontar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
 						$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
@@ -4233,20 +4248,19 @@ class IndexController extends CircuitoController {
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
 							}
 
-							$periodo = 0;
-							$apenasCelulas = true;
+							$contadorDePeriodo[1] = 1;
+							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 
-							$grupoEventosCelula = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
-							$quantidadeCelulas = count($grupoEventosCelula);
+								$relatorioCelula = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1);
+								$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
 
-							$grupoEventosCelulaEstrategica = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
-							$quantidadeCelulasEstrategicas = count($grupoEventosCelulaEstrategica);
-							$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
-							$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
+								$relatorioCelulaEstrategicas = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1, $estrategica = true);
+								$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];		
 
-							$indiceComeco = 1;
+								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
+								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
 
-							for($indiceFatoMensal = $indiceComeco; $indiceFatoMensal <= 1; $indiceFatoMensal++){
+								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
@@ -4284,16 +4298,13 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
 								}
 
-								if($indiceFatoMensal === 0){
-									$fatosMensal[$indiceFatoMensal]->setMes($mesAnterior);
-									$fatosMensal[$indiceFatoMensal]->setAno($anoAnterior);
-								}else{
-									$fatosMensal[$indiceFatoMensal]->setMes($mesAtual);
-									$fatosMensal[$indiceFatoMensal]->setAno($anoAtual);
-								}
-
-								$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
+								$contadorDePeriodo[1]++;
 							}
+
+							$fatosMensal[$indiceFatoMensal]->setMes($mesAtual);
+							$fatosMensal[$indiceFatoMensal]->setAno($anoAtual);
+
+							$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
 						}
 					}
 				}
