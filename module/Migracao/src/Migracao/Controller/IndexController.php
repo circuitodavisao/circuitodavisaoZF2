@@ -4236,7 +4236,7 @@ class IndexController extends CircuitoController {
 				$totalDeGrupos = count($gruposParaValidar);
 				$gruposParaMontar = array();
 				$contadorDeGrupos = 1;
-				$totalDivisoes = 10;
+				$totalDivisoes = 20;
 				$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
 				if($qualParte > 1){
 					$inicio = $fracaoParaMontar * ($qualParte - 1);
