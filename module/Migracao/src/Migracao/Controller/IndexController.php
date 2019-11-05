@@ -4264,7 +4264,11 @@ class IndexController extends CircuitoController {
 						if ($grupo->getEntidadeAtiva()) {
 							$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
 						}
-						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$dataInativacao = null;
+						if(!$grupo->verificarSeEstaAtivo()){
+							$dataInativacao = $grupo->getData_inativacaoStringPadraoBanco();
+						}
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo, $dataInativacao);
 						$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
 						if ($numeroIdentificador) {
 							$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);

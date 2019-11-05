@@ -271,6 +271,7 @@ class FatoCicloORM extends CircuitoORM {
 					if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
 						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 					} else {
+						break;
 						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
 					}
 				} else {
