@@ -4199,17 +4199,41 @@ class IndexController extends CircuitoController {
 
 		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
 
-		/* rodar toda segunda */
-		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
+		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
 
-		$somenteAtivos = true;
-		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos($somenteAtivos);
+		$mesAtual = date('m');
+		$anoAtual = date('Y');
+		$gruposParaValidar = array();
+		$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
+		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
+
+			$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
+			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+			$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
+			/* Verificar responsabilidades ativas */
+			foreach ($grupos as $grupo) {
+				if ($grupo->verificarSeEstaAtivo()) {
+					$dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
+					$dataDoGrupoCriacaoParaComparar = strtotime($grupo->getData_criacaoStringPadraoBanco());
+					if ($dataDoGrupoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+						$gruposParaValidar[] = $grupo;
+					}
+				} else {
+					/* Inativo */
+					$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+					$dataDoGrupoInativadoParaComparar = strtotime($grupo->getData_inativacaoStringPadraoBanco());
+					if ($dataDoGrupoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
+						$gruposParaValidar[] = $grupo;
+					}
+				}
+			}
+		}
+
 		$this->getRepositorio()->iniciarTransacao();
 		$html .= "<br />###### iniciarTransacao ";
 		try {
-			if ($grupos) {
-				$totalDeGrupos = count($grupos);
+			if ($gruposParaValidar) {
+				$totalDeGrupos = count($gruposParaValidar);
 				$gruposParaMontar = array();
 				$contadorDeGrupos = 1;
 				$totalDivisoes = 10;
@@ -4218,7 +4242,7 @@ class IndexController extends CircuitoController {
 					$inicio = $fracaoParaMontar * ($qualParte - 1);
 					$fim = $fracaoParaMontar * $qualParte;
 				}
-				foreach($grupos as $grupo){
+				foreach($gruposParaValidar as $grupo){
 					if($qualParte == 1 && $contadorDeGrupos <= $fracaoParaMontar){
 						$gruposParaMontar[] = $grupo;
 					}
@@ -4230,12 +4254,9 @@ class IndexController extends CircuitoController {
 					}
 					$contadorDeGrupos++;
 				}
-
-				// verificando os meses do periodo
 				$mesAtual = date('m');
 				$anoAtual = date('Y');
 				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
-
 				foreach ($gruposParaMontar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
@@ -4251,19 +4272,14 @@ class IndexController extends CircuitoController {
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
 							}
-
 							$contadorDePeriodo[1] = 1;
 							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
-
 								$relatorioCelula = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1);
 								$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
-
 								$relatorioCelulaEstrategicas = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1, $estrategica = true);
-								$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];		
-
+								$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];
 								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
-
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
@@ -4301,13 +4317,10 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
 								}
-
 								$contadorDePeriodo[1]++;
 							}
-
 							$fatosMensal[$indiceFatoMensal]->setMes($mesAtual);
 							$fatosMensal[$indiceFatoMensal]->setAno($anoAtual);
-
 							$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
 						}
 					}
@@ -4320,6 +4333,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->desfazerTransacao();
 			echo $exc->getTraceAsString();
 		}
+
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_end = (float) $sec + (float) $usec;
