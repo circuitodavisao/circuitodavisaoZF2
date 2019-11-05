@@ -4212,7 +4212,8 @@ class IndexController extends CircuitoController {
 				$totalDeGrupos = count($grupos);
 				$gruposParaMontar = array();
 				$contadorDeGrupos = 1;
-				$fracaoParaMontar = $totalDeGrupos/10;
+				$totalDivisoes = 10
+				$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
 				if($qualParte > 1){
 					$inicio = $fracaoParaMontar * ($qualParte - 1);
 					$fim = $fracaoParaMontar * $qualParte;
@@ -4221,7 +4222,10 @@ class IndexController extends CircuitoController {
 					if($qualParte == 1 && $contadorDeGrupos <= $fracaoParaMontar){
 						$gruposParaMontar[] = $grupo;
 					}
-					if($qualParte > 1 && $contadorDeGrupos > $inicio && $contadorDeGrupos <= $fim){
+					if($qualParte !== $totalDivisoes && $qualParte > 1 && $contadorDeGrupos > $inicio && $contadorDeGrupos <= $fim){
+						$gruposParaMontar[] = $grupo;
+					}
+					if($qualParte == $totalDivisoes && $contadorDeGrupos > $inicio){
 						$gruposParaMontar[] = $grupo;
 					}
 					$contadorDeGrupos++;
