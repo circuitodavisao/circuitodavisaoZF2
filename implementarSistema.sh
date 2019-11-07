@@ -26,8 +26,6 @@ sudo apt-get update
 sudo apt-get install docker-ce
 
 # instalando sistema
-sudo docker rm cv
-sudo docker rm bdpg
 sudo docker run --name bdpg -e POSTGRES_PASSWORD=qwaszx159753 -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres -d -v /home/circuitodavisaoZF2/my-postgres.conf:/etc/postgresql/postgresql.conf postgres -c 'config_file=/etc/postgresql/postgresql.conf'
 
 sudo cd /home/circuitodavisaoZF2
