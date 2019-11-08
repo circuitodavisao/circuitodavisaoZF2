@@ -1668,7 +1668,7 @@ class CadastroController extends CircuitoController {
 		$token = $pessoa->gerarToken();
 		$conteudo = '<pre>Você foi cadastrado no Circuito da Visão pelo seu líder</pre>
 			<pre>Clique no link abaixo ou cole o link no seu navegador</pre>
-			<pre><a href="www.circuitodavisaonovo.com.br/novaSenha/'+$token+'">www.circuitodavisaonovo.com.br/novaSenha/'+$token+'</a>';
+			<pre><a href="www.circuitodavisaonovo.com.br/novaSenha/'.$token.'">www.circuitodavisaonovo.com.br/novaSenha/'.$token.'</a>';
 		Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
 	}
 
