@@ -13,6 +13,7 @@ namespace Application;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\RelatorioController;
 use Application\Model\ORM\RepositorioORM;
+use Application\Model\Entity\EntidadeTipo;
 use Application\View\Helper\AbaSelecionada;
 use Application\View\Helper\Sitemap;
 use Application\View\Helper\FiltroCursos;
@@ -399,7 +400,14 @@ class Module {
 		$stringUrl = 'circuitodavisaonovo.com.br';
 		if (empty($sessao->idEntidadeAtual) ||
 			empty($sessao->idPessoa) ||
-			$pessoa->getAtualizar_dados() === 'S' ||
+			(
+				$pessoa->getAtualizar_dados() === 'S' && 
+				(
+					$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+					$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+				)
+			) 
+			||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/' ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/logar' ||
