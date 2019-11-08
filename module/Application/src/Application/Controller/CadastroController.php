@@ -1661,17 +1661,15 @@ class CadastroController extends CircuitoController {
 	public static function enviarEmailParaCompletarOsDados($repositorio, $idPessoaLogada, $tokenDeAgora, $pessoa) {
 		$pessoaLogada = $repositorio->getPessoaORM()->encontrarPorId($idPessoaLogada);
 
-		$Subject = 'Convite';
+		$Subject = 'Cadastro Circuito da Visão';
 		$ToEmail = $pessoa->getEmail();
-		$avatar = 'placeholder.png';
-		if ($pessoaLogada->getFoto()) {
-			$avatar = $pessoaLogada->getFoto();
-		}
 		$nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
 		$nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
-		$url = "https://" . Constantes::$HOST . "/convite.php?nomeLider=$nomeLider&avatar=$avatar&token=$tokenDeAgora&nomePessoaEmail=$nomePessoaEmail";
-		$Content = file_get_contents($url);
-		Funcoes::enviarEmail($ToEmail, $Subject, $Content);
+		$token = $pessoa->gerarToken();
+		$conteudo = '<pre>Você foi cadastrado no Circuito da Visão pelo seu líder</pre>
+			<pre>Clique no link abaixo ou cole o link no seu navegador</pre>
+			<pre><a href="www.circuitodavisaonovo.com.br/novaSenha/'+$token+'">www.circuitodavisaonovo.com.br/novaSenha/'+$token+'</a>';
+		Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
 	}
 
 	public function metasAction() {
