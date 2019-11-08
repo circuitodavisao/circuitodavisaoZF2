@@ -252,10 +252,10 @@ foreach($this->relatorio as $relatorio){
 		$class = $relatorio->mediamempclass;
 	}
 	if ($this->tipoRelatorio == 2) {
-		$class = $relatorio->mediacpclass;
+		$class = $relatorio->mediarealizadapclass;
 	}
 	if ($this->tipoRelatorio == 3) {
-		$class = $relatorio->mediarealizadapclass;
+		$class = $relatorio->mediacpclass;
 	}
 
 	echo '<tr class="'.$class.'">';
