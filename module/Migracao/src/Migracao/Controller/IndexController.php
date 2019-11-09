@@ -63,11 +63,8 @@ class IndexController extends CircuitoController {
 	private $entidadeTipoEquipe;
 	private $entidadeTipoSub;
 	private $entidadeTipoCoordenacao;
-
-
 	
-	const DATA_CRIACAO = '2019-08-26';
-
+	const DATA_CRIACAO = '2019-11-11';
 
 	/**
 	 * Contrutor sobrecarregado com os serviços de ORM e Autenticador
@@ -107,8 +104,6 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
-			//(78, 83, 84, 131, 132, 133, 175, 214)
-			//(41, 43, 37) 
 			//$queryCoordenacao = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_sub_regiao_ursula WHERE id in (37)');
 			//while ($rowC = mysqli_fetch_array($queryCoordenacao)) {
 			//	$html .= '<br />Coordenacao: ' . $rowC['numero'];
@@ -116,7 +111,8 @@ class IndexController extends CircuitoController {
 				$numeroIdentificadorCoordenacao = "$codigoRegiao$codigoCoordenacao";
 				$informacaoEntidade = $rowC['numero'];
 
-				$idGrupoPai = 7694; // Tocantins
+				// id novo
+				$idGrupoPai = 7694; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
@@ -271,16 +267,12 @@ class IndexController extends CircuitoController {
 			$this->abreConexao();
 			$this->getRepositorio()->iniciarTransacao();
 
-//coordenacões centro norte (78, 83, 84, 130, 131, 132, 133, 175, 214)
-//coordenacões santa catarina (41, 43)
-//coordenacao florianópolis (37)
 			$idCoordenacao = 37;
 			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 684');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
-				//$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
-				//$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
-				$this->alunos($row['id'], 8372, $html);
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
+				$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
 				//$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
@@ -2116,7 +2108,7 @@ class IndexController extends CircuitoController {
 	public function abreConexao() {
 		try {
 			if (empty($this->getConexao())) {
-				$this->setConexao(mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306'));
+				$this->setConexao(mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306'));
 			}
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
@@ -2124,11 +2116,11 @@ class IndexController extends CircuitoController {
 	}
 
 	public static function pegaConexaoStatica() {
-		return mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
+		return mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
 	}
 
 	public static function pegaConexaoStaticaDW() {
-		return mysqli_connect('167.114.118.195', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_dw', '3306');
+		return mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_dw', '3306');
 	}
 
 	public static function buscaIdAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
