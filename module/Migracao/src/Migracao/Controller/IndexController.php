@@ -83,7 +83,7 @@ class IndexController extends CircuitoController {
 	public function indexAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '120');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
@@ -112,12 +112,14 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				// id novo
-				$idGrupoPai = 7694; 
+				$idGrupoPai = 17543; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
+				$html .= 'coordenacao: ' . $grupoRegiao->getEntidadeAtiva()->infoEntidade();
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 684');
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 772');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
+
 					$html .= '<br />Igreja: ' . $row['nome'];
 					$idPerfilIgreja = 18;
 					$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
@@ -240,7 +242,7 @@ class IndexController extends CircuitoController {
 					}
 				}
 		//	}
-		//	$this->getRepositorio()->fecharTransacao();
+			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			Funcoes::var_dump($exc->getTraceAsString());
@@ -268,12 +270,12 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			$idCoordenacao = 37;
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 684');
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 772');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
 				$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
-				//$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
@@ -916,7 +918,7 @@ class IndexController extends CircuitoController {
 					$eventoCelulaAtual = $eventoAtual->getEventoCelula();
 					$eventoCelulaNovo = new EventoCelula();
 					$eventoCelulaNovo->setNome_hospedeiro($eventoCelulaAtual->getNome_hospedeiro());
-					$eventoCelulaNovo->setTelefone_hospedeiro($eventoCelulaAtual->getTelefone_hospedeiro());
+					$eventoCelulaNovo->setTelefone_hospedeiro('999999999');
 					$eventoCelulaNovo->setUf($eventoCelulaAtual->getUf());
 					$eventoCelulaNovo->setCidade($eventoCelulaAtual->getCidade());
 					$eventoCelulaNovo->setLogradouro($eventoCelulaAtual->getLogradouro());
@@ -947,7 +949,7 @@ class IndexController extends CircuitoController {
 					$eventoCelulaAtual = $eventoAtual->getEventoCelula();
 					$eventoCelulaNovo = new EventoCelula();
 					$eventoCelulaNovo->setNome_hospedeiro($eventoCelulaAtual->getNome_hospedeiro());
-					$eventoCelulaNovo->setTelefone_hospedeiro($eventoCelulaAtual->getTelefone_hospedeiro());
+					$eventoCelulaNovo->setTelefone_hospedeiro('999999999');
 					$eventoCelulaNovo->setUf($eventoCelulaAtual->getUf());
 					$eventoCelulaNovo->setCidade($eventoCelulaAtual->getCidade());
 					$eventoCelulaNovo->setLogradouro($eventoCelulaAtual->getLogradouro());
@@ -1877,6 +1879,7 @@ class IndexController extends CircuitoController {
 							}
 
 							/* Pessoa */
+							$telefone = '999999999';
 							$pessoaVolatil = new Pessoa();
 							$pessoaVolatil->setNome($rowPessoa['nome']);
 							$pessoaVolatil->setTelefone($telefone);
@@ -2108,7 +2111,12 @@ class IndexController extends CircuitoController {
 	public function abreConexao() {
 		try {
 			if (empty($this->getConexao())) {
-				$this->setConexao(mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306'));
+				$link = mysqli_connect('142.4.217.230', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
+				if(!$link){
+					echo "error: " . mysqli_connect_error();
+				}else{
+					$this->setConexao($link);
+				}
 			}
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
@@ -2116,11 +2124,11 @@ class IndexController extends CircuitoController {
 	}
 
 	public static function pegaConexaoStatica() {
-		return mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
+		return mysqli_connect('142.4.217.230', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_visao', '3306');
 	}
 
 	public static function pegaConexaoStaticaDW() {
-		return mysqli_connect('51.89.96.128', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_dw', '3306');
+		return mysqli_connect('142.4.217.230', 'circuito_visao2', 'Z#03SOye(hRN', 'circuito_dw', '3306');
 	}
 
 	public static function buscaIdAtendimentoPorLideres($mes, $ano, $lider1, $lider2 = null) {
@@ -2539,7 +2547,7 @@ class IndexController extends CircuitoController {
 			$pessoa->setDocumento($rowPessoa['documento']);
 			$pessoa->setEmail($rowPessoa['email']);
 			if($rowPessoa['telefoneCelular']){
-				$pessoa->setTelefone($rowPessoa['telefoneCelular']);
+				$pessoa->setTelefone('999999999');
 			}
 			if($rowPessoa['sexo']){
 				$pessoa->setSexo($rowPessoa['sexo']);
@@ -2720,9 +2728,10 @@ class IndexController extends CircuitoController {
 			if (strlen($telefone) > 11) {
 				$telefone = substr($telefone, 0, 11);
 			}
+			$telefone = '999999999';
 			$eventoCelula->setTelefone_hospedeiro($telefone);
-			$eventoCelula->setLogradouro($rowCelulas['logradouro']);
-			$eventoCelula->setComplemento($rowCelulas['complemento']);
+			$eventoCelula->setLogradouro('Precisa atualizar');
+			$eventoCelula->setComplemento('Precisa atualizar');
 			$eventoCelula->setBairro($rowCelulas['idBairro']);
 			$eventoCelula->setCidade($rowCelulas['idCidade']);
 			$eventoCelula->setUf($rowCelulas['idUF']);
@@ -2773,6 +2782,7 @@ class IndexController extends CircuitoController {
 					if (!is_numeric($telefone)) {
 						$telefone = '99999999999';
 					}
+						$telefone = '99999999999';
 					$idClassificacao = 3; // membro
 					$pessoa = new Pessoa();
 					$pessoa->setNome($rowPessoasVolateis['nome']);
@@ -2826,6 +2836,7 @@ class IndexController extends CircuitoController {
 					if (!is_numeric($telefone)) {
 						$telefone = '99999999999';
 					}
+						$telefone = '99999999999';
 					$pessoa = new Pessoa();
 					$pessoa->setNome($rowAlunos['nome']);
 					$pessoa->setTelefone($telefone);
