@@ -59,7 +59,7 @@ echo $this->layoutLoginTop;
 			<p>Digite o seu CPF para acessar, depois acesse sua tela de perfil e atualize seu email.</p>
 			</div>';
         /* Username Input */
-        echo $this->inputFormularioSimples(Constantes::$TRADUCAO_USUARIO, $formLogin->get(Constantes::$INPUT_USUARIO));
+        echo $this->inputFormularioSimples('CPF', $formLogin->get(Constantes::$INPUT_USUARIO));
         /* Password Input */
         echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SENHA, $formLogin->get(Constantes::$INPUT_SENHA));
         ?>
