@@ -177,7 +177,7 @@ return array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
                 'identity_class' => 'Application\Model\Entity\Pessoa',
-                'identity_property' => 'email',
+                'identity_property' => 'documento',
                 'credential_property' => 'senha',
             ),
         ),

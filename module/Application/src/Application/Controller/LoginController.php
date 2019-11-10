@@ -148,7 +148,7 @@ class LoginController extends CircuitoController {
             $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
             /* Verificar se existe pessoa por email informado */
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
+            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim);
 
             /* Tem responsabilidade(s) */
             $sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -198,30 +198,34 @@ class LoginController extends CircuitoController {
         }
     }
 
-    public function suporteAction() {
-        $data = $this->getRequest()->getPost();
-        $usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
-        if ($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim)) {
-            /* Tem responsabilidade(s) */
-            if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
-                /* Registro de sessão */
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $sessao->idPessoa = $pessoa->getId();
+	public function suporteAction() {
+		$data = $this->getRequest()->getPost();
+		$usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
+		try{
+			if ($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim)) {
+				/* Tem responsabilidade(s) */
+				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+					/* Registro de sessão */
+					$sessao = new Container(Constantes::$NOME_APLICACAO);
+					$sessao->idPessoa = $pessoa->getId();
 
-                $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-                $adapter->setIdentityValue($usuarioTrim);
-                $adapter->setCredentialValue($pessoa->getSenha());
-                $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
-                $identity = $authenticationResult->getIdentity();
-                $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
+					$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+					$adapter->setIdentityValue($usuarioTrim);
+					$adapter->setCredentialValue($pessoa->getSenha());
+					$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+					$identity = $authenticationResult->getIdentity();
+					$this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
-                /* Redirecionamento SELECIONAR PERFIL */
-                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                            Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
-                ));
-            }
-        }
-    }
+					/* Redirecionamento SELECIONAR PERFIL */
+					return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+						Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
+					));
+				}
+			}
+		}catch(Execption $e){
+			echo 'error: ' . $e->getMessage();
+		}
+	}
 
     /**
      * Função que tenta logar

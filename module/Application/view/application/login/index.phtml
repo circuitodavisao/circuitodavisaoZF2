@@ -54,6 +54,10 @@ echo $this->layoutLoginTop;
         }
         /* Div Mensagens */
         echo $this->divMensagens($this->mensagem, $tipoDaMensagem, $mostraMensagem);
+		echo '<div class="alert alert-danger">
+			<p>Em virtude da Migração do CV antigo para o CV novo estamos atualizando alguns dados. </p>
+			<p>Digite o seu CPF para acessar, depois acesse sua tela de perfil e atualize seu email.</p>
+			</div>';
         /* Username Input */
         echo $this->inputFormularioSimples(Constantes::$TRADUCAO_USUARIO, $formLogin->get(Constantes::$INPUT_USUARIO));
         /* Password Input */
