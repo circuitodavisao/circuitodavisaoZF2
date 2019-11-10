@@ -69,7 +69,7 @@ class Perfil extends AbstractHelper {
             $stringDoAvisoChato .= ' e clique em Salvar';
         }
         
-        if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao() || $pessoa-getEmail() == 'atualize'){
+        if($stringDoAvisoChato != ''){
             $html .= '<div id="divSexoDataDeNascimento" class="alert alert-danger p15" role="alert">';
             $html .= $stringDoAvisoChato;
             $html .= '</div>';
