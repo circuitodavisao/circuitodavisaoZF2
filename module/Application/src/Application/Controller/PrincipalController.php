@@ -61,7 +61,7 @@ class PrincipalController extends CircuitoController {
 				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
 			}
 		}
-		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao()){			
+		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao() || $pessoa->getEmail() == 'atualize' ){			
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfil'));			
 		}
 		/* fim formulario */
@@ -370,9 +370,8 @@ class PrincipalController extends CircuitoController {
 				$this->getRepositorio()->fecharTransacao();
 
 				$sessao->idSessao = $pessoa->getResponsabilidadesAtivas()[0]->getGrupo()->getId();
-				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-					Constantes::$ACTION => 'ver',
-				));
+
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL);
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
 				echo $exc->getMessage();

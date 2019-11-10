@@ -58,6 +58,13 @@ class Perfil extends AbstractHelper {
             }
             $stringDoAvisoChato .= ' Preencha sua Profissão';
         }
+        if($pessoa->getEmail() == 'atualize'){
+            if($stringDoAvisoChato != ''){
+                $stringDoAvisoChato .= ', ';
+            }
+            $stringDoAvisoChato .= ' Atualize seu email';
+        }
+ 
         if($stringDoAvisoChato != ''){
             $stringDoAvisoChato .= ' e clique em Salvar';
         }

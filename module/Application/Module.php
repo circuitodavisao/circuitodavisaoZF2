@@ -422,6 +422,11 @@ class Module {
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/principalEmail' ||
+			!$pessoa->getData_nascimento() || 
+			!$pessoa->getSexo() || 
+			!$pessoa->getProfissao() || 
+			$pessoa->getEmail() == 'atualize' ||
 			$sessao->naoMostrarMenu === 1
 		) {
 			$viewModel->mostrarMenu = 0;
