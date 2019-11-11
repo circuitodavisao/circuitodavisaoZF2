@@ -3130,7 +3130,7 @@ class IndexController extends CircuitoController {
 			$contador = 1;
 			foreach($grupoCVs as $grupoCv){
 				if($grupoCv->getId() > 6190){
-					if($contador === 10){
+					if($contador === 2){
 						break;
 					}
 					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
