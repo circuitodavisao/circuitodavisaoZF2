@@ -3129,17 +3129,21 @@ class IndexController extends CircuitoController {
 			$grupoCVs = $this->getRepositorio()->getGrupoCvORM()->buscarTodosRegistrosEntidade();
 			$contador = 1;
 			foreach($grupoCVs as $grupoCv){
-				if($grupoCv->getId() > 6190){
-					if($contador === 10){
-						break;
-					}
+				if($grupoCv->getLider2() && $grupoCv->getId() > 6190){
 					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
-						$contadorDeLideres = 1;
-						foreach($grupoResponsaveis as $grupoResponsavel){
-							$pessoa = $grupoResponsavel->getPessoa();
-							if($pessoa->getEmail() == 'atualize'){
-								$html .= '<br />'.$pessoa->getNome();
-							}
+							$contadorDeLideres = 1;
+							foreach($grupoResponsaveis as $grupoResponsavel){
+								$pessoa = $grupoResponsavel->getPessoa();
+								if($contadorDeLideres === 2){
+									$idPessoa = $grupoCv->getLider2();
+									$idInt = (int) $idPessoa;
+									$queryPessoa = mysqli_query($this->getConexao(), 'SELECT email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
+									while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
+										$pessoa->setEmail($rowPessoa['email']);
+									}
+									$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+								}
+								$contadorDeLideres++;
 						}
 					}
 				}
