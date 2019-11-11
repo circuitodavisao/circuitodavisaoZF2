@@ -154,7 +154,7 @@ class LoginController extends CircuitoController {
 		if($pessoa){
 			$senhaTrim = trim($data[Constantes::$INPUT_SENHA]);
 			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-			$adapter->setIdentityValue($pessoa->getDocumento());
+			$adapter->setIdentityValue($pessoa->getEmail());
 			$adapter->setCredentialValue(md5($senhaTrim));
 			$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
 			if ($authenticationResult->isValid()) {
@@ -237,7 +237,7 @@ class LoginController extends CircuitoController {
 					$sessao->idPessoa = $pessoa->getId();
 
 					$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-					$adapter->setIdentityValue((int)$pessoa->getDocumento());
+					$adapter->setIdentityValue((int)$pessoa->getEmail());
 					$adapter->setCredentialValue($pessoa->getSenha());
 					$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
 					echo '<br />pessoa: '.$pessoa->getId();
