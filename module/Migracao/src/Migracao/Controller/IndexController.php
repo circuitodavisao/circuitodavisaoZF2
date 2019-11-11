@@ -3123,39 +3123,22 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-
-		$turmaPessoas = $this->getRepositorio()->getTurmaPessoaORM()->buscarTodosRegistrosEntidade();
-		$this->getRepositorio()->iniciarTransacao();
-		$html .= "<br />###### iniciarTransacao ";
+		$html .= '<h1>Ajustando email dos migrados</h1>';
 		try {
-			if ($turmaPessoas) {
-				foreach($turmaPessoas as $turmaPessoa){
-					if($grupo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()){
-						if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-							foreach($fatosCurso as $fatoCurso){
-								if($fatoCurso->verificarSeEstaAtivo()){
-									$fatoCurso->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
-								}
+			$grupoCVs = $this->getRepositorio()->getGrupoCvORM()->buscarTodosRegistrosEntidade();
+			foreach($grupoCVs as $grupoCv){
+				if($grupoCv->getId() > 6190){
+					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
+						foreach($grupoResponsaveis as $grupoResponsavel){
+							$pessoa = $grupoResponsavel->getPessoa();
+							if($pessoa->getEmail() == 'atualize'){
+								$html .= '<br />'.$pessoa->getNome();
 							}
 						}
-
-						$numeroIdentificador =
-							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						$fatoCurso = new FatoCurso();
-						$fatoCurso->setNumero_identificador($numeroIdentificador);
-						$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-						$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-						$fatoCurso->setSituacao_id($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId());
-						if(!$turmaPessoa->verificarSeEstaAtivo()){
-							$fatoCurso->setDataEHoraDeInativacao();
-						}
-						$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
 					}
 				}
-				$this->getRepositorio()->fecharTransacao();
-				$html .= "<br />###### fecharTransacao ";
 			}
+		
 		} catch (Exception $exc) {
 			$html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
 			$this->getRepositorio()->desfazerTransacao();
