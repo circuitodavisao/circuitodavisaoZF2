@@ -3132,14 +3132,15 @@ class IndexController extends CircuitoController {
 					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
 							$contadorDeLideres = 1;
 							foreach($grupoResponsaveis as $grupoResponsavel){
+								$pessoa = $grupoResponsavel->getPessoa();
+
 								if($contadorDeLideres === 1){
-									$idPessoa = $grupoCv->getLider1();
-								}
-								if($contadorDeLideres === 2){
 									$idPessoa = $grupoCv->getLider2();
 								}
+								if($contadorDeLideres === 2){
+									$idPessoa = $grupoCv->getLider1();
+								}
 
-								$pessoa = $grupoResponsavel->getPessoa();
 								$idInt = (int) $idPessoa;
 								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
 								while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
