@@ -3135,16 +3135,31 @@ class IndexController extends CircuitoController {
 								$pessoa = $grupoResponsavel->getPessoa();
 
 								if($contadorDeLideres === 1){
-									$idPessoa = $grupoCv->getLider2();
+									$idPessoa = $grupoCv->getLider1();
 								}
 								if($contadorDeLideres === 2){
-									$idPessoa = $grupoCv->getLider1();
+									$idPessoa = $grupoCv->getLider2();
 								}
 
 								$idInt = (int) $idPessoa;
-								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
+								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT sexo, email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
 								while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-									$pessoa->setEmail($rowPessoa['email']);
+									$sexo = $rowPessoa['sexo'];
+									if($sexo == $pessoa->getSexo()){
+										$pessoa->setEmail($rowPessoa['email']);
+									}else{
+										if($contadorDeLideres === 1){
+											$idPessoa = $grupoCv->getLider2();
+										}
+										if($contadorDeLideres === 2){
+											$idPessoa = $grupoCv->getLider1();
+										}
+
+										$queryPessoa = mysqli_query($this->getConexao(), 'SELECT sexo, email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
+										while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
+											$pessoa->setEmail($rowPessoa['email']);
+										}
+									}
 								}
 								$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
 								$contadorDeLideres++;
