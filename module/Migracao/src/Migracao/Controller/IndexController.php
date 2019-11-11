@@ -3127,8 +3127,12 @@ class IndexController extends CircuitoController {
 		try {
 			$this->abreConexao();
 			$grupoCVs = $this->getRepositorio()->getGrupoCvORM()->buscarTodosRegistrosEntidade();
+			$contador = 1;
 			foreach($grupoCVs as $grupoCv){
 				if($grupoCv->getId() > 6190){
+					if($contador === 10){
+						break;
+					}
 					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
 						$contadorDeLideres = 1;
 						foreach($grupoResponsaveis as $grupoResponsavel){
@@ -3152,6 +3156,7 @@ class IndexController extends CircuitoController {
 							}
 						}
 					}
+					$contador++;
 				}
 			}
 		
