@@ -240,6 +240,11 @@ class LoginController extends CircuitoController {
 					$adapter->setIdentityValue((int)$pessoa->getDocumento());
 					$adapter->setCredentialValue($pessoa->getSenha());
 					$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+					echo '<br />pessoa: '.$pessoa->getId();
+					echo '<br />nome: '.$pessoa->getNome();
+					echo '<br />documento: '.$pessoa->getDocumento();
+					echo '<br />senha: '.$pessoa->getSenhocumentoa();
+ echo 'autenticacao: '.$authenticationResult->isValid();
 					$identity = $authenticationResult->getIdentity();
 					$this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
