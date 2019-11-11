@@ -136,66 +136,80 @@ class LoginController extends CircuitoController {
             return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
         }
 
+		$pessoa = null;
         $usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
-        $senhaTrim = trim($data[Constantes::$INPUT_SENHA]);
-        $adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-        $adapter->setIdentityValue($usuarioTrim);
-        $adapter->setCredentialValue(md5($senhaTrim));
-        $authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
-        if ($authenticationResult->isValid()) {
-            /* Autenticacao valida */
-            $identity = $authenticationResult->getIdentity();
-            $this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
+		if(is_numeric($usuarioTrim)){
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim);
+		}else{
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
+		}
 
-            /* Verificar se existe pessoa por email informado */
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim);
+		if($pessoa){
+			$senhaTrim = trim($data[Constantes::$INPUT_SENHA]);
+			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+			$adapter->setIdentityValue($pessoa->getDocumento());
+			$adapter->setCredentialValue(md5($senhaTrim));
+			$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+			if ($authenticationResult->isValid()) {
+				/* Autenticacao valida */
+				$identity = $authenticationResult->getIdentity();
+				$this->getDoctrineAuthenticationServicer()->getStorage()->write($identity);
 
-            /* Tem responsabilidade(s) */
-            $sessao = new Container(Constantes::$NOME_APLICACAO);
-            if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
-                /* Registro de sessão */
-                $sessao->idPessoa = $pessoa->getId();
-                /* Não precisa atualizar dados */
-                if ($pessoa->getAtualizar_dados() === 'N') {
-                    /* Redirecionamento SELECIONAR PERFIL */
-                    return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                                Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
-                    ));
-                } else {/* Precisa atualizar dados */
-                    /* Redirecionamento CadastroGrupoAtualizar */
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_GRUPO_ATUALIZACAO,
-                    ));
-                }
-            } else {
-                if ($pessoa->getEvento_id() !== null) {
-                    $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($pessoa->getEvento_id());
-                    $idEntidade = $evento->getGrupoEventoAtivo()->getGrupo()->getEntidadeAtiva()->getId();
-                    $sessao->idPessoa = $pessoa->getId();
-                    $sessao->idEntidadeAtual = $idEntidade;
-                    $sessao->naoMostrarMenu = 1;
-                    return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-                                Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHAS,
-                    ));
-                }
+				/* Verificar se existe pessoa por email informado */
+				/* Tem responsabilidade(s) */
+				$sessao = new Container(Constantes::$NOME_APLICACAO);
+				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+					/* Registro de sessão */
+					$sessao->idPessoa = $pessoa->getId();
+					/* Não precisa atualizar dados */
+					if ($pessoa->getAtualizar_dados() === 'N') {
+						/* Redirecionamento SELECIONAR PERFIL */
+						return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+							Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
+						));
+					} else {/* Precisa atualizar dados */
+						/* Redirecionamento CadastroGrupoAtualizar */
+						return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+							Constantes::$PAGINA => Constantes::$PAGINA_GRUPO_ATUALIZACAO,
+						));
+					}
+				} else {
+					if ($pessoa->getEvento_id() !== null) {
+						$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($pessoa->getEvento_id());
+						$idEntidade = $evento->getGrupoEventoAtivo()->getGrupo()->getEntidadeAtiva()->getId();
+						$sessao->idPessoa = $pessoa->getId();
+						$sessao->idEntidadeAtual = $idEntidade;
+						$sessao->naoMostrarMenu = 1;
+						return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+							Constantes::$PAGINA => Constantes::$PAGINA_ATIVAR_FICHAS,
+						));
+					}
 
-                /* Login sem responsabilidade(s) */
-                return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                            Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                            Constantes::$INPUT_USUARIO => $usuarioTrim,
-                            Constantes::$TIPO => 1,
-                ));
-            }
-        } else {
-//            Funcoes::var_dump($authenticationResult->getMessages());
-            /* Nao encontrou na base de dados */
-            /* Redirecionamento */
-            return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
-                        Constantes::$ACTION => Constantes::$ACTION_INDEX,
-                        Constantes::$INPUT_USUARIO => $usuarioTrim,
-                        Constantes::$TIPO => 1,
-            ));
-        }
+					/* Login sem responsabilidade(s) */
+					return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+						Constantes::$ACTION => Constantes::$ACTION_INDEX,
+						Constantes::$INPUT_USUARIO => $usuarioTrim,
+						Constantes::$TIPO => 1,
+					));
+				}
+			} else {
+				//            Funcoes::var_dump($authenticationResult->getMessages());
+				/* Nao encontrou na base de dados */
+				/* Redirecionamento */
+				return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+					Constantes::$ACTION => Constantes::$ACTION_INDEX,
+					Constantes::$INPUT_USUARIO => $usuarioTrim,
+					Constantes::$TIPO => 1,
+				));
+			}
+		}else{
+				return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+					Constantes::$ACTION => Constantes::$ACTION_INDEX,
+					Constantes::$INPUT_USUARIO => $usuarioTrim,
+					Constantes::$TIPO => 1,
+				));
+	
+		}
     }
 
 	public function suporteAction() {
