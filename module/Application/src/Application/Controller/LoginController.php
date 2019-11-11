@@ -216,7 +216,7 @@ class LoginController extends CircuitoController {
 					$sessao->idPessoa = $pessoa->getId();
 
 					$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-					$adapter->setIdentityValue($usuarioTrim);
+					$adapter->setIdentityValue((int)$pessoa->getDocumento());
 					$adapter->setCredentialValue($pessoa->getSenha());
 					$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
 					$identity = $authenticationResult->getIdentity();
@@ -227,6 +227,10 @@ class LoginController extends CircuitoController {
 						Constantes::$ACTION => Constantes::$ACTION_SELECIONAR_PERFIL,
 					));
 				}
+			}else{
+				return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+					Constantes::$ACTION => 'acessoTreze',
+				));
 			}
 		}catch(Execption $e){
 			echo 'error: ' . $e->getMessage();
