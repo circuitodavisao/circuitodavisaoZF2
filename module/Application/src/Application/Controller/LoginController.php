@@ -142,6 +142,13 @@ class LoginController extends CircuitoController {
 			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim);
 		}else{
 			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
+			if($pessoa === null){
+				return $this->forward()->dispatch(Constantes::$CONTROLLER_LOGIN, array(
+					Constantes::$ACTION => Constantes::$ACTION_INDEX,
+					Constantes::$INPUT_USUARIO => $usuarioTrim,
+					Constantes::$TIPO => 10,
+				));
+			}
 		}
 
 		if($pessoa){

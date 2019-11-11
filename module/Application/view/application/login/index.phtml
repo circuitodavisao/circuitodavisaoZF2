@@ -54,10 +54,12 @@ echo $this->layoutLoginTop;
         }
         /* Div Mensagens */
         echo $this->divMensagens($this->mensagem, $tipoDaMensagem, $mostraMensagem);
-		echo '<div class="alert alert-danger">
+		if($this->tipo != 1){
+			echo '<div class="alert alert-info">Utilize o CPF como login essa semana</div>';
+		}
+		echo '<div class="alert alert-info">
 			<p>Em virtude da Migração do CV antigo para o CV novo estamos atualizando alguns dados.</p>
 			<p>Nessa semana o acesso será por CPF.</p>
-			<p>Digite o seu CPF para acessar, depois acesse sua tela de perfil e atualize seu email.</p>
 			</div>';
         /* Username Input */
         echo $this->inputFormularioSimples('CPF', $formLogin->get(Constantes::$INPUT_USUARIO));
