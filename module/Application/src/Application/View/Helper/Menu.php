@@ -291,18 +291,35 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 
 				$label = '';
 				$mostrar = false;
+$link = 'relatorio';
 				switch ($indiceMenuRelatorio) {
 				case 1:
 					$label = 'Membresia';
 					$mostrar = true;
+		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+$link = 'relatorioNovo';
+}
 					break;
 				case 2:
 					$label = 'C&eacute;lulas Realizadas';
 					$mostrar = true;
+		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+$link = 'relatorioNovo';
+}
 					break;
 				case 3:
 					$label = 'C&eacute;lulas Quantidade';
 					$mostrar = true;
+		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
+		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+$link = 'relatorioNovo';
+}
+
 					break;
 				case 4:
 					$label = 'Culto da Semana';
@@ -336,7 +353,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				}
 				if ($mostrar) {
 					$html .= '<li>';
-					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'relatorio/' . $indiceMenuRelatorio . '\', null);">';
+					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
 					$html .= '<span class="fa fa-table"></span>';
 					$html .= $label;
 					$html .= '</a>';
