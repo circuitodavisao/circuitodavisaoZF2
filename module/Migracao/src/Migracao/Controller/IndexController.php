@@ -3135,10 +3135,10 @@ class IndexController extends CircuitoController {
 							$pessoa = $grupoResponsavel->getPessoa();
 							if($pessoa->getEmail() == 'atualize'){
 								if($contadorDeLideres === 1){
-									$idPessoa = $grupoCv->getLider1()
+									$idPessoa = $grupoCv->getLider1();
 								}
 								if($contadorDeLideres === 2){
-									$idPessoa = $grupoCv->getLider2()
+									$idPessoa = $grupoCv->getLider2();
 								}
 								$idInt = (int) $idPessoa;
 								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
