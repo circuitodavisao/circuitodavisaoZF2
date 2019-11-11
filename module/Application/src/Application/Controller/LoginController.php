@@ -202,7 +202,13 @@ class LoginController extends CircuitoController {
 		$data = $this->getRequest()->getPost();
 		$usuarioTrim = strtolower(trim($data[Constantes::$INPUT_USUARIO]));
 		try{
-			if ($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim)) {
+			$pessoa = null;
+			if(is_numeric($usuarioTrim)){
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($usuarioTrim);
+			}else{
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
+			}
+			if($pessoa){
 				/* Tem responsabilidade(s) */
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					/* Registro de sessão */
