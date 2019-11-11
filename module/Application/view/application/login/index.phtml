@@ -62,7 +62,7 @@ echo $this->layoutLoginTop;
 			<p>Nessa semana o acesso será por CPF.</p>
 			</div>';
         /* Username Input */
-        echo $this->inputFormularioSimples('CPF', $formLogin->get(Constantes::$INPUT_USUARIO));
+        echo $this->inputFormularioSimples('CPF ou Email', $formLogin->get(Constantes::$INPUT_USUARIO));
         /* Password Input */
         echo $this->inputFormularioSimples(Constantes::$TRADUCAO_SENHA, $formLogin->get(Constantes::$INPUT_SENHA));
         ?>

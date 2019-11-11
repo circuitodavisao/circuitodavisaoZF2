@@ -39,7 +39,7 @@ class LoginForm extends Form {
                         ->setAttributes([
                             Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
                             Constantes::$FORM_STRING_ID => Constantes::$INPUT_USUARIO,
-                            Constantes::$FORM_STRING_PLACEHOLDER => 'Informe seu CPF',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Informe seu CPF ou Email',
                             Constantes::$FORM_STRING_ONKEYPRESS => Constantes::$FORM_STRING_FUNCAO_CAPSLOCK,
                         ])
         );
