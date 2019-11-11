@@ -260,6 +260,17 @@ class PessoaORM extends CircuitoORM {
         }
     }
 
+	public function pegarTodosSemEmailQueSaoLideres(){
+		$dqlBase = "SELECT "
+			. "p.id "
+			. "FROM  " . Constantes::$ENTITY_PESSOA . " p "
+			. "WHERE "
+			. "p.email = 'atualize' AND p.documento IS NOT NULL";
 
+		$resultado = $this->getEntityManager()->createQuery($dqlBase)
+			->getResult();
+
+		return $resultado;
+	}
 
 }

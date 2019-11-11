@@ -3123,51 +3123,29 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>Ajustando email dos migrados</h1>';
+		$html .= '<h1>Ajustando email dos veios</h1>';
 		try {
-			$this->abreConexao();
-			$grupoCVs = $this->getRepositorio()->getGrupoCvORM()->buscarTodosRegistrosEntidade();
-			foreach($grupoCVs as $grupoCv){
-				if($grupoCv->getLider2() && $grupoCv->getId() > 6190){
-					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
-							$contadorDeLideres = 1;
-							foreach($grupoResponsaveis as $grupoResponsavel){
-								$pessoa = $grupoResponsavel->getPessoa();
-
-								if($contadorDeLideres === 1){
-									$idPessoa = $grupoCv->getLider1();
-								}
-								if($contadorDeLideres === 2){
-									$idPessoa = $grupoCv->getLider2();
-								}
-
-								$idInt = (int) $idPessoa;
-								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT sexo, email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
-								while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-									$sexo = $rowPessoa['sexo'];
-									if($sexo == $pessoa->getSexo()){
-										$pessoa->setEmail($rowPessoa['email']);
-									}else{
-										if($contadorDeLideres === 1){
-											$idPessoa = $grupoCv->getLider2();
-										}
-										if($contadorDeLideres === 2){
-											$idPessoa = $grupoCv->getLider1();
-										}
-
-										$queryPessoa = mysqli_query($this->getConexao(), 'SELECT sexo, email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
-										while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-											$pessoa->setEmail($rowPessoa['email']);
-										}
-									}
-								}
-								$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
-								$contadorDeLideres++;
-							}
-					}
+			$servidor = "144.217.65.207";
+			$porta = 5432;
+			$bancoDeDados = "postgres";
+			$usuario = "postgres";
+			$senha = "142857";
+			$url = "host=$servidor port=$porta dbname=$bancoDeDados user=$usuario password=$senha";
+			$conexao = pg_connect($url);
+			if(!$conexao) {
+				die("nao foi");
+			}
+			$pessoasSemEmailQueSaoLideres = $this->getRepositorio()->getPessoaORM()->pegarTodosSemEmailQueSaoLideres();
+			foreach($pessoasSemEmailQueSaoLideres as $listaPessoa){
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId((int)$listaPessoa['id']);
+				$sql = "select email from pessoa where id = " . $listaPessoa['id'];
+				$result = pg_query($conexao, $sql);
+				$email = pg_fetch_all($result)[0]['email'];
+				if($email != ''){
+					$pessoa->setEmail($email);
+					$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
 				}
 			}
-		
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
