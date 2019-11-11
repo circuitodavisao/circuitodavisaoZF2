@@ -3130,7 +3130,7 @@ class IndexController extends CircuitoController {
 			$contador = 1;
 			foreach($grupoCVs as $grupoCv){
 				if($grupoCv->getId() > 6190){
-					if($contador === 2){
+					if($contador === 10){
 						break;
 					}
 					if($grupoResponsaveis = $grupoCv->getGrupo()->getResponsabilidadesAtivas()){
@@ -3138,29 +3138,15 @@ class IndexController extends CircuitoController {
 						foreach($grupoResponsaveis as $grupoResponsavel){
 							$pessoa = $grupoResponsavel->getPessoa();
 							if($pessoa->getEmail() == 'atualize'){
-								if($contadorDeLideres === 1){
-									$idPessoa = $grupoCv->getLider1();
-								}
-								if($contadorDeLideres === 2){
-									$idPessoa = $grupoCv->getLider2();
-								}
-								$idInt = (int) $idPessoa;
-								$queryPessoa = mysqli_query($this->getConexao(), 'SELECT email FROM ursula_pessoa_ursula WHERE id = ' . $idInt);
-								while ($rowPessoa = mysqli_fetch_array($queryPessoa)) {
-									if($rowPessoa['email']){
-										$pessoa->setEmail($rowPessoa['email']);
-									}	
-								}
 								$html .= '<br />'.$pessoa->getNome();
-								$html .= '<br />'.$pessoa->getEmail();
 							}
 						}
 					}
-					$contador++;
 				}
 			}
 		
 		} catch (Exception $exc) {
+			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
 		}
 
