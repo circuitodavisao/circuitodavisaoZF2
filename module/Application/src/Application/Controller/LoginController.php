@@ -230,19 +230,18 @@ class LoginController extends CircuitoController {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($usuarioTrim);
 			}
 			if($pessoa){
-				/* Tem responsabilidade(s) */
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
-					/* Registro de sessão */
 					$sessao = new Container(Constantes::$NOME_APLICACAO);
 					$sessao->idPessoa = $pessoa->getId();
 
 					$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-					$adapter->setIdentityValue((int)$pessoa->getEmail());
+					$adapter->setIdentityValue($pessoa->getEmail());
 					$adapter->setCredentialValue($pessoa->getSenha());
 					$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
 					echo '<br />pessoa: '.$pessoa->getId();
 					echo '<br />nome: '.$pessoa->getNome();
 					echo '<br />documento: '.$pessoa->getDocumento();
+					echo '<br />email: '.$pessoa->getEmail();
 					echo '<br />senha: '.$pessoa->getSenha();
 					echo '<br />autenticacao: '.$authenticationResult->isValid();
 					$identity = $authenticationResult->getIdentity();
