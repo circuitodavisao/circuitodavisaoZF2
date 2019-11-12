@@ -212,6 +212,9 @@ class Perfil extends AbstractHelper {
 			$html .= '</div>';
 		}
 
+
+		$html .= '</div>';
+		/* fim Div panel-body */
 		$html .= $this->view->divMensagens();
 		if($stringDoAvisoChato != ''){
 			$html .= '<div id="divSexoDataDeNascimento" class="alert alert-danger p15" role="alert">';
@@ -225,8 +228,6 @@ class Perfil extends AbstractHelper {
 			$html .= '</div>';
 		}
 
-		$html .= '</div>';
-		/* fim Div panel-body */
 
 		if ($this->getMostrarOpcoes()) {
 			$html .= '<div class="panel-footer text-right">';
