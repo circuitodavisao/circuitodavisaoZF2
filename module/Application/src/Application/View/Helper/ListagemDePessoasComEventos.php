@@ -272,7 +272,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
 			$extra = $idDoBotao . ' ' . $funcaoOnclick;
 			if(!$this->view->possoAlterar){
-				$extra .= ' disabled';
+				//$extra .= ' disabled';
 			}
 			$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, $tamanhoBotao);
 		} else {/* Eventos futuro */
