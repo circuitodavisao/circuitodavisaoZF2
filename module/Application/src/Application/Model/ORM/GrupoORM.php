@@ -79,7 +79,15 @@ class GrupoORM extends CircuitoORM {
 				->setFirstResult($inicio)
 				->setMaxResults(number_format($fracaoParaMontar))
 				->getResult();
-			return $grupos;
+
+			$gruposAtivos = array();
+            foreach ($grupos as $grupo) {
+                if (count($grupo->getResponsabilidadesAtivas()) > 0) {
+                    $gruposAtivos[] = $grupo;
+                }
+            }
+ 
+			return $gruposAtivos;
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
 		}
