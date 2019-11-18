@@ -55,4 +55,34 @@ class GrupoORM extends CircuitoORM {
         }
 	}
 
+	public function gruposPorParte($qualParte){
+		$dqlBase = "SELECT g.id "
+			. "FROM  " . Constantes::$ENTITY_GRUPO . " g "
+			. "WHERE "
+			. "g.data_inativacao is null ORDER BY g.id DESC ";
+		$totalDivisoes = 50;
+		try {
+			$totalDeGrupos = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setMaxResults(1)
+				->getResult()[0]['id'];
+			$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
+			$inicio = 1;
+			if($qualParte > 1){
+				$inicio = $fracaoParaMontar * ($qualParte - 1);
+			}
+
+			$dqlBase = "SELECT g "
+				. "FROM  " . Constantes::$ENTITY_GRUPO . " g ";
+			$grupos = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setFirstResult($inicio)
+				->setMaxResults(number_format($fracaoParaMontar))
+				->getResult();
+			return $grupos;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
+
 }
