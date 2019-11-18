@@ -4192,7 +4192,7 @@ class IndexController extends CircuitoController {
 
 		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
 
-		$grupos = $this->getRepositorio()->getGrupoORM()->encontrarTodos();
+		$grupos = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
@@ -4226,31 +4226,10 @@ class IndexController extends CircuitoController {
 		$html .= "<br />###### iniciarTransacao ";
 		try {
 			if ($gruposParaValidar) {
-				$totalDeGrupos = count($gruposParaValidar);
-				$gruposParaMontar = array();
-				$contadorDeGrupos = 1;
-				$totalDivisoes = 20;
-				$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
-				if($qualParte > 1){
-					$inicio = $fracaoParaMontar * ($qualParte - 1);
-					$fim = $fracaoParaMontar * $qualParte;
-				}
-				foreach($gruposParaValidar as $grupo){
-					if($qualParte == 1 && $contadorDeGrupos <= $fracaoParaMontar){
-						$gruposParaMontar[] = $grupo;
-					}
-					if($qualParte !== $totalDivisoes && $qualParte > 1 && $contadorDeGrupos > $inicio && $contadorDeGrupos <= $fim){
-						$gruposParaMontar[] = $grupo;
-					}
-					if($qualParte == $totalDivisoes && $contadorDeGrupos > $inicio){
-						$gruposParaMontar[] = $grupo;
-					}
-					$contadorDeGrupos++;
-				}
 				$mesAtual = date('m');
 				$anoAtual = date('Y');
 				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
-				foreach ($gruposParaMontar as $grupo) {
+				foreach ($gruposParaValidar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
 						$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
