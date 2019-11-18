@@ -335,7 +335,32 @@ class IndexController extends CircuitoController {
 		try {
 			if ($grupos) {
 				$html .= "<br /><br /><br />Tem Grupos ativos!!!";
-				foreach ($grupos as $grupo) {
+
+		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
+				$totalDeGrupos = count($grupos);
+				$gruposParaMontar = array();
+				$contadorDeGrupos = 1;
+				$totalDivisoes = 50;
+				$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
+				if($qualParte > 1){
+					$inicio = $fracaoParaMontar * ($qualParte - 1);
+					$fim = $fracaoParaMontar * $qualParte;
+				}
+				foreach($grupos as $grupo){
+					if($qualParte == 1 && $contadorDeGrupos <= $fracaoParaMontar){
+						$gruposParaMontar[] = $grupo;
+					}
+					if($qualParte !== $totalDivisoes && $qualParte > 1 && $contadorDeGrupos > $inicio && $contadorDeGrupos <= $fim){
+						$gruposParaMontar[] = $grupo;
+					}
+					if($qualParte == $totalDivisoes && $contadorDeGrupos > $inicio){
+						$gruposParaMontar[] = $grupo;
+					}
+					$contadorDeGrupos++;
+				}
+	
+
+				foreach ($gruposParaMontar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						$gerar = true;
 						if ($gerar) {
