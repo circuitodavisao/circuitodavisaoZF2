@@ -112,12 +112,12 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				// id novo
-				$idGrupoPai = 17543; 
+				$idGrupoPai = 9271; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				$html .= 'coordenacao: ' . $grupoRegiao->getEntidadeAtiva()->infoEntidade();
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 772');
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 424');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 
 					$html .= '<br />Igreja: ' . $row['nome'];
@@ -270,7 +270,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			$idCoordenacao = 37;
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 772');
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 424');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
@@ -325,7 +325,7 @@ class IndexController extends CircuitoController {
 
 		/* rodar toda segunda */
 		$dateFormatada = DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-		//        $dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
+		//$dateFormatada = DateTime::createFromFormat('Y-m-d', self::DATA_CRIACAO);
 		$html .= '<br/><br /><br />Dia para gerar: ' . $dateFormatada->format('d/m/Y');
 
 		$somenteAtivos = true;
