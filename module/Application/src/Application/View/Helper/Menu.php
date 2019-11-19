@@ -299,7 +299,7 @@ $link = 'relatorio';
 		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-//$link = 'relatorioNovo';
+$link = 'relatorioNovo';
 }
 					break;
 				case 2:
@@ -308,7 +308,7 @@ $link = 'relatorio';
 		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-//$link = 'relatorioNovo';
+$link = 'relatorioNovo';
 }
 					break;
 				case 3:
@@ -317,7 +317,7 @@ $link = 'relatorio';
 		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
-//$link = 'relatorioNovo';
+$link = 'relatorioNovo';
 }
 
 					break;
