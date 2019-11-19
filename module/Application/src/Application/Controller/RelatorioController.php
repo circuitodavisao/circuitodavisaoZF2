@@ -4545,6 +4545,19 @@ public function alunosNaSemanaAction(){
 			$post_data = $request->getPost();
 			$mes = $post_data['mes'];
 			$ano = $post_data['ano'];
+			// producao 19/11/2019
+			$redirecionar = false;
+			if($ano < 2019){
+				$redirecionar = true;
+			}
+			if($ano == 2019 && $mes <= 10){
+				$redirecionar = true;
+			}
+			if($redirecionar){
+				return $this->redirect()->toRoute('relatorio', array(
+					'tipoRelatorio' => $tipoRelatorio,
+				));
+			}
 			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		}
 		if (empty($mes)) {
