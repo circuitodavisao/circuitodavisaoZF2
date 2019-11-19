@@ -165,7 +165,7 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 				<thead>
 					<tr class="dark hidden-xs">
 <?php
-echo '<th>Periodos</th>';
+echo '<th colspan="2">Periodos</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classePeriodoAtual = '';
 	if ($indiceDeArrays == -1) {
@@ -192,6 +192,7 @@ echo '<th></th>';
 echo '</tr>';
 
 echo '<tr class="dark">';
+echo '<th></th>';
 echo '<th>TIMES</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
@@ -243,7 +244,7 @@ echo '</tr>';
 echo '</thead>';
 
 echo '<tbody>';
-$contagemRanking = 0;
+$ranking = 0;
 foreach($this->relatorio as $relatorio){
 	$class = '';
 	if ($this->tipoRelatorio == 1) {
@@ -257,7 +258,13 @@ foreach($this->relatorio as $relatorio){
 	}
 
 	echo '<tr class="'.$class.'">';
-	echo '<td class="text-right">'.$relatorio->entidade.' - '.$relatorio->lideres.'</td>';
+	if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
+		echo '<td>#'.$ranking.'</td>';
+	}else{
+		echo '<td></td>';
+	}
+	$ranking++;
+	echo '<td class="text-left"><span class="hidden-xs">'.$relatorio->entidade.' - </span>'.$relatorio->lideres.'</td>';
 	$contadorDePeriodos = 1;
 	for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 		$classeBase = 'periodo' . $indiceDeArrays . ' ';
@@ -279,10 +286,10 @@ foreach($this->relatorio as $relatorio){
 			$d = 'd' . $contadorDePeriodos;
 			$mem = 'mem' . $contadorDePeriodos;
 			$memp = 'memp' . $contadorDePeriodos;
-			echo '<td class="hidden-xs">'.$relatorio->$cq.'</td>';
-			echo '<td class="hidden-xs">'.$relatorio->$cbq.'</td>';
-			echo '<td class="hidden-xs">'.$relatorio->$cqmeta.'</td>';
-			echo '<td class="hidden-xs">'.$relatorio->$cbqmeta.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cq.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbq.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cqmeta.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbqmeta.'</td>';
 			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
 			echo '<td class="' . $classeBase . '">'.$relatorio->$cu.'</td>';
 			echo '<td class="' . $classeBase . '">'.$relatorio->$a.'</td>';
@@ -301,10 +308,10 @@ foreach($this->relatorio as $relatorio){
 		if ($this->tipoRelatorio == 3) {
 			$c = 'c' . $contadorDePeriodos;
 			$cp = 'cp' . $contadorDePeriodos;
-			echo '<td>'.$relatorio->$cq.'</td>';
-			echo '<td>'.$relatorio->$cbq.'</td>';
-			echo '<td class="hidden-xs">'.$relatorio->$cqmeta.'</td>';
-			echo '<td class="hidden-xs">'.$relatorio->$cbqmeta.'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$cq.'</td>';
+			echo '<td class="' . $classeBase . '">'.$relatorio->$cbq.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cqmeta.'</td>';
+			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbqmeta.'</td>';
 			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
 			echo '<td class="' . $classeBase . '">'.$relatorio->$c.'</td>';
 			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp).'%</td>';
