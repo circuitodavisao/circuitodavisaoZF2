@@ -4688,7 +4688,7 @@ public function alunosNaSemanaAction(){
 							//realizada
 							$cq = 'cq' . $w;
 							$cbq = 'cbq' . $w;
-							$quantidadeDeCelulas = $cq + $cbq;
+							$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
 							$realizada = 'realizada' . $w;
 							$realizadap = 'realizadap' . $w;
 							$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
@@ -4747,7 +4747,7 @@ public function alunosNaSemanaAction(){
 			//realizada
 			$cq = 'cq' . $w;
 			$cbq = 'cbq' . $w;
-			$quantidadeDeCelulas = $cq + $cbq;
+			$quantidadeDeCelulas = $fatoFinal->$cq + $fatoFinal->$cbq;
 			$realizada = 'realizada' . $w;
 			$realizadap = 'realizadap' . $w;
 			$fatoFinal->$realizadap = ($fatoFinal->$realizada / $quantidadeDeCelulas * 100);
