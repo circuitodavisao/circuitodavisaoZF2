@@ -4686,9 +4686,12 @@ public function alunosNaSemanaAction(){
 							$cp = 'cp' . $w;
 							$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
 							//realizada
+							$cq = 'cq' . $w;
+							$cbq = 'cbq' . $w;
+							$quantidadeDeCelulas = $cq + $cbq;
 							$realizada = 'realizada' . $w;
 							$realizadap = 'realizadap' . $w;
-							$fatoFilho->$realizadap = ($fatoFilho->$realizada / $membresiaMetaSomada * 100);
+							$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
 						}
 
 						$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
