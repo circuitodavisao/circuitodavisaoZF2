@@ -3124,29 +3124,11 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>Ajustando email dos veios</h1>';
+		$html .= '<h1>removerndo igreja defazada</h1>';
 		try {
-			$servidor = "144.217.65.207";
-			$porta = 5432;
-			$bancoDeDados = "postgres";
-			$usuario = "postgres";
-			$senha = "142857";
-			$url = "host=$servidor port=$porta dbname=$bancoDeDados user=$usuario password=$senha";
-			$conexao = pg_connect($url);
-			if(!$conexao) {
-				die("nao foi");
-			}
-			$pessoasSemEmailQueSaoLideres = $this->getRepositorio()->getPessoaORM()->pegarTodosSemEmailQueSaoLideres();
-			foreach($pessoasSemEmailQueSaoLideres as $listaPessoa){
-				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId((int)$listaPessoa['id']);
-				$sql = "select email from pessoa where id = " . $listaPessoa['id'];
-				$result = pg_query($conexao, $sql);
-				$email = pg_fetch_all($result)[0]['email'];
-				if($email != ''){
-					$pessoa->setEmail($email);
-					$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
-				}
-			}
+			$dataDeExclusao = '2019-11-10';
+			$idGrupo = 9626;
+			$this->removerLider($idGrupo, $dataDeExclusao);
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
