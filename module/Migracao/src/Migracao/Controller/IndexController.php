@@ -112,22 +112,23 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				// id novo
-				$idGrupoPai = 9271; 
+				$idGrupoPai =  12637; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				$html .= 'coordenacao: ' . $grupoRegiao->getEntidadeAtiva()->infoEntidade();
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 424');
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 210');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 
 					$html .= '<br />Igreja: ' . $row['nome'];
 					$idPerfilIgreja = 18;
 					$numeroIdentificadorIgreja = "$codigoRegiao$codigoCoordenacao$codigoIgreja";
 					$informacaoEntidade = $row[$stringNome];
-					$grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, $grupoRegiao, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja, null);
-					$this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
-					$eventosCulto = $this->cadastrarCulto($row['id'], $grupoIgreja);
-					$this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
+					$grupoIgreja = $this->getRepositorio()->getGrupoORM()->encontrarPorId(30555);
+					//$grupoIgreja = $this->cadastrarEntidade($row[$stringIdResponsavel1], $idPerfilIgreja, $informacaoEntidade, $grupoRegiao, $row[$stringIdResponsavel2], $row['id'], $numeroIdentificadorIgreja, null);
+					//$this->cadastrarPessoasVolateis($row[$stringIdResponsavel1], $grupoIgreja);
+					//$eventosCulto = $this->cadastrarCulto($row['id'], $grupoIgreja);
+					//$this->cadastrarCelulas($row[$stringIdResponsavel1], $grupoIgreja, $row[$stringIdResponsavel2]);
 
 					$grupoEventoNoPeriodo = $grupoIgreja->getGrupoEventoNoPeriodo(0);
 					$eventosCulto = array();
@@ -136,7 +137,19 @@ class IndexController extends CircuitoController {
 					}
 					$urlEquipe = 'SELECT * FROM ursula_equipe_ursula WHERE ativa = "S" AND idIgreja = ' . $row['id'];
 					$queryEquipes = mysqli_query($this->getConexao(), $urlEquipe);
+
+					$cont = 1;
+					//$gerar = true;
+					$gerar = false;
 					while ($rowEquipe = mysqli_fetch_array($queryEquipes)) {
+						if($cont === 12){
+							$gerar = true;
+						}else{
+							$gerar = false;
+						}
+
+						$cont++;
+						if($gerar){
 						//$html .= '<br />Equipe: ' . $rowEquipe['nome'];
 						$idPerfilEquipe = 15;
 						$codigoEquipe = str_pad($rowEquipe['id'], 6, 0, STR_PAD_LEFT);
@@ -240,6 +253,7 @@ class IndexController extends CircuitoController {
 							}
 						}
 					}
+					}
 				}
 		//	}
 			$this->getRepositorio()->fecharTransacao();
@@ -270,7 +284,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			$idCoordenacao = 37;
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 424');
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 210');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
