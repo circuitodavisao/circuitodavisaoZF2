@@ -3142,7 +3142,8 @@ class IndexController extends CircuitoController {
 		try {
 			$dataDeExclusao = '2019-11-10';
 			$idGrupo = 9626;
-			$this->removerLider($idGrupo, $dataDeExclusao);
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+			$this->removerLider($grupo, $dataDeExclusao);
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
