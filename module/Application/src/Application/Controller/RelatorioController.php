@@ -4560,25 +4560,10 @@ public function alunosNaSemanaAction(){
 
 		$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');		
 		$request = $this->getRequest();
-		if ($request->isPost()) {
-			$post_data = $request->getPost();
-			$mes = $post_data['mes'];
-			$ano = $post_data['ano'];
-			// producao 19/11/2019
-			$redirecionar = false;
-			if($ano < 2019){
-				$redirecionar = true;
-			}
-			if($ano == 2019 && $mes <= 10){
-				$redirecionar = true;
-			}
-			if($redirecionar){
-				return $this->redirect()->toRoute('relatorio', array(
-					'tipoRelatorio' => $tipoRelatorio,
-				));
-			}
-			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
-		}
+		$post_data = $request->getPost();
+		$mes = $post_data['mes'];
+		$ano = $post_data['ano'];
+		$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		if (empty($mes)) {
 			$mes = (int) $this->params()->fromRoute('mes', 0);
 			if ($mes == 0) {
@@ -4591,16 +4576,31 @@ public function alunosNaSemanaAction(){
 				$ano = date('Y');
 			}
 		}
+		if (empty($pessoalOuEquipe)) {
+			$pessoalOuEquipe = 2; // equipe
+		}
 
-		if($request->isPost()){
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$relatorio = RelatorioController::relatorioCompletoNovo($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano, $true = true, $pessoalOuEquipe);
+		// producao 19/11/2019
+		$redirecionar = false;
+		if($ano < 2019){
+			$redirecionar = true;
+		}
+		if($ano == 2019 && $mes <= 10){
+			$redirecionar = true;
+		}
+		if($redirecionar){
+			return $this->redirect()->toRoute('relatorio', array(
+				'tipoRelatorio' => $tipoRelatorio,
+			));
+		}
 
-			switch($tipoRelatorio){
-			case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = $grupo->getId()); break;
-			case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = $grupo->getId()); break;
-			case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = $grupo->getId()); break;
-			}
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+		$relatorio = RelatorioController::relatorioCompletoNovo($this->getRepositorio(), $grupo, $tipoRelatorio, $mes, $ano, $true = true, $pessoalOuEquipe);
+
+		switch($tipoRelatorio){
+		case RelatorioController::relatorioMembresia: self::registrarLog(RegistroAcao::VER_RELATORIO_MEMBRESIA, $extra = $grupo->getId()); break;
+		case RelatorioController::relatorioCelulaRealizadas: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_REALIZADAS, $extra = $grupo->getId()); break;
+		case RelatorioController::relatorioCelulaQuantidade: self::registrarLog(RegistroAcao::VER_RELATORIO_CELULA_QUANTIDADE, $extra = $grupo->getId()); break;
 		}
 
 		$dados = array(
@@ -4621,7 +4621,7 @@ public function alunosNaSemanaAction(){
 		$view = new ViewModel($dados);
 
 		return $view;
-	
+
 	}
 
 	public static function relatorioCompletoNovo($repositorio, $grupo, $tipoRelatorio, $mes, $ano, $tudo = true, $pessoalOuEquipe = 2, $periodo = 0, $relatorioDoLider = 1) {
