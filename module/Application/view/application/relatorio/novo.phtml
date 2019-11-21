@@ -263,12 +263,10 @@ foreach($this->relatorio as $relatorio){
 	}else{
 		echo '<td></td>';
 	}
-	$ranking++;
 
 	echo '<td class="text-left">';
 	if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
 		echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
-
 		$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
 		$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
 		if($grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
@@ -281,6 +279,8 @@ foreach($this->relatorio as $relatorio){
 		echo ' '.$linkDeQuemEstaLogado;
 	}
 	echo '</td>';
+
+	$ranking++;
 	$contadorDePeriodos = 1;
 	for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 		$classeBase = 'periodo' . $indiceDeArrays . ' ';
