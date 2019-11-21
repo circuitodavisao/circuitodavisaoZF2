@@ -269,7 +269,7 @@ foreach($this->relatorio as $relatorio){
 	if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
 		echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
 
-		$idGrupo = substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
+		$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
 		$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
 		if($grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
 			$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
