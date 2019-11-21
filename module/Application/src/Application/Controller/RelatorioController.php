@@ -85,10 +85,15 @@ class RelatorioController extends CircuitoController {
 				$redirecionar = true;
 			}
 			if($redirecionar){
-				return $this->redirect()->toRoute('relatorio', array(
-					'action' => 'Novo',
-					'tipoRelatorio' => $tipoRelatorio,
-				));
+				if(
+					$tipoRelatorio == 1 ||
+					$tipoRelatorio == 2 ||
+					$tipoRelatorio == 3){
+						return $this->redirect()->toRoute('relatorio', array(
+							'action' => 'Novo',
+							'tipoRelatorio' => $tipoRelatorio,
+						));
+					}
 			}
 			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		}
