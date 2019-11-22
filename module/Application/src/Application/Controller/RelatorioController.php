@@ -2355,7 +2355,7 @@ class RelatorioController extends CircuitoController {
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 
 		$contadorDePeriodos = 0;
-		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
 			$contadorDePeriodos++;
 		}
 
@@ -2369,6 +2369,8 @@ class RelatorioController extends CircuitoController {
 				$somaDeCelulas = $relatorio->$cq + $relatorio->$cbq;
 				if($somaDeCelulas > 0){
 					$diferenca = $relatorio->$realizada - $somaDeCelulas;
+					Funcoes::var_dump('realizara'.$relatorio->$realizada);
+					Funcoes::var_dump('diferenca'.$diferenca);
 					if($diferenca > 0){
 						Funcoes::var_dump($diferenca);
 						$linkWhatsapp = $grupo->getLinksWhatsapp();			
@@ -2387,6 +2389,8 @@ class RelatorioController extends CircuitoController {
 			if ($a['entidade'] === $b['entidade']) return $ak - $bk;
 			return $a['entidade'] > $b['entidade'] ? 1 : -1;
 		});
+
+		Funcoes::var_dump($relatorioOrdenado);
 
 		$dados['repositorio'] = $this->getRepositorio();
 		$dados['relatorio'] = $relatorioOrdenado;		

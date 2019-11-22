@@ -439,7 +439,7 @@ $link = 'relatorioNovo';
 					$html .= '</li>';
 			}			
 
-			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+			if(false && $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 				$html .= '<li>';
 				$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
