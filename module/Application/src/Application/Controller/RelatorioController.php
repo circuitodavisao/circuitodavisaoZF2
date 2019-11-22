@@ -2360,6 +2360,7 @@ class RelatorioController extends CircuitoController {
 		}
 
 		$relatorioOrdenado = array();
+		$total = 0;
 		foreach($relatorioDesordenado as $relatorio){
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId((int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8)));
 			if($grupo->getEntidadeAtiva()){
@@ -2368,16 +2369,14 @@ class RelatorioController extends CircuitoController {
 				$realizada = 'realizada'.$contadorDePeriodos;
 				$somaDeCelulas = $relatorio->$cq + $relatorio->$cbq;
 				if($somaDeCelulas > 0){
-					$diferenca = $relatorio->$realizada - $somaDeCelulas;
-					Funcoes::var_dump('realizara'.$relatorio->$realizada);
-					Funcoes::var_dump('diferenca'.$diferenca);
+					$diferenca = $somaDeCelulas - $relatorio->$realizada;
 					if($diferenca > 0){
-						Funcoes::var_dump($diferenca);
 						$linkWhatsapp = $grupo->getLinksWhatsapp();			
 						$relatorioOrdenado[$grupo->getId()]['lideres'] = $relatorio->lideres;
 						$relatorioOrdenado[$grupo->getId()]['linkWhatsapp'] = $linkWhatsapp;
 						$relatorioOrdenado[$grupo->getId()]['entidade'] = $relatorio->entidade;
 						$relatorioOrdenado[$grupo->getId()]['direfenca'] = $diferenca;
+						$total += $diferenca;
 					}
 				}
 			}
@@ -2390,11 +2389,10 @@ class RelatorioController extends CircuitoController {
 			return $a['entidade'] > $b['entidade'] ? 1 : -1;
 		});
 
-		Funcoes::var_dump($relatorioOrdenado);
-
 		$dados['repositorio'] = $this->getRepositorio();
 		$dados['relatorio'] = $relatorioOrdenado;		
 		$dados['periodo'] = $periodo;
+		$dados['total'] = $total;
 		self::registrarLog(RegistroAcao::VER_RELATORIO_CELULAS_NAO_REALIZADAS, $extra = '');
 		return new ViewModel($dados);
 	}
