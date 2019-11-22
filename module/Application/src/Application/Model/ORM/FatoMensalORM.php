@@ -140,4 +140,26 @@ class FatoMensalORM extends CircuitoORM {
 			echo $exc->getMessage();
 		}
 	}
+
+	public function buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano) {
+		$dqlBase = "SELECT fm "
+			. "FROM  " . Constantes::$ENTITY_FATO_MENSAL . " fm "
+			. "WHERE "
+			. "fm.numero_identificador #tipoComparacao ?1 "
+			. "AND fm.data_inativacao is null "
+			. "AND fm.mes = ?2 "
+			. "AND fm.ano = ?3";
+		try {
+			$dqlAjustadaTipoComparacao = str_replace('#tipoComparacao', 'LIKE', $dqlBase);
+			$numeroIdentificador .= '%';
+			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
+				->setParameter(1, $numeroIdentificador)
+				->setParameter(2, $mes)
+				->setParameter(3, $ano)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
 }

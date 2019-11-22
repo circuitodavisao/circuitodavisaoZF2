@@ -16,6 +16,7 @@ use Application\Controller\Helper\Funcoes;
 </style>
 	<?php
 	$label = 'Células não realizadas - Total: '.count($this->relatorio);
+$label= '';
 	echo $this->templateFormularioTopo($label);
 	?>
 	  <div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
@@ -31,20 +32,18 @@ if($this->mostrarIgreja){
 }
 echo '<th>Quem</th>';
 echo '<th></th>';
-echo '<th class="hidden-xs">Célula</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 if($this->relatorio){
 	foreach($this->relatorio as $relatorioOrdenado => $resultado){
 		echo '<tr>';
-		echo '<td>'.$resultado['infoEntidade'].'</td>';
+		echo '<td>'.$resultado['entidade'].'</td>';
 		if($this->mostrarIgreja){
 			echo '<td>'.$resultado['nomeIgreja'].'</td>';
 		}
 		echo '<td>'.$resultado['lideres'].'</td>';
 		echo '<td>'.$resultado['linkWhatsapp'].'</td>';
-		echo '<td class="hidden-xs">'.$resultado['celulaDia'].'</td>';		
 		echo '</tr>';
 	}
 }
