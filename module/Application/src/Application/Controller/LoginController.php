@@ -677,7 +677,9 @@ class LoginController extends CircuitoController {
         $sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		self::registrarLog(RegistroAcao::LOGOUT, $extra = '');
-		$sessao->getManager()->destroy();
+		if($sessao->getManager()){
+			$sessao->getManager()->destroy();
+		}
 
         /* Redirecionamento */
         return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
