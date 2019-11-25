@@ -3848,7 +3848,9 @@ public function alunosNaSemanaAction(){
 					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $somado = 2);			
 					$cq = 'cq'.$contadorDePeriodos;
 					$cbq = 'cbq'.$contadorDePeriodos;
-					$celulas = $fatoMensalSomado->$cq + $fatoMensalSomado->$cbq;
+					$celulasBoas = $fatoMensalSomado[$cq];
+					$celulasBetas = $fatoMensalSomado[$cbq];
+					$celulas = $celulasBoas + $celulasBetas;
 
 					/* Discipulados */
 					$discipulados = $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio);					
@@ -3897,7 +3899,7 @@ public function alunosNaSemanaAction(){
 								$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador12, date('m'), date('Y'), $somado = 2);			
 								$cq = 'cq'.$contadorDePeriodos;
 								$cbq = 'cbq'.$contadorDePeriodos;
-								$celulas += $fatoMensalSomado->$cq + $fatoMensalSomado->$cbq;
+								$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
 								/* Somando discipulados */
 								$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador12);
 								/* Somando alunos */
@@ -3931,7 +3933,7 @@ public function alunosNaSemanaAction(){
 											$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador144, date('m'), date('Y'), $somado  =2);			
 											$cq = 'cq'.$contadorDePeriodos;
 											$cbq = 'cbq'.$contadorDePeriodos;
-											$celulas += $fatoMensalSomado->$cq + $fatoMensalSomado->$cbq;
+											$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
 											/* Somando discipulados */
 											$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador144);
 											/* Somando alunos */
@@ -3965,7 +3967,7 @@ public function alunosNaSemanaAction(){
 														$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador1728, date('m'), date('Y'), $somado = 2);			
 														$cq = 'cq'.$contadorDePeriodos;
 														$cbq = 'cbq'.$contadorDePeriodos;
-														$celulas += $fatoMensalSomado->$cq + $fatoMensalSomado->$cbq;
+														$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
 														/* Somando discipulados */
 														$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador1728);
 														/* Somando alunos */
@@ -3996,7 +3998,7 @@ public function alunosNaSemanaAction(){
 																	$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador20736, date('m'), date('Y'), $somado = 2);			
 																	$cq = 'cq'.$contadorDePeriodos;
 																	$cbq = 'cbq'.$contadorDePeriodos;
-																	$celulas += $fatoMensalSomado->$cq + $fatoMensalSomado->$cbq;
+																	$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
 																	/* Somando discipulados */
 																	$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador20736);
 																	/* Somando alunos */
