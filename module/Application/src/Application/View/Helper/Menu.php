@@ -233,7 +233,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
-			$html .= '<a href="/lancamentoArregimentacao/-1" onClick="mostrarSplash(););">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao/-1\', null);">';
 			$html .= '<span class="fa fa-terminal"></span>';
 			$html .= 'Arregimentação';
 			$html .= '</a>';

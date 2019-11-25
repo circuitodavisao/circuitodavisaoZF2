@@ -212,6 +212,10 @@ class Perfil extends AbstractHelper {
 			$html .= '</div>';
 		}
 
+		$html .= '<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+		$extraVerLancamento = $this->view->funcaoOnClick('mostrarSplash(); funcaoCircuito("lancamentoArregimentacao", ' . $this->view->idGrupo . ')');
+		$html .= $botaoVerTelaDeLancamento = $this->view->botaoSimples('Tela de lançamento de Dados', $extraVerLancamento, BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+		$html .= '</div>';
 
 		$html .= '</div>';
 		/* fim Div panel-body */
