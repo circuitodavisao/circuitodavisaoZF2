@@ -476,6 +476,9 @@ class IndexController extends CircuitoController {
 											}
 											if ($solicitacao->getNome()) {
 												$extra = (string) $solicitacao->getNome();
+												if(is_numeric($solicitacao->getNome()) ){
+													$extra = 'EQUIPE SEM NOME';
+												}
 											}
 											if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
 												$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE";
