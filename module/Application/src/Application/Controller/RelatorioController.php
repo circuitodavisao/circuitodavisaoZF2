@@ -4691,14 +4691,17 @@ public function alunosNaSemanaAction(){
 						}
 						$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
 						$fatoFilho = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano);
+
 						if($fatoFilho->entidade === null){
 							$fatoFilho->entidade = $grupoFilho->getEntidadeAtiva()->infoEntidade();
 							$fatoFilho->lideres = $grupoFilho->getNomeLideresAtivos();
 						}
+
 						$fatoSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano, $pessoalOuEquipe);
 						foreach($fatoSomado as $k => $v){
 							$fatoFilho->$k = $v;
 						}
+
 						// ajustando percentual somado
 						for($w = 1;$w <= 6;$w++){
 							$cqmeta = 'cqmeta' . $w;
@@ -4707,18 +4710,30 @@ public function alunosNaSemanaAction(){
 							$mem = 'mem' . $w;
 							$memp = 'memp' . $w;
 							$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
-							$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
+							if($membresiaMetaSomada > 0 ){
+								$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
+							}else{
+								$fatoFilho->$memp = 0;
+							}
 							// celulas
 							$c = 'c' . $w;
 							$cp = 'cp' . $w;
-							$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
+							if($membresiaMetaSomada > 0 ){
+								$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
+							}else{
+								$fatoFilho->$cp = 0;
+							}
 							//realizada
 							$cq = 'cq' . $w;
 							$cbq = 'cbq' . $w;
 							$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
 							$realizada = 'realizada' . $w;
 							$realizadap = 'realizadap' . $w;
-							$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
+							if($quantidadeDeCelulas > 0 ){
+								$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
+							}else{
+								$fatoFilho->$realizadap = 0;
+							}
 						}
 
 						$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
