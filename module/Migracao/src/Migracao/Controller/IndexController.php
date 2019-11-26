@@ -3150,11 +3150,13 @@ class IndexController extends CircuitoController {
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($item['grupo_id']);
 					if($grupo->getEntidadeAtiva()){
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
-						$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
-						$fatoCelulaDiscipulado->setGrupo_evento_id($idGrupoEvento);
-						$fatoCelulaDiscipulado->setDataEHoraDeCriacao('2019-11-11');
-						//$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+						if($numeroIdentificador !== ''){
+							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
+							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+							$fatoCelulaDiscipulado->setGrupo_evento_id($idGrupoEvento);
+							$fatoCelulaDiscipulado->setDataEHoraDeCriacao('2019-11-11');
+							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado, false);
+						}
 					}
 				}
 			}
