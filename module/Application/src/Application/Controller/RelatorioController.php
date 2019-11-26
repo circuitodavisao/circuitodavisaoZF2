@@ -3821,9 +3821,6 @@ public function alunosNaSemanaAction(){
 
 		if($grupo->getEntidadeAtiva()){
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			if($mes == date('m') && $ano == date('Y')){
-				$arrayPeriodoDoMes[1] = 0;
-			}
 			$periodoParaUsar = $arrayPeriodoDoMes[1];		
 			$tipoRelatorio = $pessoalOuEquipe;
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
