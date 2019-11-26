@@ -3141,12 +3141,23 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>removerndo igreja defazada</h1>';
+		$html .= '<h1>Gerar fato celula discipulado</h1>';
 		try {
-			$dataDeExclusao = '2019-11-10';
-			$idGrupo = 9626;
-			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-			$this->removerLider($grupo, $dataDeExclusao);
+			$relatorio = $this->getRepositorio()->getGrupoEventoORM()->discipuladosParaAjustar();
+			foreach($relatorio as $item){
+				$idGrupoEvento = $item['id'];
+				if(!$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorIdGrupoEvento($idGrupoEvento)){
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($item['grupo_id']);
+					if($grupo->getEntidadeAtiva()){
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
+						$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
+						$fatoCelulaDiscipulado->setGrupo_evento_id($idGrupoEvento);
+						$fatoCelulaDiscipulado->setDataEHoraDeCriacao('2019-11-11');
+						//$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado);
+					}
+				}
+			}
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();

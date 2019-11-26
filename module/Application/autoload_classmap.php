@@ -128,6 +128,7 @@ return array(
     'Application\Model\ORM\GrupoPessoaTipoORM'                   => __DIR__ . '/src/Application/Model/ORM/GrupoPessoaTipoORM.php',
     'Application\Model\ORM\FatoMensalORM'                        => __DIR__ . '/src/Application/Model/ORM/FatoMensalORM.php',
     'Application\Model\ORM\GrupoPessoaORM'                       => __DIR__ . '/src/Application/Model/ORM/GrupoPessoaORM.php',
+    'Application\Model\ORM\GrupoEventoORM'                       => __DIR__ . '/src/Application/Model/ORM/GrupoEventoORM.php',
     'Application\Model\ORM\FatoRankingCelulaORM'                 => __DIR__ . '/src/Application/Model/ORM/FatoRankingCelulaORM.php',
     'Application\Model\ORM\TurmaPessoaFrequenciaORM'             => __DIR__ . '/src/Application/Model/ORM/TurmaPessoaFrequenciaORM.php',
     'Application\Model\ORM\TurmaORM'                             => __DIR__ . '/src/Application/Model/ORM/TurmaORM.php',

@@ -196,17 +196,6 @@ class RepositorioORM {
     }
 
     /**
-     * Metodo public para obter a instancia do GrupoEventoORM
-     * @return CircuitoORM
-     */
-    public function getGrupoEventoORM() {
-        if (is_null($this->_grupoEventoORM)) {
-            $this->_grupoEventoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_EVENTO);
-        }
-        return $this->_grupoEventoORM;
-    }
-
-    /**
      * Metodo public para obter a instancia do GrupoAtendimentoORM
      * @return CircuitoORM
      */
@@ -757,6 +746,13 @@ class RepositorioORM {
 			$this->_fatoCelulaDiscipuladoORM = new FatoCelulaDiscipuladoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_CELULA_DISCIPULADO);
         }
         return $this->_fatoCelulaDiscipuladoORM;
+    }
+
+    public function getGrupoEventoORM() {
+        if (is_null($this->_grupoEventoORM)) {
+			$this->_grupoEventoORM = new GrupoEventoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_EVENTO);
+        }
+        return $this->_grupoEventoORM;
     }
 
     /**

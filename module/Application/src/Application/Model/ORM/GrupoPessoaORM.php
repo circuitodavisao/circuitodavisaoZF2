@@ -108,6 +108,7 @@ class GrupoPessoaORM extends CircuitoORM {
             echo $exc->getTraceAsString();
         }
     }
+
 	public function grupoPessoasInativosNoPEriodo($idGrupo, $periodo) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];

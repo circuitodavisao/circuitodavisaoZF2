@@ -40,4 +40,16 @@ class FatoDiscipuladoORM extends CircuitoORM {
 		}
 	}
 
+	public function encontrarPorIdGrupoEvento($idGrupoEvento) {
+		try {
+			$entidade = $this->getEntityManager()
+				->getRepository($this->getEntity())
+				->findOneBy(array(
+					'grupo_evento_id' => $idGrupoEvento,
+				));
+			return $entidade;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
 }
