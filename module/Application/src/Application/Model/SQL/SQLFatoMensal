@@ -119,3 +119,10 @@ CREATE INDEX index_fato_mensal_numero_identificador
   ON fato_mensal
   USING btree
   (numero_identificador COLLATE pg_catalog."default");
+
+ALTER TABLE fato_mensal ADD COLUMN l1 integer;
+ALTER TABLE fato_mensal ADD COLUMN l2 integer;
+ALTER TABLE fato_mensal ADD COLUMN l3 integer;
+ALTER TABLE fato_mensal ADD COLUMN l4 integer;
+ALTER TABLE fato_mensal ADD COLUMN l5 integer;
+ALTER TABLE fato_mensal ADD COLUMN l6 integer;

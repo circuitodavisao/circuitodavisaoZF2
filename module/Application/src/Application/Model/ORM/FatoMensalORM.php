@@ -47,6 +47,12 @@ class FatoMensalORM extends CircuitoORM {
 
 	public function buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $tipoComparacao) {
 		$dqlBase = "SELECT "
+			. "SUM(fm.l1) l1, "
+			. "SUM(fm.l2) l2, "
+			. "SUM(fm.l3) l3, "
+			. "SUM(fm.l4) l4, "
+			. "SUM(fm.l5) l5, "
+			. "SUM(fm.l6) l6, "
 			. "SUM(fm.cq1) cq1, "
 			. "SUM(fm.cq2) cq2, "
 			. "SUM(fm.cq3) cq3, "

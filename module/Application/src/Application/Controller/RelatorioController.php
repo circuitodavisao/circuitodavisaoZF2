@@ -3836,13 +3836,12 @@ public function alunosNaSemanaAction(){
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 
+					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $somado = 2);			
 					/* Líderes */
-					$fatoLider = 
-						$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio, $periodoParaUsar, $inativo = false);						
-					$lideres = $fatoLider[0]['lideres'];
+					$l = 'l'.$contadorDePeriodos;
+					$lideres = $fatoMensalSomado[$l];
 
 					/* Células */
-					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $somado = 2);			
 					$cq = 'cq'.$contadorDePeriodos;
 					$cbq = 'cbq'.$contadorDePeriodos;
 					$celulasBoas = $fatoMensalSomado[$cq];
@@ -3888,12 +3887,12 @@ public function alunosNaSemanaAction(){
 							if($filho12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 								$igrejas++;
 								$numeroIdentificador12 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho12);
-								/* Somando líderes */
-								$fatoLider = 
-									$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador12, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-								$lideres += $fatoLider[0]['lideres'];
-								/* Somando Células */
 								$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador12, date('m'), date('Y'), $somado = 2);			
+								/* Somando líderes */
+								$l = 'l'.$contadorDePeriodos;
+								$lideres += $fatoMensalSomado[$l];
+
+								/* Somando Células */
 								$cq = 'cq'.$contadorDePeriodos;
 								$cbq = 'cbq'.$contadorDePeriodos;
 								$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
@@ -3922,12 +3921,11 @@ public function alunosNaSemanaAction(){
 										if($filho144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 											$igrejas++;
 											$numeroIdentificador144 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho144);
-											/* Somando líderes */
-											$fatoLider = 
-												$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador144, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-											$lideres += $fatoLider[0]['lideres'];
-											/* Somando Células */
 											$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador144, date('m'), date('Y'), $somado  =2);			
+											/* Somando líderes */
+											$l = 'l'.$contadorDePeriodos;
+											$lideres += $fatoMensalSomado[$l];
+											/* Somando Células */
 											$cq = 'cq'.$contadorDePeriodos;
 											$cbq = 'cbq'.$contadorDePeriodos;
 											$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
@@ -3956,12 +3954,11 @@ public function alunosNaSemanaAction(){
 													if($filho1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 														$igrejas++;
 														$numeroIdentificador1728 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho1728);
-														/* Somando líderes */
-														$fatoLider = 
-															$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador1728, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-														$lideres += $fatoLider[0]['lideres'];
-														/* Somando Células */
 														$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador1728, date('m'), date('Y'), $somado = 2);			
+														/* Somando líderes */
+														$l = 'l'.$contadorDePeriodos;
+														$lideres += $fatoMensalSomado[$l];
+														/* Somando Células */
 														$cq = 'cq'.$contadorDePeriodos;
 														$cbq = 'cbq'.$contadorDePeriodos;
 														$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
@@ -3987,12 +3984,11 @@ public function alunosNaSemanaAction(){
 																if($filho20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 																	$igrejas++;
 																	$numeroIdentificador20736 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho20736);
-																	/* Somando líderes */
-																	$fatoLider = 
-																		$repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador20736, $tipoRelatorio, $periodoParaUsar, $inativo = false);
-																	$lideres += $fatoLider[0]['lideres'];
-																	/* Somando Células */
 																	$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador20736, date('m'), date('Y'), $somado = 2);			
+																	/* Somando líderes */
+																	$l = 'l'.$contadorDePeriodos;
+																	$lideres += $fatoMensalSomado[$l];
+																	/* Somando Células */
 																	$cq = 'cq'.$contadorDePeriodos;
 																	$cbq = 'cbq'.$contadorDePeriodos;
 																	$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];

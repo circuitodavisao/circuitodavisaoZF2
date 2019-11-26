@@ -26,6 +26,24 @@ class FatoMensal extends CircuitoEntity {
 	protected $ano;
 
 	/** @ORM\Column(type="integer") */
+	protected $l1;
+
+	/** @ORM\Column(type="integer") */
+	protected $l2;
+
+	/** @ORM\Column(type="integer") */
+	protected $l3;
+
+	/** @ORM\Column(type="integer") */
+	protected $l4;
+
+	/** @ORM\Column(type="integer") */
+	protected $l5;
+
+	/** @ORM\Column(type="integer") */
+	protected $l6;
+
+	/** @ORM\Column(type="integer") */
 	protected $cu1;
 
 	/** @ORM\Column(type="integer") */
@@ -838,6 +856,43 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setMediacpclass($item){
 		$this->mediacpclass = $item;
+	}
+
+	function setL1($item){
+		$this->l1 = $item;
+	}
+	function setL2($item){
+		$this->l2 = $item;
+	}
+	function setL3($item){
+		$this->l3 = $item;
+	}
+	function setL4($item){
+		$this->l4 = $item;
+	}
+	function setL5($item){
+		$this->l5 = $item;
+	}
+	function setL6($item){
+		$this->l6 = $item;
+	}
+	function getL1(){
+		return $this->l1;
+	}
+	function getL2(){
+		return $this->l2;
+	}
+	function getL3(){
+		return $this->l3;
+	}
+	function getL4(){
+		return $this->l4;
+	}
+	function getL5(){
+		return $this->l5;
+	}
+	function getL6(){
+		return $this->l6;
 	}
 
 	public function __set($name,$value) {

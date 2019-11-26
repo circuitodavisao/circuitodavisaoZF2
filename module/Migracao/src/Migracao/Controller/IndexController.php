@@ -4247,48 +4247,61 @@ class IndexController extends CircuitoController {
 							}
 							$contadorDePeriodo[1] = 1;
 							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
+								// celulas
 								$relatorioCelula = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1);
 								$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
 								$relatorioCelulaEstrategicas = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1, $estrategica = true);
 								$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];
 								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
+								// lideres
+								$lideres = 0;
+								if($quantidadeCelulas > 0 || $quantidadeCelulasEstrategicas > 0){
+									$lideres = count($grupo->getResponsabilidadesAtivas());
+								}
+
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL1($lideres);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 2){
 									$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL2($lideres);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 3){
 									$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL3($lideres);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 4){
 									$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL4($lideres);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL5($lideres);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 6){
 									$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
 									$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
+									$fatosMensal[$indiceFatoMensal]->setL6($lideres);
 								}
 								$contadorDePeriodo[1]++;
 							}
