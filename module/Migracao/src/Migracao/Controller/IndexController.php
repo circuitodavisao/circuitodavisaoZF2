@@ -3141,25 +3141,9 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>Gerar fato celula discipulado</h1>';
+		$html .= '<h1>Ajustar lideres</h1>';
 		try {
-			$relatorio = $this->getRepositorio()->getGrupoEventoORM()->discipuladosParaAjustar();
-			foreach($relatorio as $item){
-				$idGrupoEvento = $item['id'];
-				if(!$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorIdGrupoEvento($idGrupoEvento)){
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($item['grupo_id']);
-					if($grupo->getEntidadeAtiva()){
-						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						if($numeroIdentificador !== ''){
-							$fatoCelulaDiscipulado = new FatoCelulaDiscipulado();
-							$fatoCelulaDiscipulado->setNumero_identificador($numeroIdentificador);
-							$fatoCelulaDiscipulado->setGrupo_evento_id($idGrupoEvento);
-							$fatoCelulaDiscipulado->setDataEHoraDeCriacao('2019-11-11');
-							$this->getRepositorio()->getFatoCelulaDiscipuladoORM()->persistir($fatoCelulaDiscipulado, false);
-						}
-					}
-				}
-			}
+
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
@@ -4117,24 +4101,24 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
 		}
 	}
+
 	public function removerFatosLideresFantasmasAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
 
 		$html = '';
+		$dataParaInativar = '2019-11-24';
 		$fatosLideresAtivos = $this->getRepositorio()->getFatoLiderORM()->encontrarTodosFatosLideresAtivos();
 		foreach($fatosLideresAtivos as $fatoLider){
 			$idGrupo = substr($fatoLider->getNumero_identificador(), (count($fatoLider->getNumero_identificador())-8));					
 			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);	
 			if(!$grupo){
-				$dataParaInativar = self::getDataParaInativacao();				
 				$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
 				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
 				$html .= '<br />Fato líder fantasma inativado: ID ' . $fatoLider->getId();
 			}
 			if($grupo && count($grupo->getResponsabilidadesAtivas()) === 0){
-				$dataParaInativar = self::getDataParaInativacao();				
 				$fatoLider->setDataEHoraDeInativacao($dataParaInativar);
 				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider, $alterarDataDeCriacao = false);
 				$html .= '<br />Fato líder fantasma inativado: ID ' . $fatoLider->getId();
