@@ -106,12 +106,12 @@ use Application\Controller\Helper\Constantes;
 
                 // Modal de publicidade na página de login
 
-                // $(document).ready(function () {
-                //     let ls = localStorage.getItem("modalIndexx");
-                //     if(!ls){
-                //         $('#alertIndex').modal('show');
-                //     }
-                // });
+                 $(document).ready(function () {
+                     let ls = localStorage.getItem("modalIndexx");
+                     if(!ls){
+                         $('#alertIndex').modal('show');
+                     }
+                 });
 
                 $('#alertIndex').on('shown.bs.modal', function(){
                     localStorage.setItem("modalIndex", false);
