@@ -112,12 +112,12 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				// id novo
-				$idGrupoPai = 17689; 
+				$idGrupoPai = 12696; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				$html .= 'coordenacao: ' . $grupoRegiao->getEntidadeAtiva()->infoEntidade();
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 147');
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 204');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 
 					$html .= '<br />Igreja: ' . $row['nome'];
@@ -284,12 +284,13 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 
 			$idCoordenacao = 37;
-			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 147');
+			$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 311');
 			while ($row = mysqli_fetch_array($queryIgrejas)) {
 				$html .= '<br />Igreja: ' . $row['nome'];
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorNomeETabela($row['nome'], Constantes::$ENTITY_ENTIDADE);
-				$this->alunos($row['id'], $entidade[0]->getGrupo()->getId(), $html);
-				$this->alunosHistorico($row['id'], $entidade[0]->getGrupo()->getId(), $html);
+				$idGrupo = 26894;
+				//$this->alunos($row['id'], $idGrupo, $html);
+				$this->alunosHistorico($row['id'], $idGrupo, $html);
 			}
 			$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
