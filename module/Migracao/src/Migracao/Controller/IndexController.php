@@ -4230,16 +4230,17 @@ class IndexController extends CircuitoController {
 				foreach ($gruposParaValidar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
-						$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
+					//	$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
+					//	$html .= "<br />lideres: " . $grupo->getNomeLideresAtivos();
 						if ($grupo->getEntidadeAtiva()) {
-							$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
+						//	$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
 						}
 						$dataInativacao = null;
 						if(!$grupo->verificarSeEstaAtivo()){
 							$dataInativacao = $grupo->getData_inativacaoStringPadraoBanco();
 						}
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo, $dataInativacao);
-						$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
+						//$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
 						if ($numeroIdentificador) {
 							$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 							if($fatosMensal[1]->entidade === null){
@@ -4249,10 +4250,12 @@ class IndexController extends CircuitoController {
 							$contadorDePeriodo[1] = 1;
 							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 								// celulas
-								$relatorioCelula = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1);
-								$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
-								$relatorioCelulaEstrategicas = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1, $estrategica = true);
-								$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];
+								$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
+								$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
+
+								//$html .= '<br />Celulas: ' . $quantidadeCelulas;
+								//$html .= '<br />Celulas Bosta: ' . $quantidadeCelulasEstrategicas;
+
 								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
 								// lideres

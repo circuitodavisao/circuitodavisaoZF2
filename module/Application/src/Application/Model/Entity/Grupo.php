@@ -374,12 +374,20 @@ class Grupo extends CircuitoEntity {
 		return $grupoPaiFilhoFilhosAtivos;
 	}
 
-    function getCelulasPorPeriodo($periodo = -1) {
+	// 0 - todas, 1 - boas, 2 - betas
+    function getCelulasPorPeriodo($periodo = -1, $quais = 0) {
         $resposta = 0;
         /* Responsabilidades */
 		$grupoEvento = array();
-        $array1 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
-        $array2 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica);
+		$array1 = null;
+		$array2 = null;
+
+		if($quais === 0 || $quais === 1){
+			$array1 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula);
+		}
+		if($quais === 0 || $quais === 2){
+			$array2 = $this->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelulaEstrategica);
+		}
 		if($array1 && !$array2){
 			$grupoEvento = $array1;
 		}
