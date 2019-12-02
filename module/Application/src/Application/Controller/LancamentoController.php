@@ -291,16 +291,11 @@ class LancamentoController extends CircuitoController {
 					$this->getRepositorio()->getDimensaoORM()->persistir($dimensao, false);
 
 					if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CELULA) {
-						$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
 						$contadorCelulasRealizadas = 0;
-						foreach ($fatoCelulas as $fatoCelula) {
-							$realizada = 0;
-							if ($relatorio['celula'][$fatoCelula->getEvento_celula_id()] > 0) {
+						foreach($relatorio['celula'] as $k => $v){
+							if($relatorio['celula'][$k] > 0){
 								$contadorCelulasRealizadas++;
-								$realizada = 1;
 							}
-							$fatoCelula->setRealizada($realizada);
-							$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelula, false);
 						}
 					}
 
