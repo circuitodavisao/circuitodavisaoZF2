@@ -4190,36 +4190,10 @@ class IndexController extends CircuitoController {
 
 		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
 
-		$grupos = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
-
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
-		$gruposParaValidar = array();
-		$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
-		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 
-			$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
-			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-			$stringFimDoPeriodo = $arrayPeriodo[6] . '-' . $arrayPeriodo[5] . '-' . $arrayPeriodo[4];
-			/* Verificar responsabilidades ativas */
-			foreach ($grupos as $grupo) {
-				if ($grupo->verificarSeEstaAtivo()) {
-					$dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-					$dataDoGrupoCriacaoParaComparar = strtotime($grupo->getData_criacaoStringPadraoBanco());
-					if ($dataDoGrupoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-						$gruposParaValidar[] = $grupo;
-					}
-				} else {
-					/* Inativo */
-					$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-					$dataDoGrupoInativadoParaComparar = strtotime($grupo->getData_inativacaoStringPadraoBanco());
-					if ($dataDoGrupoInativadoParaComparar >= $dataDoInicioDoPeriodoParaComparar) {
-						$gruposParaValidar[] = $grupo;
-					}
-				}
-			}
-		}
-
+		$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
 		$this->getRepositorio()->iniciarTransacao();
 		$html .= "<br />###### iniciarTransacao ";
 		try {
@@ -4230,8 +4204,8 @@ class IndexController extends CircuitoController {
 				foreach ($gruposParaValidar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
-					//	$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
-					//	$html .= "<br />lideres: " . $grupo->getNomeLideresAtivos();
+						//$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
+						//$html .= "<br />lideres: " . $grupo->getNomeLideresAtivos();
 						if ($grupo->getEntidadeAtiva()) {
 						//	$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
 						}
@@ -4253,8 +4227,8 @@ class IndexController extends CircuitoController {
 								$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
 								$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
 
-								//$html .= '<br />Celulas: ' . $quantidadeCelulas;
-								//$html .= '<br />Celulas Bosta: ' . $quantidadeCelulasEstrategicas;
+						//		$html .= '<br />Celulas: ' . $quantidadeCelulas;
+						//		$html .= '<br />Celulas Bosta: ' . $quantidadeCelulasEstrategicas;
 
 								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
