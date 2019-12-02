@@ -422,11 +422,8 @@ class LancamentoController extends CircuitoController {
 				}
 
 				// membresia para fato mensal
-				$relatorioCelula = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1);
-				$quantidadeCelulas = $relatorioCelula[0]['quantidade'];
-
-				$relatorioCelulaEstrategicas = $this->getRepositorio()->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $indiceDePeriodos, $tipoRelatorio = 1, $estrategica = true);
-				$quantidadeCelulasEstrategicas = $relatorioCelulaEstrategicas[0]['quantidade'];		
+				$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
+				$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
 
 				$fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio = 1, $indiceDePeriodos, $inativo);
 				$quantidadeLideres = $fatoLider[0]['lideres'];
