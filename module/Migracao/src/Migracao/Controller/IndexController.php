@@ -4241,9 +4241,6 @@ class IndexController extends CircuitoController {
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
-									if($fatosMensal[$indiceFatoMensal]->getRealizada1() > $quantidadeCelulas){
-										$fatosMensal[$indiceFatoMensal]->setRealizada1($quantidadeCelulas);
-									}
 									$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
@@ -4272,9 +4269,6 @@ class IndexController extends CircuitoController {
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
-									if($fatosMensal[$indiceFatoMensal]->getRealizada5() > $quantidadeCelulas){
-										$fatosMensal[$indiceFatoMensal]->setRealizada5($quantidadeCelulas);
-									}
 									$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
@@ -4282,9 +4276,6 @@ class IndexController extends CircuitoController {
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 6){
 									$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
-									if($fatosMensal[$indiceFatoMensal]->getRealizada6() > $quantidadeCelulas){
-										$fatosMensal[$indiceFatoMensal]->setRealizada6($quantidadeCelulas);
-									}
 									$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
 									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
