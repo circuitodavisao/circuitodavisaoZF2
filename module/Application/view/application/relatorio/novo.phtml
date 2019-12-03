@@ -246,106 +246,113 @@ echo '</thead>';
 echo '<tbody>';
 $ranking = 0;
 foreach($this->relatorio as $relatorio){
-	$class = '';
-	if ($this->tipoRelatorio == 1) {
-		$class = $relatorio->mediamempclass;
+	$mostrar = true;
+	if($relatorio->numero_identificador === 0){
+		$mostrar = false;
+		$ranking = 1;
 	}
-	if ($this->tipoRelatorio == 2) {
-		$class = $relatorio->mediarealizadapclass;
-	}
-	if ($this->tipoRelatorio == 3) {
-		$class = $relatorio->mediacpclass;
-	}
-
-	echo '<tr class="'.$class.'">';
-	if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
-		echo '<td>'.$ranking.'º</td>';
-	}else{
-		echo '<td></td>';
-	}
-
-	echo '<td class="text-left">';
-	if($ranking !== count($this->relatorio) - 1){
-		echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
-		$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
-		$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
-		if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
-			$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
-			$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio->lideres.'</a>';
-		} else {
-			$linkDeQuemEstaLogado = $relatorio->lideres;
-		}		
-
-		echo ' '.$linkDeQuemEstaLogado;
-	}
-	echo '</td>';
-
-	$ranking++;
-	$contadorDePeriodos = 1;
-	for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-		$classeBase = 'periodo' . $indiceDeArrays . ' ';
-		if ($indiceDeArrays != -1) {
-			$classeBase .= 'hidden-xs';
-		}
-		$classePeriodoAtual = '';
-		if ($indiceDeArrays == -1) {
-			$classePeriodoAtual = 'bg-info';
-		}
-		$cq = 'cq' . $contadorDePeriodos;
-		$cbq = 'cbq' . $contadorDePeriodos;
-		$cqmeta = 'cqmeta' . $contadorDePeriodos;
-		$cbqmeta = 'cbqmeta' . $contadorDePeriodos;
-
+	if($mostrar){
+		$class = '';
 		if ($this->tipoRelatorio == 1) {
-			$cu = 'cu' . $contadorDePeriodos;
-			$a = 'a' . $contadorDePeriodos;
-			$d = 'd' . $contadorDePeriodos;
-			$mem = 'mem' . $contadorDePeriodos;
-			$memp = 'memp' . $contadorDePeriodos;
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cq.'</td>';
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbq.'</td>';
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cqmeta.'</td>';
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbqmeta.'</td>';
-			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$cu.'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$a.'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$d.'</td>';
-			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem).'</td>';
-			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp).'%</td>';
+			$class = $relatorio->mediamempclass;
 		}
-		if ($this->tipoRelatorio == 2){
-			$realizada = 'realizada' . $contadorDePeriodos;
-			$realizadap = 'realizadap' . $contadorDePeriodos;
-			echo '<td class="' . $classeBase . '">'.($relatorio->$cq+$relatorio->$cbq).'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$realizada.'</td>';
-			echo '<td class="' . $classeBase . '">'.(($relatorio->$cq + $relatorio->$cbq) - $relatorio->$realizada).'</td>';
-			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizadap).'%</td>';
+		if ($this->tipoRelatorio == 2) {
+			$class = $relatorio->mediarealizadapclass;
 		}
 		if ($this->tipoRelatorio == 3) {
-			$c = 'c' . $contadorDePeriodos;
-			$cp = 'cp' . $contadorDePeriodos;
-			echo '<td class="' . $classeBase . '">'.$relatorio->$cq.'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$cbq.'</td>';
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cqmeta.'</td>';
-			echo '<td class="' . $classeBase . ' hidden-xs">'.$relatorio->$cbqmeta.'</td>';
-			echo '<td class="' . $classeBase . '">'.($relatorio->$cqmeta+$relatorio->$cbqmeta).'</td>';
-			echo '<td class="' . $classeBase . '">'.$relatorio->$c.'</td>';
-			echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp).'%</td>';
+			$class = $relatorio->mediacpclass;
 		}
-		$contadorDePeriodos++;
+
+		echo '<tr class="'.$class.'">';
+		if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
+			echo '<td>'.$ranking.'º</td>';
+		}else{
+			echo '<td></td>';
+		}
+
+		echo '<td class="text-left">';
+		if($ranking !== count($this->relatorio) - 1){
+			echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
+			$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
+			$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+			if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
+				$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
+				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'.$relatorio->lideres.'</a>';
+			} else {
+				$linkDeQuemEstaLogado = $relatorio->lideres;
+			}		
+
+			echo ' '.$linkDeQuemEstaLogado;
+		}
+		echo '</td>';
+
+		$ranking++;
+		$contadorDePeriodos = 1;
+		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
+			$classeBase = 'periodo' . $indiceDeArrays . ' ';
+			if ($indiceDeArrays != -1) {
+				$classeBase .= 'hidden-xs';
+			}
+			$classePeriodoAtual = '';
+			if ($indiceDeArrays == -1) {
+				$classePeriodoAtual = 'bg-info';
+			}
+			$cq = 'cq' . $contadorDePeriodos;
+			$cbq = 'cbq' . $contadorDePeriodos;
+			$cqmeta = 'cqmeta' . $contadorDePeriodos;
+			$cbqmeta = 'cbqmeta' . $contadorDePeriodos;
+
+			if ($this->tipoRelatorio == 1) {
+				$cu = 'cu' . $contadorDePeriodos;
+				$a = 'a' . $contadorDePeriodos;
+				$d = 'd' . $contadorDePeriodos;
+				$mem = 'mem' . $contadorDePeriodos;
+				$memp = 'memp' . $contadorDePeriodos;
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp, 0, ',', '.').' %</td>';
+			}
+			if ($this->tipoRelatorio == 2){
+				$realizada = 'realizada' . $contadorDePeriodos;
+				$realizadap = 'realizadap' . $contadorDePeriodos;
+				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cq+$relatorio->$cbq), 0 , ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizada, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format((($relatorio->$cq + $relatorio->$cbq) - $relatorio->$realizada), 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizadap, 0, ',', '.').' %</td>';
+			}
+			if ($this->tipoRelatorio == 3) {
+				$c = 'c' . $contadorDePeriodos;
+				$cp = 'cp' . $contadorDePeriodos;
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0 , ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
+			}
+			$contadorDePeriodos++;
+		}
+		if ($this->tipoRelatorio == 1){
+			echo '<td>'.number_format($relatorio->mediamem, 0, ',', '.').'</td>';
+			echo '<td>'.number_format($relatorio->mediamemp, 0, ',', '.').' %</td>';
+		}
+		if ($this->tipoRelatorio == 2){
+			echo '<td>'.number_format($relatorio->mediarealizadap, 0, ',', '.').' %</td>';
+		}
+		if ($this->tipoRelatorio == 3){
+			echo '<td>'.number_format($relatorio->mediac, 0 , ',', '.').'</td>';
+			echo '<td>'.number_format($relatorio->mediacp, 0, ',', '.').' %</td>';
+		}
+		echo '</tr>';
 	}
-	if ($this->tipoRelatorio == 1){
-		echo '<td>'.number_format($relatorio->mediamem).'</td>';
-		echo '<td>'.number_format($relatorio->mediamemp).'%</td>';
-	}
-	if ($this->tipoRelatorio == 2){
-		echo '<td>'.number_format($relatorio->mediarealizadap).'%</td>';
-	}
-	if ($this->tipoRelatorio == 3){
-		echo '<td>'.number_format($relatorio->mediac).'</td>';
-		echo '<td>'.number_format($relatorio->mediacp).'%</td>';
-	}
-	echo '</tr>';
 }
 
 echo '</tbody>';

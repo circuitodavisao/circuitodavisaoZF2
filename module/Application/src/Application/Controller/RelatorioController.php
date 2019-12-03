@@ -4637,6 +4637,9 @@ public function alunosNaSemanaAction(){
 								}
 							}
 						}
+						if($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() === EntidadeTipo::secretario){
+							$adicionar = false;
+						}
 						if ($adicionar) {
 							$todosFilhos[] = $grupoPaiFilhoFilho;
 						}
@@ -4646,7 +4649,8 @@ public function alunosNaSemanaAction(){
 		}
 
 		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-			&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao ){
+			&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+			&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial ){
 
 				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 				$fatoFinal = new FatoMensal();
@@ -4678,130 +4682,364 @@ public function alunosNaSemanaAction(){
 				$fatosDiscipulos = array();
 				if(count($todosFilhos)){
 					foreach($todosFilhos as $filho){
+						$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-						if($grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-							&& $grupoFilho->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao ){
-								$dataInativacao = null;
-								if ($filho->getData_inativacao()) {
-									$dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
-								}
-								$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
-								$fatoFilho = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano);
+						$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 
-								if($fatoFilho->entidade === null){
-									$fatoFilho->entidade = $grupoFilho->getEntidadeAtiva()->infoEntidade();
-									$fatoFilho->lideres = $grupoFilho->getNomeLideresAtivos();
-								}
-
-								$fatoSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano, $pessoalOuEquipe);
-								foreach($fatoSomado as $k => $v){
-									$fatoFilho->$k = $v;
-								}
-
-								// ajustando percentual somado
-								for($w = 1;$w <= 6;$w++){
-									$cqmeta = 'cqmeta' . $w;
-									$cbqmeta = 'cbqmeta' . $w;
-									// membresia
-									$mem = 'mem' . $w;
-									$memp = 'memp' . $w;
-									$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
-									if($membresiaMetaSomada > 0 ){
-										$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
-									}else{
-										$fatoFilho->$memp = 0;
-									}
-									// celulas
-									$c = 'c' . $w;
-									$cp = 'cp' . $w;
-									if($membresiaMetaSomada > 0 ){
-										$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
-									}else{
-										$fatoFilho->$cp = 0;
-									}
-									//realizada
-									$cq = 'cq' . $w;
-									$cbq = 'cbq' . $w;
-									$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
-									$realizada = 'realizada' . $w;
-									$realizadap = 'realizadap' . $w;
-									if($quantidadeDeCelulas > 0 ){
-										$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
-									}else{
-										$fatoFilho->$realizadap = 0;
-									}
-								}
-
-								$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
-								$somaCp = $fatoFilho->getCp1() + $fatoFilho->getCp2() + $fatoFilho->getCp3() + $fatoFilho->getCp4() + $fatoFilho->getCp5() + $fatoFilho->getCp6();
-								$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
-
-								$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
-								$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
-								$fatoFilho->setMediamempclass($mediaMemPClass);
-
-								$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
-								$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
-								$fatoFilho->setMediacpclass($mediaCPClass);
-
-								$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
-								$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
-								$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
-
-								$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
-
-								foreach($fatoSomado as $k => $v){
-									$novoValor = $fatoFinal->$k + $v;
-									$fatoFinal->$k = $novoValor;
-								}
-							}
+						foreach($fatoSomado as $k => $v){
+							$novoValor = $fatoFinal->$k + $v;
+							$fatoFinal->$k = $novoValor;
+						}
 					}
 				}
-				// ordernar os malucos
-				$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
-				foreach($filhosOrdenado as $filho){
-					$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-					$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
-				}
-
-				// final
-				$fatoFinal->setMediamempclass('dark');
-				$fatoFinal->setMediacpclass('dark');
-				$fatoFinal->setMediarealizadapclass('dark');
-
-				// ajustando percentual somado
-				for($w = 1;$w <= 6;$w++){
-					$cqmeta = 'cqmeta' . $w;
-					$cbqmeta = 'cbqmeta' . $w;
-					// membresia
-					$mem = 'mem' . $w;
-					$memp = 'memp' . $w;
-					$membresiaMetaSomada = $fatoFinal->$cqmeta + $fatoFinal->$cbqmeta;
-					$fatoFinal->$memp = ($fatoFinal->$mem / $membresiaMetaSomada * 100);
-					// celulas
-					$c = 'c' . $w;
-					$cp = 'cp' . $w;
-					$fatoFinal->$cp = ($fatoFinal->$c / $membresiaMetaSomada * 100);
-					//realizada
-					$cq = 'cq' . $w;
-					$cbq = 'cbq' . $w;
-					$quantidadeDeCelulas = $fatoFinal->$cq + $fatoFinal->$cbq;
-					$realizada = 'realizada' . $w;
-					$realizadap = 'realizadap' . $w;
-					$fatoFinal->$realizadap = ($fatoFinal->$realizada / $quantidadeDeCelulas * 100);
-				}
-
-				$somaMembresiap = $fatoFinal->getMemp1() + $fatoFinal->getMemp2() + $fatoFinal->getMemp3() + $fatoFinal->getMemp4() + $fatoFinal->getMemp5() + $fatoFinal->getMemp6();
-				$somaCp = $fatoFinal->getCp1() + $fatoFinal->getCp2() + $fatoFinal->getCp3() + $fatoFinal->getCp4() + $fatoFinal->getCp5() + $fatoFinal->getCp6();
-				$somaRealizadap = $fatoFinal->getRealizadap1() + $fatoFinal->getRealizadap2() + $fatoFinal->getRealizadap3() + $fatoFinal->getRealizadap4() + $fatoFinal->getRealizadap5() + $fatoFinal->getRealizadap6();
-
-				$fatoFinal->setMediamemp($somaMembresiap/$diferencaDePeriodos);
-				$fatoFinal->setMediacp($somaCp/$diferencaDePeriodos);
-				$fatoFinal->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
-
-				$relatorio[] = $fatoFinal;
 			}
 
+		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial ){
+				$fatoFinal = new FatoMensal();
+				// dados pessoais
+				$fatoPessoal = new FatoMensal();
+				$fatoPessoal->numero_identificador = 0;
+				$relatorio[] = $fatoPessoal;
+				// dados discipulos
+				$fatosDiscipulos = array();
+				if(count($todosFilhos)){
+					foreach($todosFilhos as $filho){
+						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+						$entidade = $grupoFilho->getEntidadeAtiva();
+						$idEntidadeTipo = $entidade->getEntidadeTipo()->getId();
+
+						$fatoFilho = new FatoMensal();
+						$fatoFilho->entidade = $grupoFilho->getEntidadeAtiva()->infoEntidade();
+						$fatoFilho->lideres = $grupoFilho->getNomeLideresAtivos();
+						$fatoFilho->numero_identificador = str_pad($grupoFilho->getId(), 8, '0', STR_PAD_LEFT);
+
+						if($idEntidadeTipo === EntidadeTipo::regiao || $idEntidadeTipo === EntidadeTipo::coordenacao){
+							$discipulos1 = array();
+							for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+								if($grupoPaiFilhoFilhos1 = $grupoFilho->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
+									foreach ($grupoPaiFilhoFilhos1 as $grupoPaiFilhoFilho1) {
+										$adicionar = true;
+										if (count($discipulos1) > 0) {
+											foreach ($discipulos1 as $filho1) {
+												if ($filho1->getId() === $grupoPaiFilhoFilho1->getId()) {
+													$adicionar = false;
+													break;
+												}
+											}
+										}
+										if($grupoPaiFilhoFilho1->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() === EntidadeTipo::secretario){
+											$adicionar = false;
+										}
+										if ($adicionar) {
+											$discipulos1[] = $grupoPaiFilhoFilho1;
+										}
+									}
+								}
+							}
+
+							if(count($discipulos1)){
+								foreach($discipulos1 as $filho1){
+									$grupoFilho1 = $filho1->getGrupoPaiFilhoFilho();
+									$entidade1 = $grupoFilho1->getEntidadeAtiva();
+									$idEntidadeTipo1 = $entidade1->getEntidadeTipo()->getId();
+									if($idEntidadeTipo1 === EntidadeTipo::regiao || $idEntidadeTipo1 === EntidadeTipo::coordenacao){
+										$discipulos2 = array();
+										for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+											if($grupoPaiFilhoFilhos2 = $grupoFilho1->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
+												foreach ($grupoPaiFilhoFilhos2 as $grupoPaiFilhoFilho2) {
+													$adicionar = true;
+													if (count($discipulos2) > 0) {
+														foreach ($discipulos2 as $filho2) {
+															if ($filho2->getId() === $grupoPaiFilhoFilho2->getId()) {
+																$adicionar = false;
+																break;
+															}
+														}
+													}
+													if($grupoPaiFilhoFilho2->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() === EntidadeTipo::secretario){
+														$adicionar = false;
+													}
+													if ($adicionar) {
+														$discipulos2[] = $grupoPaiFilhoFilho2;
+													}
+												}
+											}
+										}
+
+										if(count($discipulos2)){
+											foreach($discipulos2 as $filho2){
+												$grupoFilho2 = $filho2->getGrupoPaiFilhoFilho();
+												$entidade2 = $grupoFilho2->getEntidadeAtiva();
+												$idEntidadeTipo2 = $entidade2->getEntidadeTipo()->getId();
+												if($idEntidadeTipo2 === EntidadeTipo::regiao || $idEntidadeTipo2 === EntidadeTipo::coordenacao){
+													$discipulos3 = array();
+													for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+														if($grupoPaiFilhoFilhos3 = $grupoFilho2->getGrupoPaiFilhoFilhosAtivos($indiceDeArrays)){
+															foreach ($grupoPaiFilhoFilhos3 as $grupoPaiFilhoFilho3) {
+																$adicionar = true;
+																if (count($discipulos3) > 0) {
+																	foreach ($discipulos3 as $filho3) {
+																		if ($filho3->getId() === $grupoPaiFilhoFilho3->getId()) {
+																			$adicionar = false;
+																			break;
+																		}
+																	}
+																}
+																if($grupoPaiFilhoFilho3->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() === EntidadeTipo::secretario){
+																	$adicionar = false;
+																}
+																if ($adicionar) {
+																	$discipulos3[] = $grupoPaiFilhoFilho3;
+																}
+															}
+														}
+													}
+
+													if(count($discipulos3)){
+														foreach($discipulos3 as $filho3){
+															$grupoFilho3 = $filho3->getGrupoPaiFilhoFilho();
+															$entidade3 = $grupoFilho3->getEntidadeAtiva();
+															$idEntidadeTipo3 = $entidade3->getEntidadeTipo()->getId();
+															if($idEntidadeTipo3 === EntidadeTipo::igreja){
+																$fatoFilho3 = self::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+																$arrayFatoMensal3 = (array)$fatoFilho3;
+																foreach($arrayFatoMensal3 as $k => $v){
+																	$aux = explode ("\0", $k);
+																	$k = $aux[count($aux)-1];
+																	if(
+																		$k !== 'id' &&
+																		$k !== 'numero_identificador' &&
+																		$k !== 'entidade' &&
+																		$k !== 'lideres' &&
+																		$k !== 'mes' &&
+																		$k !== 'ano' &&
+																		$k !== 'data_criacao' &&
+																		$k !== 'hora_criacao' &&
+																		$k !== 'data_inativacao' &&
+																		$k !== 'hora_inativacao'
+																	){
+																		$novoValor = $fatoFinal->$k + $v;
+																		$fatoFinal->$k = $novoValor;
+																		$novoValor1 = $fatoFilho->$k + $v;
+																		$fatoFilho->$k = $novoValor1;
+																	}
+																}
+															}
+														}
+													}
+												}
+												if($idEntidadeTipo2 === EntidadeTipo::igreja){
+													$fatoFilho2 = self::fatoMensalSomado($filho2, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+													$arrayFatoMensal2 = (array)$fatoFilho2;
+													foreach($arrayFatoMensal2 as $k => $v){
+														$aux = explode ("\0", $k);
+														$k = $aux[count($aux)-1];
+														if(
+															$k !== 'id' &&
+															$k !== 'numero_identificador' &&
+															$k !== 'entidade' &&
+															$k !== 'lideres' &&
+															$k !== 'mes' &&
+															$k !== 'ano' &&
+															$k !== 'data_criacao' &&
+															$k !== 'hora_criacao' &&
+															$k !== 'data_inativacao' &&
+															$k !== 'hora_inativacao'
+														){
+															$novoValor = $fatoFinal->$k + $v;
+															$fatoFinal->$k = $novoValor;
+															$novoValor1 = $fatoFilho->$k + $v;
+															$fatoFilho->$k = $novoValor1;
+														}
+													}
+												}
+											}
+										}
+									}
+									if($idEntidadeTipo1 === EntidadeTipo::igreja){
+										$fatoFilho1 = self::fatoMensalSomado($filho1, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+										$arrayFatoMensal1 = (array)$fatoFilho1;
+										foreach($arrayFatoMensal1 as $k => $v){
+											$aux = explode ("\0", $k);
+											$k = $aux[count($aux)-1];
+											if(
+												$k !== 'id' &&
+												$k !== 'numero_identificador' &&
+												$k !== 'entidade' &&
+												$k !== 'lideres' &&
+												$k !== 'mes' &&
+												$k !== 'ano' &&
+												$k !== 'data_criacao' &&
+												$k !== 'hora_criacao' &&
+												$k !== 'data_inativacao' &&
+												$k !== 'hora_inativacao'
+											){
+												$novoValor = $fatoFinal->$k + $v;
+												$fatoFinal->$k = $novoValor;
+												$novoValor1 = $fatoFilho->$k + $v;
+												$fatoFilho->$k = $novoValor1;
+											}
+										}
+									}
+								}
+							}
+
+							$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
+							$fatoFilho->setMediamempclass($mediaMemPClass);
+							$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
+							$fatoFilho->setMediacpclass($mediaCPClass);
+							$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
+							$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
+							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
+						}
+						if($idEntidadeTipo === EntidadeTipo::igreja){
+							$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+							$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
+						}
+
+						$arrayFatoMensal1 = (array)$fatoFilho;
+						foreach($arrayFatoMensal1 as $k => $v){
+							$aux = explode ("\0", $k);
+							$k = $aux[count($aux)-1];
+							if(
+								$k !== 'id' &&
+								$k !== 'numero_identificador' &&
+								$k !== 'entidade' &&
+								$k !== 'lideres' &&
+								$k !== 'mes' &&
+								$k !== 'ano' &&
+								$k !== 'data_criacao' &&
+								$k !== 'hora_criacao' &&
+								$k !== 'data_inativacao' &&
+								$k !== 'hora_inativacao'
+							){
+								$novoValor = $fatoFinal->$k + $v;
+								$fatoFinal->$k = $novoValor;
+							}
+						}
+					}
+				}
+			}
+
+		// ordernar os malucos
+		$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
+		foreach($filhosOrdenado as $filho){
+			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+			$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+		}
+
+		// final
+		$fatoFinal->setMediamempclass('dark');
+		$fatoFinal->setMediacpclass('dark');
+		$fatoFinal->setMediarealizadapclass('dark');
+
+		// ajustando percentual somado
+		for($w = 1;$w <= 6;$w++){
+			$cqmeta = 'cqmeta' . $w;
+			$cbqmeta = 'cbqmeta' . $w;
+			// membresia
+			$mem = 'mem' . $w;
+			$memp = 'memp' . $w;
+			$membresiaMetaSomada = $fatoFinal->$cqmeta + $fatoFinal->$cbqmeta;
+			$fatoFinal->$memp = ($fatoFinal->$mem / $membresiaMetaSomada * 100);
+			// celulas
+			$c = 'c' . $w;
+			$cp = 'cp' . $w;
+			$fatoFinal->$cp = ($fatoFinal->$c / $membresiaMetaSomada * 100);
+			//realizada
+			$cq = 'cq' . $w;
+			$cbq = 'cbq' . $w;
+			$quantidadeDeCelulas = $fatoFinal->$cq + $fatoFinal->$cbq;
+			$realizada = 'realizada' . $w;
+			$realizadap = 'realizadap' . $w;
+			$fatoFinal->$realizadap = ($fatoFinal->$realizada / $quantidadeDeCelulas * 100);
+		}
+
+		$somaMembresiap = $fatoFinal->getMemp1() + $fatoFinal->getMemp2() + $fatoFinal->getMemp3() + $fatoFinal->getMemp4() + $fatoFinal->getMemp5() + $fatoFinal->getMemp6();
+		$somaCp = $fatoFinal->getCp1() + $fatoFinal->getCp2() + $fatoFinal->getCp3() + $fatoFinal->getCp4() + $fatoFinal->getCp5() + $fatoFinal->getCp6();
+		$somaRealizadap = $fatoFinal->getRealizadap1() + $fatoFinal->getRealizadap2() + $fatoFinal->getRealizadap3() + $fatoFinal->getRealizadap4() + $fatoFinal->getRealizadap5() + $fatoFinal->getRealizadap6();
+
+		$fatoFinal->setMediamemp($somaMembresiap/$diferencaDePeriodos);
+		$fatoFinal->setMediacp($somaCp/$diferencaDePeriodos);
+		$fatoFinal->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+
+		$relatorio[] = $fatoFinal;
+
 		return $relatorio;
+	}
+
+	function fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos){
+		$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+		$dataInativacao = null;
+		if ($filho->getData_inativacao()) {
+			$dataInativacao = $filho->getData_inativacaoStringPadraoBanco();
+		}
+		$numeroIdentificadorFilho = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupoFilho, $dataInativacao);
+		$fatoFilho = $repositorio->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano);
+
+		if($fatoFilho->entidade === null){
+			$fatoFilho->entidade = $grupoFilho->getEntidadeAtiva()->infoEntidade();
+			$fatoFilho->lideres = $grupoFilho->getNomeLideresAtivos();
+		}
+
+		$fatoSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho, $mes, $ano, $pessoalOuEquipe);
+		foreach($fatoSomado as $k => $v){
+			$fatoFilho->$k = $v;
+		}
+
+		// ajustando percentual somado
+		for($w = 1;$w <= 6;$w++){
+			$cqmeta = 'cqmeta' . $w;
+			$cbqmeta = 'cbqmeta' . $w;
+			// membresia
+			$mem = 'mem' . $w;
+			$memp = 'memp' . $w;
+			$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
+			if($membresiaMetaSomada > 0 ){
+				$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
+			}else{
+				$fatoFilho->$memp = 0;
+			}
+			// celulas
+			$c = 'c' . $w;
+			$cp = 'cp' . $w;
+			if($membresiaMetaSomada > 0 ){
+				$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
+			}else{
+				$fatoFilho->$cp = 0;
+			}
+			//realizada
+			$cq = 'cq' . $w;
+			$cbq = 'cbq' . $w;
+			$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
+			$realizada = 'realizada' . $w;
+			$realizadap = 'realizadap' . $w;
+			if($quantidadeDeCelulas > 0 ){
+				$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
+			}else{
+				$fatoFilho->$realizadap = 0;
+			}
+		}
+
+		$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
+		$somaCp = $fatoFilho->getCp1() + $fatoFilho->getCp2() + $fatoFilho->getCp3() + $fatoFilho->getCp4() + $fatoFilho->getCp5() + $fatoFilho->getCp6();
+		$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
+
+		$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
+		$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
+		$fatoFilho->setMediamempclass($mediaMemPClass);
+
+		$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
+		$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
+		$fatoFilho->setMediacpclass($mediaCPClass);
+
+		$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+		$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
+		$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
+
+		return $fatoFilho;
 	}
 }

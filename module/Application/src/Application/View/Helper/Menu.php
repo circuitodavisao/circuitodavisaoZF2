@@ -296,30 +296,17 @@ $link = 'relatorio';
 				case 1:
 					$label = 'Membresia';
 					$mostrar = true;
-		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 $link = 'relatorioNovo';
-}
 					break;
 				case 2:
 					$label = 'C&eacute;lulas Realizadas';
 					$mostrar = true;
-		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 $link = 'relatorioNovo';
-}
 					break;
 				case 3:
 					$label = 'C&eacute;lulas Quantidade';
 					$mostrar = true;
-		if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
-		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 $link = 'relatorioNovo';
-}
-
 					break;
 				case 4:
 					$label = 'Culto da Semana';
