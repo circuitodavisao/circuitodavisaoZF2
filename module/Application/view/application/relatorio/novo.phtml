@@ -311,8 +311,8 @@ foreach($this->relatorio as $relatorio){
 				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
@@ -333,8 +333,8 @@ foreach($this->relatorio as $relatorio){
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0 , ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
 			}
