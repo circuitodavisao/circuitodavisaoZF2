@@ -57,7 +57,10 @@ class ListagemTurmas extends AbstractHelper {
 				$stringNomeDaFuncaoOnClickAbrirAula = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'AbrirAula' . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickEditarTurma = 'mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'TurmaFormEdit' . '",' . $turma->getId() . ')';
 				$stringNomeDaFuncaoOnClickFecharTurma = 'let resposta = confirm("confirma exclusao?"); if(resposta){ mostrarSplash(); funcaoCircuito("' . Constantes::$ROUTE_CURSO . 'FecharTurma' . '",' . $turma->getId() . ')}';
-				$totalAlunos = ($this->view->relatorio[$turma->getId()][Situacao::ATIVO] + $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]);
+				$totalAlunos = 0;
+				if($this->view->relatorio[$turma->getId()]){
+					$totalAlunos = ($this->view->relatorio[$turma->getId()][Situacao::ATIVO] + $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]);
+				}
 
 				$html .= '<tr>';
 				$html .= '<td class="text-center">';
