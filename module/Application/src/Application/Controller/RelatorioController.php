@@ -92,6 +92,8 @@ class RelatorioController extends CircuitoController {
 						return $this->redirect()->toRoute('relatorio', array(
 							'action' => 'Novo',
 							'tipoRelatorio' => $tipoRelatorio,
+							'mes' => $mes,
+							'ano' => $ano,
 						));
 					}
 			}
@@ -4579,6 +4581,8 @@ public function alunosNaSemanaAction(){
 		if($redirecionar){
 			return $this->redirect()->toRoute('relatorio', array(
 				'tipoRelatorio' => $tipoRelatorio,
+				'mes' => $mes,
+				'ano' => $ano,
 			));
 		}
 
