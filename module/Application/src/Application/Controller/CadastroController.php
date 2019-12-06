@@ -478,7 +478,7 @@ class CadastroController extends CircuitoController {
 			$idEntidadeAtual = $sessao->idEntidadeAtual;
 			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 			$grupo = $entidade->getGrupo();
-			$extra = $grupo->getGrupoPaiFilhoFilhos();
+			$extra = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 		}
 		if ($sessao->pagina == Constantes::$PAGINA_EVENTO_CELULA) {
 			/* Verificando a se tem algum id na sessão */
