@@ -2293,7 +2293,12 @@ class RelatorioController extends CircuitoController {
 					$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
 					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$numeroIdentificadorFilho12 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);						
-						$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho12, date('m'), date('Y'));			
+						$relatorio12 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho12, date('m'), date('Y'));			
+															if($relatorio12){
+																foreach($relatorio12 as $r12){
+																	$relatorioDesordenado[] = $r12;
+																}
+															}
 					}	
 					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
 						$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
@@ -2303,7 +2308,12 @@ class RelatorioController extends CircuitoController {
 								$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
 								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 									$numeroIdentificadorFilho144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);						
-									$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho144, date('m'), date('Y'));			
+									$relatorio144 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho144, date('m'), date('Y'));			
+															if($relatorio144){
+																foreach($relatorio144 as $r144){
+																	$relatorioDesordenado[] = $r144;
+																}
+															}
 								}	
 								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
 									$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
@@ -2313,7 +2323,12 @@ class RelatorioController extends CircuitoController {
 											$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
 											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 												$numeroIdentificadorFilho1728 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);						
-												$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho1728, date('m'), date('Y'));			
+												$relatorio1728 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho1728, date('m'), date('Y'));			
+															if($relatorio1728){
+																foreach($relatorio1728 as $r1728){
+																	$relatorioDesordenado[] = $r1728;
+																}
+															}
 											}	
 											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
 												$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
@@ -2323,7 +2338,12 @@ class RelatorioController extends CircuitoController {
 														$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
 														if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 															$numeroIdentificadorFilho20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);						
-															$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho20736, date('m'), date('Y'));			
+															$relatorio20736 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho20736, date('m'), date('Y'));			
+															if($relatorio20736){
+																foreach($relatorio20736 as $r20376){
+																	$relatorioDesordenado[] = $r20376;
+																}
+															}
 														}	
 													}
 												}
