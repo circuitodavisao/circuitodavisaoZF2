@@ -3809,6 +3809,10 @@ public function alunosNaSemanaAction(){
 	}
 
 	static function buscarDadosPrincipais($repositorio, $grupo, $mes, $ano, $pessoalOuEquipe = 2){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '120');
+
 		$celulas = 0;
 		$lideres = 0;
 		$discipulados = 0;
@@ -3836,7 +3840,8 @@ public function alunosNaSemanaAction(){
 			}
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 
 					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $somado = 2);			
 					/* Líderes */
@@ -3864,14 +3869,16 @@ public function alunosNaSemanaAction(){
 
 			/* Contado Regiões, Coordenações e Igrejas */
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-				|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+				|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
+				|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 
 					$mostrarCoordenacoes = true;
 					$mostrarIgrejas = true;
 
-					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-						$mostrarRegioes = true;
-					}
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+						||$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+							$mostrarRegioes = true;
+						}
 
 					$grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
 					foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
