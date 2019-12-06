@@ -2285,6 +2285,7 @@ class RelatorioController extends CircuitoController {
 		$dados = Array();
 		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
 			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+
 				$relatorioDesordenado = Array();
 				$grupoPaiFilhoFilhos12 = $entidadeLogada->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
 				foreach ($grupoPaiFilhoFilhos12 as $filho12) {
@@ -2292,11 +2293,8 @@ class RelatorioController extends CircuitoController {
 					$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
 					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 						$numeroIdentificadorFilho12 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);						
-						$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho12, $dateFormatada);			
+						$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho12, date('m'), date('Y'));			
 					}	
-					foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
-						$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-					}				
 					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
 						$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
 							$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2305,11 +2303,8 @@ class RelatorioController extends CircuitoController {
 								$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
 								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 									$numeroIdentificadorFilho144 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);						
-									$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho144, $dateFormatada);			
+									$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho144, date('m'), date('Y'));			
 								}	
-								foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
-									$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-								}						
 								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
 									$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 										$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2318,11 +2313,8 @@ class RelatorioController extends CircuitoController {
 											$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
 											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 												$numeroIdentificadorFilho1728 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);						
-												$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho1728, $dateFormatada);			
+												$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho1728, date('m'), date('Y'));			
 											}	
-											foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
-												$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-											}								
 											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
 												$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
 													$grupoPaiFilhoFilhos20736 = $entidadeDoFilho1728->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
@@ -2331,11 +2323,8 @@ class RelatorioController extends CircuitoController {
 														$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
 														if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 															$numeroIdentificadorFilho20736 = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);						
-															$relatoriosDesordenadoAuxiliar = $this->getRepositorio()->getFatoCelulaORM()->encontrarPorNumeroIdentificadorEDataCriacao($numeroIdentificadorFilho20736, $dateFormatada);			
+															$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificadorFilho20736, date('m'), date('Y'));			
 														}	
-														foreach($relatoriosDesordenadoAuxiliar as $relatorioDesordenadoAuxiliar){
-															$relatorioDesordenado[] = $relatorioDesordenadoAuxiliar;
-														}										
 													}
 												}
 										}
@@ -2378,6 +2367,10 @@ class RelatorioController extends CircuitoController {
 						$relatorioOrdenado[$grupo->getId()]['linkWhatsapp'] = $linkWhatsapp;
 						$relatorioOrdenado[$grupo->getId()]['entidade'] = $relatorio->entidade;
 						$relatorioOrdenado[$grupo->getId()]['direfenca'] = $diferenca;
+						if($dados['mostrarIgreja']){
+							$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+							$relatorioOrdenado[$grupo->getId()]['nomeIgreja'] = $nomeIgreja;
+						}
 						$total += $diferenca;
 					}
 				}
