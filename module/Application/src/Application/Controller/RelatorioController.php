@@ -4149,7 +4149,7 @@ public function alunosNaSemanaAction(){
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
-		$mediaCelulaQuantidade = ($fatoMensalSomado[cq1] + $fatoMensalSomado[cq2] + $fatoMensalSomado[cq3] + $fatoMensalSomado[cq4] + $fatoMensalSomado[cq5] + $fatoMensalSomado[cq6] + $fatoMensalSomado[cqb1] + $fatoMensalSomado[cqb2] + $fatoMensalSomado[cqb3] + $fatoMensalSomado[cqb4] + $fatoMensalSomado[cqb5] + $fatoMensalSomado[cqb6])/$diferencaDePeriodos;
+		$mediaCelulaQuantidade = ($fatoMensalSomado[cq1] + $fatoMensalSomado[cq2] + $fatoMensalSomado[cq3] + $fatoMensalSomado[cq4] + $fatoMensalSomado[cq5] + $fatoMensalSomado[cq6] + $fatoMensalSomado[cbq1] + $fatoMensalSomado[cbq2] + $fatoMensalSomado[cbq3] + $fatoMensalSomado[cbq4] + $fatoMensalSomado[cbq5] + $fatoMensalSomado[cbq6])/$diferencaDePeriodos;
 		$mediaPessoasFrequentes = ($fatoMensalSomado[c1] + $fatoMensalSomado[c2] + $fatoMensalSomado[c3] + $fatoMensalSomado[c4] + $fatoMensalSomado[c5] + $fatoMensalSomado[c6])/$diferencaDePeriodos;
 		$mediaCelulaRealizadas = ($fatoMensalSomado[realizada1] + $fatoMensalSomado[realizada2] + $fatoMensalSomado[realizada3] + $fatoMensalSomado[realizada4] + $fatoMensalSomado[realizada5] + $fatoMensalSomado[realizada6])/$diferencaDePeriodos;
 
