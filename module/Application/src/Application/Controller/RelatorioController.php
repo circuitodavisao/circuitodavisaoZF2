@@ -4117,39 +4117,21 @@ public function alunosNaSemanaAction(){
 		$listaDomingo = array();
 		$listaMembresia = array();
 
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		if($mes == date('m') && $ano == date('Y')){
-			$arrayPeriodoDoMes[1] = 0;
-		}
-		$periodoParaUsar = $arrayPeriodoDoMes[1];
-		$tipoSomado = 2;		
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+		$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $pessoalOuEquipe);			
 
-		$tipoRelatorio = $tipoSomado;
-
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresia, $mes, $ano, $tudo = false, $tipoSomado, 'atual', $pessoalOuEquipe);
-		$indiceParaVer = count($relatorio) - 1;
-
-		$mediaCultos = $relatorio[$indiceParaVer]['mediaMembresiaCulto'];
-		$mediaArena = $relatorio[$indiceParaVer]['mediaMembresiaArena'];
-		$mediaDomingo = $relatorio[$indiceParaVer]['mediaMembresiaDomingo'];
-		$mediaMembresia = $relatorio[$indiceParaVer]['mediaMembresia'];
-
-		for($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++){
-			$listaCultos[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaCulto'];
-			$listaArena[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaArena'];
-			$listaDomingo[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresiaDomingo'];
-			$listaMembresia[] = $relatorio[$indiceParaVer][$indiceDeArrays]['membresia'];
-		}
+		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
+		$mediaCultos = ($fatoMensalSomado[cu1] + $fatoMensalSomado[cu2] + $fatoMensalSomado[cu3] + $fatoMensalSomado[cu4] + $fatoMensalSomado[cu5] + $fatoMensalSomado[cu6])/$diferencaDePeriodos;
+		$mediaArena = ($fatoMensalSomado[a1] + $fatoMensalSomado[a2] + $fatoMensalSomado[a3] + $fatoMensalSomado[a4] + $fatoMensalSomado[a5] + $fatoMensalSomado[a6])/$diferencaDePeriodos;
+		$mediaDomingo = ($fatoMensalSomado[d1] + $fatoMensalSomado[d2] + $fatoMensalSomado[d3] + $fatoMensalSomado[d4] + $fatoMensalSomado[d5] + $fatoMensalSomado[d6])/$diferencaDePeriodos;
+		$mediaMembresia = ($fatoMensalSomado[mem1] + $fatoMensalSomado[mem2] + $fatoMensalSomado[mem3] + $fatoMensalSomado[mem4] + $fatoMensalSomado[mem5] + $fatoMensalSomado[mem6])/$diferencaDePeriodos;
 
 		$dados = array();
 		$dados['mediaCultos'] = $mediaCultos;
 		$dados['mediaArena'] = $mediaArena;
 		$dados['mediaDomingo'] = $mediaDomingo;
 		$dados['mediaMembresia'] = $mediaMembresia;
-		$dados['listaCultos'] = $listaCultos;
-		$dados['listaArena'] = $listaArena;
-		$dados['listaDomingo'] = $listaDomingo;
-		$dados['listaMembresia'] = $listaMembresia;
+		$dados['fatoMensal'] = $fatoMensalSomado;
 		return $dados;
 	}
 
@@ -4161,35 +4143,19 @@ public function alunosNaSemanaAction(){
 		$listaPessoasFrequentes = array();
 		$listaCelulaRealizadas = array();
 
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		if($mes == date('m') && $ano == date('Y')){
-			$arrayPeriodoDoMes[1] = 0;
-		}
-		$periodoParaUsar = $arrayPeriodoDoMes[1];
-		$tipoSomado = 2;
+		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
+		$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $pessoalOuEquipe);			
 
-		$tipoRelatorio = $tipoSomado;
-
-		$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = false, $tipoSomado, 'atual', $pessoalOuEquipe);
-		$indiceParaVer = count($relatorio) - 1;
-
-		$mediaCelulaQuantidade = $relatorio[$indiceParaVer]['mediaCelulaQuantidade'];
-		$mediaPessoasFrequentes = $relatorio[$indiceParaVer]['mediaCelula'];
-		$mediaCelulaRealizadas = $relatorio[$indiceParaVer]['mediaCelulaRealizadasPerformance'];
-
-		for($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++){
-			$listaCelulaQuantidade[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celulaQuantidade'] + $relatorio[$indiceParaVer][$indiceDeArrays]['celulaQuantidadeEstrategica'];
-			$listaPessoasFrequentes[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celula'];
-			$listaCelulaRealizadas[] = $relatorio[$indiceParaVer][$indiceDeArrays]['celulaRealizadasPerformance'];
-		}
+		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
+		$mediaCelulaQuantidade = ($fatoMensalSomado[cq1] + $fatoMensalSomado[cq2] + $fatoMensalSomado[cq3] + $fatoMensalSomado[cq4] + $fatoMensalSomado[cq5] + $fatoMensalSomado[cq6] + $fatoMensalSomado[cqb1] + $fatoMensalSomado[cqb2] + $fatoMensalSomado[cqb3] + $fatoMensalSomado[cqb4] + $fatoMensalSomado[cqb5] + $fatoMensalSomado[cqb6])/$diferencaDePeriodos;
+		$mediaPessoasFrequentes = ($fatoMensalSomado[c1] + $fatoMensalSomado[c2] + $fatoMensalSomado[c3] + $fatoMensalSomado[c4] + $fatoMensalSomado[c5] + $fatoMensalSomado[c6])/$diferencaDePeriodos;
+		$mediaCelulaRealizadas = ($fatoMensalSomado[realizada1] + $fatoMensalSomado[realizada2] + $fatoMensalSomado[realizada3] + $fatoMensalSomado[realizada4] + $fatoMensalSomado[realizada5] + $fatoMensalSomado[realizada6])/$diferencaDePeriodos;
 
 		$dados = array();
 		$dados['mediaCelulaQuantidade'] = $mediaCelulaQuantidade;
 		$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
 		$dados['mediaCelulaRealizadas'] = $mediaCelulaRealizadas;
-		$dados['listaCelulaQuantidade'] = $listaCelulaQuantidade;
-		$dados['listaPessoasFrequentes'] = $listaPessoasFrequentes;
-		$dados['listaCelulaRealizadas'] = $listaCelulaRealizadas;
+		$dados['fatoMensal'] = $fatoMensalSomado;
 		return $dados;
 	}
 

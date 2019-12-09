@@ -315,7 +315,7 @@ echo '</div>';
 //	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
 //	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 
-if(false){
+if(true){
 ?>
 <!-- dados membresia -->
 <div class="row mb10">
@@ -662,50 +662,52 @@ if(count($this->discipulos) > 0){
 			document.getElementById('valorMediaArena').innerHTML = json.resultado.mediaArena.toFixed(2)
 			document.getElementById('valorMediaDomingo').innerHTML = json.resultado.mediaDomingo.toFixed(2)
 			document.getElementById('valorMediaMembresia').innerHTML = json.resultado.mediaMembresia.toFixed(2)
-			let valor = ''
-			json.resultado.listaCultos.forEach(item => {
+			let valorCu = ''
+			let valorA = ''
+			let valorD = ''
+			let valorMem = ''
+			for(let i = 1; i <= 6; i++){
+				let campo = 'cu' + i
+				let item = json.resultado.fatoMensal[campo]
 				if(item){
-				if(valor === ''){
-					valor += item
-				}else{
-					valor += '|' + item
+					if(valorCu === ''){
+						valorCu += item
+					}else{
+						valorCu += '|' + item
+					}
 				}
-				}
-			})
-			document.getElementById('listaCultos').innerHTML = valor
-			valor = ''
-			json.resultado.listaArena.forEach(item => {
+				campo = 'a' + i
+				item = json.resultado.fatoMensal[campo]
 				if(item){
-				if(valor === ''){
-					valor += item
-				}else{
-					valor += '|' + item
+					if(valorA === ''){
+						valorA += item
+					}else{
+						valorA += '|' + item
+					}
 				}
-				}
-			})
-			document.getElementById('listaArena').innerHTML = valor
-			valor = ''
-			json.resultado.listaDomingo.forEach(item => {
+				campo = 'd' + i
+				item = json.resultado.fatoMensal[campo]
 				if(item){
-				if(valor === ''){
-					valor += item
-				}else{
-					valor += '|' + item
+					if(valorD === ''){
+						valorD += item
+					}else{
+						valorD += '|' + item
+					}
 				}
-				}
-			})
-			document.getElementById('listaDomingo').innerHTML = valor
-			valor = ''
-			json.resultado.listaMembresia.forEach(item => {
+				campo = 'mem' + i
+				item = json.resultado.fatoMensal[campo]
 				if(item){
-				if(valor === ''){
-					valor += item.toFixed(2)
-				}else{
-					valor += '|' + item.toFixed(2)
+					if(valorMem === ''){
+						valorMem += item
+					}else{
+						valorMem += '|' + item
+					}
 				}
-				}
-			})
-			document.getElementById('listaMembresia').innerHTML = valor
+			}
+			document.getElementById('listaCultos').innerHTML = valorCu
+			document.getElementById('listaArena').innerHTML = valorA
+			document.getElementById('listaDomingo').innerHTML = valorD
+			document.getElementById('listaMembresia').innerHTML = valorMem
 		})
 	}
 	function buscarDadosPrincipaisCelula(){
@@ -732,39 +734,51 @@ if(count($this->discipulos) > 0){
 			document.getElementById('mediaCelulaQuantidade').innerHTML = json.resultado.mediaCelulaQuantidade.toFixed(2)
 			document.getElementById('mediaPessoasFrequentes').innerHTML = json.resultado.mediaPessoasFrequentes.toFixed(2)
 			document.getElementById('mediaCelulaRealizadas').innerHTML = json.resultado.mediaCelulaRealizadas.toFixed(2)
-			let valor = ''
-				json.resultado.listaCelulaQuantidade.forEach(item => {
+			let valorQ = ''
+			let valorP = ''
+			let valorR = ''
+
+			for(let i = 1; i <= 6; i++){
+				let campo = 'cq' + i
+				let item = json.resultado.fatoMensal[campo]
+				campo = 'cbq' + i
+				let itemB = json.resultado.fatoMensal[campo]
+				if(item || itemB){
+					let valor = 0
 					if(item){
-					if(valor === ''){
 						valor += item
+					}
+					if(itemB){
+						valor += itemB
+					}
+					if(valorQ === ''){
+						valorQ += valor
 					}else{
-						valor += '|' + item
+						valorQ += '|' + valor
 					}
-					}
-				})
-			document.getElementById('listaCelulaQuantidade').innerHTML = valor
-			valor = ''
-				json.resultado.listaPessoasFrequentes.forEach(item => {
-					if(item){
-					if(valor === ''){
-						valor += item
+				}
+				campo = 'c' + i
+				item = json.resultado.fatoMensal[campo]
+				if(item){
+					if(valorP === ''){
+						valorP += item
 					}else{
-						valor += '|' + item
+						valorP += '|' + item
 					}
-					}
-				})
-			document.getElementById('listaPessoasFrequentes').innerHTML = valor
-			valor = ''
-				json.resultado.listaCelulaRealizadas.forEach(item => {
-					if(item){
-					if(valor === ''){
-						valor += item.toFixed(2)
+				}
+				campo = 'realizada' + i
+				item = json.resultado.fatoMensal[campo]
+				if(item){
+					if(valorR === ''){
+						valorR += item
 					}else{
-						valor += '|' + item.toFixed(2)
+						valorR += '|' + item
 					}
-					}
-				})
-			document.getElementById('listaCelulaRealizadas').innerHTML = valor
+				}
+			}
+			document.getElementById('listaCelulaQuantidade').innerHTML = valorQ
+			document.getElementById('listaPessoasFrequentes').innerHTML = valorP
+			document.getElementById('listaCelulaRealizadas').innerHTML = valorR
 		})
 	}
 	function buscarDadosPrincipaisInstituto(){
