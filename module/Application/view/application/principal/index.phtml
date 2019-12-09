@@ -311,11 +311,9 @@ echo '</div>';
 ?>
 
 <?php
-//if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-//	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
-//	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
-
-if(true){
+if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+	&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 ?>
 <!-- dados membresia -->
 <div class="row mb10">
