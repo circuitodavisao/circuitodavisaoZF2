@@ -4120,6 +4120,7 @@ public function alunosNaSemanaAction(){
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 		$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $pessoalOuEquipe);			
 
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
 		$mediaCultos = ($fatoMensalSomado[cu1] + $fatoMensalSomado[cu2] + $fatoMensalSomado[cu3] + $fatoMensalSomado[cu4] + $fatoMensalSomado[cu5] + $fatoMensalSomado[cu6])/$diferencaDePeriodos;
 		$mediaArena = ($fatoMensalSomado[a1] + $fatoMensalSomado[a2] + $fatoMensalSomado[a3] + $fatoMensalSomado[a4] + $fatoMensalSomado[a5] + $fatoMensalSomado[a6])/$diferencaDePeriodos;
@@ -4146,6 +4147,7 @@ public function alunosNaSemanaAction(){
 		$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 		$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $pessoalOuEquipe);			
 
+		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
 		$mediaCelulaQuantidade = ($fatoMensalSomado[cq1] + $fatoMensalSomado[cq2] + $fatoMensalSomado[cq3] + $fatoMensalSomado[cq4] + $fatoMensalSomado[cq5] + $fatoMensalSomado[cq6] + $fatoMensalSomado[cqb1] + $fatoMensalSomado[cqb2] + $fatoMensalSomado[cqb3] + $fatoMensalSomado[cqb4] + $fatoMensalSomado[cqb5] + $fatoMensalSomado[cqb6])/$diferencaDePeriodos;
 		$mediaPessoasFrequentes = ($fatoMensalSomado[c1] + $fatoMensalSomado[c2] + $fatoMensalSomado[c3] + $fatoMensalSomado[c4] + $fatoMensalSomado[c5] + $fatoMensalSomado[c6])/$diferencaDePeriodos;
