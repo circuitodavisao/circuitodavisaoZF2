@@ -693,7 +693,7 @@ if(count($this->discipulos) > 0){
 					}
 				}
 				campo = 'mem' + i
-				item = json.resultado.fatoMensal[campo]
+				item = parseFloat(json.resultado.fatoMensal[campo]).toFixed(0)
 				if(item){
 					if(valorMem === ''){
 						valorMem += item
