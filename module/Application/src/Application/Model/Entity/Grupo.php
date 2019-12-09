@@ -1401,10 +1401,15 @@ class Grupo extends CircuitoEntity {
             while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
             $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$contador++;
+				if($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()){
 				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
                 if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
                     break;
                 }
+				}else{
+					error_log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'.$grupoSelecionado->getId());
+					break;
+				}
             }
             $grupoIgreja = $grupoSelecionado;
 		}

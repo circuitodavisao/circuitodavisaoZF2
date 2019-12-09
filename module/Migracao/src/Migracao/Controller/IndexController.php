@@ -1450,9 +1450,10 @@ class IndexController extends CircuitoController {
 		$this->getRepositorio()->getEntidadeORM()->persistir($entidadeAtual, false);
 
 		/* grupo pai filho */
-		$grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo();
-		$grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
-		$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+		if($grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo()){
+			$grupoPaiFilhoPai->setDataEHoraDeInativacao($dataParaInativar);
+			$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoPai, false);
+		}
 
 		/*retirando acesso ao parceiro de Deus e IV */
 		if($pessoasDoGrupo = $grupo->getPessoasAtivas()){			
