@@ -2595,13 +2595,18 @@ public function alunosNaSemanaAction(){
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$mes = 12; //Temporariamente Fixo só pra agilizar
-		$ano = 2018; //Temporariamente Fixo só pra agilizar
+		$mes = date('m'); //Temporariamente Fixo só pra agilizar
+		$ano = date('Y'); //Temporariamente Fixo só pra agilizar
 		$comparacao = 2; // Temporariamente Fixo também, comparação = like
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 		$periodoInicial = $arrayPeriodoDoMes[0];
 		$periodoFinal = $arrayPeriodoDoMes[1];
-		
+					$contadorDePeriodos = 0;
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
+				$contadorDePeriodos++;
+			}
+
+
 		$todosFilhos = Array();
 		$repositorio = $this->getRepositorio();
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
@@ -2633,12 +2638,14 @@ public function alunosNaSemanaAction(){
 				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
 					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
 					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);
+
+					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $somado = 2);			
 					$relatorio = Array();
 					if($grupo->getEntidadeAtiva()->getNome()){
 							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
 					}
-					$relatorio['celulas'] = $relatorioCelula[0]['quantidade'];
+					$campo = 'cq' . $contadorDePeriodos;
+					$relatorio['celulas'] = $fatoMensalSomado[$campo];
 					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
 						foreach($relatorioCursosDesordenados as $fatoCurso){
 							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
@@ -3249,6 +3256,10 @@ public function alunosNaSemanaAction(){
 			$dados['postado'] = true;
 
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$contadorDePeriodos = 0;
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
+				$contadorDePeriodos++;
+			}
 			$periodo = $arrayPeriodoDoMes[1]; 
 			$comparacao = 2; // Temporariamente Fixo também, comparação = like
 			$todosFilhos = Array();
@@ -3348,9 +3359,8 @@ public function alunosNaSemanaAction(){
 
 								$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
 								if($numeroIdentificador > 0){
-									$tipoRelatorio = RelatorioController::relatorioCelulaQuantidade;
-									$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, false, $tipoRelatorio);
-									$quantidadeDeLideresBeta = RelatorioController::verificarLideresBeta($this->getRepositorio(), $numeroIdentificador, $periodo, $somado = 2, $inativo = false);
+									$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $somado = 2);			
+
 									if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
 										$somaIgrejaAlunos1 = 0;
 										$somaIgrejaAlunos2 = 0;
@@ -3393,18 +3403,22 @@ public function alunosNaSemanaAction(){
 										$quantidadeDeSexos = self::pegarQuantidadeDePessoasPorSexoPorGrupo($grupoFilho144);
 									}
 
-									$quantidadeDeLideresNormal = $relatorio['quantidadeLideres'] - $quantidadeDeLideresBeta;
-									$dadosFilho144['lideres'] = $quantidadeDeLideresNormal;
-									$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $quantidadeDeLideresNormal : 0;
+									$campoL = 'l' . $contadorDePeriodos;
+									$campoCq = 'cq' . $contadorDePeriodos;
+									$campoCbq = 'cbq' . $contadorDePeriodos;
 
-									$dadosFilho144['lideresBeta'] = $quantidadeDeLideresBeta;
-									$dadosFilho144['lideresBetaMeta'] = $lideresBeta > 0 ? $lideresBeta / 100 * $quantidadeDeLideresBeta : 0;
+									//$quantidadeDeLideresNormal = $relatorio['quantidadeLideres'] - $quantidadeDeLideresBeta;
+									$dadosFilho144['lideres'] = $fatoMensalSomado[$campoL];
+									$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $fatoMensalSomado[$campoL] : 0;
 
-									$dadosFilho144['celulas'] = $relatorio['celulaQuantidade'];
-									$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $relatorio['celulaQuantidade'] : 0;
+									//$dadosFilho144['lideresBeta'] = $quantidadeDeLideresBeta;
+									//$dadosFilho144['lideresBetaMeta'] = $lideresBeta > 0 ? $lideresBeta / 100 * $quantidadeDeLideresBeta : 0;
 
-									$dadosFilho144['celulasBeta'] = $relatorio['celulaQuantidadeEstrategica'];
-									$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $relatorio['celulaQuantidadeEstrategica'] : 0;
+									$dadosFilho144['celulas'] = $fatoMensalSomado[$campoCq];
+									$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $fatoMensalSomado[$campoCq] : 0;
+
+									$dadosFilho144['celulasBeta'] = $fatoMensalSomado[$campoCbq];
+									$dadosFilho144['celulasBetaMeta'] = $celulasBeta > 0 ? $celulasBeta / 100 * $fatoMensalSomado[$campoCbq] : 0;
 
 									if($alunos1m > 0 || $alunos2m > 0 || $alunos3m > 0){
 										$dadosFilho144['alunos1'] = $somaIgrejaAlunos1;
@@ -3428,8 +3442,8 @@ public function alunosNaSemanaAction(){
 									}
 									$somaParcialLideres += $dadosFilho144['lideres'];
 									$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
-									$somaParcialLideresBeta += $dadosFilho144['lideresBeta'];
-									$somaParcialLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
+									//$somaParcialLideresBeta += $dadosFilho144['lideresBeta'];
+									//$somaParcialLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
 									$somaParcialCelulas += $dadosFilho144['celulas'];
 									$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
 									$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
@@ -4131,8 +4145,9 @@ public function alunosNaSemanaAction(){
 		$dados['mediaCultos'] = $mediaCultos;
 		$dados['mediaArena'] = $mediaArena;
 		$dados['mediaDomingo'] = $mediaDomingo;
-		$dados['mediaMembresia'] = $mediaMembresia;
+		$dados['mediaMembresia'] = number_format($mediaMembresia, 0, ',', '.');
 		$dados['fatoMensal'] = $fatoMensalSomado;
+		$dados['numeroDePeriodo'] = $diferencaDePeriodos;
 		return $dados;
 	}
 
@@ -4157,6 +4172,7 @@ public function alunosNaSemanaAction(){
 		$dados['mediaCelulaQuantidade'] = $mediaCelulaQuantidade;
 		$dados['mediaPessoasFrequentes'] = $mediaPessoasFrequentes;
 		$dados['mediaCelulaRealizadas'] = $mediaCelulaRealizadas;
+		$dados['numeroDePeriodo'] = $diferencaDePeriodos;
 		$dados['fatoMensal'] = $fatoMensalSomado;
 		return $dados;
 	}

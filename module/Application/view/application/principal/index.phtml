@@ -659,12 +659,12 @@ if(count($this->discipulos) > 0){
 			document.getElementById('valorMediaCultos').innerHTML = json.resultado.mediaCultos.toFixed(2)
 			document.getElementById('valorMediaArena').innerHTML = json.resultado.mediaArena.toFixed(2)
 			document.getElementById('valorMediaDomingo').innerHTML = json.resultado.mediaDomingo.toFixed(2)
-			document.getElementById('valorMediaMembresia').innerHTML = json.resultado.mediaMembresia.toFixed(2)
+			document.getElementById('valorMediaMembresia').innerHTML = json.resultado.mediaMembresia
 			let valorCu = ''
 			let valorA = ''
 			let valorD = ''
 			let valorMem = ''
-			for(let i = 1; i <= 6; i++){
+			for(let i = 1; i <= json.resultado.numeroDePeriodo; i++){
 				let campo = 'cu' + i
 				let item = json.resultado.fatoMensal[campo]
 				if(item){
@@ -736,7 +736,7 @@ if(count($this->discipulos) > 0){
 			let valorP = ''
 			let valorR = ''
 
-			for(let i = 1; i <= 6; i++){
+			for(let i = 1; i <= json.resultado.numeroDePeriodo; i++){
 				let campo = 'cq' + i
 				let item = json.resultado.fatoMensal[campo]
 				campo = 'cbq' + i

@@ -97,31 +97,31 @@ $html .= '</div>';
 
 // div percentual liderres e celulas
 $html .= '<div class="row p5">';
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 pt10">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1 pt10">';
 $html .= 'Líderes';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-3 col-md-11 col-lg-4 mb15">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-11 col-lg-3 mb15">';
 $html .= '<input value="'.$this->lideres.'" maxlength="3" type="number" name="lideres" class="form-control" placeholder="0%" />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 pt10">';
-$html .= 'Líderes Beta';
-$html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-3 col-md-11 col-lg-4 mb15">';
-$html .= '<input value="'.$this->lideresBeta.'" maxlength="3" type="number" name="lideresBeta" class="form-control" placeholder="0%" />';
-$html .= '</div>';
+//$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1 pt10">';
+//$html .= 'Líderes Beta';
+//$html .= '</div>';
+//$html .= '<div class="col-xs-12 col-sm-3 col-md-11 col-lg-3 mb15">';
+//$html .= '<input value="'.$this->lideresBeta.'" maxlength="3" type="number" name="lideresBeta" class="form-control" placeholder="0%" />';
+//$html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 pt10">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1 pt10">';
 $html .= 'Células';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-4 mb15">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 mb15">';
 $html .= '<input value="'.$this->celulas.'" maxlength="3" type="number" name="celulas" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 pt10">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1 pt10">';
 $html .= 'Células Beta';
 $html .= '</div>';
-$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-4 mb15">';
+$html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 mb15">';
 $html .= '<input value="'.$this->celulasBeta.'" maxlength="3" type="number" name="celulasBeta" class="form-control" placeholder="0%"  />';
 $html .= '</div>';
 $html .= '</div>';
@@ -205,13 +205,14 @@ if($this->postado){
 		foreach($this->filhos as $filho){
 			$corLinha = 'primary';
 			$colSpan = 11;
+			$colSpan = 9;
 			if($filho['informacao'] === 'TOTAL'){
 				$corLinha = 'dark';
 				$colSpan = 0;
 				$html .= '<tr class="dark">'; 
 				$html .= '<td></td>';
 				$html .= '<td>LÍDERES / META</td>';
-				$html .= '<td>LÍDERES BETA / META</td>';
+				//$html .= '<td>LÍDERES BETA / META</td>';
 				$html .= '<td>CÉLULAS / META</td>';
 				$html .= '<td>CÉLULAS BETAS / META</td>';
 				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
@@ -243,7 +244,7 @@ if($this->postado){
 					+ $filho['casaisMeta']
 					;
 				$html .= '<td>'.$filho['lideres'].' / '.number_format($filho['lideresMeta']).'</td>';
-				$html .= '<td>'.$filho['lideresBeta'].' / '.number_format($filho['lideresBetaMeta']).'</td>';
+				//$html .= '<td>'.$filho['lideresBeta'].' / '.number_format($filho['lideresBetaMeta']).'</td>';
 				$html .= '<td>'.$filho['celulas'].' / '.number_format($filho['celulasMeta']).'</td>';
 				$html .= '<td>'.$filho['celulasBeta'].' / '.number_format($filho['celulasBetaMeta']).'</td>';
 				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
@@ -264,7 +265,7 @@ if($this->postado){
 				$html .= '<tr class="primary">'; 
 				$html .= '<td>TIMES</td>';
 				$html .= '<td>LÍDERES / META</td>';
-				$html .= '<td>LÍDERES BETA / META</td>';
+				//$html .= '<td>LÍDERES BETA / META</td>';
 				$html .= '<td>CÉLULAS / META</td>';
 				$html .= '<td>CÉLULAS BETAS / META</td>';
 				if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
@@ -302,7 +303,7 @@ if($this->postado){
 					$html .= '<tr class="'.$corLinha144.'">'; 
 					$html .= '<td>---- '.$filho144['informacao'].'</td>';
 					$html .= '<td>'.$filho144['lideres'].' / '.number_format($filho144['lideresMeta']).'</td>';
-					$html .= '<td>'.$filho144['lideresBeta'].' / '.number_format($filho144['lideresBetaMeta']).'</td>';
+					//$html .= '<td>'.$filho144['lideresBeta'].' / '.number_format($filho144['lideresBetaMeta']).'</td>';
 					$html .= '<td>'.$filho144['celulas'].' / '.number_format($filho144['celulasMeta']).'</td>';
 					$html .= '<td>'.$filho144['celulasBeta'].' / '.number_format($filho144['celulasBetaMeta']).'</td>';
 					if($this->alunos1m > 0 || $this->alunos2m > 0 || $this->alunos3m){
