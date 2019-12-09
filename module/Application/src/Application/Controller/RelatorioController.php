@@ -4567,11 +4567,17 @@ public function alunosNaSemanaAction(){
 			$redirecionar = true;
 		}
 		if($redirecionar){
+			if((int) $tipoRelatorio !== 4){
 			return $this->redirect()->toRoute('relatorio', array(
 				'tipoRelatorio' => $tipoRelatorio,
 				'mes' => $mes,
 				'ano' => $ano,
 			));
+			}else{
+				return $this->redirect()->toRoute('relatorio', array(
+					'action' => 'Resumo',
+				));
+			}
 		}
 
 		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
@@ -4676,6 +4682,11 @@ public function alunosNaSemanaAction(){
 				if(count($todosFilhos)){
 					foreach($todosFilhos as $filho){
 						$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+
+						if((int) $tipoRelatorio === 4){
+							$fatoFilho->setMediamempclass('white');
+						}
+
 						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 						$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 
@@ -4962,11 +4973,18 @@ public function alunosNaSemanaAction(){
 				}
 			}
 
-		// ordernar os malucos
-		$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
-		foreach($filhosOrdenado as $filho){
-			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-			$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+		if((int) $tipoRelatorio !== 4){
+			// ordernar os malucos
+			$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
+			foreach($filhosOrdenado as $filho){
+				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+				$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+			}
+		}else{
+			foreach($todosFilhos as $filho){
+				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+				$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+			}
 		}
 
 		// final

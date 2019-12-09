@@ -43,6 +43,9 @@ if ($this->tipoRelatorio == 2) {
 if ($this->tipoRelatorio == 3) {
 	$label = 'Células Quantitativo';
 }
+if ($this->tipoRelatorio == 4) {
+	$label = 'Resumo';
+}
 echo $this->templateFormularioTopo($label);
 ?>
 	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
@@ -180,6 +183,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($this->tipoRelatorio == 3){		
 		$colspan = 7;
 	}
+	if ($this->tipoRelatorio == 4){		
+		$colspan = 7;
+	}
 	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
 	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
 	echo '</th>';
@@ -230,6 +236,15 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
+	if ($this->tipoRelatorio == 4) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">LÍD Q</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL Q</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BETA Q</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
+	}
 }
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 3) {
@@ -262,9 +277,12 @@ foreach($this->relatorio as $relatorio){
 		if ($this->tipoRelatorio == 3) {
 			$class = $relatorio->mediacpclass;
 		}
+		if ($this->tipoRelatorio == 4) {
+			$class = $relatorio->mediamempclass;
+		}
 
 		echo '<tr class="'.$class.'">';
-		if($ranking !== count($this->relatorio) - 1 && $ranking !== 0){
+		if($this->tipoRelatorio != 4 && $ranking !== count($this->relatorio) - 1 && $ranking !== 0){
 			echo '<td>'.$ranking.'º</td>';
 		}else{
 			echo '<td></td>';
@@ -337,6 +355,20 @@ foreach($this->relatorio as $relatorio){
 				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
+			}
+			if ($this->tipoRelatorio == 4) {
+				$c = 'c' . $contadorDePeriodos;
+				$cu = 'cu' . $contadorDePeriodos;
+				$a = 'a' . $contadorDePeriodos;
+				$d = 'd' . $contadorDePeriodos;
+				$l = 'l' . $contadorDePeriodos;
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$l, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
 			}
 			$contadorDePeriodos++;
 		}

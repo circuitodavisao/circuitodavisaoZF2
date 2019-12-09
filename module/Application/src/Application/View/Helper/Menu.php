@@ -468,7 +468,7 @@ $link = 'relatorioNovo';
 			$html .= '</li>';
 
 				$html .= '<li>';
-				$html .= '<a href="/relatorioResumo" onClick="mostrarSplash();">';
+				$html .= '<a href="/relatorioNovo/4" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-list"></span>';
 				$html .= 'Resumo';
 				$html .= '</a>';
