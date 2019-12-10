@@ -36,8 +36,13 @@ if($this->fatosMensal && $this->filtrado){
 		echo '<td>'.$contagemRanking.'</td>';
 
 		if($this->mostrarIgreja){
-			$grupo = $this->repositorio->getGrupoORM()->encontrarPorId((int) substr($fato->numero_identificador, (count($fato->numero_identificador)-8)));
-			$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+			$nomeIgreja = '';
+			if($fato->nome_igreja){
+				$nomeIgreja = $fato->nome_igreja;
+			}else{
+				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId((int) substr($fato->numero_identificador, (count($fato->numero_identificador)-8)));
+				$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+			}
 			echo '<td>'.$nomeIgreja.'</td>';
 		}
 		echo '<td>'.$fato->lideres.'-'.$fato->entidade.'</td>';

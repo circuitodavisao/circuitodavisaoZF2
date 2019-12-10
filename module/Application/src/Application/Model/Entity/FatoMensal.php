@@ -14,6 +14,9 @@ class FatoMensal extends CircuitoEntity {
 	protected $numero_identificador;
 
 	/** @ORM\Column(type="string") */
+	protected $nome_igreja;
+
+	/** @ORM\Column(type="string") */
 	protected $entidade;
 
 	/** @ORM\Column(type="string") */
@@ -378,6 +381,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getNumero_identificador() {
 		return $this->numero_identificador;
+	}
+	function getNome_igreja(){
+		return $this->nome_igreja;
 	}
 	function getEntidade(){
 		return $this->entidade;
@@ -757,6 +763,9 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function setNumero_identificador($numero_identificador) {
 		$this->numero_identificador = $numero_identificador;
+	}
+	function setNome_igreja($item){
+		$this->nome_igreja = $item;
 	}
 	function setCq1($item){
 		$this->cq1 = $item;
