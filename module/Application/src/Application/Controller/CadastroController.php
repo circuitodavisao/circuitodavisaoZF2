@@ -2440,7 +2440,7 @@ class CadastroController extends CircuitoController {
 				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
 					$objeto = $solicitacao->getObjeto1();
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($objeto);
-					if($grupo->getGrupoEquipe()){
+					if($grupo && $grupo->getGrupoEquipe()){
 						if($entidade->getGrupo()->getId() !== $grupo->getGrupoEquipe()->getId()){
 							$adicionar = false;
 						}
