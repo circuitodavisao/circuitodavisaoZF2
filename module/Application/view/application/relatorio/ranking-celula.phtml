@@ -20,7 +20,7 @@ if($this->mostrarIgreja){
 	echo '<th class="text-center">Igreja</th>';
 }
 echo '<th class="text-center">Quem</th>';
-for($i = 1; $i <= 6; $i++){
+for($i = 1; $i <= $this->periodos; $i++){
 	echo '<th class="text-center">P'.$i.'</th>';
 }
 echo '<th class="text-center">Média</th>';
@@ -46,7 +46,7 @@ if($this->fatosMensal && $this->filtrado){
 			echo '<td>'.$nomeIgreja.'</td>';
 		}
 		echo '<td>'.$fato->lideres.'-'.$fato->entidade.'</td>';
-		for($i = 1; $i <= 6; $i++){
+		for($i = 1; $i <= $this->periodos; $i++){
 			$campo = 'c'.$i;
 			echo '<td>'.$fato->$campo.'</td>';
 		}

@@ -2256,6 +2256,7 @@ class RelatorioController extends CircuitoController {
 
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
+			$dados['periodos'] = $diferencaDePeriodos;
 
 			// ordenando
 			$totalDeFatos = count($fatosMensal);
