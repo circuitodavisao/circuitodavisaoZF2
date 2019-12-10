@@ -16,83 +16,38 @@ echo '<table class="text-center table table-condensed table-hover bg-light" styl
 echo '<thead>';
 echo '<tr>';
 echo '<th></th>';
-echo '<th class="text-center">Igreja</th>';
+if($this->mostrarIgreja){
+	echo '<th class="text-center">Igreja</th>';
+}
 echo '<th class="text-center">Quem</th>';
-echo '<th class="text-center">Célula</th>';
-$contadorDePeriodos = 1;
-for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-	echo '<th class="text-center">P'.$contadorDePeriodos.'</th>';
-	$contadorDePeriodos++;
+for($i = 1; $i <= 6; $i++){
+	echo '<th class="text-center">P'.$i.'</th>';
 }
 echo '<th class="text-center">Média</th>';
 echo '</tr>';
 echo '</thead>';
 
-$classeCor = '';
 echo '<tbody>';
-if($this->fatos && $this->filtrado){
+if($this->fatosMensal && $this->filtrado){
 	$contagemRanking = 1;
-	foreach($this->fatos as $fato){
-		$mostrar = false;
-		$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($fato->getGrupo_evento_id());
-		$infoEntidade = $grupoEvento->getGrupo()->getEntidadeAtiva()->infoEntidade();
-		$lideres = $grupoEvento->getGrupo()->getNomeLideresAtivos();
-		$celulaDia = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
-		$grupoIgreja = $grupoEvento->getGrupo()->getGrupoIgreja();
-		$nomeIgreja = $grupoIgreja->getEntidadeAtiva()->getNome();
+	foreach($this->fatosMensal as $fato){
+	$classeCor = '';
+		echo '<tr class="'.$classeCor.'">';
+		echo '<td>'.$contagemRanking.'</td>';
 
-		if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			if($grupoIgreja->getId() !== 1 
-				&& $grupoIgreja->getId() !== 1225
-				&& $grupoIgreja->getId() !== 5434
-				&& $grupoIgreja->getId() !== 4066 
-			){
-				$mostrar = true;
-			}
-		}
-		if($this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-			$mostrar = true;
-		}
-		if(!$grupoEvento->verificarSeEstaAtivo() || !$grupoEvento->getGrupo()->getGrupoResponsavelAtivo()){
-			$mostrar = false;
-		}
-		if($mostrar){
-			$classeCor = 'dark';
-			if($fato->getValor() > 6){
-				$classeCor = 'success';
-			}
-			if ($fato->getValor() >= 4 && $fato->getValor() <= 6) {
-				$classeCor = 'warning';
-			}
-			if($fato->getValor() >= 1 && $fato->getValor() <= 3) {
-				$classeCor = 'danger';
-			}
-
-			echo '<tr class="'.$classeCor.'">';
-			echo '<td>'.$contagemRanking.'</td>';
+		if($this->mostrarIgreja){
+			$grupo = $this->repositorio->getGrupoORM()->encontrarPorId((int) substr($fato->numero_identificador, (count($fato->numero_identificador)-8)));
+			$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
 			echo '<td>'.$nomeIgreja.'</td>';
-			echo '<td>'.$lideres.'-'.$infoEntidade.'</td>';
-			echo '<td>'.$celulaDia.'</td>';
-			$contadorDePeriodos = 1;
-			for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
-				$valor = 0;
-				switch($contadorDePeriodos){
-				case 1: $valor = $fato->getP1(); break;
-				case 2: $valor = $fato->getP2(); break;
-				case 3: $valor = $fato->getP3(); break;
-				case 4: $valor = $fato->getP4(); break;
-				case 5: $valor = $fato->getP5(); break;
-				case 6: $valor = $fato->getP6(); break;
-				}
-				echo '<td>';
-				echo $valor;
-				echo '</td>';
-				$contadorDePeriodos++;
-			}
-			echo '<td>'.$fato->getValor().'</td>';
-			echo '</tr>';
-			$contagemRanking++;
 		}
+		echo '<td>'.$fato->lideres.'-'.$fato->entidade.'</td>';
+		for($i = 1; $i <= 6; $i++){
+			$campo = 'c'.$i;
+			echo '<td>'.$fato->$campo.'</td>';
+		}
+		echo '<td>'.$fato->mediac.'</td>';
+		echo '</tr>';
+		$contagemRanking++;
 	}
 }
 echo '</tbody>';
