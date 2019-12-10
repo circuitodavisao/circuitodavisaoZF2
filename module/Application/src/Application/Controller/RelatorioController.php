@@ -2405,9 +2405,13 @@ class RelatorioController extends CircuitoController {
 						$relatorioOrdenado[$grupo->getId()]['linkWhatsapp'] = $linkWhatsapp;
 						$relatorioOrdenado[$grupo->getId()]['entidade'] = $relatorio->entidade;
 						$relatorioOrdenado[$grupo->getId()]['direfenca'] = $diferenca;
-						if($dados['mostrarIgreja']){
-							$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
-							$relatorioOrdenado[$grupo->getId()]['nomeIgreja'] = $nomeIgreja;
+						if($relatorio->nome_igreja !== null && $relatorio->nome_igreja !== ''){
+							$relatorioOrdenado[$grupo->getId()]['nomeIgreja'] = $relatorio->nome_igreja;
+						}else{
+							if($dados['mostrarIgreja']){
+								$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+								$relatorioOrdenado[$grupo->getId()]['nomeIgreja'] = $nomeIgreja;
+							}
 						}
 						$total += $diferenca;
 					}
