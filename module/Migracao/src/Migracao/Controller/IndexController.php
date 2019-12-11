@@ -112,12 +112,12 @@ class IndexController extends CircuitoController {
 				$informacaoEntidade = $rowC['numero'];
 
 				// id novo
-				$idGrupoPai = 12696; 
+				$idGrupoPai = 18073; 
 				$grupoRegiao = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoPai); // grupo regiao
 				$html .= 'coordenacao: ' . $grupoRegiao->getEntidadeAtiva()->infoEntidade();
 				// $grupoCoordenacao = $this->cadastrarEntidade($rowC[$stringIdResponsavel1], $idPerfilCoordenacao, $informacaoEntidade, $grupoRegiao, $rowC[$stringIdResponsavel2], $rowC['id'], $numeroIdentificadorCoordenacao, null);
 
-				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 204');
+				$queryIgrejas = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_igreja_ursula WHERE id = 748');
 				while ($row = mysqli_fetch_array($queryIgrejas)) {
 
 					$html .= '<br />Igreja: ' . $row['nome'];
@@ -146,7 +146,7 @@ class IndexController extends CircuitoController {
 						}else{
 							$gerar = false;
 						}
-						$gerar = true;
+						$gerar = false;
 
 						$cont++;
 						if($gerar){
@@ -163,7 +163,7 @@ class IndexController extends CircuitoController {
 						$urlSub = 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = 0 and idEquipe = ' . $rowEquipe['id'] . ';';
 						$querySubEquipes = mysqli_query($this->getConexao(), $urlSub);
 						while ($rowSubs = mysqli_fetch_array($querySubEquipes)) {
-							$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs['id'] . ' and idTipo = 3 and mes = MONTH(CURDATE()) and ano = YEAR(CURDATE());';
+							$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs['id'] . ' and idTipo = 3 and mes = 9 and ano = 2019);';
 							$queryTemGrupo = mysqli_query($this->getConexao(), $sqlTemGrupo);
 							$cadastrar = true;
 							if (mysqli_num_rows($queryTemGrupo) == 0) {
@@ -180,7 +180,7 @@ class IndexController extends CircuitoController {
 								$this->cadastrarCelulas($rowSubs[$stringIdResponsavel1], $grupoSub, $rowSubs[$stringIdResponsavel2]);
 								$querySubEquipes144 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND dataInativacao IS NULL AND idSubEquipePai = ' . $rowSubs['id']);
 								while ($rowSubs144 = mysqli_fetch_array($querySubEquipes144)) {
-									$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs144['id'] . ' and idTipo = 4 and mes = MONTH(CURDATE()) and ano = YEAR(CURDATE());';
+									$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs144['id'] . ' and idTipo = 4 and mes = 9 and ano = YEAR(CURDATE());';
 									$queryTemGrupo = mysqli_query($this->getConexao(), $sqlTemGrupo);
 									$cadastrar = true;
 									if (mysqli_num_rows($queryTemGrupo) == 0) {
@@ -197,7 +197,7 @@ class IndexController extends CircuitoController {
 
 										$querySubEquipes1728 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs144['id']);
 										while ($rowSubs1728 = mysqli_fetch_array($querySubEquipes1728)) {
-											$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs1728['id'] . ' and idTipo = 4 and mes = MONTH(CURDATE()) and ano = YEAR(CURDATE());';
+											$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs1728['id'] . ' and idTipo = 4 and mes = 9 and ano = YEAR(CURDATE());';
 											$queryTemGrupo = mysqli_query($this->getConexao(), $sqlTemGrupo);
 											$cadastrar = true;
 											if (mysqli_num_rows($queryTemGrupo) == 0) {
@@ -213,7 +213,7 @@ class IndexController extends CircuitoController {
 
 												$querySubEquipes20736 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs1728['id']);
 												while ($rowSubs20736 = mysqli_fetch_array($querySubEquipes20736)) {
-													$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs20736['id'] . ' and idTipo = 4 and mes = MONTH(CURDATE()) and ano = YEAR(CURDATE());';
+													$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs20736['id'] . ' and idTipo = 4 and mes = 9 and ano = YEAR(CURDATE());';
 													$queryTemGrupo = mysqli_query($this->getConexao(), $sqlTemGrupo);
 													$cadastrar = true;
 													if (mysqli_num_rows($queryTemGrupo) == 0) {
@@ -229,7 +229,7 @@ class IndexController extends CircuitoController {
 
 														$querySubEquipes248832 = mysqli_query($this->getConexao(), 'SELECT * FROM ursula_subequipe_ursula WHERE ativa = "S" AND idSubEquipePai = ' . $rowSubs20736['id']);
 														while ($rowSubs248832 = mysqli_fetch_array($querySubEquipes248832)) {
-															$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs248832['id'] . ' and idTipo = 4 and mes = MONTH(CURDATE()) and ano = YEAR(CURDATE());';
+															$sqlTemGrupo = 'SELECT id FROM ursula_grupo_ursula where idGrupo = ' . $rowSubs248832['id'] . ' and idTipo = 4 and mes = 9 and ano = YEAR(CURDATE());';
 															$queryTemGrupo = mysqli_query($this->getConexao(), $sqlTemGrupo);
 															$cadastrar = true;
 															if (mysqli_num_rows($queryTemGrupo) == 0) {
