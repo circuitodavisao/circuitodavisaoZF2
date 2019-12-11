@@ -29,6 +29,24 @@ class FatoMensal extends CircuitoEntity {
 	protected $ano;
 
 	/** @ORM\Column(type="integer") */
+	protected $lb1;
+
+	/** @ORM\Column(type="integer") */
+	protected $lb2;
+
+	/** @ORM\Column(type="integer") */
+	protected $lb3;
+
+	/** @ORM\Column(type="integer") */
+	protected $lb4;
+
+	/** @ORM\Column(type="integer") */
+	protected $lb5;
+
+	/** @ORM\Column(type="integer") */
+	protected $lb6;
+
+	/** @ORM\Column(type="integer") */
 	protected $l1;
 
 	/** @ORM\Column(type="integer") */
@@ -885,6 +903,25 @@ class FatoMensal extends CircuitoEntity {
 	function setL6($item){
 		$this->l6 = $item;
 	}
+	function setLb1($item){
+		$this->lb1 = $item;
+	}
+	function setLb2($item){
+		$this->lb2 = $item;
+	}
+	function setLb3($item){
+		$this->lb3 = $item;
+	}
+	function setLb4($item){
+		$this->lb4 = $item;
+	}
+	function setLb5($item){
+		$this->lb5 = $item;
+	}
+	function setLb6($item){
+		$this->lb6 = $item;
+	}
+	
 	function getL1(){
 		return $this->l1;
 	}
@@ -902,6 +939,24 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getL6(){
 		return $this->l6;
+	}
+	function getLb1(){
+		return $this->lb1;
+	}
+	function getLb2(){
+		return $this->lb2;
+	}
+	function getLb3(){
+		return $this->lb3;
+	}
+	function getLb4(){
+		return $this->lb4;
+	}
+	function getLb5(){
+		return $this->lb5;
+	}
+	function getLb6(){
+		return $this->lb6;
 	}
 
 	public function __set($name,$value) {
