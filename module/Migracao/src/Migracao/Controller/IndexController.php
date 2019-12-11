@@ -4240,8 +4240,12 @@ class IndexController extends CircuitoController {
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
 								// lideres
 								$lideres = 0;
+								$lideresBeta = 0;
 								if($quantidadeCelulas > 0 || $quantidadeCelulasEstrategicas > 0){
 									$lideres = count($grupo->getResponsabilidadesAtivas());
+								}
+								if($quantidadeCelulasEstrategicas > 0){
+									$lideresBeta = count($grupo->getResponsabilidadesAtivas());
 								}
 
 								$indiceFatoMensal = 1;// mes atual
@@ -4251,6 +4255,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL1($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb1($lideresBeta);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 2){
 									$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
@@ -4258,6 +4263,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL2($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb2($lideresBeta);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 3){
 									$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
@@ -4265,6 +4271,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL3($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb3($lideresBeta);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 4){
 									$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
@@ -4272,6 +4279,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL4($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb4($lideresBeta);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
 									$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
@@ -4279,6 +4287,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL5($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb5($lideresBeta);
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 6){
 									$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
@@ -4286,6 +4295,7 @@ class IndexController extends CircuitoController {
 									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
 									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
 									$fatosMensal[$indiceFatoMensal]->setL6($lideres);
+									$fatosMensal[$indiceFatoMensal]->setLb6($lideresBeta);
 								}
 								$contadorDePeriodo[1]++;
 							}

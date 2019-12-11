@@ -2614,165 +2614,6 @@ public function alunosNaSemanaAction(){
 		return $relatorio;
 	}
 
-	public function geradorMetasAction() {
-
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$mes = date('m'); //Temporariamente Fixo só pra agilizar
-		$ano = date('Y'); //Temporariamente Fixo só pra agilizar
-		$comparacao = 2; // Temporariamente Fixo também, comparação = like
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		$periodoInicial = $arrayPeriodoDoMes[0];
-		$periodoFinal = $arrayPeriodoDoMes[1];
-					$contadorDePeriodos = 0;
-			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
-				$contadorDePeriodos++;
-			}
-
-
-		$todosFilhos = Array();
-		$repositorio = $this->getRepositorio();
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
-		$situacaoAtiva = 1;
-		$situacaoEspecial = 6;
-
-		foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho) {
-			$todosFilhos[] = $grupoPaiFilhoFilho;
-		}
-		$arrayComRelatorios = Array();
-		foreach ($todosFilhos as $filho) {
-			$somaCelulas = 0;
-			$somaAlunos = 0;
-			$somaMetaDeAlunos = 0;
-			$somaMetaDeEnvioRevisao = 0;
-			$somaTOTAL = 0;
-			$grupo = $filho->getGrupoPaiFilhoFilho();
-			$relatorio = Array();
-			if($grupo->getEntidadeAtiva()->getNome()){
-					$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
-			}	else {
-				$relatorio['nome'] = 'COORDENAÇÃO '.$grupo->getEntidadeAtiva()->getNumero();
-			}
-			$relatorio['tipo'] = 'titulo';
-			$arrayComRelatorios[] = $relatorio;
-			if($grupo->getId() == 1225 || $grupo->getId() == 1){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
-				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
-					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
-					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-
-					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $somado = 2);			
-					$relatorio = Array();
-					if($grupo->getEntidadeAtiva()->getNome()){
-							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
-					}
-					$campo = 'cq' . $contadorDePeriodos;
-					$relatorio['celulas'] = $fatoMensalSomado[$campo];
-					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
-						foreach($relatorioCursosDesordenados as $fatoCurso){
-							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
-							if($turmaDoFatoCurso->getAno() <= 2018){
-								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
-									$relatorio['alunos']++;
-								}
-							}							
-						}
-					}
-					$meta['metaDeAlunos'] = number_format($relatorio['alunos'] / 100 * 10);
-					$meta['metaDeEnvioRevisao'] = number_format($relatorio['celulas'] / 100 * 10);
-
-					if(!$relatorio['alunos']){
-						$relatorio['alunos'] = 0;
-					}
-					if(!$relatorio['celulas']){
-						$relatorio['celulas'] = 0;
-					}
-					$meta['total'] = $relatorio['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
-					$relatorio['meta'] = $meta;
-					$arrayComRelatorios[] = $relatorio;
-					$somaAlunos += $relatorio['alunos'];
-					$somaCelulas += $relatorio['celulas'];
-					$somaMetaDeAlunos += $meta['metaDeAlunos'];
-					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
-					$somaTOTAL += $meta['total'];
-				}
-				$relatorio['nome'] = 'TOTAL';
-				$relatorio['celulas'] = $somaCelulas;
-				$relatorio['alunos'] = $somaAlunos;
-				$relatorio['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
-				$relatorio['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
-				$relatorio['meta']['total'] = $somaTOTAL;
-				$arrayComRelatorios[] = $relatorio;
-			}
-
-			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 4 || $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === 3){
-				$grupoPaiFilhoFilhosEquipe = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoFinal);
-				foreach ($grupoPaiFilhoFilhosEquipe as $grupoPaiFilhoFilhoEquipes) {
-					$grupo = $grupoPaiFilhoFilhoEquipes->getGrupoPaiFilhoFilho();
-					$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
-					$relatorioCelula = $repositorio->getFatoCicloORM()->montarRelatorioCelulaPorNumeroIdentificador($numeroIdentificador, $periodoFinal, $comparacao);					
-					$relatorio = Array();
-					if($grupo->getEntidadeAtiva()->getNome()){
-							$relatorio['nome'] = $grupo->getEntidadeAtiva()->getNome();
-					}
-					$relatorio['celulas'] = $relatorioCelula[0]['quantidade'];
-					$turmas = $grupo->getGrupoIgreja()->getTurma();
-					$relatorioCursos = array();
-					if($relatorioCursosDesordenados = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador)){
-						foreach($relatorioCursosDesordenados as $fatoCurso){
-							$turmaDoFatoCurso = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());							
-							if($turmaDoFatoCurso->getAno() <= 2018){
-								if($fatoCurso->getSituacao_id() == $situacaoAtiva || $fatoCurso->getSituacao_id() == $situacaoEspecial){
-									$relatorio['alunos']++;
-								}
-							}
-						}
-					}
-					$meta['metaDeAlunos'] = number_format($relatorio['alunos'] / 100 * 10);
-					$meta['metaDeEnvioRevisao'] = number_format($relatorio['celulas'] / 100 * 10);
-
-					if(!$relatorio['alunos']){
-						$relatorio['alunos'] = 0;
-					}
-					if(!$relatorio['celulas']){
-						$relatorio['celulas'] = 0;
-					}
-					$meta['total'] = $relatorio['celulas'] + $meta['metaDeAlunos'] + $meta['metaDeEnvioRevisao'];
-					$relatorio['meta'] = $meta;
-					$arrayComRelatorios[] = $relatorio;
-					$somaAlunos += $relatorio['alunos'];
-					$somaCelulas += $relatorio['celulas'];
-					$somaMetaDeAlunos += $meta['metaDeAlunos'];
-					$somaMetaDeEnvioRevisao += $meta['metaDeEnvioRevisao'];
-					$somaTOTAL += $meta['total'];
-				}
-				$relatorio['nome'] = 'TOTAL';
-				$relatorio['celulas'] = $somaCelulas;
-				$relatorio['alunos'] = $somaAlunos;
-				$relatorio['meta']['metaDeAlunos'] = $somaMetaDeAlunos;
-				$relatorio['meta']['metaDeEnvioRevisao'] = $somaMetaDeEnvioRevisao;
-				$relatorio['meta']['total'] = $somaTOTAL;
-				$arrayComRelatorios[] = $relatorio;
-			}
-		}
-
-		$request = $this->getRequest();
-		if($request->isPost()){
-			$postDados = $request->getPost();
-			$mes = $postDados['mes'];
-			$ano = $postDados['ano'];
-		}else{
-			$mes = date('m');
-			$ano = date('Y');
-		}
-
-		$dados['mes'] = $mes;
-		$dados['ano'] = $ano;
-		$dados['arrayComRelatorios'] = $arrayComRelatorios;
-		return new ViewModel($dados);
-	}
-
 	public function exclusaoCelulasAction() {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -3427,15 +3268,17 @@ public function alunosNaSemanaAction(){
 									}
 
 									$campoL = 'l' . $contadorDePeriodos;
+									$campoLb = 'lb' . $contadorDePeriodos;
 									$campoCq = 'cq' . $contadorDePeriodos;
 									$campoCbq = 'cbq' . $contadorDePeriodos;
+									$quantidadeDeLideresBeta = $fatoMensalSomado[$campoLb];
+									$quantidadeDeLideresNormal = $fatoMensalSomado[$campoL] - $quantidadeDeLideresBeta;
 
-									//$quantidadeDeLideresNormal = $relatorio['quantidadeLideres'] - $quantidadeDeLideresBeta;
-									$dadosFilho144['lideres'] = $fatoMensalSomado[$campoL];
-									$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $fatoMensalSomado[$campoL] : 0;
+									$dadosFilho144['lideres'] = $quantidadeDeLideresNormal;
+									$dadosFilho144['lideresMeta'] = $lideres > 0 ? $lideres / 100 * $quantidadeDeLideresNormal : 0;
 
-									//$dadosFilho144['lideresBeta'] = $quantidadeDeLideresBeta;
-									//$dadosFilho144['lideresBetaMeta'] = $lideresBeta > 0 ? $lideresBeta / 100 * $quantidadeDeLideresBeta : 0;
+									$dadosFilho144['lideresBeta'] = $quantidadeDeLideresBeta;
+									$dadosFilho144['lideresBetaMeta'] = $lideresBeta > 0 ? $lideresBeta / 100 * $quantidadeDeLideresBeta : 0;
 
 									$dadosFilho144['celulas'] = $fatoMensalSomado[$campoCq];
 									$dadosFilho144['celulasMeta'] = $celulas > 0 ? $celulas / 100 * $fatoMensalSomado[$campoCq] : 0;
@@ -3465,8 +3308,8 @@ public function alunosNaSemanaAction(){
 									}
 									$somaParcialLideres += $dadosFilho144['lideres'];
 									$somaParcialLideresMeta += $dadosFilho144['lideresMeta'];
-									//$somaParcialLideresBeta += $dadosFilho144['lideresBeta'];
-									//$somaParcialLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
+									$somaParcialLideresBeta += $dadosFilho144['lideresBeta'];
+									$somaParcialLideresBetaMeta += $dadosFilho144['lideresBetaMeta'];
 									$somaParcialCelulas += $dadosFilho144['celulas'];
 									$somaParcialCelulasMeta += $dadosFilho144['celulasMeta'];
 									$somaParcialCelulasBeta += $dadosFilho144['celulasBeta'];
