@@ -12,14 +12,24 @@ use Zend\View\Helper\AbstractHelper;
 class ListagemLideresTransferencia extends AbstractHelper {
 
 	private $discipulos;
+	private $mostrarLider;
 
 	public function __construct() {
 
 	}
 
-	public function __invoke($discipulos) {
+	public function __invoke($discipulos, $mostrarLider = false) {
 		$this->setDiscipulos($discipulos);
+		$this->setMostrarLider($mostrarLider);
 		return $this->renderHtml();
+	}
+
+	public function setMostrarLider($item){
+		$this->mostrarLider = $item;
+	}
+
+	public function getMostrarLider(){
+		return $this->mostrarLider;
 	}
 
 	public function verificarSeMostrarONo($grupo, $solicitacoes) {

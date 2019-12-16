@@ -71,7 +71,7 @@ echo '<input type="hidden" id="receber" name="receber" value="1" />';
 	<div id="divSelecionarLider" class="hidden">
 	<select id="idLider" class="form-control" onChange="mostrarBotaoSelecionarLider();">
 	<option value="0"><?php echo $this->translate(Constantes::$TRADUCAO_SELECIONE); ?></option>
-	<?php echo $this->listagemLideresTransferencia($this->discipulos); ?>
+	<?php echo $this->listagemLideresTransferencia($this->discipulos, true); ?>
 	</select>
 	<div id="divBotaoSelecionarLider" class="hidden mt10">
 	<?php
