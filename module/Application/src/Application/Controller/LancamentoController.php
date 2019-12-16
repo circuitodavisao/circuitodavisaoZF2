@@ -1358,22 +1358,6 @@ class LancamentoController extends CircuitoController {
                 $progresso = number_format($explodeProgresso[0], 2, '.', '');
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
 
-                if ($grupoLancado->getGrupoCv()) {
-                    /* Cadastrar atendimento no circuito antigo */
-                    $idAtendimento = IndexController::buscaIdAtendimentoPorLideres(
-                                    $mesSelecionado, $anoSelecionado, $grupoLancado->getGrupoCv()->getLider1(), $grupoLancado->getGrupoCv()->getLider2()
-                    );
-
-                    unset($atendimentoLancado);
-                    for ($index = 1; $index <= 5; $index++) {
-                        if ($index <= $numeroAtendimentos) {
-                            $atendimentoLancado[$index] = 'S';
-                        } else {
-                            $atendimentoLancado[$index] = 'N';
-                        }
-                    }
-                    IndexController::cadastrarAtendimentoPorid($idAtendimento, $atendimentoLancado);
-                }
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(
                                 array('response' => 'true',
