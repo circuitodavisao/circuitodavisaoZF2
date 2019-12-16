@@ -238,8 +238,9 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	}
 	if ($this->tipoRelatorio == 4) {
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">LÍD Q</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL Q</th>';
-		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BETA Q</th>';
+		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL Q</th>';
+		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL BETA Q</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">TOT CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
@@ -362,9 +363,11 @@ foreach($this->relatorio as $relatorio){
 				$a = 'a' . $contadorDePeriodos;
 				$d = 'd' . $contadorDePeriodos;
 				$l = 'l' . $contadorDePeriodos;
+				$totalCelulas = $relatorio->$cq + $relatorio->$cbq;
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$l, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+				echo '<td class="' . $classeBase . '">'.number_format($totalCelulas, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
 				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
