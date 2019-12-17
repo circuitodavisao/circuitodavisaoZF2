@@ -1070,8 +1070,8 @@ class LoginController extends CircuitoController {
 			$sessao = new Container(Constantes::$NOME_APLICACAO);
 			$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 			$pessoaLogada->setCep($data['cep_logradouro']);
-			$pessoaLogada->setLocalidade_uf($data['hiddencidade'].'/'.$data['hiddenud']);
-			$pessoaLogada->setBairro_distrito($data['hiddenBairro']);
+			$pessoaLogada->setLocalidade_uf($data['hiddencidade'].'/'.$data['hiddenuf']);
+			$pessoaLogada->setBairro_distrito($data['hiddenbairro']);
 			$pessoaLogada->setLogradouro($data['hiddenlogradouro']);
 			$pessoaLogada->setComplemento($data['complemento']);
 			$this->getRepositorio()->getPessoaORM()->persistir($pessoaLogada, $mudarDataDeCadastro = false);

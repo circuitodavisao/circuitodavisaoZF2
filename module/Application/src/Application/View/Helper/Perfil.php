@@ -166,6 +166,7 @@ class Perfil extends AbstractHelper {
 		$html .= $this->view->inputFormularioSimples('Localidade/UF', $formulario->get('localidadeUf'), 12);
 		$html .= $this->view->inputFormularioSimples('Bairro/Distrito', $formulario->get('bairroDistrito'), 12);
 		$html .= $this->view->inputFormularioSimples('Logradouro', $formulario->get('logradouro'), 12);
+		$html .= $this->view->inputFormularioSimples('Complemento', $formulario->get('complemento'), 12);
 
 		$html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_CPF, $formulario->get(Constantes::$INPUT_CPF), 12);
 		$html .= $this->view->inputFormularioSimples(Constantes::$TRADUCAO_EMAIL, $formulario->get(Constantes::$INPUT_EMAIL), 7);

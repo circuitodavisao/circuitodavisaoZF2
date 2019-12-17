@@ -164,6 +164,19 @@ class PerfilForm extends Form {
                         ])
         );
 
+        $this->add(
+                (new Text())
+                        ->setName('complemento')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'complemento',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Sem CEP',
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getComplemento(),
+                            'disabled' => 'true',
+                        ])
+        );
+
+
         list($ano, $mes, $dia) = explode('-', $pessoa->getData_nascimento());
 
         /* Dia da data de nascimento */
