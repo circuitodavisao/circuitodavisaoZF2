@@ -31,28 +31,34 @@ echo '<tbody>';
 if($this->fatosMensal && $this->filtrado){
 	$contagemRanking = 1;
 	foreach($this->fatosMensal as $fato){
-	$classeCor = '';
-		echo '<tr class="'.$classeCor.'">';
-		echo '<td>'.$contagemRanking.'</td>';
+		$mostrar = true;
+		if(strpos($fato->lideres, 'INATIVO')){
+			$mostrar = false;
+		}
+		if($mostrar){
+			$classeCor = '';
+			echo '<tr class="'.$classeCor.'">';
+			echo '<td>'.$contagemRanking.'</td>';
 
-		if($this->mostrarIgreja){
-			$nomeIgreja = '';
-			if($fato->nome_igreja){
-				$nomeIgreja = $fato->nome_igreja;
-			}else{
-				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId((int) substr($fato->numero_identificador, (count($fato->numero_identificador)-8)));
-				$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+			if($this->mostrarIgreja){
+				$nomeIgreja = '';
+				if($fato->nome_igreja){
+					$nomeIgreja = $fato->nome_igreja;
+				}else{
+					$grupo = $this->repositorio->getGrupoORM()->encontrarPorId((int) substr($fato->numero_identificador, (count($fato->numero_identificador)-8)));
+					$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+				}
+				echo '<td>'.$nomeIgreja.'</td>';
 			}
-			echo '<td>'.$nomeIgreja.'</td>';
+			echo '<td>'.$fato->lideres.'-'.$fato->entidade.'</td>';
+			for($i = 1; $i <= $this->periodos; $i++){
+				$campo = 'c'.$i;
+				echo '<td>'.$fato->$campo.'</td>';
+			}
+			echo '<td>'.$fato->mediac.'</td>';
+			echo '</tr>';
+			$contagemRanking++;
 		}
-		echo '<td>'.$fato->lideres.'-'.$fato->entidade.'</td>';
-		for($i = 1; $i <= $this->periodos; $i++){
-			$campo = 'c'.$i;
-			echo '<td>'.$fato->$campo.'</td>';
-		}
-		echo '<td>'.$fato->mediac.'</td>';
-		echo '</tr>';
-		$contagemRanking++;
 	}
 }
 echo '</tbody>';
