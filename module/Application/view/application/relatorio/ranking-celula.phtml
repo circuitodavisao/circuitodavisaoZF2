@@ -55,7 +55,7 @@ if($this->fatosMensal && $this->filtrado){
 				$campo = 'c'.$i;
 				echo '<td>'.$fato->$campo.'</td>';
 			}
-			echo '<td>'.$fato->mediac.'</td>';
+			echo '<td>'.number_format($fato->mediac).'</td>';
 			echo '</tr>';
 			$contagemRanking++;
 		}
