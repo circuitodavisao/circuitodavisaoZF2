@@ -732,7 +732,7 @@ $link = 'relatorioNovo';
 			$html .= '<li>';
 			$html .= '<a href="/cadastroFichaRevisionistas" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-terminal"></span>';
-			$html .= 'Fichas Revisão de Vidas';
+			$html .= 'Fichas Revisionistas/Líderes';
 			$html .= '</a>';
 			$html .= '</li>';
 
