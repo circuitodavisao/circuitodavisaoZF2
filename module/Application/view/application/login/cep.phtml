@@ -1,0 +1,31 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+
+$form = $this->Form;
+$form->prepare();
+$form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_LOGIN, array('action' => 'cepSalvar')));
+
+echo $this->form()->openTag($form);
+echo '<div class="admin-form">';
+echo '<div class="panel mt10">';
+echo '<div class="alert alert-info m10">Atualize seu endereço</div>';
+echo '<div class="panel-body bg-light p25 pb15">';
+echo $this->montarEndereco($form);
+echo '<div class="mt10">';
+echo '<div id="divBotaoCepContinuar" class="hidden">';
+echo '<button class="btn btn-primary btn-sm" type="submit">Salvar</button>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+echo $this->form()->closeTag();
+
+$versao = '?v=8.6';
+
+echo $this
+	->headScript()
+	->prependFile($this->basePath() . '/js/circuito_da_visao/buscar-endereco.js' . $versao)
+	;
+echo $this->inlineScript();

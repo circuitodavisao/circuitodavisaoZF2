@@ -420,6 +420,7 @@ class Module {
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/logar' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/selecionarPerfil' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/preSaida' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cep' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/principalEmail' ||

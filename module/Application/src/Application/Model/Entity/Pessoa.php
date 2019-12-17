@@ -142,6 +142,21 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $documento;
 
+    /** @ORM\Column(type="integer") */
+    protected $cep;
+
+    /** @ORM\Column(type="string") */
+    protected $localidade_uf;
+
+    /** @ORM\Column(type="string") */
+    protected $bairro_distrito;
+
+    /** @ORM\Column(type="string") */
+    protected $logradouro;
+
+    /** @ORM\Column(type="string") */
+    protected $complemento;
+ 
     /** @ORM\Column(type="string") */
     protected $token;
 
@@ -468,6 +483,26 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
         return $this->documento;
     }
 
+    function getCep() {
+        return $this->cep;
+    }
+
+    function getLocalidade_uf() {
+        return $this->localidade_uf;
+    }
+
+    function getBairro_distrito() {
+        return $this->bairro_distrito;
+    }
+
+    function getLogradouro() {
+        return $this->logradouro;
+    }
+
+	function getComplemento(){
+		return $this->complemento;
+	}
+
     function setNome($nome) {
         $this->nome = trim(strtoupper($nome));
     }
@@ -491,6 +526,26 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setDocumento($documento) {
         $this->documento = $documento;
     }
+
+    function setCep($item) {
+        $this->cep = $item;
+    }
+
+    function setLocalidade_uf($item) {
+        $this->localidade_uf = $item;
+    }
+
+    function setBairro_distrito($item) {
+        $this->bairro_distrito = $item;
+    }
+
+    function setLogradouro($item) {
+        $this->logradouro = $item;
+    }
+
+	function setComplemento($item){
+		$this->complemento = $item;
+	}
 
     function getToken() {
         return $this->token;

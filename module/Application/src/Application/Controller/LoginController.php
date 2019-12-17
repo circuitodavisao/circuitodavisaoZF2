@@ -9,6 +9,7 @@ use Application\Form\LoginForm;
 use Application\Form\NovaSenhaForm;
 use Application\Form\PerfilForm;
 use Application\Form\RecuperarAcessoForm;
+use Application\Form\AtualizarCadastroForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\EntidadeTipo;
@@ -1048,6 +1049,39 @@ class LoginController extends CircuitoController {
 		}
 		$response->setContent(Json::encode($dados));
 		return $response;
+	}
+
+	public function cepAction(){
+		$form = new AtualizarCadastroForm(Constantes::$FORM, $sessao->idPessoa);
+
+		$view = new ViewModel(array(
+			'tituloDaPagina' => 'Atualizar CEP',
+			Constantes::$FORM => $form,
+			Constantes::$FORM_ENDERECO_HIDDEN => Constantes::$FORM_HIDDEN
+		));
+
+		return $view;
+	}
+
+	public function cepSalvarAction() {
+		$data = $this->getRequest()->getPost();
+		if($this->getRequest()->isPost()){
+		try{
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+			$pessoaLogada = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
+			$pessoaLogada->setCep($data['cep_logradouro']);
+			$pessoaLogada->setLocalidade_uf($data['hiddencidade'].'/'.$data['hiddenud']);
+			$pessoaLogada->setBairro_distrito($data['hiddenBairro']);
+			$pessoaLogada->setLogradouro($data['hiddenlogradouro']);
+			$pessoaLogada->setComplemento($data['complemento']);
+			$this->getRepositorio()->getPessoaORM()->persistir($pessoaLogada, $mudarDataDeCadastro = false);
+            return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL);
+		}catch(Execption $e){
+			echo 'error: ' . $e->getMessage();
+		}
+		}else{
+            return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN);
+		}
 	}
 
 }

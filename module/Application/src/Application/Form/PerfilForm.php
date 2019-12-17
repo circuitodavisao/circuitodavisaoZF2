@@ -116,6 +116,54 @@ class PerfilForm extends Form {
                         ])
         );
 
+        $this->add(
+                (new Number())
+                        ->setName('cep')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'cep',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Sem CEP',
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getCep(),
+                            'disabled' => 'true',
+                        ])
+        );
+
+        $this->add(
+                (new Text())
+                        ->setName('localidadeUf')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'localidadeUf',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Sem CEP',
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getLocalidade_uf(),
+                            'disabled' => 'true',
+                        ])
+        );
+
+        $this->add(
+                (new Text())
+                        ->setName('bairroDistrito')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'bairroDistrito',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Sem CEP',
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getBairro_distrito(),
+                            'disabled' => 'true',
+                        ])
+        );
+
+        $this->add(
+                (new Text())
+                        ->setName('logradouro')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'logradouro',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Sem CEP',
+                            Constantes::$FORM_STRING_VALUE => $pessoa->getLogradouro(),
+                            'disabled' => 'true',
+                        ])
+        );
+
         list($ano, $mes, $dia) = explode('-', $pessoa->getData_nascimento());
 
         /* Dia da data de nascimento */
@@ -204,6 +252,7 @@ class PerfilForm extends Form {
                 (new Csrf())
                         ->setName(Constantes::$INPUT_CSRF)
         );
+
     }
 
 }

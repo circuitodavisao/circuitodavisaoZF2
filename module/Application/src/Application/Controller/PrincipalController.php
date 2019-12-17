@@ -64,6 +64,9 @@ class PrincipalController extends CircuitoController {
 		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao() || $pessoa->getEmail() == 'atualize' ){			
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfil'));			
 		}
+		if(!$pessoa->getCep()){
+			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'cep'));			
+		}
 		/* fim formulario */
 		
 		$vendoPessoaLogada = true;
