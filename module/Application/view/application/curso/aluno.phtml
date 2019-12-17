@@ -479,6 +479,7 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					}
 				}
 
+			
 				for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
 					$extra = '';
 					$icone = 'fa-times';
@@ -494,8 +495,14 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 					$extra = ' id="' . $idBotao . '" ' . $this->funcaoOnClick('mudarPresencaOuVistoOuFinanceiro(' . $this->turmaPessoa->getId() . ', ' . $disciplina->getId() . ', 3 ,' . $indiceMensalidade . ')');
 
 					$html .= '<td>';
+					$mostrarRecibo = 'hidden';
 					if($this->possoAcessarIsso){
+						if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+							$mostrarRecibo = '';
+						}
 						$html .= $this->botaoSimples($iconeBotao, $extra, $corDoBotao, BotaoSimples::posicaoAoCentro);
+
+						$html .= '<a id="recibo'.$idBotao.'" target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'_'.$disciplina->getId() . '_'. $indiceMensalidade . '" class="'.$mostrarRecibo.' ml10 btn btn-xs btn-primary" ><i class="fa fa-print"></i></a>';
 					}
 					if(!$this->possoAcessarIsso){
 						if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
@@ -508,7 +515,7 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 						$html .= $iconeBotao;
 						$html .= '</span>';				
 					}
-					
+
 					$html .= '</td>';
 				}
 
@@ -517,10 +524,6 @@ if ($this->turmaPessoa->verificarSeEstaAtivo()) {
 				if($pontosFinanceiro[$disciplina->getNome()] < 3){
 					$validacaoFinanceiro = 0;
 				}				
-
-				if($this->possoAcessarIsso){
-					$html .= '<td class="text-center hidden-xs hidden-sm hidden-md""><a target="_blanck" href="/cursoReciboFinanceiro/' . $this->turmaPessoa->getId().'9999999999'.$disciplina->getId() . '" class="btn btn-xs btn-primary" ><i class="fa fa-print"></i></a></td>';
-				}			
 
 				$html .= '</tr>';
 			}
@@ -654,7 +657,7 @@ $html .= '<input type="hidden" id="validacaoGeralDoAluno" value="' . $validacaoG
 $html .= '<input type="hidden" id="validacaoDoFinanceiro" value="' . $validacaoFinanceiro . '" />';
 echo $html;
 
-$versao = '?v=1.1.32';
+$versao = '?v=1.1.34';
 
 echo $this
 	->headScript()

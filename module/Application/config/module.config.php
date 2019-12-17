@@ -102,7 +102,7 @@ return array(
                     'route' => '/curso[:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[-0-9]+',
+                        'id' => '[-0-9_]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Curso',

@@ -34,7 +34,7 @@ echo $this
 <p>Aluno: <?php echo $this->turmaPessoa->getPessoa()->getNome(); ?></p>
 <p>Time: <?php echo $this->turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade(); ?></p>
 <p>Referente a: <?php echo $this->disciplina->getNome(); ?></p>
-<p>Mensalidade: __________</p>
+<p>Mensalidade: <?php echo $this->mensalidade; ?></p>
 <p>Data: <?php echo date('d/m/Y'); ?></p>
 <p>Financeiro</p>
 <p>_________________________________________________</p>
@@ -46,6 +46,7 @@ echo $this
 <p>Aluno: <?php echo $this->turmaPessoa->getPessoa()->getNome(); ?></p>
 <p>Time: <?php echo $this->turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade(); ?></p>
 <p>Referente a: <?php echo $this->disciplina->getNome(); ?></p>
+<p>Mensalidade: <?php echo $this->mensalidade; ?></p>
 <p>Data: <?php echo date('d/m/Y'); ?></p>
 <p>Financeiro</p>
 <p>_________________________________________________</p>

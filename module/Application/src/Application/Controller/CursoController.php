@@ -2502,11 +2502,12 @@ class CursoController extends CircuitoController {
 
 	public function reciboFinanceiroAction(){
 		$idPassado = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
-		$explodeId = explode('9999999999', $idPassado);
+		$explodeId = explode('_', $idPassado);
 
 		$dados = array();
 		$dados['turmaPessoa'] = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($explodeId[0]);
 		$dados['disciplina'] = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($explodeId[1]);
+		$dados['mensalidade'] = $explodeId[2];
 
 		$view = new ViewModel($dados);
 		$view->setTerminal(true);

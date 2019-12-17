@@ -67,9 +67,15 @@ function mudarPresencaOuVistoOuFinanceiro(idTurmaPessoa, idAulaOuDisciplina, tip
 				if (valor === "S") {
 					botao.addClass(btnSuccess);
 					botao.html(iconeFaCheck);
+					if(tipoDeLancamento === 3){
+						document.getElementById('recibo'+botao.attr('id')).classList.remove('hidden')
+					}
 				} else {
 					botao.addClass(btnDanger);
 					botao.html(iconeFaTimes);
+					if(tipoDeLancamento === 3){
+						document.getElementById('recibo'+botao.attr('id')).classList.add('hidden')
+					}
 				}
 				botao.removeClass(disabled);
 			}
