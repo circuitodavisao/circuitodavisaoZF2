@@ -1,0 +1,93 @@
+<?php
+
+use Application\Controller\Helper\Constantes;
+use Application\Controller\Helper\Funcoes;
+
+echo $this->doctype();
+?>
+
+<html lang="pt-BR">
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<?php
+$NAME_APPLICATION = $this->translate(Constantes::$TRADUCAO_NOME_APLICACAO);
+echo $this
+	->headTitle($NAME_APPLICATION)
+	->setSeparator(' - ')
+	->setAutoEscape(false)
+	;
+?> 
+		<!-- Meta Head -->
+<?php
+echo $this
+	->headMeta()
+	->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no')
+	->appendName('theme-color', '#3498db')
+	->appendName('google-site-verification', 'b4wOHXCDC8BakDzVfow_NeYwAGGBAEv-sCdKLsDAQUs')
+	->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+	;
+?>
+	</head>
+	<body>
+<?php
+$alinhamento = "right";
+$contador = 0;
+foreach ($this->lista['revisionistas'] as $revisionista) {
+	if ($alinhamento == "right") {
+		$alinhamento = "left";
+	} else {
+		$alinhamento = "right";
+	}
+	$eventoFrequencia = $this->repositorio->getEventoFrequenciaORM()->encontrarPorId($revisionista);
+
+	echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
+	echo '<div align="center">';
+	echo '<h2>Revisionista</h2>';
+	echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
+	echo '</div>';
+	echo '<hr />';
+	echo '<div align="center" style="font-size:16px;">';
+	echo 'Inscrição: ' . $revisionista . '<br />';
+	echo $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+	echo Funcoes::mudarPadraoData($eventoFrequencia->getEvento()->getData(), 1) . '<br />';
+	echo 'L&iacute;der(es): ' . $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getNomeLideresAtivos() . '<br />';
+	echo '</div>';
+	echo '<br />';
+	echo '</fieldset>';
+	if($contador === 8){
+		echo "<div style=\"page-break-before: always\"></div>";
+		$contador = 0;
+	}else{
+		$contador++;
+	}
+}
+$contador = 0;
+foreach ($this->lista['lideres'] as $lider) {
+	$eventoFrequencia = $this->repositorio->getEventoFrequenciaORM()->encontrarPorId($lider);
+	$qualHierarquia = $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+	if($eventoFrequencia->getPessoa()->getSexo() == 'F'){
+		$qualHierarquia = $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino();
+	}
+	echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
+	echo '<div align="center">';
+	echo '<h2>' .$qualHierarquia. '</h2>';
+	echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
+	echo '</div>';
+	echo '<hr />';
+	echo '<div align="center" style="font-size:16px;">';
+	echo $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
+	echo Funcoes::mudarPadraoData($eventoFrequencia->getEvento()->getData(), 1) . '<br />';
+	echo 'L&iacute;der(es): ' . $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getNomeLideresAtivos() . '<br />';
+	echo '</div>';
+	echo '<br />';
+	echo '</fieldset>';
+	if($contador === 8){
+		echo "<div style=\"page-break-before: always\"></div>";
+		$contador = 0;
+	}else{
+		$contador++;
+	}
+}
+?>
+	</body>
+</html>        

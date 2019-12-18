@@ -296,6 +296,11 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_GERAR_CRACHA,
 			));
 		}
+		if ($pagina == Constantes::$PAGINA_GERAR_CRACHA.'Oito') {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => Constantes::$PAGINA_GERAR_CRACHA.'Oito',
+			));
+		}
 		if ($pagina == Constantes::$PAGINA_REVISAO) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
 				Constantes::$ACTION => Constantes::$PAGINA_REVISAO,
@@ -3084,6 +3089,23 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function gerarCrachaAction() {
+		$request = $this->getRequest();
+		if ($request->isPost()) {
+			foreach ($_POST as $key => $value) {
+				if (substr($key, 0, 12) == 'revisionista') {
+					$lista['revisionistas'][] = $value;
+				}
+				if (substr($key, 0, 5) == 'lider') {
+					$lista['lideres'][] = $value;
+				}
+			}
+		}
+		$viewModel = new ViewModel(array('lista' => $lista, 'repositorio' => $this->getRepositorio(),));
+		$viewModel->setTerminal(true);
+		return $viewModel;
+	}
+
+	public function gerarCrachaOitoAction() {
 		$request = $this->getRequest();
 		if ($request->isPost()) {
 			foreach ($_POST as $key => $value) {

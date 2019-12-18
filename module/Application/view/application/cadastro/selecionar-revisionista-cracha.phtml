@@ -20,9 +20,13 @@ echo $this->form()->openTag($form);
         <?php
         $htmlBotaoGerar .= '<div class="text-center m20">';
         $funcao = $this->funcaoOnClick('this.form.submit()');
-        $htmlBotaoGerar .= $this->botaoSimples('Gerar Crachá', $funcao, '', BotaoSimples::posicaoAoCentro);
+        $htmlBotaoGerar .= $this->botaoSimples('Gerar crachá 1 por página', $funcao, '', BotaoSimples::posicaoAoCentro);
+		$htmlBotaoGerar .= '&nbsp;';
+        $funcao = $this->funcaoOnClick('this.form.action = "/cadastroGerarCrachaOito"; this.form.submit()');
+        $htmlBotaoGerar .= $this->botaoSimples('Gerar crachá 8 por página', $funcao, '', BotaoSimples::posicaoAoCentro);
         $htmlBotaoGerar .= '</div>';
         echo $htmlBotaoGerar;
+ 
         echo '<h2>Revisionistas - Homens: '.$this->quantidadeHomensRevisionistas.' - Mulheres: '.$this->quantidadeMulheresRevisionistas.'</h2>';
 
         if ($relatorioRevisionistas = $this->relatorio['revisionistas']) {
