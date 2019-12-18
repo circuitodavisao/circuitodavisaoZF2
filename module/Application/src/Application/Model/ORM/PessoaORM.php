@@ -273,4 +273,15 @@ class PessoaORM extends CircuitoORM {
 		return $resultado;
 	}
 
+    public function encontrarVariosPorEmail($email) {
+        try {
+            $pessoas = $this->getEntityManager()
+                    ->getRepository($this->getEntity())
+                    ->findBy(array(Constantes::$ENTITY_PESSOA_EMAIL => $email));
+            return $pessoas;
+        } catch (Exception $exc) {
+            echo $exc->getTraceAsString();
+        }
+    }
+
 }

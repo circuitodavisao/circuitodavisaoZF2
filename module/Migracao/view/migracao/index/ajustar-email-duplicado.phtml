@@ -1,0 +1,23 @@
+<form action="migracaoAjustarEmailDuplicado" method="POST">
+<p>Email</p>
+<input value="<?php echo $this->email; ?>" type='email' id='email' name='email' />
+<p>Matricula</p>
+<input value="<?php echo $this->idGrupo; ?>" type='number' id='idGrupo' name='idGrupo' />
+<button type='button' onClick='validar(this.form)'>Ajustar</button>
+</form>
+<script type='text/javascript'>
+function validar(form){
+console.log(form)
+	if(form.email.value === ''){
+		alert('Preencha o email')
+		return false
+	}
+	if(form.idGrupo.value === ''){
+		alert('Preencha a matricula')
+		return false
+	}
+	form.submit()
+}
+</script>
+<?php
+echo $this->html;

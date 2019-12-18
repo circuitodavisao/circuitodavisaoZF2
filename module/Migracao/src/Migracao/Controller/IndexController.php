@@ -256,7 +256,7 @@ class IndexController extends CircuitoController {
 					}
 				}
 		//	}
-			$this->getRepositorio()->fecharTransacao();
+			//$this->getRepositorio()->fecharTransacao();
 		} catch (Exception $exc) {
 			$this->getRepositorio()->desfazerTransacao();
 			Funcoes::var_dump($exc->getTraceAsString());
@@ -4321,6 +4321,66 @@ class IndexController extends CircuitoController {
 
 		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
 		return new ViewModel(array('html' => $html));
+	}
+
+	public function ajustarEmailDuplicadoAction(){
+		$html = '';
+		$email = '';
+		$idGrupo = '';
+		$request = $this->getRequest();
+		if($request->isPost()){
+			try{
+				$this->getRepositorio()->iniciarTransacao();
+				$data = $request->getPost();
+				$email = $data['email'];
+				$idGrupo = $data['idGrupo'];
+				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo)){
+					$html .= '<br />idGrupo: ' . $grupo->getId();
+					if($grupoResponsaveis = $grupo->getResponsabilidadesAtivas()){
+						$html .= '<br />Lidere(s) do grupo: ' . $grupo->getNomeLideresAtivos();
+						$idPessoa = null;
+						if($pessoas = $this->getRepositorio()->getPessoaORM()->encontrarVariosPorEmail(trim($email))){
+							foreach($pessoas as $pessoa){
+								foreach($grupoResponsaveis as $grupoResponsavel){
+									if($grupoResponsavel->getPessoa()->getId() === $pessoa->getId()){
+										$idPessoa = $pessoa->getId();
+									}
+								}
+							}
+							if($idPessoa){
+								$html .= '<br /> Pessoa eh responsavel por esse grupo';
+								$html .= '<br /> Quantidade de cadastro mutiplicado: ' . count($pessoas);
+								foreach($pessoas as $pessoa){
+									if($pessoa->getId() !== $idPessoa){
+										$html .= '<br /> Alterando duplicado';
+										$pessoa->setEmail(null);
+										$pessoa->setDocumento(null);
+										$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $alterarDataDeCriacao = false);
+									}
+								}
+							}else{
+								$html .= '<br /> Pessoa nao eh responsavel por esse grupo';
+							}
+						}else{
+							$html .= '<br /> Email não encontrado';
+						}
+					}else{
+						$html .= '<br /> Grupo sem responsabilidades';
+					}
+				}else{
+					$html .= '<br /> Grupo não encontrado';
+				}
+				$this->getRepositorio()->fecharTransacao();
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				$html .= 'Error: ' . $exc->getMessage();
+			}
+		}
+		return new ViewModel(array(
+			'html' => $html,
+			'email' => $email,
+			'idGrupo' => $idGrupo,
+		));
 	}
 
 }
