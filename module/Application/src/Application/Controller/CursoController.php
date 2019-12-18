@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\View\Helper\BotaoSimples;
 use Application\Form\AulaForm;
 use Application\Form\CursoForm;
 use Application\Form\CursoUsuarioForm;
@@ -1341,6 +1342,10 @@ class CursoController extends CircuitoController {
 		return new ViewModel(array('titulo' => 'Consultar Matrícula'));
 	}
 
+	public function verificarFinanceiroAction() {
+		return new ViewModel(array('titulo' => 'Consultar Financeiro'));
+	}
+
 	public function consultarMatriculaAction() {
 		$response = $this->getResponse();
 		try {
@@ -1362,6 +1367,44 @@ class CursoController extends CircuitoController {
 					$nomeAula = $turmaAulaAtiva->getAula()->getDisciplina()->getNome().' Aula: '.$turmaAulaAtiva->getAula()->getPosicao();
 				}
 				$idParaRetornar = $turmaPessoa->getId();
+
+				$financeiro = '';
+				$turma = $turmaPessoa->getTurma();
+				foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+					if ($disciplina->getId() !== Disciplina::POS_REVISAO) {																						
+						$mostrar = false;
+						if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() >= $disciplina->getId()) {
+							$mostrar = true;
+						}
+						if ($mostrar) {
+							$icone = 'fa-times';
+							$corDoBotao = 'danger';
+							$pontosDoFinanceiro = 0;
+							if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+								foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+									if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
+										if($turmaPessoaFinanceiro->getValor1() == 'S'){
+											$pontosDoFinanceiro += 1;
+										}
+										if($turmaPessoaFinanceiro->getValor2() == 'S'){
+											$pontosDoFinanceiro += 1;
+										}
+										if($turmaPessoaFinanceiro->getValor3() == 'S'){
+											$pontosDoFinanceiro += 1;
+										}
+										if($pontosDoFinanceiro == 3){
+											$icone = 'fa-check';
+											$corDoBotao = 'success';
+										}																
+									}
+								}
+							}
+							$iconeBotao = '<span disabled class="btn btn-xs btn-'.$corDoBotao.'"><i class="fa ' . $icone . '"></i></span>';
+							$extra = 'disabled ';
+							$financeiro .= '    ' . $disciplina->getNome() . ' ' . $iconeBotao;
+						}
+					}
+				}
 			} else {
 				$resposta = false;
 			}
@@ -1372,6 +1415,7 @@ class CursoController extends CircuitoController {
 				'idTurmaPessoa' => $idParaRetornar,
 				'temAulaAtiva' => $temAulaAtiva,
 				'nomeAula' => $nomeAula,
+				'financeiro' => $financeiro,
 			)));
 		} catch (Exception $exc) {
 			echo $exc->getMessage();

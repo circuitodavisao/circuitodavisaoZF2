@@ -150,6 +150,9 @@ function verificarMatricula(reposicao = false) {
 					}else{
 						informacaoAluno += '<p class="alert alert-danger">SEM AULA ABERTA</p>';
 					}
+					if(data.financeiro){
+						informacaoAluno += '<p>Financeiro: ' + data.financeiro + '</p>'
+					}
 					mensagem
 						.addClass('alert-info')
 						.removeClass('alert-danger')

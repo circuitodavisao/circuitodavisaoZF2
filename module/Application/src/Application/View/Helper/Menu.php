@@ -620,6 +620,13 @@ $link = 'relatorioNovo';
 				$html .= 'Consultar Matrícula';
 				$html .= '</a>';
 				$html .= '</li>';
+
+				$html .= '<li>';
+				$html .= '<a href="/cursoVerificarFinanceiro" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-terminal"></span>';
+				$html .= 'Consultar Financeiro';
+				$html .= '</a>';
+				$html .= '</li>';
 			}
 			if ($arrayOQueMostrarDosCursos['turmas']) {
 				$html .= '<li>';

@@ -1,0 +1,24 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+
+echo $this->templateFormularioTopo($this->titulo);
+echo '<div class="panel-body bg-light">';
+echo '<div class="block-center">';
+echo '<div class="row">';
+echo '<div class="col-lg-8 col-md-8 col-md-8 col-xs-8">';
+echo '<input type="number" id="matricula" class="form-control" placeholder="Mátricula" onBlur="verificarMatricula()"/>';
+echo '</div>';
+echo '<div class="col-lg-4 col-md-4 col-md-4 col-xs-4">';
+echo $this->botaoSimples('Pesquisar', $this->funcaoOnClick('verificarMatricula()'), BotaoSimples::botaoImportante, BotaoSimples::larguraMaxima);
+echo '</div>';
+echo '</div>';
+echo '<div id="mensagem" class="row alert mt10 hidden"></div>';
+echo '</div>';
+echo $this->templateFormularioRodape();
+
+$versao = '?v=3.9';
+echo $this
+	->headScript()
+	->prependFile($this->basePath() . '/js/circuito_da_visao/aluno.js' . $versao)
+	;
