@@ -413,6 +413,7 @@ class Module {
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/logar' ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/selecionarPerfil' ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/preSaida' ||
+			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cep' ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/cadastroFichaRevisao' ||
 			$e->getRequest()->getUriString() == $stringHttps . 'www.' . $stringUrl . '/lancamentoDiscipulado' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl ||
