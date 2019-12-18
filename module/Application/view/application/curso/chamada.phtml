@@ -72,7 +72,11 @@ if($this->filtrado){
 						}
 					}
 				}
-				if($this->postado['mostrarFinanceiro'] == 1 || $this->postado['mostrarFinanceiro'] == 2){								
+				if(
+					$this->postado['mostrarFinanceiro'] == 1 || 
+					$this->postado['mostrarFinanceiro'] == 2 ||
+					$this->postado['mostrarFinanceiro'] == 3
+				){	
 					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
 						if ($disciplina->getId() !== Disciplina::POS_REVISAO) {												
 							$mostrar = false;
@@ -139,12 +143,19 @@ if($this->filtrado){
 									}
 									$inadimplente = 1;
 									$adimplente = 2;
-									if($this->postado['mostrarFinanceiro'] == $inadimplente){
+									$todas = 3;
+									if(
+										$this->postado['mostrarFinanceiro'] == $inadimplente ||
+										$this->postado['mostrarFinanceiro'] == $todas
+									){
 										if($contador < $totalDeDisciplinas){
 											$mostrarFinanceiro = true;
 										}
 									}
-									if($this->postado['mostrarFinanceiro'] == $adimplente){
+									if(
+										$this->postado['mostrarFinanceiro'] == $adimplente ||
+										$this->postado['mostrarFinanceiro'] == $todas
+									){
 										if($contador === $totalDeDisciplinas){
 											$mostrarFinanceiro = true;
 										}
@@ -220,7 +231,11 @@ if($this->filtrado){
 											}
 										}
 									}
-									if($this->postado['mostrarFinanceiro'] == 1 || $this->postado['mostrarFinanceiro'] == 2){
+									if(
+										$this->postado['mostrarFinanceiro'] == 1 || 
+										$this->postado['mostrarFinanceiro'] == 2 ||
+										$this->postado['mostrarFinanceiro'] == 3
+									){
 										foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
 											if ($disciplina->getId() !== Disciplina::POS_REVISAO) {																						
 												$mostrar = false;

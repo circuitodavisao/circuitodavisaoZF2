@@ -112,8 +112,6 @@ class FiltroCursos extends AbstractHelper {
 					$html .= '</select>';
 					$html .= '</div>';
 
-					$selectedNao = '';
-					$selectedSim = '';
 					if($this->view->postado['mostrarFinanceiro'] == 0){
 						$selectedNao = 'selected';
 					}
@@ -123,10 +121,14 @@ class FiltroCursos extends AbstractHelper {
 					if($this->view->postado['mostrarFinanceiro'] == 2){
 						$selectedAdimplente = 'selected';
 					}
+					if($this->view->postado['mostrarFinanceiro'] == 3){
+						$selectedTodas = 'selected';
+					}
 					$html .= '<div class="form-group">';
 					$html .= '<label for="">' . $this->view->translate('Mostrar Financeiro') . '</label>';
 					$html .= '<select class="form-control" name="mostrarFinanceiro" id="mostrarFinanceiro" >';
 					$html .= '<option value="0" '.$selectedNao.'>Não</option>';
+					$html .= '<option value="3" '.$selectedTodas.'>Todas Situações</option>';
 					$html .= '<option value="1" '.$selectedInadimplente.'>Inadiplente</option>';
 					$html .= '<option value="2" '.$selectedAdimplente.'>Adimplente</option>';
 					$html .= '</select>';
