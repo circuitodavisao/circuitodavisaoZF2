@@ -3965,12 +3965,14 @@ public function alunosNaSemanaAction(){
 						if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
 							foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
 								$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
-								foreach($filho12->getPessoasAtivas() as $pessoa){
-									if ($pessoa->getSexo() === 'M') {
-										$discipuladoHomens++;
-									}
-									if ($pessoa->getSexo() === 'F') {
-										$discipuladoMulheres++;
+								if($filho12->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() !== EntidadeTipo::secretario){
+									foreach($filho12->getPessoasAtivas() as $pessoa){
+										if ($pessoa->getSexo() === 'M') {
+											$discipuladoHomens++;
+										}
+										if ($pessoa->getSexo() === 'F') {
+											$discipuladoMulheres++;
+										}
 									}
 								}
 							}
