@@ -14,12 +14,18 @@ use Exception;
  */
 class RegistroORM extends CircuitoORM {
 
-   public function encontrarUltimoRegistroDeLogin() {
+   public function encontrarUltimoRegistroDeLogin($idGrupo = null) {
         $dql = "SELECT "
                 . " r "
                 . "FROM  " . Constantes::$ENTITY_REGISTRO . " r "
                 . "WHERE "
+				. "#idGrupo " 
                 . "r.registro_acao_id = 1 ORDER BY r.id DESC ";
+		if($idGrupo === null){
+			$dql = str_replace('#idGrupo', '', $dql);
+		}else{
+			$dql = str_replace('#idGrupo', 'r.grupo_id = '.$idGrupo.' AND ', $dql);
+		}
         try {
             $result = $this->getEntityManager()->createQuery($dql)
 					->setMaxResults(1)

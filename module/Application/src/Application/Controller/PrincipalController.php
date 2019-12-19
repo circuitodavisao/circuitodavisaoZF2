@@ -136,6 +136,7 @@ class PrincipalController extends CircuitoController {
 			'anoInicial' => $anoInicial,
 			'mesFinal' => $mesFinal,
 			'anoFinal' => $anoFinal,
+			'repositorio' => $this->getRepositorio(),
 		);
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
