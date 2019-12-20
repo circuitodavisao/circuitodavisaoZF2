@@ -774,7 +774,7 @@ $link = 'relatorioNovo';
 		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe) {
 			$html .= '<li class="sidebar-label pt20">Suporte</li>';
 			$html .= '<li>';
-			$html .= '<a href="/principalSuporte" onClick="mostrarSplash();">';
+			$html .= '<a href="https://circuitodavisao.zendesk.com/hc/pt-br" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-envelope"></span>';
 			$html .= '<span class="sidebar-title">Suporte</span>';
 			$html .= '</a>';
