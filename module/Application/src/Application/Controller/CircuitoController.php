@@ -132,6 +132,21 @@ class CircuitoController extends AbstractActionController {
         return false;
     }
 
+	public function validarSeSouIgrejaOuEquipeOuCoordencaoOuRegiao(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::igreja
+			&&  $entidade->getEntidadeTipo()->getId() !== EntidadeTipo::equipe
+			&&  $entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+			&&  $entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+					Constantes::$ACTION => 'semAcesso',
+				));
+			}
+	}
+
 	public function validarSeSouIgrejaOuEquipeOuRegiao(){
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 

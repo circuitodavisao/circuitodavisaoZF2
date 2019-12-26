@@ -2385,7 +2385,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacoesAction() {
-		self::validarSeSouIgrejaOuEquipeOuRegiao();
+		self::validarSeSouIgrejaOuEquipeOuCoordencaoOuRegiao();
 		$request = $this->getRequest();
 		$dados = array();
 		if($request->isPost()){
@@ -2415,13 +2415,15 @@ class CadastroController extends CircuitoController {
 
 		$solicitacoesDivididasPorTipo = array();
 
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+		$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 			$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
 			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
 
 			$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		}
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
+		$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 			$idRegiao = $entidade->getGrupo()->getId();
 			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
 
@@ -2432,6 +2434,8 @@ class CadastroController extends CircuitoController {
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
 			$solicitacoesTipo[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+			$solicitacoesTipo[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
 			$solicitacoesTipo[] = $solicitacaoTipo;
 
 			$trocaDeResponsaveis = $this->getRepositorio()->getTrocaResponsavelORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
@@ -2536,7 +2540,7 @@ class CadastroController extends CircuitoController {
 
 	public function solicitacaoAction() {
 		ini_set('memory_limit', '1024M');
-		self::validarSeSouIgrejaOuEquipeOuRegiao();
+		self::validarSeSouIgrejaOuEquipeOuCoordencaoOuRegiao();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2547,25 +2551,36 @@ class CadastroController extends CircuitoController {
 		$solicitacaoTiposSemAjuste = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		$solicitacaoTiposAjustado = array();
 
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
-			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
-			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
-			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+
+			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
+				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
+				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
+				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+			}
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
 			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 			$igrejas = array();
+			$equipes = array();
 			$paraOndeTransferir = array();
 			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
 				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
 
 				if($grupo12->getEntidadeAtiva() && $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 					$igrejas[] = $grupo12;
+					foreach($grupo12->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+						$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+					}
 				}	
+	
 				if($grupo12->getEntidadeAtiva() 
 					&& ($grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 					|| $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
@@ -2576,6 +2591,9 @@ class CadastroController extends CircuitoController {
 
 							if($grupo144->getEntidadeAtiva() && $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 								$igrejas[] = $grupo144;
+								foreach($grupo144->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+									$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+								}
 							}	
 
 							if($grupo144->getEntidadeAtiva() 
@@ -2588,21 +2606,41 @@ class CadastroController extends CircuitoController {
 
 										if($grupo1728->getEntidadeAtiva() && $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 											$igrejas[] = $grupo1728;
+											foreach($grupo1728->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+												$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+											}
 										}
+
+										if($grupo1728->getEntidadeAtiva() 
+											&& ($grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+											|| $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+												$paraOndeTransferir[] = $grupo1728;
+												$grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal();
+												foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+													$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+
+													if($grupo20736->getEntidadeAtiva() && $grupo20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+														$igrejas[] = $grupo20736;
+														foreach($grupo20736->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+															$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+														}
+													}
+												}
+											}
 									}
 								}
-
 						}
 					}
 			}
-
 		}
 
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+		$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
@@ -2613,6 +2651,8 @@ class CadastroController extends CircuitoController {
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_IGREJA){
 							$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 						}	
@@ -2636,6 +2676,7 @@ class CadastroController extends CircuitoController {
 			'grupoPaiFilhoCasais' => $arrayCasais,
 			'alunos' => $alunos,
 			'igrejas' => $igrejas,
+			'equipes' => $equipes,
 			'paraOndeTransferir' => $paraOndeTransferir,
 		));
 
@@ -2724,9 +2765,10 @@ class CadastroController extends CircuitoController {
 				if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
 					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 				}
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-					$grupoIgreja = $entidade->getGrupo();
-				}				
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+						$grupoIgreja = $entidade->getGrupo();
+					}				
 
 				/* Criando */
 				$solicitacao = new Solicitacao();
@@ -2754,6 +2796,9 @@ class CadastroController extends CircuitoController {
 					}
 					if($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER){
 						$objeto2 = $grupoIgreja->getId();
+					}
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA){
+						$objeto2 = $entidade->getGrupo()->getId();
 					}
 					$solicitacao->setObjeto2($objeto2);
 				}
@@ -2814,11 +2859,12 @@ class CadastroController extends CircuitoController {
 				if ($post_data['nome']) {
 					$solicitacao->setNome($post_data['nome']);
 				}
-				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
-					if ($post_data['nomeEquipe']) {
-						$solicitacao->setNome($post_data['nomeEquipe']);
+				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
+						if ($post_data['nomeEquipe']) {
+							$solicitacao->setNome($post_data['nomeEquipe']);
+						}
 					}
-				}
 				
 				$this->getRepositorio()->getSolicitacaoORM()->persistir($solicitacao);				
 
@@ -2838,7 +2884,9 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
-					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)) {
+					$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)
+				) {
 						
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);

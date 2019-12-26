@@ -174,8 +174,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 				$html .= '</li>';			
 			}
 
-			if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe &&
-				$this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){				
+			if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe){
 				$html .= '<li>';
 				$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'cadastroSolicitacoes\', null);">';
 				$html .= '<span class="fa fa-users"></span>';

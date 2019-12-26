@@ -111,7 +111,19 @@ for ($indiceDeObejtos = 1; $indiceDeObejtos <= 3; $indiceDeObejtos++) {
 	<!--divSelecionarEquipe-->
 	<div id="divSelecionarEquipe" class="hidden">
 	<select id="idEquipe" class="form-control" onChange="mostrarBotaoSelecionarEquipe();">
-	<option value="0">Aguarde Processando ...</option>
+<?php
+if($this->equipes){
+echo '<option value="0">SELECIONE</option>';
+	foreach ($this->equipes as $equipe) {
+		$nomeEquipe = $equipe->getEntidadeAtiva()->getNome();
+		$nomeIgreja = $equipe->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+		echo '<option  value="' . $equipe->getId() . '" >' . $nomeIgreja. ' - ' . $nomeEquipe . '</option>';
+}
+}else{
+echo '<option value="0">Aguarde Processando ...</option>';
+}
+?>
+
 	</select>
 	<div id="divBotaoSelecionarEquipe" class="hidden mt10">
 	<?php

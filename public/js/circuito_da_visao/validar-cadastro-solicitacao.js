@@ -66,6 +66,8 @@ const REMOVER_IGREJA = 10;
 const TRANSFERIR_IGREJA = 11;
 const ADICIONAR_RESPONSABILIDADE = 12;
 const REMOVER_RESPONSABILIDADE = 13;
+const ABRIR_IGREJA_COM_EQUIPE_COMPLETA = 14;
+const ABRIR_EQUIPE_COM_LIDER_DA_IGREJA = 15;
 
 function selecionarTipo() {
 	$(stringDivSolicitacaoTipo).addClass(hidden);
@@ -89,6 +91,8 @@ function selecionarTipo() {
 		parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === ADICIONAR_RESPONSABILIDADE ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_RESPONSABILIDADE ||
+		parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
+		parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA ||
 		parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA) {
 
 		$('#blocoObjeto3').addClass(hidden);
@@ -150,14 +154,26 @@ function selecionarTipo() {
 			$('#spanSelecioneObjeto1').html('Selecione a pessoa que deixará de ser secretário(a).');
 			$('#blocoObjeto2').addClass(hidden);
 		}
+		if (parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA) {			
+			$('#spanSelecioneObjeto1').html('Selecione a equipe para abrir a nova igreja.');
+			$('#blocoObjeto2').addClass(hidden);
+		}
+		if (parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA) {			
+			$('#blocoObjeto1').addClass(hidden);
+			$('#blocoObjeto2').addClass(hidden);
+			$('#spanSelecioneObjeto1').html('Nome da Nova Equipe');
+		}
 	}
 
 	if ( parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_ALUNO){
 		buscarAlunos();
 		buscarDiscipulosIgreja();
-}else{
-	buscarDiscipulos(parseInt($('#solicitacaoTipo').val()));
-}
+	}else{
+
+		if (parseInt($('#solicitacaoTipo').val()) !== ABRIR_EQUIPE_COM_LIDER_DA_IGREJA) {			
+			buscarDiscipulos(parseInt($('#solicitacaoTipo').val()));
+		}
+	}
 }
 
 function abrirSelecionarObjeto(qualObjeto, idLider) {
@@ -214,6 +230,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == REMOVER_RESPONSABILIDADE) {
 			$('#divSelecionarPessoa').removeClass(hidden);			
 		}
+		if (qualObjeto == 1 && $('#solicitacaoTipoId').val() == ABRIR_IGREJA_COM_EQUIPE_COMPLETA) {
+			$(stringDivSelecionarEquipe).removeClass(hidden);			
+		}
 	} else {
 		if ($('#solicitacaoTipoId').val() == SEPARAR) {
 			$(stringDivSelecionarQuemSaira).removeClass(hidden);
@@ -239,6 +258,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 		if(parseInt($("#receber").val()) === 1) {
 			$(stringDivSelecionarNumeracao).removeClass(hidden);
 		}
+		if($('#solicitacaoTipoId').val() == ABRIR_IGREJA_COM_EQUIPE_COMPLETA) {
+			$('#divNomeEquipe').removeClass(hidden);
+		} 
 	}
 	objetoSelecionado = qualObjeto;
 }
@@ -460,6 +482,7 @@ function selecionarObjeto(id, informacao) {
 		&& 
 		(parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER 
 			|| parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA
+			|| parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA
 			|| parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER)
 	){
 		objeto.html(informacao);
@@ -470,7 +493,8 @@ function selecionarObjeto(id, informacao) {
 		if(parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA){
 			$('#divSelecionarCelula').addClass(hidden);
 		}
-		if(parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER){
+		if(parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
+			parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA){
 			$('#divNomeEquipe').addClass(hidden);
 		}
 		valorParaAdicionar = 50;
@@ -529,6 +553,11 @@ function selecionarObjeto(id, informacao) {
 									$('#divSelecionarIgreja').addClass(hidden)
 									$('#blocoObjeto2').removeClass(hidden)
 								}
+								if ($('#solicitacaoTipoId').val() == ABRIR_IGREJA_COM_EQUIPE_COMPLETA) {
+									objeto.html('Equipe que se tornara uma igreja');
+									$('#divSelecionarEquipe').addClass(hidden)
+									$('#blocoObjeto3').removeClass(hidden)
+								}
 								if ($('#solicitacaoTipoId').val() == REMOVER_CELULA) {
 									objeto.html('Líder que terá a célula removida');
 									console.log('Quantas celulas: ', data.celulas)
@@ -582,6 +611,7 @@ function selecionarObjeto(id, informacao) {
 							parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA ||
 							parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
 							parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_IGREJA ||
+							parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
 							parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
 							valorParaAdicionar = 50;
 						}
@@ -1115,11 +1145,21 @@ function buscarDiscipulos(idSolicitacaoTipo){
 			return resultado.json()
 		})
 		.then(json => {
-			document.getElementById('idLider').innerHTML = json.resultado.discipulos
-			document.getElementById('idEquipe').innerHTML = json.resultado.equipes
-			document.getElementById('idHomem').innerHTML = json.resultado.homens
-			document.getElementById('idMulher').innerHTML = json.resultado.mulheres
-			document.getElementById('idCasal').innerHTML = json.resultado.casais
+			if(json.resultado.discipulos){
+				document.getElementById('idLider').innerHTML = json.resultado.discipulos
+			}
+			if(json.resultado.equipes){
+				document.getElementById('idEquipe').innerHTML = json.resultado.equipes
+			}
+			if(json.resultado.homens){
+				document.getElementById('idHomem').innerHTML = json.resultado.homens
+			}
+			if(json.resultado.mulheres){
+				document.getElementById('idMulher').innerHTML = json.resultado.mulheres
+			}
+			if(json.resultado.casais){
+				document.getElementById('idCasal').innerHTML = json.resultado.casais
+			}
 		})
 }
 
