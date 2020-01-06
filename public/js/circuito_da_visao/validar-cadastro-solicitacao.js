@@ -161,7 +161,9 @@ function selecionarTipo() {
 		if (parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA) {			
 			$('#blocoObjeto1').addClass(hidden);
 			$('#blocoObjeto2').addClass(hidden);
-			$('#spanSelecioneObjeto1').html('Nome da Nova Equipe');
+			$('#blocoObjeto3').removeClass(hidden);
+			$('#spanSelecioneObjeto3').html('Informe o nome da nova equipe');
+			$('#divBotaoSelecionar3').removeClass(hidden);
 		}
 	}
 
@@ -259,6 +261,9 @@ function abrirSelecionarObjeto(qualObjeto, idLider) {
 			$(stringDivSelecionarNumeracao).removeClass(hidden);
 		}
 		if($('#solicitacaoTipoId').val() == ABRIR_IGREJA_COM_EQUIPE_COMPLETA) {
+			$('#divNomeEquipe').removeClass(hidden);
+		} 
+		if($('#solicitacaoTipoId').val() == ABRIR_EQUIPE_COM_LIDER_DA_IGREJA) {
 			$('#divNomeEquipe').removeClass(hidden);
 		} 
 	}
@@ -483,6 +488,7 @@ function selecionarObjeto(id, informacao) {
 		(parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER 
 			|| parseInt($('#solicitacaoTipo').val()) === REMOVER_CELULA
 			|| parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA
+			|| parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA
 			|| parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER)
 	){
 		objeto.html(informacao);
@@ -494,10 +500,14 @@ function selecionarObjeto(id, informacao) {
 			$('#divSelecionarCelula').addClass(hidden);
 		}
 		if(parseInt($('#solicitacaoTipo').val()) === SUBIR_LIDER ||
-			parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA){
+			parseInt($('#solicitacaoTipo').val()) === ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
+			parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA){
 			$('#divNomeEquipe').addClass(hidden);
 		}
 		valorParaAdicionar = 50;
+		if(parseInt($('#solicitacaoTipo').val()) === ABRIR_EQUIPE_COM_LIDER_DA_IGREJA){
+			valorParaAdicionar = 100;
+		}
 		atualizarBarraDeProgresso(valorParaAdicionar);
 		verificarSeMostraOBotaoDeContinuar();
 		botaoLimpar.removeClass(hidden);

@@ -2775,7 +2775,12 @@ class CadastroController extends CircuitoController {
 				$solicitacao->setSolicitante($pessoaLogada);
 				$solicitacao->setGrupo($grupoIgreja);
 				$solicitacao->setSolicitacaoTipo($solicitacaoTipo);
-				$solicitacao->setObjeto1($post_data['objeto1']);
+				if($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA){
+					$objeto1 = $entidade->getGrupo()->getId();
+					$solicitacao->setObjeto1($objeto1);
+				}else{
+					$solicitacao->setObjeto1($post_data['objeto1']);
+				}
 
 				if ($solicitacaoTipo->getId() !== SolicitacaoTipo::SEPARAR) {
 					$objeto2 = $post_data['objeto2'];
@@ -2797,9 +2802,10 @@ class CadastroController extends CircuitoController {
 					if($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER){
 						$objeto2 = $grupoIgreja->getId();
 					}
-					if($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA){
-						$objeto2 = $entidade->getGrupo()->getId();
-					}
+					if($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
+						$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA){
+							$objeto2 = $entidade->getGrupo()->getId();
+						}
 					$solicitacao->setObjeto2($objeto2);
 				}
 				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR) {

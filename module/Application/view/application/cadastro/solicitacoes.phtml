@@ -78,6 +78,10 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$colspan = 4;
 		$htmlThead .= '<th>Quem</th>';
 		break;
+	case SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA:
+		$colspan = 4;
+		$htmlThead .= '<th>Quem</th>';
+		break;
 	}
 	
 	$htmlThead .= '<th>Status</th>';
