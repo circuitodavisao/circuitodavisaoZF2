@@ -3731,7 +3731,9 @@ public function alunosNaSemanaAction(){
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
-
+			if($contadorDePeriodos === 0){
+				$contadorDePeriodos++;
+			}
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
