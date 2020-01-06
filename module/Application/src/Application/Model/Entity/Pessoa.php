@@ -242,7 +242,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
      * Recupera as Responsabilidades ativas
      * @return Entidade[]
      */
-    function getResponsabilidadesAtivas($todasResposabilidades = false) {
+    function getResponsabilidadesAtivas($todasResposabilidades = false, $ordernar = true) {
         $responsabilidadesAtivas = null;
         /* Responsabilidades */
         $responsabilidadesTodosStatus = $this->getGrupoResponsavel();
@@ -259,7 +259,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
             }
         }
         /* Ordenando */
-        if ($responsabilidadesAtivas) {
+        if ($responsabilidadesAtivas && $ordernar) {
             for ($i = 0; $i < count($responsabilidadesAtivas); $i++) {
                 for ($j = 1; $j < count($responsabilidadesAtivas); $j++) {
                     $r[1] = $responsabilidadesAtivas[$i];

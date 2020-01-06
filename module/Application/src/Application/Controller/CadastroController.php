@@ -2866,6 +2866,7 @@ class CadastroController extends CircuitoController {
 					$solicitacao->setNome($post_data['nome']);
 				}
 				if ($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
 						if ($post_data['nomeEquipe']) {
 							$solicitacao->setNome($post_data['nomeEquipe']);

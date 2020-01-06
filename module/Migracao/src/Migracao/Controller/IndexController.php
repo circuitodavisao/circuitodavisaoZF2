@@ -590,6 +590,42 @@ class IndexController extends CircuitoController {
 										$idGrupoDaEntidadeSecretario = $solicitacao->getObjeto1();
 										$this->removerResponsabilidadeSecretario($idGrupoDaEntidadeSecretario);
 									}
+									if ($idSolicitacaoTipo == SolicitacaoTipo::ABRIR_EQUIPE_COM_LIDER_DA_IGREJA) {
+										$html .= "<br /> {$solicitacao->getId()} - ABRIR_EQUIPE_COM_LIDER_DA_IGREJA";										
+										$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
+
+										/* Criar Grupo */
+										$grupoNovo = new Grupo();
+										$grupoNovo->setDataEHoraDeCriacao();
+										$this->getRepositorio()->getGrupoORM()->persistir($grupoNovo, $mudarData = false);
+
+										/* Criar Entidade */
+										$entidadeNova = new Entidade();
+										$entidadeNova->setEntidadeTipo( $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId(EntidadeTipo::equipe));
+										$entidadeNova->setNome($solicitacao->getNome());
+										$entidadeNova->setGrupo($grupoNovo);
+										$entidadeNova->setDataEHoraDeCriacao();
+										$this->getRepositorio()->getEntidadeORM()->persistir($entidadeNova, $mudarData = false);
+
+										/* Criar Grupo_Responsavel */
+										$grupoResponsabilidades = $grupo1->getResponsabilidadesAtivas();
+										foreach($grupoResponsabilidades as $grupoReponsabilidade){
+											$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($grupoReponsabilidade->getPessoa()->getId());
+											$grupoResponsavelNovo = new GrupoResponsavel();
+											$grupoResponsavelNovo->setPessoa($pessoa);
+											$grupoResponsavelNovo->setGrupo($grupoNovo);
+											$grupoResponsavelNovo->setDataEHoraDeCriacao();
+											$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
+										}
+
+										/* Criar Grupo_Pai_Filho */		
+										$grupoPaiFilhoNovo = new GrupoPaiFilho();
+										$grupoPaiFilhoNovo->setGrupoPaiFilhoPai($grupo1);
+										$grupoPaiFilhoNovo->setGrupoPaiFilhoFilho($grupoNovo);
+										$grupoPaiFilhoNovo->setDataEHoraDeCriacao();
+										$this->getRepositorio()->getGrupoPaiFilhoORM()->persistir($grupoPaiFilhoNovo, $mudarData = false);
+									}
+	
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
 									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
@@ -4066,9 +4102,7 @@ class IndexController extends CircuitoController {
 		/* Criar Entidade */
 		$entidadeNova = new Entidade();
 		$tipoSecretario = 8;
-		$entidadeNova->setEntidadeTipo(
-			$this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoSecretario)
-		);
+		$entidadeNova->setEntidadeTipo( $this->getRepositorio()->getEntidadeTipoORM()->encontrarPorId($tipoSecretario));
 		$entidadeNova->setGrupoSecretario($grupoQueVaiGerenciar);
 		$entidadeNova->setNome('SECRETÁRIO');
 		$entidadeNova->setGrupo($grupoNovo);
@@ -4320,7 +4354,6 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->desfazerTransacao();
 			echo $exc->getTraceAsString();
 		}
-
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_end = (float) $sec + (float) $usec;
