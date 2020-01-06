@@ -74,6 +74,10 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 		$htmlThead .= '<th>Secretário Removido</th>';
 		$htmlThead .= '<th class="hidden-xs">De Quem</th>';
 		break;
+	case SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA:
+		$colspan = 4;
+		$htmlThead .= '<th>Quem</th>';
+		break;
 	}
 	
 	$htmlThead .= '<th>Status</th>';
@@ -117,6 +121,7 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				$grupo = $this->repositorio->getGrupoORM()->encontrarPorId($objeto);
 				$dadosObjeto1 = '';
 				if($solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA
+					|| $solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA
 					|| $solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA){
 						$dadosObjeto1 = $grupo->getEntidadeAtiva()->getNome() . ' - ';
 				}

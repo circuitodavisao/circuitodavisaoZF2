@@ -2859,7 +2859,7 @@ class CadastroController extends CircuitoController {
 				if ($post_data['nome']) {
 					$solicitacao->setNome($post_data['nome']);
 				}
-				if ($solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER ||
+				if ($solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SUBIR_LIDER) {
 						if ($post_data['nomeEquipe']) {
 							$solicitacao->setNome($post_data['nomeEquipe']);
@@ -2887,7 +2887,6 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)
 				) {
-						
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
 

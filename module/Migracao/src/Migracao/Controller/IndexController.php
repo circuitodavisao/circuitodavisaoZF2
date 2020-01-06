@@ -467,6 +467,7 @@ class IndexController extends CircuitoController {
 									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
 									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
+										$idSolicitacaoTipo === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
 										$idSolicitacaoTipo === SolicitacaoTipo::SUBIR_LIDER) {
 
 											$grupoQueSeraSemeado = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
@@ -489,6 +490,9 @@ class IndexController extends CircuitoController {
 											}
 											if ($idSolicitacaoTipo === SolicitacaoTipo::SUBIR_LIDER){
 												$html .= "<br /> {$solicitacao->getId()} - SUBIR_LIDER";
+											}
+											if ($idSolicitacaoTipo === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA){
+												$html .= "<br /> {$solicitacao->getId()} - ABRIR_IGREJA_COM_EQUIPE_COMPLETA";
 											}
 											$html .= $this->transferirLider($grupoQueSeraSemeado, $grupoQueRecebera, $extra);
 										}
