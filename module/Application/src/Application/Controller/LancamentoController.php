@@ -315,7 +315,8 @@ class LancamentoController extends CircuitoController {
 						}
 					}
 					if($indiceDePeriodos >= $arrayPeriodoDoMesAtual[0]){
-						for($indiceAtual = $arrayPeriodoDoMesAtual[0]; $indiceAtual <= $arrayPeriodoDoMesAtual[1]; $indiceAtual++){
+						$periodoAtual = 0;
+						for($indiceAtual = $arrayPeriodoDoMesAtual[0]; $indiceAtual <= $periodoAtual; $indiceAtual++){
 							if($indiceDePeriodos == $indiceAtual){
 								$temNoMes[1] = true;
 								break;
