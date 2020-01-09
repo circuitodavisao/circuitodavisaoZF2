@@ -435,8 +435,7 @@ $link = 'relatorioNovo';
 			}
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao 
-			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
-			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
+			&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 
 			$html .= '<li>';
 			$html .= '<a href="/relatorioAlunos/1" onClick="mostrarSplash();">';
