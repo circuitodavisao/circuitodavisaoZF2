@@ -279,7 +279,9 @@ foreach($this->relatorio as $relatorio){
 			$class = $relatorio->mediacpclass;
 		}
 		if ($this->tipoRelatorio == 4) {
-			$class = $relatorio->mediamempclass;
+			if($relatorio->mediamempclass === 'dark'){
+				$class = $relatorio->mediamempclass;
+			}
 		}
 
 		echo '<tr class="'.$class.'">';
