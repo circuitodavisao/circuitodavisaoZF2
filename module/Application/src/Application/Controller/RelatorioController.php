@@ -5026,7 +5026,7 @@ public function alunosNaSemanaAction(){
 		$fatoFilho->setMediacpclass($mediaCPClass);
 		$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
 
-		$relatorio[] = $fatoFinal;
+		$relatorio[] = $fatoFilho;
 
 		return $relatorio;
 	}
