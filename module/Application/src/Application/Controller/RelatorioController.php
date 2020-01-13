@@ -4602,7 +4602,7 @@ public function alunosNaSemanaAction(){
 							}
 						}
 
-						if($mes !== date('m')){
+						if($mes != date('m')){
 							// ajustando percentual somado
 							for($w = 1;$w <= 6;$w++){
 								$cqmeta = 'cqmeta' . $w;
