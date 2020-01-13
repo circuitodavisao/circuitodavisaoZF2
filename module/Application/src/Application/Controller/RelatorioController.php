@@ -5022,10 +5022,6 @@ public function alunosNaSemanaAction(){
 		$fatoFilho->setMediarealizada($somaRealizada/$diferencaDePeriodos);
 		$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
 
-		$fatoFilho->setMediamempclass($mediaMemPClass);
-		$fatoFilho->setMediacpclass($mediaCPClass);
-		$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
-
 		$relatorio[] = $fatoFilho;
 
 		return $relatorio;
