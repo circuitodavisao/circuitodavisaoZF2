@@ -264,39 +264,37 @@ class FatoCicloORM extends CircuitoORM {
 			} else {
 				$entidadeSelecionada = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao);
 			}
-			if($entidadeSelecionada){
-				$tipoEntidade = $entidadeSelecionada->getEntidadeTipo()->getId();
-				while ($tipoEntidade === Entidade::SUBEQUIPE) {
-					$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-					if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
-						if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
-							$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-						} else {
-							break;
-							$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
-						}
+			$tipoEntidade = $entidadeSelecionada->getEntidadeTipo()->getId();
+			while ($tipoEntidade === Entidade::SUBEQUIPE) {
+				$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+				if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
+					if ($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()) {
+						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 					} else {
-						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
+						break;
+						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiInativo()->getGrupoPaiFilhoPai();
 					}
-					if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
-						$tipoEntidade = $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId();
-					} else {
-						$tipoEntidade = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)->getEntidadeTipo()->getId();
+				} else {
+					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
+				}
+				if (!$grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)) {
+					$tipoEntidade = $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId();
+				} else {
+					$tipoEntidade = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao)->getEntidadeTipo()->getId();
+				}
+			}
+			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+				$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
+				if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
+					if($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()){
+						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 					}
+				} else {
+					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
 				}
-				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-					$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-					if (!$grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)) {
-						if($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()){
-							$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
-						}
-					} else {
-						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiPorDataInativacao($dataInativacao)->getGrupoPaiFilhoPai();
-					}
-				}
-				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
-					$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
-				}
+			}
+			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+				$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
 			}
 			return $numeroIdentificador;
 		} catch (Exception $exc) {

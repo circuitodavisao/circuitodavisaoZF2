@@ -2852,7 +2852,7 @@ class CadastroController extends CircuitoController {
 						));
 					}										
 					$solicitacao->setObjeto1($objeto1);
-					$objeto2 = $entidadeASerInativada->getGrupo()->getId();;
+					$objeto2 = $entidadeASerInativada->getGrupo()->getId();
 					$solicitacao->setObjeto2($objeto2);										
 				}
 
@@ -2889,8 +2889,6 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
-					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
-					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)
 				) {
