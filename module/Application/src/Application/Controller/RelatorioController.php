@@ -4984,6 +4984,8 @@ public function alunosNaSemanaAction(){
 		$fatoFinal->setMediacpclass('dark');
 		$fatoFinal->setMediarealizadapclass('dark');
 
+		$fatoFilho = $fatoFinal;
+
 		// ajustando percentual somado
 		for($w = 1;$w <= 6;$w++){
 			$cqmeta = 'cqmeta' . $w;
@@ -4991,28 +4993,41 @@ public function alunosNaSemanaAction(){
 			// membresia
 			$mem = 'mem' . $w;
 			$memp = 'memp' . $w;
-			$membresiaMetaSomada = $fatoFinal->$cqmeta + $fatoFinal->$cbqmeta;
-			$fatoFinal->$memp = ($fatoFinal->$mem / $membresiaMetaSomada * 100);
+			$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
+			$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
 			// celulas
 			$c = 'c' . $w;
 			$cp = 'cp' . $w;
-			$fatoFinal->$cp = ($fatoFinal->$c / $membresiaMetaSomada * 100);
+			$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
 			//realizada
 			$cq = 'cq' . $w;
 			$cbq = 'cbq' . $w;
-			$quantidadeDeCelulas = $fatoFinal->$cq + $fatoFinal->$cbq;
+			$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
 			$realizada = 'realizada' . $w;
 			$realizadap = 'realizadap' . $w;
-			$fatoFinal->$realizadap = ($fatoFinal->$realizada / $quantidadeDeCelulas * 100);
+			$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
 		}
 
-		$somaMembresiap = $fatoFinal->getMemp1() + $fatoFinal->getMemp2() + $fatoFinal->getMemp3() + $fatoFinal->getMemp4() + $fatoFinal->getMemp5() + $fatoFinal->getMemp6();
-		$somaCp = $fatoFinal->getCp1() + $fatoFinal->getCp2() + $fatoFinal->getCp3() + $fatoFinal->getCp4() + $fatoFinal->getCp5() + $fatoFinal->getCp6();
-		$somaRealizadap = $fatoFinal->getRealizadap1() + $fatoFinal->getRealizadap2() + $fatoFinal->getRealizadap3() + $fatoFinal->getRealizadap4() + $fatoFinal->getRealizadap5() + $fatoFinal->getRealizadap6();
+		$somaMembresia = $fatoFilho->getMem1() + $fatoFilho->getMem2() + $fatoFilho->getMem3() + $fatoFilho->getMem4() + $fatoFilho->getMem5() + $fatoFilho->getMem6();
+		$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
+		$somaC = $fatoFilho->getC1() + $fatoFilho->getC2() + $fatoFilho->getC3() + $fatoFilho->getC4() + $fatoFilho->getC5() + $fatoFilho->getC6();
+		$somaCp = $fatoFilho->getCp1() + $fatoFilho->getCp2() + $fatoFilho->getCp3() + $fatoFilho->getCp4() + $fatoFilho->getCp5() + $fatoFilho->getCp6();
+		$somaRealizada = $fatoFilho->getRealizada1() + $fatoFilho->getRealizada2() + $fatoFilho->getRealizada3() + $fatoFilho->getRealizada4() + $fatoFilho->getRealizada5() + $fatoFilho->getRealizada6();
+		$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
 
-		$fatoFinal->setMediamemp($somaMembresiap/$diferencaDePeriodos);
-		$fatoFinal->setMediacp($somaCp/$diferencaDePeriodos);
-		$fatoFinal->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+		$fatoFilho->setMediamem($somaMembresia/$diferencaDePeriodos);
+		$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
+		$fatoFilho->setMediac($somaC/$diferencaDePeriodos);
+		$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
+		$fatoFilho->setMediarealizada($somaRealizada/$diferencaDePeriodos);
+		$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+
+		$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
+		$fatoFilho->setMediamempclass($mediaMemPClass);
+		$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
+		$fatoFilho->setMediacpclass($mediaCPClass);
+		$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
+		$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
 
 		$relatorio[] = $fatoFinal;
 
