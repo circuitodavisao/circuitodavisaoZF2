@@ -532,12 +532,6 @@ class IndexController extends CircuitoController {
 										$fatoLider->setNumero_identificador($numeroIdentificador);										
 										$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLider);
 									}
-									//								if ($idSolicitacaoTipo == SolicitacaoTipo::TROCAR_RESPONSABILIDADES) {
-									//									$html .= "<br />TROCANDO RESPONSABILIDADES";
-									//									$grupo1 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
-									//									$grupo2 = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-									//									$html .= $this->trocarResponsabilidades($grupo1, $grupo2);
-									//								}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::REMOVER_LIDER
 										||	$idSolicitacaoTipo == SolicitacaoTipo::REMOVER_IGREJA) {
 											/* remover todos lideres abaixo */
@@ -656,39 +650,44 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 			try {
 				foreach($trocaDeResponsaveisAtivas as $trocaDeResponsavel){
-					$html .= "<br /><br />Troca ativa, id: " . $trocaDeResponsavel->getId();
-					foreach($trocaDeResponsavel->getResolucaoResponsabilidade() as $resolucaoResponsabilidade){
-						if($resolucaoResponsabilidade){
-							if($resolucaoResponsabilidade->getOperacao() === 'A'){
-								$grupoRecebido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
-								$pessoaQueRecebera = $this->getRepositorio()->getPessoaORM()->encontrarPorId($resolucaoResponsabilidade->getPessoa_id());
-								$html .= "<br />Nova responsabilidade, Grupo: " . $grupoRecebido->getId() . " Pessoa: " . $pessoaQueRecebera->getId();
-								/* Criar Grupo_Responsavel */
-								$grupoResponsavelNovo = new GrupoResponsavel();
-								$grupoResponsavelNovo->setPessoa($pessoaQueRecebera);
-								$grupoResponsavelNovo->setGrupo($grupoRecebido);
-								$grupoResponsavelNovo->setDataEHoraDeCriacao();
-								$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
-							}
+					$dataDaSolicitacaoParaComparar = strtotime($trocaDeResponsavel->getData_criacaoStringPadraoBanco());
+					$dataDeHojeParaComparar = strtotime(date('Y-m-d'));
+					if ($dataDaSolicitacaoParaComparar <= $dataDeHojeParaComparar) {
 
-							if($resolucaoResponsabilidade->getOperacao() === 'R'){
-								$grupoASerRemovido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
-								$dataParaInativar = self::getDataParaInativacao();
-								$html .= "<br />Responsabilidade Removida, Grupo: " . $grupoASerRemovido->getId() . " Pessoa: " . $resolucaoResponsabilidade->getPessoa_id();								
+						$html .= "<br /><br />Troca ativa, id: " . $trocaDeResponsavel->getId();
+						foreach($trocaDeResponsavel->getResolucaoResponsabilidade() as $resolucaoResponsabilidade){
+							if($resolucaoResponsabilidade){
+								if($resolucaoResponsabilidade->getOperacao() === 'A'){
+									$grupoRecebido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
+									$pessoaQueRecebera = $this->getRepositorio()->getPessoaORM()->encontrarPorId($resolucaoResponsabilidade->getPessoa_id());
+									$html .= "<br />Nova responsabilidade, Grupo: " . $grupoRecebido->getId() . " Pessoa: " . $pessoaQueRecebera->getId();
+									/* Criar Grupo_Responsavel */
+									$grupoResponsavelNovo = new GrupoResponsavel();
+									$grupoResponsavelNovo->setPessoa($pessoaQueRecebera);
+									$grupoResponsavelNovo->setGrupo($grupoRecebido);
+									$grupoResponsavelNovo->setDataEHoraDeCriacao();
+									$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavelNovo, $mudarData = false);
+								}
 
-								/* responsabilidades */
-								foreach ($grupoASerRemovido->getResponsabilidadesAtivas() as $grupoResponsavel) {
-									if($grupoResponsavel->getPessoa()->getId() === $resolucaoResponsabilidade->getPessoa_id()){
-										$grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
-										$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
-									}								
+								if($resolucaoResponsabilidade->getOperacao() === 'R'){
+									$grupoASerRemovido = $this->getRepositorio()->getGrupoORM()->encontrarPorId($resolucaoResponsabilidade->getGrupo_id());
+									$dataParaInativar = self::getDataParaInativacao();
+									$html .= "<br />Responsabilidade Removida, Grupo: " . $grupoASerRemovido->getId() . " Pessoa: " . $resolucaoResponsabilidade->getPessoa_id();								
+
+									/* responsabilidades */
+									foreach ($grupoASerRemovido->getResponsabilidadesAtivas() as $grupoResponsavel) {
+										if($grupoResponsavel->getPessoa()->getId() === $resolucaoResponsabilidade->getPessoa_id()){
+											$grupoResponsavel->setDataEHoraDeInativacao($dataParaInativar);
+											$this->getRepositorio()->getGrupoResponsavelORM()->persistir($grupoResponsavel, false);
+										}								
+									}
 								}
 							}
 						}
+						$situacaoConcluida = 'C';
+						$trocaDeResponsavel->setSituacao($situacaoConcluida);
+						$this->getRepositorio()->getTrocaResponsavelORM()->persistir($trocaDeResponsavel);
 					}
-					$situacaoConcluida = 'C';
-					$trocaDeResponsavel->setSituacao($situacaoConcluida);
-					$this->getRepositorio()->getTrocaResponsavelORM()->persistir($trocaDeResponsavel);
 				}
 			$this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
@@ -1485,9 +1484,10 @@ class IndexController extends CircuitoController {
 			$dataParaInativar = self::getDataParaInativacao();
 		}
 		/* entidade */
-		$entidadeAtual = $grupo->getEntidadeAtiva();
-		$entidadeAtual->setDataEHoraDeInativacao($dataParaInativar);
-		$this->getRepositorio()->getEntidadeORM()->persistir($entidadeAtual, false);
+		if($entidadeAtual = $grupo->getEntidadeAtiva()){
+			$entidadeAtual->setDataEHoraDeInativacao($dataParaInativar);
+			$this->getRepositorio()->getEntidadeORM()->persistir($entidadeAtual, false);
+		}
 
 		/* grupo pai filho */
 		if($grupoPaiFilhoPai = $grupo->getGrupoPaiFilhoPaiAtivo()){
