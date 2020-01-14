@@ -81,47 +81,13 @@ if ($this->mostrarPrincipal) {
 		&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 		&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
 		&& $this->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){ ?>		
-			<?php
-			$mesInicial = 1;
-			$mesFinal = 12;
-			$anoInicial = 2017;
-			$anoFinal = date('Y');
 
-			if($this->mesInicial){
-				$mesInicial = $this->mesInicial;
-				$mesFinal = $this->mesFinal;
-				$anoInicial = $this->anoInicial;
-				$anoFinal = $this->anoFinal;
-			}
-			?>
 			<div class="row p5">
 				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
-					<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 						<select name="mes" id="mes" class="form-control">
-							<?php 
-								for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
-									$selected = '';
-									if ($this->mes == $indice) {
-										$selected = 'selected';
-									}
-						
-									echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
-								}
-							?>
-						</select>
-					</div>
-					<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
-					<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-						<select name="ano" id="ano" class="form-control">
-							<?php 					
-								for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
-									$selected = '';
-									if ($this->ano == $indice) {
-										$selected = 'selected';
-									}
-									echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
-								}
-							?>
+						<option value="1" <?php echo $this->selectedAtual; ?>>Atual</option>
+						<option value="2" <?php echo $this->selectedAnterior; ?>>Anterior</option>
 						</select>
 					</div>
 					<?php
@@ -139,7 +105,7 @@ if ($this->mostrarPrincipal) {
 								break;
 						}
 					?>
-					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
 						<div class="option-group field text-center pb10 pt10">
 							<label class="option option-primary">
 								<input type="radio" name="pessoalOuEquipe" value="1" <?php echo $checked1;?>>
@@ -151,7 +117,7 @@ if ($this->mostrarPrincipal) {
 							</label>
 						</div>
 					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+					<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 					<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
 						<span class="ladda-label">Filtrar</span>
 						<span class="ladda-spinner"></span>

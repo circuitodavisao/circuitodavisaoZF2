@@ -70,20 +70,6 @@ class PrincipalController extends CircuitoController {
 		/* fim formulario */
 		
 		$vendoPessoaLogada = true;
-		$mesFinal = date('m');
-		$anoFinal = date('Y');
-		if($mesFinal == 1){
-			$mesInicial = 12;
-			$anoInicial = $anoFinal - 1;
-		}else{
-			$mesInicial = $mesFinal - 1;
-			$anoInicial = $anoFinal;
-		}
-
-		if (!$entidade->verificarSeEstaAtivo()) {
-			$mostrarPrincipal = false;
-		}
-
 		$grupoIdPessoaVerificada = null;
 
 		/* verificando se estou vendo um discipulo abaixo e pegando os dados dele */
@@ -107,15 +93,26 @@ class PrincipalController extends CircuitoController {
 		if ($request->isPost()) {
 			$post_data = $request->getPost();
 			$mes = $post_data['mes'];
-			$ano = $post_data['ano'];
 			$pessoalOuEquipe = $post_data['pessoalOuEquipe'];
 		}
-		if (empty($mes)) {
+		$selectedAtual = '';
+		$selectedAnterior = '';
+		if(empty($mes) || $mes == 1){ // atual
 			$mes = date('m');
-		}
-		if (empty($ano)) {
 			$ano = date('Y');
+			$selectedAtual = 'selected';
 		}
+		if($mes == 2){
+			if(date('m') == 1){
+				$mes = 12;
+				$ano = date('Y') - 1;
+			}else{
+				$mes = date('m') - 1;
+				$ano = date('Y');
+			}
+			$selectedAnterior = 'selected';
+		}
+	
 		if (empty($pessoalOuEquipe)) {
 			$pessoalOuEquipe = 2; // Trazer os dados da equipe
 		}
@@ -137,6 +134,8 @@ class PrincipalController extends CircuitoController {
 			'mesFinal' => $mesFinal,
 			'anoFinal' => $anoFinal,
 			'repositorio' => $this->getRepositorio(),
+			'selectedAtual' => $selectedAtual,
+			'selectedAnterior' => $selectedAnterior,
 		);
 
 		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
