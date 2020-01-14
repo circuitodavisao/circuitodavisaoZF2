@@ -3728,7 +3728,10 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 			}			
 			$contadorDePeriodos = 0;
-			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
+			if($mes == date('m')){
+				$arrayPeriodoDoMes[1] = -1;
+			}
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
 			if($contadorDePeriodos === 0){
