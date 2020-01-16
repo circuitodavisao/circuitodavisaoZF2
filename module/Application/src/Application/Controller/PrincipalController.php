@@ -1037,7 +1037,7 @@ class PrincipalController extends CircuitoController {
 												if ($grupo20736->verificarSeEstaAtivo()) {
 													$nomeLideres = $grupo20736->getNomeLideresAtivos();
 													$informacao = $grupo20736->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
-													$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . ' grupo' . $grupo1728->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+													$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . ' grupo' . $grupo1728->getId() . '" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
 
 													if (!$grupo20736->verificaSeECasal()) {	
 
