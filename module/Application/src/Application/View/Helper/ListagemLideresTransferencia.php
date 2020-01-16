@@ -114,7 +114,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 																		$nomeLideres = $grupoFilho2985984->getNomeLideresAtivos();
 																		$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
 																		$classe = 'semDiscipulos';
-																		$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . '" value="' . $grupoFilho248832->getId() . '">' . $informacao . '</option>';
+																		$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . ' grupo' . $grupoFilho2985984->getId(). '" value="' . $grupoFilho2985984->getId() . '">' . $informacao . '</option>';
 																	}
 																}
 															}
