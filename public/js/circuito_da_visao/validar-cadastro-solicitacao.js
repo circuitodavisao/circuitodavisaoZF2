@@ -136,6 +136,7 @@ function selecionarTipo() {
 			$('#blocoObjeto2').addClass(hidden);
 			$('#blocoObjeto3').removeClass(hidden);
 			$('.grupoEquipe').attr('disabled','disabled');
+			$('.grupoLogado').attr('disabled','disabled');
 		}
 		if (parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA) {
 			$('#spanSelecioneObjeto1').html('Selecione a igreja');
@@ -1169,6 +1170,10 @@ function buscarDiscipulos(idSolicitacaoTipo){
 			}
 			if(json.resultado.casais){
 				document.getElementById('idCasal').innerHTML = json.resultado.casais
+			}
+			if (idSolicitacaoTipo === SUBIR_LIDER) {
+				$('.grupoEquipe').attr('disabled','disabled');
+				$('.grupoLogado').attr('disabled','disabled');
 			}
 		})
 }
