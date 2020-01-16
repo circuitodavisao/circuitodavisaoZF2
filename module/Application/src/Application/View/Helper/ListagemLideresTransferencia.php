@@ -82,7 +82,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 									if ($dispulos20736 = $grupoFilho1728->getGrupoPaiFilhoFilhosAtivos(1)) {
 										$classe = 'comDiscipulos';
 									}
-									$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . '" value="' . $grupoFilho1728->getId() . '">' . $informacao . '</option>';
+									$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho1728->getId() . '" value="' . $grupoFilho1728->getId() . '">' . $informacao . '</option>';
 									if ($dispulos20736) {
 										foreach ($dispulos20736 as $gpFilho20736) {
 											$grupoFilho20736 = $gpFilho20736->getGrupoPaiFilhoFilho();
@@ -94,7 +94,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 												if ($dispulos248832 = $grupoFilho20736->getGrupoPaiFilhoFilhosAtivos(1)) {
 													$classe = 'comDiscipulos';
 												}
-												$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho20736->getId() . '" value="' . $grupoFilho20736->getId() . '">' . $informacao . '</option>';
+												$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho1728->getId() . ' grupo' . $grupoFilho20736->getId() . '" value="' . $grupoFilho20736->getId() . '">' . $informacao . '</option>';
 												if ($dispulos248832) {
 													foreach ($dispulos248832 as $gpFilho248832) {
 														$grupoFilho248832 = $gpFilho248832->getGrupoPaiFilhoFilho();
@@ -106,7 +106,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 															if ($dispulos2985984 = $grupoFilho248832->getGrupoPaiFilhoFilhosAtivos(1)) {
 																$classe = 'comDiscipulos';
 															}
-															$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . '" value="' . $grupoFilho248832->getId() . '">' . $informacao . '</option>';
+															$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho1728 . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . '" value="' . $grupoFilho248832->getId() . '">' . $informacao . '</option>';
 															if ($dispulos2985984) {
 																foreach ($dispulos2985984 as $gpFilho2985984) {
 																	$grupoFilho2985984 = $gpFilho2985984->getGrupoPaiFilhoFilho();
@@ -114,7 +114,7 @@ class ListagemLideresTransferencia extends AbstractHelper {
 																		$nomeLideres = $grupoFilho2985984->getNomeLideresAtivos();
 																		$informacao = $entidade->infoEntidade() . ' - ' . $nomeLideres;
 																		$classe = 'semDiscipulos';
-																		$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . ' grupo' . $grupoFilho2985984->getId(). '" value="' . $grupoFilho2985984->getId() . '">' . $informacao . '</option>';
+																		$html .= '<option class="lider ' . $classe . ' grupo' . $grupo->getId() . ' grupo' . $grupoFilho144->getId() . ' grupo' . $grupoFilho1728 . ' grupo' . $grupoFilho20736->getId() . ' grupo' . $grupoFilho248832->getId() . ' grupo' . $grupoFilho2985984->getId(). '" value="' . $grupoFilho2985984->getId() . '">' . $informacao . '</option>';
 																	}
 																}
 															}
