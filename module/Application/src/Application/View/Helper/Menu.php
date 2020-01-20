@@ -460,9 +460,9 @@ $link = 'relatorioNovo';
 
 			$html .= '<li>';
 //			$html .= '<a href="/relatorioSetenta" onClick="mostrarSplash();">';
-			$html .= '<a href="" onClick="mostrarSplash();">';
+			$html .= '<a href="#" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-trophy"></span>';
-			$html .= 'Setenta (Manutenção)"';
+			$html .= 'Setenta (Manutenção)';
 			$html .= '</a>';
 			$html .= '</li>';
 
