@@ -161,7 +161,7 @@ class LancamentoController extends CircuitoController {
 		}
 
 		$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
-		$arrayPeriodoDoMesAnterior = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+//		$arrayPeriodoDoMesAnterior = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 
 		if ($entidade->getData_inativacaoStringPadraoBanco()) {
 			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
@@ -173,10 +173,11 @@ class LancamentoController extends CircuitoController {
 		$this->getRepositorio()->iniciarTransacao();
 
 		$fatosMensal = array();
-		$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+//		$fatosMensal[0] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
 		$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 
-		for($indiceDePeriodos = $arrayPeriodoDoMesAnterior[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+//		for($indiceDePeriodos = $arrayPeriodoDoMesAnterior[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 
 			$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
@@ -288,7 +289,7 @@ class LancamentoController extends CircuitoController {
 					$dimensao->setMembro($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::MEMBRO]);
 					$dimensao->setConsolidacao($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::CONSOLIDACAO]);
 					$dimensao->setVisitante($relatorio[$dimensao->getDimensaoTipo()->getId()][GrupoPessoaTipo::VISITANTE]);
-					$this->getRepositorio()->getDimensaoORM()->persistir($dimensao, false);
+					//$this->getRepositorio()->getDimensaoORM()->persistir($dimensao, false);
 
 					if ($dimensao->getDimensaoTipo()->getId() === DimensaoTipo::CELULA) {
 						$contadorCelulasRealizadas = 0;
@@ -419,11 +420,11 @@ class LancamentoController extends CircuitoController {
 				}
 
 				// membresia para fato mensal
-				$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
-				$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
+//				$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
+//				$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
 
-				$fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio = 1, $indiceDePeriodos, $inativo);
-				$quantidadeLideres = $fatoLider[0]['lideres'];
+//				$fatoLider = $this->getRepositorio()->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $tipoRelatorio = 1, $indiceDePeriodos, $inativo);
+//				$quantidadeLideres = $fatoLider[0]['lideres'];
 
 				$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 				$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
@@ -441,60 +442,60 @@ class LancamentoController extends CircuitoController {
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA1();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu1();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC1();
-							$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 2){
 							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD2();
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA2();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu2();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC2();
-							$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 3){
 							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD3();
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA3();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu3();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC3();
-							$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 4){
 							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD4();
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA4();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu4();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC4();
-							$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 5){
 							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD5();
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA5();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu5();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC5();
-							$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 6){
 							$valorDomingo = $fatosMensal[$indiceFatoMensal]->getD6();
 							$valorArena = $fatosMensal[$indiceFatoMensal]->getA6();
 							$valorCulto = $fatosMensal[$indiceFatoMensal]->getCu6();
 							$valorCelula = $fatosMensal[$indiceFatoMensal]->getC6();
-							$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
-							$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
-							$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
-							$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
+//							$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
+//							$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
+//							$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
+//							$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
 						}
 						$membresia = RelatorioController::calculaMembresia($valorCulto, $valorArena, $valorDomingo);
 						$somaCelulas = $quantidadeCelulas + $quantidadeCelulasEstrategicas;
