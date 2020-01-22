@@ -33,5 +33,6 @@ sudo docker build -t cv:0.1 .
 sudo docker run -d --name cv --link bdpg:postgres -p 443:443 -v /home/circuitodavisaoZF2:/var/www/html cv:0.1
 
 # instalando o banco de dados
-
-sudo docker exec -i bdpg psql -U postgres < /home/circuitodavisaoZF2/dump/dump.sql
+sudo scp root@51.89.96.128:/home/backup/dump /home/dump
+sudo tar -xzvf dump
+sudo docker exec -i bdpg psql -U postgres < /home/dump.sql
