@@ -4560,7 +4560,12 @@ public function alunosNaSemanaAction(){
 					// membresia
 					$mem = 'mem' . $w;
 					$memp = 'memp' . $w;
+					$culto = 'cu' . $w;
+					$arena = 'a' . $w;
+					$domingo = 'd' . $w;
 					$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
+					$membresia = RelatorioController::calculaMembresia($fatoFilho->$culto, $fatoFilho->$arena, $fatoFilho->$domingo);
+					$fatoFilho->$mem = $membresia;
 					$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
 					// celulas
 					$c = 'c' . $w;
