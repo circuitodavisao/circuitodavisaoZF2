@@ -215,7 +215,7 @@ class LancamentoController extends CircuitoController {
 								$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
 								$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-								if ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
+								if ($grupoEvento->verificarSeEstaAtivo() && ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
 									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
 									$relatorio['celula'][$eventoCelulaId] ++;
 								}
@@ -229,7 +229,7 @@ class LancamentoController extends CircuitoController {
 								$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
 								$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-								if ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica()) {
+								if ($grupoEvento->verificarSeEstaAtivo() && ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
 									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
 									$relatorio['celula'][$eventoCelulaId] ++;
 								}
@@ -249,8 +249,8 @@ class LancamentoController extends CircuitoController {
 				$consolidacao = $relatorio[$indiceDimensao][GrupoPessoaTipo::CONSOLIDACAO];
 				$visitante = $relatorio[$indiceDimensao][GrupoPessoaTipo::VISITANTE];
 
+				$contadorCelulasRealizadas = 0;
 				if ($indiceDimensao === DimensaoTipo::CELULA) {
-					$contadorCelulasRealizadas = 0;
 					foreach($relatorio['celula'] as $k => $v){
 						if($relatorio['celula'][$k] > 0){
 							$contadorCelulasRealizadas++;
