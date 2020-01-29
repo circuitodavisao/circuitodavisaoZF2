@@ -141,6 +141,9 @@ class FatoFinanceiroORM extends CircuitoORM {
 		if($mes){
 			/* começo do mes */
 			if($resultadoPeriodo[5] == $mes && $resultadoPeriodo[2] != $mes){
+				if($mes == 1 && $resultadoPeriodo[3] != $resultadoPeriodo[6]){
+					$resultadoPeriodo[3] = $resultadoPeriodo[6];
+				}
 				$dataDoPeriodoInicial = $resultadoPeriodo[3].'-'.str_pad($mes, 2, '0', STR_PAD_LEFT).'-01';
 			}
 			/* fim do mes */
@@ -165,6 +168,10 @@ class FatoFinanceiroORM extends CircuitoORM {
 				){
 					$ultimoDiaDomes = 30;
 				}
+				if($mes == 12 && $resultadoPeriodo[6] != $resultadoPeriodo[3]){
+					$resultadoPeriodo[6] = $resultadoPeriodo[3];
+				}
+	
 				$dataDoPeriodoFinal = $resultadoPeriodo[6].'-'.str_pad($mes, 2, '0', STR_PAD_LEFT).'-'.$ultimoDiaDomes;
 			}
 		}
@@ -176,6 +183,8 @@ class FatoFinanceiroORM extends CircuitoORM {
                 . "AND ff.data_inativacao is null "
                 . "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
 		try {
+			error_log('data inicial: '.$dataDoPeriodoInicial);
+			error_log('data final: '.$dataDoPeriodoFinal);
 			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
 			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
 			$result = $this->getEntityManager()->createQuery($dql)

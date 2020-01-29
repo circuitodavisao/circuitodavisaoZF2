@@ -379,8 +379,6 @@ class FatoCicloORM extends CircuitoORM {
 		$dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
 		$dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
 
-
-
 		$dataDoInicioFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
 		$dataDoFimFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
 
@@ -435,6 +433,7 @@ class FatoCicloORM extends CircuitoORM {
 		$relatorio['parceiroDeDeus'] = 0;
 
 		if($valorParceiroDeDeus = $repositorio->getFatoFinanceiroORM()->valorPorEventoEPEriodo($idEvento, $periodo, $mes)){
+			error_log('parceiro: '.$valorParceiroDeDeus);
 			$relatorio['parceiroDeDeus'] = $valorParceiroDeDeus;
 		}
 
