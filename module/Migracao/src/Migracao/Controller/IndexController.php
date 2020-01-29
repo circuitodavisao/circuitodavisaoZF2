@@ -4230,33 +4230,41 @@ class IndexController extends CircuitoController {
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
 
+		$gruposParaValidar = array();
 		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
+		if($qualParte <= 50){
+			$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
+		}else{
+			$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId($qualParte);
+		}
 
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
 
-		$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
 		$this->getRepositorio()->iniciarTransacao();
 		$html .= "<br />###### iniciarTransacao ";
 		try {
 			if ($gruposParaValidar) {
-				$mesAtual = date('m');
-				$anoAtual = date('Y');
 				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAtual, $anoAtual);
 				foreach ($gruposParaValidar as $grupo) {
 					$gerar = true;
 					if ($gerar) {
-						//$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
-						//$html .= "<br />lideres: " . $grupo->getNomeLideresAtivos();
-						if ($grupo->getEntidadeAtiva()) {
-						//	$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
+						if($qualParte > 50){
+							$html .= "<br /><br /><br />Grupo: " . $grupo->getId();
+							$html .= "<br />lideres: " . $grupo->getNomeLideresAtivos();
+							if ($grupo->getEntidadeAtiva()) {
+								$html .= "<br />Entidade " . $grupo->getEntidadeAtiva()->infoEntidade();
+							}
 						}
 						$dataInativacao = null;
 						if(!$grupo->verificarSeEstaAtivo()){
 							$dataInativacao = $grupo->getData_inativacaoStringPadraoBanco();
 						}
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo, $dataInativacao);
-						//$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
+
+						if($qualParte > 50){
+							$html .= "<br />NumeroIdentificador: " . $numeroIdentificador;
+						}
 						if ($numeroIdentificador) {
 							$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 							if($fatosMensal[1]->entidade === null){
@@ -4274,9 +4282,10 @@ class IndexController extends CircuitoController {
 								$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
 								$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
 
-						//		$html .= '<br />Celulas: ' . $quantidadeCelulas;
-						//		$html .= '<br />Celulas Bosta: ' . $quantidadeCelulasEstrategicas;
-
+								if($qualParte > 50){
+									$html .= '<br />Celulas: ' . $quantidadeCelulas;
+									$html .= '<br />Celulas Beta: ' . $quantidadeCelulasEstrategicas;
+								}
 								$membresiaMeta = Constantes::$META_LIDER * $quantidadeCelulas;
 								$membresiaMetaEstrategica = (Constantes::$META_LIDER/2) * $quantidadeCelulasEstrategicas;
 								// lideres
