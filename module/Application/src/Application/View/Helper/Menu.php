@@ -231,8 +231,15 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
+		$qualPeriodo = '';
+		$diaDaSemnana = date('N');
+		$SEGUNDA = 1;
+		if($diaDaSemnana === $SEGUNDA){
+			$qualPeriodo = '/-1';
+		}
+    
 			$html .= '<li>';
-			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao/-1\', null);">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoArregimentacao'.$qualPeriodo.'\', null);">';
 			$html .= '<span class="fa fa-terminal"></span>';
 			$html .= 'Arregimentação';
 			$html .= '</a>';

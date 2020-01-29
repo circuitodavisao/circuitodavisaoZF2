@@ -57,7 +57,7 @@ class LancamentoController extends CircuitoController {
      * GET /lancamentoArregimentacao
      */
     public function arregimentacaoAction() {
-        $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
         $entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
 
