@@ -42,10 +42,10 @@ if($this->filtrado){
 			echo '<span class="label label-primary" style="cursor: pointer;" >Clique Para Mais Informações</span>';
 			echo '</div>';
 
+			var_dump('mult: '.$fatoMensal);
 			echo '<div id="dados'.$idGrupo.'" class="hidden">';
 			echo '<div class="panel">';
 			echo '<div class="panel-body">';
-			var_dump('mult: '.$fatoMensal->getMultiplicadorMetaSetenta());
 			if($fatoMensal->getMultiplicadorMetaSetenta() > 0){
 				echo '<p>Pessoas | Meta</p>';
 				echo '<p>' . $fatoMensal->getSomaCelula() . ' | ' . ($fatoMensal->getMultiplicadorMetaSetenta() * 35) . '</p>';

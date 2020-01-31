@@ -2799,7 +2799,6 @@ public function alunosNaSemanaAction(){
 				$metaVisitantes = 2;
 				$metaParceiro = 40;
 				$lideres = array();
-				var_dump('id: '.$entidade->getGrupo()->getId());
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
 				$fatosMensal = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 				foreach ($fatosMensal as $fatoMensal) {
