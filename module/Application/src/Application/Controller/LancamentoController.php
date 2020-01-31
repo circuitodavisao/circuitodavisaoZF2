@@ -229,7 +229,7 @@ class LancamentoController extends CircuitoController {
 								$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
 								$relatorio[$tipoCampo][$tipoPessoa] ++;
 
-								if ($grupoEvento->verificarSeEstaAtivo() && ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
+								if (($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
 									$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
 									$relatorio['celula'][$eventoCelulaId] ++;
 								}
