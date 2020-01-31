@@ -174,7 +174,7 @@ class LancamentoController extends CircuitoController {
 		$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 		$numeroDeCelulas = 0;
 		$somaVisitantes = 0;
-		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 			$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
 			/* verificando visitante no mes */
