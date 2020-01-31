@@ -11,16 +11,16 @@ use Doctrine\ORM\Mapping as ORM;
 class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="integer") */
-	protected $somaCelula;
+	protected $somacelula;
 
 	/** @ORM\Column(type="integer") */
-	protected $somaVisitantes;
+	protected $somavisitantes;
 
 	/** @ORM\Column(type="integer") */
-	protected $somaParceiro;
+	protected $somaparceiro;
 
 	/** @ORM\Column(type="integer") */
-	protected $multiplicadorMetaSetenta;
+	protected $multiplicadormetasetenta;
 
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
@@ -971,29 +971,29 @@ class FatoMensal extends CircuitoEntity {
 		return $this->lb6;
 	}
 
-	function setSomaCelula($item) {
-		$this->somaCelula = $item;
+	function setSomacelula($item) {
+		$this->somacelula = $item;
 	}
-	function setSomaVisitantes($item) {
-		$this->somaVisitantes = $item;
+	function setSomavisitantes($item) {
+		$this->somavisitantes = $item;
 	}
-	function setSomaParceiro($item) {
-		$this->somaParceiro = $item;
+	function setSomaparceiro($item) {
+		$this->somaparceiro = $item;
 	}
-	function setMultiplicadorMetaSetenta($item) {
-		$this->multiplicadorMetaSetenta = $item;
+	function setMultiplicadormetasetenta($item) {
+		$this->multiplicadormetasetenta = $item;
 	}
-	function getSomaCelula(){
-		return $this->somaCelula;
+	function getSomacelula(){
+		return $this->somacelula;
 	}
-	function getSomaVisitantes(){
-		return $this->somaVisitantes;
+	function getSomavisitantes(){
+		return $this->somavisitantes;
 	}
-	function getSomaParceiro() {
-		return $this->somaParceiro;
+	function getSomaparceiro() {
+		return $this->somaparceiro;
 	}
-	function getMultiplicadorMetaSetenta(){
-		return $this->multiplicadorMetaSetenta;
+	function getMultiplicadormetaSetenta(){
+		return $this->multiplicadormetasetenta;
 	}
 
 	public function __set($name,$value) {
