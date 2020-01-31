@@ -10,6 +10,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoMensal extends CircuitoEntity {
 
+	/** @ORM\Column(type="integer") */
+	protected $somaCelula;
+
+	/** @ORM\Column(type="integer") */
+	protected $somaVisitantes;
+
+	/** @ORM\Column(type="integer") */
+	protected $somaParceiro;
+
+	/** @ORM\Column(type="integer") */
+	protected $multiplicadorMetaSetenta;
+
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
@@ -957,6 +969,31 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getLb6(){
 		return $this->lb6;
+	}
+
+	function setSomaCelula($item) {
+		$this->somaCelula = $item;
+	}
+	function setSomaVisitantes($item) {
+		$this->somaVisitantes = $item;
+	}
+	function setSomaParceiro($item) {
+		$this->somaParceiro = $item;
+	}
+	function setMultiplicadorMetaSetenta($item) {
+		$this->multiplicadorMetaSetenta = $item;
+	}
+	function getSomaCelula(){
+		return $this->somaCelula;
+	}
+	function getSomaVisitantes(){
+		return $this->somaVisitantes;
+	}
+	function getSomaParceiro() {
+		return $this->somaParceiro;
+	}
+	function getMultiplicadorMetaSetenta(){
+		return $this->multiplicadorMetaSetenta;
 	}
 
 	public function __set($name,$value) {

@@ -133,6 +133,56 @@ class FatoFinanceiroORM extends CircuitoORM {
         }
     }
 
+	public function pegarValorSomadoDoMesDeCelulas($numero_identificador, $mes, $ano){
+		$dataInicial = '01-' . str_pad($mes, 2 , '0',STR_PAD_LEFT) . '-' . $ano;
+		$ultimoDiaDomes = 28;
+		if(
+			$mes == 1 ||
+			$mes == 3 ||
+			$mes == 5 ||
+			$mes == 7 ||
+			$mes == 8 ||
+			$mes == 10 ||
+			$mes == 12
+		){
+			$ultimoDiaDomes = 31;
+		}
+		if(
+			$mes == 4 ||
+			$mes == 6 ||
+			$mes == 9 ||
+			$mes == 11
+		){
+			$ultimoDiaDomes = 30;
+		}
+
+		$dataFinal = $ultimoDiaDomes . '-' . str_pad($mes, 2 , '0', STR_PAD_LEFT) . '-' . $ano;
+
+		$dql= "SELECT "
+			. "SUM(ff.valor) valor "
+			. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO . " ff "
+			. "WHERE "
+			. " ff.numero_identificador = ?1 "
+			. "AND ff.evento_id IS NOT NULL "
+			. "AND ff.data >= ?2 AND ff.data <= ?3 AND ff.situacao_id = 3 ";
+		try {
+			error_log('data inicial: '.$dataInicial);
+			error_log('data final: '.$dataFinal);
+			$dataInicialFormatada = DateTime::createFromFormat('d-m-Y', $dataInicial);
+			$dataFinalFormatada = DateTime::createFromFormat('d-m-Y', $dataFinal);
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $numero_identificador)
+				->setParameter(2, $dataInicialFormatada)
+				->setParameter(3, $dataFinalFormatada)
+				->getResult();
+
+			error_log('rsul: '.print_r($result, true));
+			return $result[0]['valor'];
+		} catch (Exception $exc) {
+			error_log('error: '.$exc->getMessage());
+		}
+	}
+
 	public function valorPorEventoEPEriodo($idEvento, $periodo, $mes = null) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];

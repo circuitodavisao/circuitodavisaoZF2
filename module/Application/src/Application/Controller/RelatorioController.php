@@ -2795,48 +2795,31 @@ public function alunosNaSemanaAction(){
 			}
 
 			if($processar){
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
-					$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoIgreja($grupoIgreja->getId(), $mes, $ano);
-				}
-
-				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
-					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-						$grupoEquipe = $entidade->getGrupo()->getGrupoEquipe();
-						$fatosSetenta = $this->getRepositorio()->getFatoSetentaORM()->encontrarPorIdGrupoEquipe($grupoEquipe->getId(), $mes, $ano);
-					}
-
-				$arrayLideres = array();
-				foreach($fatosSetenta as $fatoA){
-					$adicionarFato = true;
-					$GrupoFatoA = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoA->getGrupo_id());
-					$comInativos = true;
-					$grupoResponsavelFatoA = $GrupoFatoA->getResponsabilidadesAtivas($comInativos);					
-					$pessoaIdFatoA = $grupoResponsavelFatoA[0]->getPessoa()->getId();
-
-					foreach($fatosSetenta as $fatoB){
-						$GrupoFatoB = $this->getRepositorio()->getGrupoORM()->encontrarPorId($fatoB->getGrupo_id());
-						$comInativos = true;
-						$grupoResponsavelFatoB = $GrupoFatoB->getResponsabilidadesAtivas($comInativos);					
-						$pessoaIdFatoB = $grupoResponsavelFatoB[0]->getPessoa()->getId();						
-
-						if($pessoaIdFatoA == $pessoaIdFatoB){						
-							if(!$grupoResponsavelFatoA[0]->verificarSeEstaAtivo() && $grupoResponsavelFatoB[0]->verificarSeEstaAtivo()){
-								$adicionarFato = false;
-							}
-						}				
-					}
-
-					if($adicionarFato){
-						if($fatoA->getSetenta() == 'S'){
-						 	$arrayLideres[$fatoA->getGrupo_id()]['setenta'] = 'S';
+				$metaCelula = 35;
+				$metaVisitantes = 2;
+				$metaParceiro = 40;
+				$lideres = array();
+				var_dump('id: '.$entidade->getGrupo()->getId());
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
+				$fatosMensal = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+				foreach ($fatosMensal as $fatoMensal) {
+					if( $fatoMensal->getMultiplicadorMetaSetenta() > 0){
+						if(
+							$fatoMensal->getSomaCelula() >= ($metaCelula * $fatoMensal->getMultiplicadorMetaSetenta()) &&
+							$fatoMensal->getSomaVisitantes() >= ($metaVisitantes * $fatoMensal->getMultiplicadorMetaSetenta()) &&
+							$fatoMensal->getSomaParceiro() >= ($metaParceiro * $fatoMensal->getMultiplicadorMetaSetenta())
+						){
+							$lideres['setenta'][] = $fatoMensal;
+						}else{
+							$lideres['elo'][] = $fatoMensal;
 						}
-						$arrayLideres[$fatoA->getGrupo_id()]['celula'][] = $fatoA;
 					}
 
+					if($fatoMensal->getMultiplicadorMetaSetenta() === null){
+						$lideres['elo'][] = $fatoMensal;
+					}
 				}
-
-				$dados['lideres'] = $arrayLideres;
+				$dados['lideres'] = $lideres;
 				$dados['repositorio'] = $this->getRepositorio();
 			}
 			$dados['filtrado'] = true;
@@ -2846,10 +2829,6 @@ public function alunosNaSemanaAction(){
 		}
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
-
-		$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-		$dados['periodoInicial'] = $arrayPeriodoDoMes[0];
-		$dados['periodoFinal'] = $arrayPeriodoDoMes[1];
 
 		self::registrarLog(RegistroAcao::VER_RELATORIO_SETENTA, $extra = '');
 		return new ViewModel($dados);
