@@ -971,17 +971,17 @@ class FatoMensal extends CircuitoEntity {
 		return $this->lb6;
 	}
 
-	function setSomacelula($item) {
-		$this->somacelula = $item;
+	function setSomacelula($somacelula) {
+		$this->somacelula = $cwsomacelulaitem;
 	}
-	function setSomavisitantes($item) {
-		$this->somavisitantes = $item;
+	function setSomavisitantes($somavisitantes) {
+		$this->somavisitantes = $somavisistantes;
 	}
-	function setSomaparceiro($item) {
-		$this->somaparceiro = $item;
+	function setSomaparceiro($somaparceiro) {
+		$this->somaparceiro = $somaparceiro;
 	}
-	function setMultiplicadormetasetenta($item) {
-		$this->multiplicadormetasetenta = $item;
+	function setMultiplicadormetasetenta($multiplicadormetasetenta) {
+		$this->multiplicadormetasetenta = $multiplicadormetasetenta;
 	}
 	function getSomacelula(){
 		return $this->somacelula;

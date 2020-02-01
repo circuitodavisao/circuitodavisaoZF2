@@ -45,13 +45,13 @@ if($this->filtrado){
 			echo '<div id="dados'.$idGrupo.'" class="hidden">';
 			echo '<div class="panel">';
 			echo '<div class="panel-body">';
-			if($fatoMensal->getMultiplicadorMetaSetenta() > 0){
+			if($fatoMensal->getMultiplicadormetasetenta() > 0){
 				echo '<p>Pessoas | Meta</p>';
-				echo '<p>' . $fatoMensal->getSomaCelula() . ' | ' . ($fatoMensal->getMultiplicadorMetaSetenta() * 35) . '</p>';
+				echo '<p>' . $fatoMensal->getSomacelula() . ' | ' . ($fatoMensal->getMultiplicadormetasetenta() * 35) . '</p>';
 				echo '<p>Visitantes | Meta</p>';
-				echo '<p>' . $fatoMensal->getSomaVisitantes() . ' | ' . ($fatoMensal->getMultiplicadorMetaSetenta() * 2) . '</p>';
+				echo '<p>' . $fatoMensal->getSomavisitantes() . ' | ' . ($fatoMensal->getMultiplicadormetasetenta() * 2) . '</p>';
 				echo '<p>Parceiro | Meta</p>';
-				echo '<p>' . $fatoMensal->getSomaParceiro() ? number_format($fatoMensal->getSomaParceiro(), 2, ',','.') : '0,00' . ' | ' . ($fatoMensal->getMultiplicadorMetaSetenta() * 40) . '</p>';
+				echo '<p>' . $fatoMensal->getSomaparceiro() ? number_format($fatoMensal->getSomaparceiro(), 2, ',','.') : '0,00' . ' | ' . ($fatoMensal->getMultiplicadormetasetenta() * 40) . '</p>';
 			}else{
 				echo '<p>Para atualizar envio o relatório</p>';
 			}

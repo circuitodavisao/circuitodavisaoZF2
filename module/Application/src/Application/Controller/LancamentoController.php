@@ -413,9 +413,9 @@ class LancamentoController extends CircuitoController {
 			$fatosMensal[1]->getC4() +
 			$fatosMensal[1]->getC5() +
 			$fatosMensal[1]->getC6() ;
-		$fatosMensal[1]->setSomaCelula($somaCelula);
-		$fatosMensal[1]->setMultiplicadorMetaSetenta($numeroDeCelulas);
-		$fatosMensal[1]->setSomaVisitantes($somaVisitantes);
+		$fatosMensal[1]->setSomacelula($somaCelula);
+		$fatosMensal[1]->setMultiplicadormetasetenta($numeroDeCelulas);
+		$fatosMensal[1]->setSomavisitantes($somaVisitantes);
 
 		/* temporario */
 		$mesAtual = date('m');
@@ -428,11 +428,11 @@ class LancamentoController extends CircuitoController {
 			$anoAnterior = $anoAtual;
 		}
 		$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAtual, $anoAtual);
-		$fatosMensal[1]->setSomaParceiro($somaParceiro);
+		$fatosMensal[1]->setSomaparceiro($somaParceiro);
 
 		$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
 		$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
-		$fatoMensalAnterior->setSomaParceiro($somaParceiro);
+		$fatoMensalAnterior->setSomaparceiro($somaParceiro);
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 	
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[1], false);
@@ -1527,12 +1527,12 @@ class LancamentoController extends CircuitoController {
 			}
 			$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual);
 			$fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual);
-			$fatoMensal->setSomaParceiro($somaParceiro);
+			$fatoMensal->setSomaparceiro($somaParceiro);
 			$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
 
 			$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior);
 			$fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior);
-			$fatoMensal->setSomaParceiro($somaParceiro);
+			$fatoMensal->setSomaparceiro($somaParceiro);
 			$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
 			/* fim */
 

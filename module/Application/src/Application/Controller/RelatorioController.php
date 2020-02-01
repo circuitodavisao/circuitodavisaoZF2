@@ -2802,11 +2802,11 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
 				$fatosMensal = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 				foreach ($fatosMensal as $fatoMensal) {
-					if( $fatoMensal->getMultiplicadorMetaSetenta() > 0){
+					if( $fatoMensal->getMultiplicadormetasetenta() > 0){
 						if(
-							$fatoMensal->getSomaCelula() >= ($metaCelula * $fatoMensal->getMultiplicadorMetaSetenta()) &&
-							$fatoMensal->getSomaVisitantes() >= ($metaVisitantes * $fatoMensal->getMultiplicadorMetaSetenta()) &&
-							$fatoMensal->getSomaParceiro() >= ($metaParceiro * $fatoMensal->getMultiplicadorMetaSetenta())
+							$fatoMensal->getSomacelula() >= ($metaCelula * $fatoMensal->getMultiplicadormetasetenta()) &&
+							$fatoMensal->getSomavisitantes() >= ($metaVisitantes * $fatoMensal->getMultiplicadormetasetenta()) &&
+							$fatoMensal->getSomaparceiro() >= ($metaParceiro * $fatoMensal->getMultiplicadormetasetenta())
 						){
 							$lideres['setenta'][] = $fatoMensal;
 						}else{
@@ -2814,7 +2814,7 @@ public function alunosNaSemanaAction(){
 						}
 					}
 
-					if($fatoMensal->getMultiplicadorMetaSetenta() === null){
+					if($fatoMensal->getMultiplicadormetasetenta() === null){
 						$lideres['elo'][] = $fatoMensal;
 					}
 				}
