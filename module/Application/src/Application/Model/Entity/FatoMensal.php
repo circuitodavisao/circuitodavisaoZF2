@@ -992,7 +992,7 @@ class FatoMensal extends CircuitoEntity {
 	function getSomaparceiro() {
 		return $this->somaparceiro;
 	}
-	function getMultiplicadormetaSetenta(){
+	function getMultiplicadormetasetenta(){
 		return $this->multiplicadormetasetenta;
 	}
 
