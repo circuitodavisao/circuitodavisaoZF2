@@ -10,18 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoMensal extends CircuitoEntity {
 
-	/** @ORM\Column(type="integer") */
-	protected $somacelula;
-
-	/** @ORM\Column(type="integer") */
-	protected $somavisitantes;
-
-	/** @ORM\Column(type="integer") */
-	protected $somaparceiro;
-
-	/** @ORM\Column(type="integer") */
-	protected $multiplicadormetasetenta;
-
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
@@ -336,6 +324,18 @@ class FatoMensal extends CircuitoEntity {
 
 	/** @ORM\Column(type="string") */
 	protected $mediarealizadapclass;
+
+	/** @ORM\Column(type="integer") */
+	protected $somacelula;
+
+	/** @ORM\Column(type="integer") */
+	protected $somavisitantes;
+
+	/** @ORM\Column(type="integer") */
+	protected $somaparceiro;
+
+	/** @ORM\Column(type="integer") */
+	protected $multiplicadormetasetenta;
 
 	function getRealizada1(){
 		return $this->realizada1;

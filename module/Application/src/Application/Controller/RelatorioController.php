@@ -2802,7 +2802,6 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
 				$fatosMensal = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 				foreach ($fatosMensal as $fatoMensal) {
-					Funcoes::var_dump($fatoMensal);
 					if( $fatoMensal->getMultiplicadormetasetenta() > 0){
 						if(
 							$fatoMensal->getSomacelula() >= ($metaCelula * $fatoMensal->getMultiplicadormetasetenta()) &&
