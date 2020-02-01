@@ -45,6 +45,7 @@ if($this->filtrado){
 			echo '<div id="dados'.$idGrupo.'" class="hidden">';
 			echo '<div class="panel">';
 			echo '<div class="panel-body">';
+			Funcoes::var_dump($fatoMensal);
 			if($fatoMensal->multiplicadormetasetenta > 0){
 				echo '<p>Pessoas | Meta</p>';
 				echo '<p>' . $fatoMensal->somacelula. ' | ' . ($fatoMensal->multiplicadormetasetenta * 35) . '</p>';
