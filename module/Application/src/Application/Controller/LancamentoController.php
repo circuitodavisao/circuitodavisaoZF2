@@ -433,6 +433,17 @@ class LancamentoController extends CircuitoController {
 		$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
 		$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
 		$fatoMensalAnterior->setSomaparceiro($somaParceiro);
+		$somaCelula = 
+			$fatoMensalAnterior->getC1() +
+			$fatoMensalAnterior->getC2() +
+			$fatoMensalAnterior->getC3() +
+			$fatoMensalAnterior->getC4() +
+			$fatoMensalAnterior->getC5() +
+			$fatoMensalAnterior->getC6() ;
+		$fatoMensalAnterior->setSomacelula($somaCelula);
+		$fatoMensalAnterior->setMultiplicadormetasetenta($numeroDeCelulas);
+		$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 	
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[1], false);
