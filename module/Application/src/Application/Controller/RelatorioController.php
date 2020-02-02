@@ -3702,7 +3702,6 @@ public function alunosNaSemanaAction(){
 
 		if($grupo->getEntidadeAtiva()){
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-			$periodoParaUsar = $arrayPeriodoDoMes[1];		
 			$tipoRelatorio = $pessoalOuEquipe;
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 				$numeroIdentificador = '';
@@ -3710,15 +3709,15 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);
 			}			
 			$contadorDePeriodos = 0;
-			if($mes == date('m')){
-				$arrayPeriodoDoMes[1] = -1;
-			}
+			$arrayPeriodoDoMes[1] = 0;
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
 			if($contadorDePeriodos === 0){
-				$contadorDePeriodos++;
+				$contadorDePeriodos = 1;
 			}
+			$periodoParaUsar = $arrayPeriodoDoMes[1];		
+
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
@@ -3727,8 +3726,6 @@ public function alunosNaSemanaAction(){
 					/* Líderes */
 					$l = 'l'.$contadorDePeriodos;
 					$lideres = $fatoMensalSomado[$l];
-					Funcoes::var_dump('l: '.$l);
-					Funcoes::var_dump('lideres: '.$lideres);
 
 					/* Células */
 					$cq = 'cq'.$contadorDePeriodos;
