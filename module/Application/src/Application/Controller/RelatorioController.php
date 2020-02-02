@@ -3710,15 +3710,14 @@ public function alunosNaSemanaAction(){
 			}			
 			$contadorDePeriodos = 0;
 			$arrayPeriodoDoMes[1] = 0;
-			Funcoes::var_dump('0: '.$arrayPeriodoDoMes[0]);
-			Funcoes::var_dump('1: '.$arrayPeriodoDoMes[0]);
+			$periodoParaUsar = $arrayPeriodoDoMes[1];		
+
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
 			if($contadorDePeriodos === 0){
 				$contadorDePeriodos = 1;
 			}
-			$periodoParaUsar = $arrayPeriodoDoMes[1];		
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
