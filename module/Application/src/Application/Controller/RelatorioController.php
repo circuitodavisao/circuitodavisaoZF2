@@ -3724,6 +3724,7 @@ public function alunosNaSemanaAction(){
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 
 					$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $somado = 2);			
+					Funcoes::var_dump($fatoMensalSomado);
 					/* Líderes */
 					$l = 'l'.$contadorDePeriodos;
 					$lideres = $fatoMensalSomado[$l];
