@@ -3710,6 +3710,8 @@ public function alunosNaSemanaAction(){
 			}			
 			$contadorDePeriodos = 0;
 			$arrayPeriodoDoMes[1] = 0;
+			Funcoes::var_dump('0: '.$arrayPeriodoDoMes[0]);
+			Funcoes::var_dump('1: '.$arrayPeriodoDoMes[0]);
 			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
