@@ -2389,6 +2389,9 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
 			$contadorDePeriodos++;
 		}
+		if($contadorDePeriodos === 0){
+			$contadorDePeriodos = 1;
+		}
 
 		$relatorioOrdenado = array();
 		$total = 0;
