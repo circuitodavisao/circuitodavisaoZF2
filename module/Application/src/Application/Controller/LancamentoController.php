@@ -174,6 +174,8 @@ class LancamentoController extends CircuitoController {
 		$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
 		$numeroDeCelulas = 0;
 		$somaVisitantes = 0;
+		$somaPorPeriodoETipo = array();
+		$celulasRealizadasNoPrimeiroPeriodo = 0;
 		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 			$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
@@ -305,7 +307,11 @@ class LancamentoController extends CircuitoController {
 
 					$indiceFatoMensal = 1;
 					if($temNoMes[$indiceFatoMensal]){
+						$somaPorPeriodoETipo[$contadorDePeriodo[$indiceFatoMensal]][$indiceDimensao] = $soma;
 						if ($indiceDimensao === DimensaoTipo::CELULA) {
+							if($contadorDePeriodo[$indiceFatoMensal] === 1){
+								$celulasRealizadasNoPrimeiroPeriodo = $contadorCelulasRealizadas;
+							}
 							if($contadorDePeriodo[$indiceFatoMensal] === 1){
 								$fatosMensal[$indiceFatoMensal]->setC1($soma);
 								$fatosMensal[$indiceFatoMensal]->setRealizada1($contadorCelulasRealizadas);
@@ -417,36 +423,74 @@ class LancamentoController extends CircuitoController {
 		$fatosMensal[1]->setMultiplicadormetasetenta($numeroDeCelulas);
 		$fatosMensal[1]->setSomavisitantes($somaVisitantes);
 
-		/* temporario */
-		$mesAtual = date('m');
-		$anoAtual = date('Y');
-		if(intVal($mesAtual) === 1){
-			$mesAnterior = 12;
-			$anoAnterior = $anoAtual -1;
-		}else{
-			$mesAnterior = $mesAtual - 1;
-			$anoAnterior = $anoAtual;
-		}
-		$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAtual, $anoAtual);
-		$fatosMensal[1]->setSomaparceiro($somaParceiro);
-
-		$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
-		$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
-		$fatoMensalAnterior->setSomaparceiro($somaParceiro);
-		$somaCelula = 
-			$fatoMensalAnterior->getC1() +
-			$fatoMensalAnterior->getC2() +
-			$fatoMensalAnterior->getC3() +
-			$fatoMensalAnterior->getC4() +
-			$fatoMensalAnterior->getC5() +
-			$fatoMensalAnterior->getC6() ;
-		$fatoMensalAnterior->setSomacelula($somaCelula);
-		$fatoMensalAnterior->setMultiplicadormetasetenta($numeroDeCelulas);
-		$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
-
-		$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
-	
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[1], false);
+
+		if($contadorDePeriodo[1] === 1 || $contadorDePeriodo[1] === 2){
+			$mesAtual = date('m');
+			$anoAtual = date('Y');
+			if(intVal($mesAtual) === 1){
+				$mesAnterior = 12;
+				$anoAnterior = $anoAtual -1;
+			}else{
+				$mesAnterior = $mesAtual - 1;
+				$anoAnterior = $anoAtual;
+			}
+
+			if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior)){
+				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+				$contadorDePeriodos = 0;
+				for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+					$contadorDePeriodos++;
+				}
+
+				for($indiceDimensao = 1; $indiceDimensao <= 4; $indiceDimensao++){
+					if ($indiceDimensao === DimensaoTipo::CELULA) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setC5($somaPorPeriodoETipo[1][$indiceDimensao]);
+							$fatoMensalAnterior->setRealizada5($celulasRealizadasNoPrimeiroPeriodo);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setC6($somaPorPeriodoETipo[1][$indiceDimensao]);
+							$fatoMensalAnterior->setRealizada6($celulasRealizadasNoPrimeiroPeriodo);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::CULTO) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setCu5($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setCu6($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::ARENA) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setA5($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setA6($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::DOMINGO){
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setD5($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setD6($somaPorPeriodoETipo[1][$indiceDimensao]);
+						}
+					}
+				}
+				$somaCelula = 
+					$fatoMensalAnterior->getC1() +
+					$fatoMensalAnterior->getC2() +
+					$fatoMensalAnterior->getC3() +
+					$fatoMensalAnterior->getC4() +
+					$fatoMensalAnterior->getC5() +
+					$fatoMensalAnterior->getC6() ;
+				$fatoMensalAnterior->setSomacelula($somaCelula);
+				$fatoMensalAnterior->setMultiplicadormetasetenta($numeroDeCelulas);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
+			}
+		}
 
 		$this->getRepositorio()->fecharTransacao();
 
