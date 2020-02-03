@@ -232,9 +232,9 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 		$qualPeriodo = '';
-		$diaDaSemnana = date('N');
+		$diaDaSemana = date('N');
 		$SEGUNDA = 1;
-		if($diaDaSemnana === $SEGUNDA){
+		if(intVal($diaDaSemana) === $SEGUNDA){
 			$qualPeriodo = '/-1';
 		}
     
