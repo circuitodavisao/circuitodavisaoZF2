@@ -176,7 +176,6 @@ class FatoFinanceiroORM extends CircuitoORM {
 				->setParameter(3, $dataFinalFormatada)
 				->getResult();
 
-			error_log('rsul: '.print_r($result, true));
 			return $result[0]['valor'];
 		} catch (Exception $exc) {
 			error_log('error: '.$exc->getMessage());

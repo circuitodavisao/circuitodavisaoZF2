@@ -331,7 +331,7 @@ class FatoMensal extends CircuitoEntity {
 	/** @ORM\Column(type="integer") */
 	protected $somavisitantes;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Column(type="decimal") */
 	protected $somaparceiro;
 
 	/** @ORM\Column(type="integer") */
