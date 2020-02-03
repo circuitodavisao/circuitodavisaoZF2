@@ -3186,8 +3186,27 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>Ajustar lideres</h1>';
+		$html .= '<h1>Ajustar Lançamentos</h1>';
 		try {
+			$mesAtual = date('m');
+			$anoAtual = date('Y');
+			if(intVal($mesAtual) === 1){
+				$mesAnterior = 12;
+				$anoAnterior = $anoAtual -1;
+			}else{
+				$mesAnterior = $mesAtual - 1;
+				$anoAnterior = $anoAtual;
+			}
+			$fatosMensalAtual = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorMesEAno($mesAtual, $anoAtual);
+			foreach($fatosMensalAtual as $fatoMensalAtual){
+				if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoMensalAtual->getNumero_identificador(), $mesAnterior, $anoAnterior)){
+					$fatoMensalAnterior->setC5($fatoMensalAtual->getC1());
+					$fatoMensalAnterior->setCu5($fatoMensalAtual->getCu1());
+					$fatoMensalAnterior->setA5($fatoMensalAtual->getA1());
+					$fatoMensalAnterior->setD5($fatoMensalAtual->getD1());
+					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
+				}
+			}
 
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());

@@ -174,4 +174,22 @@ class FatoMensalORM extends CircuitoORM {
 			echo $exc->getMessage();
 		}
 	}
+
+	public function buscarFatosPorMesEAno($mes, $ano) {
+		$dqlBase = "SELECT fm "
+			. "FROM  " . Constantes::$ENTITY_FATO_MENSAL . " fm "
+			. "WHERE "
+			. "fm.data_inativacao is null "
+			. "AND fm.mes = ?1 "
+			. "AND fm.ano = ?2";
+		try {
+			$result = $this->getEntityManager()->createQuery($dqlBase)
+				->setParameter(1, $mes)
+				->setParameter(2, $ano)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
 }
