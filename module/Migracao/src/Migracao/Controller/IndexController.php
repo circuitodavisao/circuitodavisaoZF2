@@ -3207,7 +3207,7 @@ class IndexController extends CircuitoController {
 						$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 						$somaVisitantes = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
-							if($grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos)){
+							if($grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos, true)){
 								/* verificando visitante no mes */
 								foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 									if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
