@@ -2798,7 +2798,7 @@ public function alunosNaSemanaAction(){
 			}
 
 			if($processar){
-				$metaCelula = 35;
+				$metaCelula = 28;
 				$metaVisitantes = 2;
 				$metaParceiro = 40;
 				$lideres = array();
