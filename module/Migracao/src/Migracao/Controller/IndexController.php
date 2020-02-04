@@ -3197,14 +3197,11 @@ class IndexController extends CircuitoController {
 				$mesAnterior = $mesAtual - 1;
 				$anoAnterior = $anoAtual;
 			}
-			$fatosMensalAtual = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorMesEAno($mesAtual, $anoAtual);
-			foreach($fatosMensalAtual as $fatoMensalAtual){
-				if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoMensalAtual->getNumero_identificador(), $mesAnterior, $anoAnterior)){
-					if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoMensalAtual->getNumero_identificador(), $mesAnterior, $anoAnterior)){
-						$fatoMensalAnterior->setSomaparceiro($somaParceiro);
-						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
-					}
-
+			$fatosMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorMesEAno($mesAnterior, $anoAnterior);
+			foreach($fatosMensalAnterior as $fatoMensalAnterior){
+				if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoMensalAnterior->getNumero_identificador(), $mesAnterior, $anoAnterior)){
+					$fatoMensalAnterior->setSomaparceiro($somaParceiro);
+					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 				}
 			}
 
