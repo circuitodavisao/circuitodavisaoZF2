@@ -235,7 +235,7 @@ Membresia
 
 <?php
 $class = 'class = "col-lg-3 col-md-3 col-sm-6 col-xs-12"';
-$numeroIndices = 4;
+$numeroIndices = 3;
 for ($indice = 1; $indice <= $numeroIndices; $indice++) {
 	$idValor = '';
 	$idLista = '';
@@ -582,7 +582,6 @@ if(count($this->discipulos) > 0){
 			document.getElementById('valorMediaCultos').innerHTML = json.resultado.mediaCultos.toFixed(2)
 			document.getElementById('valorMediaArena').innerHTML = json.resultado.mediaArena.toFixed(2)
 			document.getElementById('valorMediaDomingo').innerHTML = json.resultado.mediaDomingo.toFixed(2)
-			document.getElementById('valorMediaMembresia').innerHTML = json.resultado.mediaMembresia
 			let valorCu = ''
 			let valorA = ''
 			let valorD = ''
@@ -615,20 +614,10 @@ if(count($this->discipulos) > 0){
 						valorD += '|' + item
 					}
 				}
-				campo = 'mem' + i
-				item = parseFloat(json.resultado.fatoMensal[campo]).toFixed(0)
-				if(item){
-					if(valorMem === ''){
-						valorMem += item
-					}else{
-						valorMem += '|' + item
-					}
-				}
 			}
 			document.getElementById('listaCultos').innerHTML = valorCu
 			document.getElementById('listaArena').innerHTML = valorA
 			document.getElementById('listaDomingo').innerHTML = valorD
-			document.getElementById('listaMembresia').innerHTML = valorMem
 		})
 	}
 	function buscarDadosPrincipaisCelula(){

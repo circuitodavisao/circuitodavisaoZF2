@@ -3745,7 +3745,7 @@ public function alunosNaSemanaAction(){
 					}					
 
 					/* Parceiro de Deus */
-					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano, $tipoRelatorio)['valor'];					
+					$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), $tipoRelatorio)['valor'];					
 				}
 
 			/* Contado Regiões, Coordenações e Igrejas */
