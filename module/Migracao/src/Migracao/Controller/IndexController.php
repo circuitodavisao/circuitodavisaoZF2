@@ -6,6 +6,7 @@ use Application\Controller\CircuitoController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
+use Application\Model\Entity\GrupoPessoaTipo;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
@@ -44,6 +45,7 @@ use Application\Model\Entity\FatoFinanceiroSituacao;
 use Application\Model\Entity\FatoSetenta;
 use Application\Model\Entity\FatoCelulaDiscipulado;
 use Application\Model\ORM\RepositorioORM;
+use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -3199,12 +3201,45 @@ class IndexController extends CircuitoController {
 			}
 			$fatosMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorMesEAno($mesAnterior, $anoAnterior);
 			foreach($fatosMensalAnterior as $fatoMensalAnterior){
-				if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoMensalAnterior->getNumero_identificador(), $mesAnterior, $anoAnterior)){
-					$fatoMensalAnterior->setSomaparceiro($somaParceiro);
-					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
-				}
-			}
+				$idGrupo = substr($fatoMensalAnterior->getNumero_identificador(), (count($fatoMensalAnterior->getNumero_identificador())-8));					
+				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo)){
+					if($grupo->verificarSeEstaAtivo()){
+						$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+						$somaVisitantes = 0;
+						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
+							if($grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos)){
+								/* verificando visitante no mes */
+								foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+									if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+										|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+											if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+												if ($diaDaSemanaDoEvento === 1) {
+													$diaDaSemanaDoEvento = 7; // domingo
+												} else {
+													$diaDaSemanaDoEvento--;
+												}
+												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+												foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+													if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+														$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
 
+														if($tipoPessoa === GrupoPessoaTipo::VISITANTE){
+															$somaVisitantes ++;
+														}
+													}
+												}
+											}
+										}
+								}
+							}
+						}
+					}
+				}
+
+				$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
+			}
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();
