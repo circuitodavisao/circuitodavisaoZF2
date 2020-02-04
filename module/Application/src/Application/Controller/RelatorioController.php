@@ -3701,7 +3701,8 @@ public function alunosNaSemanaAction(){
 		$mostrarIgrejas = false;
 
 		if($grupo->getEntidadeAtiva()){
-			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+
 			$tipoRelatorio = $pessoalOuEquipe;
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 				$numeroIdentificador = '';
