@@ -3265,9 +3265,9 @@ class IndexController extends CircuitoController {
 											$diaDaSemanaDoEvento--;
 										}
 										$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-										//$html .= '<br />dia: '.$diaRealDoEvento;
+										$html .= '<br />dia: '.$diaRealDoEvento;
 										$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
-										//$html .= '<br />quantidade: '.$quantidade;
+										$html .= '<br />quantidade: '.$quantidade;
 										if($semana === 1){
 											$fatoMensalAnterior->setC1($quantidade);
 										}
