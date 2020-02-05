@@ -3226,6 +3226,7 @@ class IndexController extends CircuitoController {
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
 	
+						$somaCelula = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
 								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
@@ -3286,7 +3287,7 @@ class IndexController extends CircuitoController {
 										if($semana === 6){
 											$fatoMensalAnterior->setC6($quantidade);
 										}
-
+										$somaCelula += $quantidade;
 									}
 							}
 
@@ -3294,7 +3295,8 @@ class IndexController extends CircuitoController {
 						}
 
 						//$html .= '<br />visitantes: '.$somaVisitantes;
-					$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 					}
 				}
