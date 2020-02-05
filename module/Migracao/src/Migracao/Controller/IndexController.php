@@ -3210,8 +3210,8 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
-				//$gruposParaValidar = array();
-				//$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId();
+				$gruposParaValidar = array();
+				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						$html .= '<br /><br />grupo: '.$grupo->getId();
@@ -3219,7 +3219,7 @@ class IndexController extends CircuitoController {
 						$somaVisitantes = 0;
 						$html .= '<br />visitantes: '.$somaVisitantes;
 
-						$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos, true);
+						$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
@@ -3227,18 +3227,23 @@ class IndexController extends CircuitoController {
 									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
 										$html .= '<br />tem visitante';										
 										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-											$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-											if ($diaDaSemanaDoEvento === 1) {
-												$diaDaSemanaDoEvento = 7; // domingo
-											} else {
-												$diaDaSemanaDoEvento--;
-											}
-											$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
 
-											if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-												$html .= '<br /> visitante ok';
-												$somaVisitantes++;
-											}
+													$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+													if ($diaDaSemanaDoEvento === 1) {
+														$diaDaSemanaDoEvento = 7; // domingo
+													} else {
+														$diaDaSemanaDoEvento--;
+													}
+													$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+													$html .= '<br />dia: '.$diaRealDoEvento;
+
+													if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+														$html .= '<br /> visitante ok';
+														$somaVisitantes++;
+													}
+												}
 										}
 									}	
 								}
