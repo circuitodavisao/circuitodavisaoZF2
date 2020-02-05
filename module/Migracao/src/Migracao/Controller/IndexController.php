@@ -3199,12 +3199,19 @@ class IndexController extends CircuitoController {
 				$mesAnterior = $mesAtual - 1;
 				$anoAnterior = $anoAtual;
 			}
-			$fatosMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorMesEAno($mesAnterior, $anoAnterior);
-			foreach($fatosMensalAnterior as $fatoMensalAnterior){
-				$idGrupo = substr($fatoMensalAnterior->getNumero_identificador(), (count($fatoMensalAnterior->getNumero_identificador())-8));					
-				if($grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo)){
+
+			$gruposParaValidar = array();
+			$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
+			if($qualParte <= 50){
+				$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
+			}else{
+				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId($qualParte);
+			}
+
+			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+			if($gruposParaValidar){
+				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
-						$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 						$somaVisitantes = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 							if($grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos, true)){
@@ -3234,11 +3241,13 @@ class IndexController extends CircuitoController {
 								}
 							}
 						}
+						$numeroIdentificador =
+							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 					}
 				}
-
-				$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
-				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 			}
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
