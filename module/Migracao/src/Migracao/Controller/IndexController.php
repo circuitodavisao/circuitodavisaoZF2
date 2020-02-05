@@ -3210,14 +3210,14 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
-				$gruposParaValidar = array();
-				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
+				//$gruposParaValidar = array();
+				//$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
-						$html .= '<br /><br />grupo: '.$grupo->getId();
-						$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
+						//$html .= '<br /><br />grupo: '.$grupo->getId();
+						//$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
 						$somaVisitantes = 0;
-						$html .= '<br />visitantes: '.$somaVisitantes;
+						//$html .= '<br />visitantes: '.$somaVisitantes;
 
 						$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
@@ -3225,7 +3225,7 @@ class IndexController extends CircuitoController {
 							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
 								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
 									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
-										$html .= '<br />tem visitante';										
+										//$html .= '<br />tem visitante';										
 										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
 												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
@@ -3237,10 +3237,10 @@ class IndexController extends CircuitoController {
 														$diaDaSemanaDoEvento--;
 													}
 													$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-													$html .= '<br />dia: '.$diaRealDoEvento;
+													//$html .= '<br />dia: '.$diaRealDoEvento;
 
 													if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-														$html .= '<br /> visitante ok';
+														//$html .= '<br /> visitante ok';
 														$somaVisitantes++;
 													}
 												}
@@ -3250,7 +3250,7 @@ class IndexController extends CircuitoController {
 							}
 						}
 
-						$html .= '<br />visitantes: '.$somaVisitantes;
+						//$html .= '<br />visitantes: '.$somaVisitantes;
 						$numeroIdentificador =
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
