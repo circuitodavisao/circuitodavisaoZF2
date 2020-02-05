@@ -3210,8 +3210,11 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
+				//$gruposParaValidar = array();
+				//$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId();
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
+						$html .= '<br /><br />grupo: '.$grupo->getId();
 						$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
 						$somaVisitantes = 0;
 						$html .= '<br />visitantes: '.$somaVisitantes;
@@ -3233,6 +3236,7 @@ class IndexController extends CircuitoController {
 											$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
 
 											if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+												$html .= '<br /> visitante ok';
 												$somaVisitantes++;
 											}
 										}
