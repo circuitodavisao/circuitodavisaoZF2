@@ -3210,8 +3210,8 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
-				//$gruposParaValidar = array();
-				//$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
+				$gruposParaValidar = array();
+				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						//$html .= '<br /><br />grupo: '.$grupo->getId();
@@ -3221,6 +3221,11 @@ class IndexController extends CircuitoController {
 
 						$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 
+						$semana = 1;
+						$numeroIdentificador =
+							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+	
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
 								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
@@ -3248,13 +3253,48 @@ class IndexController extends CircuitoController {
 									}	
 								}
 							}
+
+							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+								if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+									|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+
+										$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+										if ($diaDaSemanaDoEvento === 1) {
+											$diaDaSemanaDoEvento = 7; // domingo
+										} else {
+											$diaDaSemanaDoEvento--;
+										}
+										$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+										//$html .= '<br />dia: '.$diaRealDoEvento;
+										$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
+										//$html .= '<br />quantidade: '.$quantidade;
+										if($semana === 1){
+											$fatoMensalAnterior->setC1($quantidade);
+										}
+										if($semana === 2){
+											$fatoMensalAnterior->setC2($quantidade);
+										}
+										if($semana === 3){
+											$fatoMensalAnterior->setC3($quantidade);
+										}
+										if($semana === 4){
+											$fatoMensalAnterior->setC4($quantidade);
+										}
+										if($semana === 5){
+											$fatoMensalAnterior->setC5($quantidade);
+										}
+										if($semana === 6){
+											$fatoMensalAnterior->setC6($quantidade);
+										}
+
+									}
+							}
+
+							$semana++;
 						}
 
 						//$html .= '<br />visitantes: '.$somaVisitantes;
-						$numeroIdentificador =
-							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
-						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+					$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 					}
 				}
