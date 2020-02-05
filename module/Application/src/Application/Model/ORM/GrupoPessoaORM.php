@@ -87,7 +87,7 @@ class GrupoPessoaORM extends CircuitoORM {
 		}
 	}
 
-	public function grupoPessoasAtivosNoPEriodo($idGrupo, $periodo) {
+	public function grupoPessoasAtivosNoPEriodo($idGrupo, $periodo, $visitante = false) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
 		$dql = "SELECT "
@@ -96,8 +96,14 @@ class GrupoPessoaORM extends CircuitoORM {
                 . "WHERE "
                 . " gp.grupo_id = ?1 "
                 . " AND gp.data_inativacao IS NULL "
+				. " #visitante "
                 . " AND gp.data_criacao <= ?2 ";
 		try {
+			if(!$visitante){
+				$dql = str_replace('#visitante', '', $dql);
+			}else{
+				$dql = str_replace('#visitante', ' AND gp.tipo_id = 1 ', $dql);
+			}
 			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
 			$result = $this->getEntityManager()->createQuery($dql)
 				->setParameter(1, (int) $idGrupo)
@@ -109,7 +115,7 @@ class GrupoPessoaORM extends CircuitoORM {
         }
     }
 
-	public function grupoPessoasInativosNoPEriodo($idGrupo, $periodo) {
+	public function grupoPessoasInativosNoPEriodo($idGrupo, $periodo, $visitante = false) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
         $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
@@ -120,8 +126,15 @@ class GrupoPessoaORM extends CircuitoORM {
                 . " gp.grupo_id = ?1 "
                 . " AND gp.data_inativacao IS NOT NULL "
                 . " AND gp.data_criacao <= ?2 "
+				. " #visitante "
                 . " AND gp.data_inativacao >= ?3 ";
 		try {
+			if(!$visitante){
+				$dql = str_replace('#visitante', '', $dql);
+			}else{
+				$dql = str_replace('#visitante', ' AND gp.tipo_id = 1 ', $dql);
+			}
+	
 			$dataFinalFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoFinal);
 			$dataInicialFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodoInicial);
 			$result = $this->getEntityManager()->createQuery($dql)

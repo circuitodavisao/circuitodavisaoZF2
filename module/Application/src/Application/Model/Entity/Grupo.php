@@ -1079,6 +1079,23 @@ class Grupo extends CircuitoEntity {
 		return $grupoPessoasNoPeriodo;
 	}
 
+	function getGrupoPessoasVisitantesNoPeriodo($periodo = 0, $repositorio = null) {
+		$grupoPessoasNoPeriodo = array();
+		if($repositorio){
+			if($grupopessoasAtivos = $repositorio->getGrupoPessoaORM()->grupoPessoasAtivosNoPeriodo($this->getid(), $periodo, true)){
+				foreach($grupopessoasAtivos as $grupoPessoaAtivo){
+					$grupoPessoasNoPeriodo[] = $grupoPessoaAtivo;
+				}
+			}
+			if($grupopessoasInativos = $repositorio->getGrupoPessoaORM()->grupoPessoasInativosNoPeriodo($this->getid(), $periodo, true)){
+				foreach($grupopessoasInativos as $grupoPessoaInativo){
+					$grupoPessoasNoPeriodo[] = $grupoPessoaInativo;
+				}
+			}
+		}
+		return $grupoPessoasNoPeriodo;
+	}
+
     /**
      * Retorna o grupo evento no ciclo selecionado
      * @param int $ciclo
