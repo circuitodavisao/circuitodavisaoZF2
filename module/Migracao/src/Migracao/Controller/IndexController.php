@@ -3210,8 +3210,8 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
-				$gruposParaValidar = array();
-				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
+				//$gruposParaValidar = array();
+				//$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId(206);
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						//$html .= '<br /><br />grupo: '.$grupo->getId();
@@ -3266,9 +3266,9 @@ class IndexController extends CircuitoController {
 											$diaDaSemanaDoEvento--;
 										}
 										$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-										$html .= '<br />dia: '.$diaRealDoEvento;
+										//$html .= '<br />dia: '.$diaRealDoEvento;
 										$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
-										$html .= '<br />quantidade: '.$quantidade;
+										//$html .= '<br />quantidade: '.$quantidade;
 										if($semana === 1){
 											$fatoMensalAnterior->setC1($quantidade);
 										}
