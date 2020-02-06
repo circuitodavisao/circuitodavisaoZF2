@@ -3496,96 +3496,98 @@ public function alunosNaSemanaAction(){
 				foreach ($grupoPaiFilhoFilhos12 as $filho12) {
 					$grupoFilho12 = $filho12->getGrupoPaiFilhoFilho();
 					$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
-					$fatoMensal12 = new FatoMensal();
-					$fatoMensal12->setEntidade($entidadeDoFilho12->infoEntidade());
-					$fatoMensal12->setLideres($grupoFilho12->getNomeLideresAtivos());
-					$fatoMensal12->cabecalho = true;
-					$relatorio[] = $fatoMensal12;
+					if($entidadeDoFilho12->getEntidadeTipo(true)->getId() !== EntidadeTipo::secretario){
+						$fatoMensal12 = new FatoMensal();
+						$fatoMensal12->setEntidade($entidadeDoFilho12->infoEntidade());
+						$fatoMensal12->setLideres($grupoFilho12->getNomeLideresAtivos());
+						$fatoMensal12->cabecalho = true;
+						$relatorio[] = $fatoMensal12;
 
-					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);
-						$fatosMensal12 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
-						foreach ($fatosMensal12 as $fatoMensal12) {
-							if($fatoMensal12->getMultiplicadormetasetenta() > 0){
-								if(
-									$fatoMensal12->getSomacelula() >= ($metaCelula * $fatoMensal12->getMultiplicadormetasetenta()) &&
-									$fatoMensal12->getSomavisitantes() >= ($metaVisitantes * $fatoMensal12->getMultiplicadormetasetenta()) &&
-									$fatoMensal12->getSomaparceiro() >= ($metaParceiro * $fatoMensal12->getMultiplicadormetasetenta())
-								){
-									$relatorio[] = $fatoMensal12;
+						if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);
+							$fatosMensal12 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+							foreach ($fatosMensal12 as $fatoMensal12) {
+								if($fatoMensal12->getMultiplicadormetasetenta() > 0){
+									if(
+										$fatoMensal12->getSomacelula() >= ($metaCelula * $fatoMensal12->getMultiplicadormetasetenta()) &&
+										$fatoMensal12->getSomavisitantes() >= ($metaVisitantes * $fatoMensal12->getMultiplicadormetasetenta()) &&
+										$fatoMensal12->getSomaparceiro() >= ($metaParceiro * $fatoMensal12->getMultiplicadormetasetenta())
+									){
+										$relatorio[] = $fatoMensal12;
+									}
 								}
 							}
-						}
-					}	
-					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
-						$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
-							$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-							foreach ($grupoPaiFilhoFilhos144 as $filho144) {					
-								$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
-								$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
-								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-									$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
-									$fatosMensal144 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
-									foreach ($fatosMensal144 as $fatoMensal144) {
-										if($fatoMensal144->getMultiplicadormetasetenta() > 0){
-											if(
-												$fatoMensal144->getSomacelula() >= ($metaCelula * $fatoMensal144->getMultiplicadormetasetenta()) &&
-												$fatoMensal144->getSomavisitantes() >= ($metaVisitantes * $fatoMensal144->getMultiplicadormetasetenta()) &&
-												$fatoMensal144->getSomaparceiro() >= ($metaParceiro * $fatoMensal144->getMultiplicadormetasetenta())
-											){
-												$relatorio[] = $fatoMensal144;
+						}	
+						if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+							$entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::regiao){	
+								$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+								foreach ($grupoPaiFilhoFilhos144 as $filho144) {					
+									$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
+									$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
+									if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
+										$fatosMensal144 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+										foreach ($fatosMensal144 as $fatoMensal144) {
+											if($fatoMensal144->getMultiplicadormetasetenta() > 0){
+												if(
+													$fatoMensal144->getSomacelula() >= ($metaCelula * $fatoMensal144->getMultiplicadormetasetenta()) &&
+													$fatoMensal144->getSomavisitantes() >= ($metaVisitantes * $fatoMensal144->getMultiplicadormetasetenta()) &&
+													$fatoMensal144->getSomaparceiro() >= ($metaParceiro * $fatoMensal144->getMultiplicadormetasetenta())
+												){
+													$relatorio[] = $fatoMensal144;
+												}
 											}
 										}
-									}
-								}	
-								if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
-									$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-										$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-										foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {							
-											$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
-											$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
-											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-												$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);
-												$fatosMensal1728 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
-												foreach ($fatosMensal1728 as $fatoMensal1728) {
-													if($fatoMensal1728->getMultiplicadormetasetenta() > 0){
-														if(
-															$fatoMensal1728->getSomacelula() >= ($metaCelula * $fatoMensal1728->getMultiplicadormetasetenta()) &&
-															$fatoMensal1728->getSomavisitantes() >= ($metaVisitantes * $fatoMensal1728->getMultiplicadormetasetenta()) &&
-															$fatoMensal1728->getSomaparceiro() >= ($metaParceiro * $fatoMensal1728->getMultiplicadormetasetenta())
-														){
-															$relatorio[] = $fatoMensal1728;
+									}	
+									if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+										$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+											$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+											foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {							
+												$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
+												$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
+												if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+													$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);
+													$fatosMensal1728 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+													foreach ($fatosMensal1728 as $fatoMensal1728) {
+														if($fatoMensal1728->getMultiplicadormetasetenta() > 0){
+															if(
+																$fatoMensal1728->getSomacelula() >= ($metaCelula * $fatoMensal1728->getMultiplicadormetasetenta()) &&
+																$fatoMensal1728->getSomavisitantes() >= ($metaVisitantes * $fatoMensal1728->getMultiplicadormetasetenta()) &&
+																$fatoMensal1728->getSomaparceiro() >= ($metaParceiro * $fatoMensal1728->getMultiplicadormetasetenta())
+															){
+																$relatorio[] = $fatoMensal1728;
+															}
 														}
 													}
-												}
-											}	
-											if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
-												$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-													$grupoPaiFilhoFilhos20736 = $entidadeDoFilho1728->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-													foreach ($grupoPaiFilhoFilhos20736 as $filho20736) {									
-														$grupoFilho20736 = $filho20736->getGrupoPaiFilhoFilho();
-														$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
-														if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-															$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);
-															$fatosMensal20736 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
-															foreach ($fatosMensal20736 as $fatoMensal20736) {
-																if($fatoMensal20736->getMultiplicadormetasetenta() > 0){
-																	if(
-																		$fatoMensal20736->getSomacelula() >= ($metaCelula * $fatoMensal20736->getMultiplicadormetasetenta()) &&
-																		$fatoMensal20736->getSomavisitantes() >= ($metaVisitantes * $fatoMensal20736->getMultiplicadormetasetenta()) &&
-																		$fatoMensal20736->getSomaparceiro() >= ($metaParceiro * $fatoMensal20736->getMultiplicadormetasetenta())
-																	){
-																		$relatorio[] = $fatoMensal20736;
+												}	
+												if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+													$entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+														$grupoPaiFilhoFilhos20736 = $entidadeDoFilho1728->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
+														foreach ($grupoPaiFilhoFilhos20736 as $filho20736) {									
+															$grupoFilho20736 = $filho20736->getGrupoPaiFilhoFilho();
+															$entidadeDoFilho20736 = $grupoFilho20736->getEntidadeAtiva();
+															if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+																$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);
+																$fatosMensal20736 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+																foreach ($fatosMensal20736 as $fatoMensal20736) {
+																	if($fatoMensal20736->getMultiplicadormetasetenta() > 0){
+																		if(
+																			$fatoMensal20736->getSomacelula() >= ($metaCelula * $fatoMensal20736->getMultiplicadormetasetenta()) &&
+																			$fatoMensal20736->getSomavisitantes() >= ($metaVisitantes * $fatoMensal20736->getMultiplicadormetasetenta()) &&
+																			$fatoMensal20736->getSomaparceiro() >= ($metaParceiro * $fatoMensal20736->getMultiplicadormetasetenta())
+																		){
+																			$relatorio[] = $fatoMensal20736;
+																		}
 																	}
 																}
-															}
-														}	
+															}	
+														}
 													}
-												}
+											}
 										}
-									}
-							}						
-						}				
+								}						
+							}				
+					}
 				}
 			}
 			$dados['postado'] = true;
