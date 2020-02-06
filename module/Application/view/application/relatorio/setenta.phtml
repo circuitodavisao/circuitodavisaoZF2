@@ -50,8 +50,8 @@ if($this->filtrado){
 				echo '<p>' . $fatoMensal->somacelula. ' | ' . ($fatoMensal->multiplicadormetasetenta * 28) . '</p>';
 				echo '<p>Visitantes | Meta</p>';
 				echo '<p>' . $fatoMensal->somavisitantes. ' | ' . ($fatoMensal->multiplicadormetasetenta * 2) . '</p>';
-				echo '<p>Parceiro | Meta</p>';
-				echo '<p>' . $fatoMensal->somaparceiro . ' | ' . ($fatoMensal->multiplicadormetasetenta * 40) . '</p>';
+				echo '<p>P.D. | Meta</p>';
+				echo '<p>' . $fatoMensal->somaparceiro ? number_format($fatoMensal->somaparceiro,2,',','.') : '0,00' . ' | ' . ($fatoMensal->multiplicadormetasetenta * 40) . '</p>';
 			}else{
 				echo '<p>Para atualizar envio o relatório</p>';
 			}
