@@ -68,91 +68,17 @@ $html .= '</div>';
 $html .= '</form>';
 if($this->postado){
 	$html .= '<table class="table table-condesend table-bordered">';
+	$html .= '<thead>';
+	$html .= '<tr>';
+	$html .= '<th>TIME</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
 	$html .= '<tbody>';
-	if($this->filhos){
-		foreach($this->filhos as $filho){
-			$corLinha = 'primary';
-			$colSpan = 8;
-			if($filho['informacao'] === 'TOTAL'){
-				$corLinha = 'dark';
-				$colSpan = 0;
-				$html .= '<tr class="dark">'; 
-				$html .= '<td></td>';
-				$html .= '<td>LÍDERES / META</td>';
-				$html .= '<td>CÉLULAS / META</td>';
-				$html .= '<td>CÉLULAS BETAS / META</td>';
-				$html .= '<td>ALUNOS 1°M / META</td>';
-				$html .= '<td>ALUNOS 2°M / META</td>';
-				$html .= '<td>ALUNOS 3°M / META</td>';
-				$html .= '<td>TOTAL</td>';
-				$html .= '</tr>';
-			}
-			$html .= '<tr class="'.$corLinha.'">'; 
-			$html .= '<td colspan="'.$colSpan.'">'.$filho['informacao'].'</td>';
-			if($filho['informacao'] === 'TOTAL'){
-				$total = 
-					$filho['lideresMeta']
-					+ $filho['celulasMeta']
-					+ $filho['celulasBetaMeta']
-					+ $filho['alunos1Meta']
-					+ $filho['alunos2Meta']
-					+ $filho['alunos3Meta']
-					;
-				$html .= '<td>'.$filho['lideres'].' / '.$filho['lideresMeta'].'</td>';
-				$html .= '<td>'.$filho['celulas'].' / '.$filho['celulasMeta'].'</td>';
-				$html .= '<td>'.$filho['celulasBeta'].' / '.$filho['celulasBetaMeta'].'</td>';
-				$html .= '<td>'.$filho['alunos1'].' / '.$filho['alunos1Meta'].'</td>';
-				$html .= '<td>'.$filho['alunos2'].' / '.$filho['alunos2Meta'].'</td>';
-				$html .= '<td>'.$filho['alunos3'].' / '.$filho['alunos3Meta'].'</td>';
-				$html .= '<td>'.$total.'</td>';
-			}
+	if($this->relatorio){
+		foreach($this->relatorio as $relatorio){
+			$html .= '<tr>';
+			$html .= '<td>'.$relatorio->getEntidade().'</td>';
 			$html .= '</tr>';
-
-			if($filho['informacao'] !== 'TOTAL'){
-				$html .= '<tr class="primary">'; 
-				$html .= '<td>TIMES</td>';
-				$html .= '<td>LÍDERES / META</td>';
-				$html .= '<td>CÉLULAS / META</td>';
-				$html .= '<td>CÉLULAS BETAS / META</td>';
-				$html .= '<td>ALUNOS 1°M / META</td>';
-				$html .= '<td>ALUNOS 2°M / META</td>';
-				$html .= '<td>ALUNOS 3°M / META</td>';
-				$html .= '<td>TOTAL</td>';
-				$html .= '</tr>';
-			}
-			if($filho['filhos']){
-				foreach($filho['filhos'] as $filho144){
-					$corLinha144 = '';
-					if($filho144['informacao'] === 'TOTAL PARCIAL'){
-						$corLinha144 = 'info';
-					}
-					$total = 
-						$filho144['lideresMeta']
-						+ $filho144['celulasMeta']
-						+ $filho144['celulasBetaMeta']
-						+ $filho144['alunos1Meta']
-						+ $filho144['alunos2Meta']
-						+ $filho144['alunos3Meta']
-						;
-
-					$html .= '<tr class="'.$corLinha144.'">'; 
-					$html .= '<td>---- '.$filho144['informacao'].'</td>';
-					$html .= '<td>'.$filho144['lideres'].' / '.$filho144['lideresMeta'].'</td>';
-					$html .= '<td>'.$filho144['celulas'].' / '.$filho144['celulasMeta'].'</td>';
-					$html .= '<td>'.$filho144['celulasBeta'].' / '.$filho144['celulasBetaMeta'].'</td>';
-					$html .= '<td>'.$filho144['alunos1'].' / '.$filho144['alunos1Meta'].'</td>';
-					$html .= '<td>'.$filho144['alunos2'].' / '.$filho144['alunos2Meta'].'</td>';
-					$html .= '<td>'.$filho144['alunos3'].' / '.$filho144['alunos3Meta'].'</td>';
-					$html .= '<td>'.$total.'</td>';
-					$html .= '</tr>';
-
-					if($filho144['informacao'] === 'TOTAL PARCIAL'){
-						$html .= '<tr style="height: 10px;">'; 
-						$html .= '<td>&nbsp;</td>';
-						$html .= '</tr>';
-					}
-				}
-			}
 		}
 	}
 	$html .= '</tbody>';

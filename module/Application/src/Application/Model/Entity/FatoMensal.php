@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FatoMensal extends CircuitoEntity {
 
+	public $cabecalho;
+
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
