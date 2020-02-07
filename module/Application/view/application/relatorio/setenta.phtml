@@ -51,7 +51,10 @@ if($this->filtrado){
 				echo '<p>Visitantes | Meta</p>';
 				echo '<p>' . $fatoMensal->somavisitantes. ' | ' . ($fatoMensal->multiplicadormetasetenta * 2) . '</p>';
 				echo '<p>P.D. | Meta</p>';
-				echo '<p>' . $fatoMensal->somaparceiro ? number_format($fatoMensal->somaparceiro,2,',','.') : '0,00' . ' | ' . ($fatoMensal->multiplicadormetasetenta * 40) . '</p>';
+				echo '<p>';
+				echo $fatoMensal->somaparceiro ? number_format($fatoMensal->somaparceiro,2,',','.') : '0,00';
+				echo ' | ' . number_format(($fatoMensal->multiplicadormetasetenta * 40), 2, ',', '.');
+				echo '</p>';
 			}else{
 				echo '<p>Para atualizar envio o relatório</p>';
 			}
