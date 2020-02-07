@@ -70,6 +70,7 @@ if($this->postado){
 	$html .= '<table class="table table-condesend table-bordered">';
 	$html .= '<thead>';
 	$html .= '<tr>';
+	$html .= '<th>IGREJA</th>';
 	$html .= '<th>TIME</th>';
 	$html .= '<th>LÍDERES</th>';
 	$html .= '</tr>';
@@ -82,6 +83,7 @@ if($this->postado){
 				$class = 'dark';
 			}
 			$html .= '<tr class='.$class.'>';
+			$html .= '<td>'.$relatorio->getNome_igreja().'</td>';
 			$html .= '<td>'.$relatorio->getEntidade().'</td>';
 			$html .= '<td>'.$relatorio->getLideres().'</td>';
 			$html .= '</tr>';
