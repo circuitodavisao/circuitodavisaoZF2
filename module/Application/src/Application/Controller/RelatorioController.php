@@ -2790,6 +2790,11 @@ public function alunosNaSemanaAction(){
 
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
+			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
+			$diferenca += 1;
+			$campoCelula = 'cq'.$diferenca;
+			$campoCelulaBeta = 'cbq'.$diferenca;
 
 			$processar = true;
 			/* mostrar aparti de novembro de 2018 */
@@ -2805,6 +2810,8 @@ public function alunosNaSemanaAction(){
 				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
 				$fatosMensal = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 				foreach ($fatosMensal as $fatoMensal) {
+					$somaCelulas = $fatoMensal->$campoCelula + $fatoMensal->$campoCelulaBeta;
+					$fatoMensal->setMultiplicadormetasetenta($somaCelulas);
 					if( $fatoMensal->getMultiplicadormetasetenta() > 0){
 						if(
 							$fatoMensal->getSomacelula() >= ($metaCelula * $fatoMensal->getMultiplicadormetasetenta()) &&
@@ -3488,6 +3495,13 @@ public function alunosNaSemanaAction(){
 			$postDados = $request->getPost();
 			$mes = $postDados['mes'];
 			$ano = $postDados['ano'];
+
+			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+			$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
+			$diferenca += 1;
+			$campoCelula = 'cq'.$diferenca;
+			$campoCelulaBeta = 'cbq'.$diferenca;
+
 			if(
 				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao 
 				|| $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
@@ -3507,6 +3521,8 @@ public function alunosNaSemanaAction(){
 							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);
 							$fatosMensal12 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 							foreach ($fatosMensal12 as $fatoMensal12) {
+								$totalDeCelulas = $fatoMensal12->$campoCelula + $fatoMensal12->$campoCelulaBeta;
+								$fatoMensal12->setMultiplicadormetasetenta($totalDeCelulas);
 								if($fatoMensal12->getMultiplicadormetasetenta() > 0){
 									if(
 										$fatoMensal12->getSomacelula() >= ($metaCelula * $fatoMensal12->getMultiplicadormetasetenta()) &&
@@ -3528,6 +3544,8 @@ public function alunosNaSemanaAction(){
 										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
 										$fatosMensal144 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 										foreach ($fatosMensal144 as $fatoMensal144) {
+											$totalDeCelulas = $fatoMensal144->$campoCelula + $fatoMensal144->$campoCelulaBeta;
+											$fatoMensal144->setMultiplicadormetasetenta($totalDeCelulas);
 											if($fatoMensal144->getMultiplicadormetasetenta() > 0){
 												if(
 													$fatoMensal144->getSomacelula() >= ($metaCelula * $fatoMensal144->getMultiplicadormetasetenta()) &&
@@ -3549,6 +3567,8 @@ public function alunosNaSemanaAction(){
 													$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);
 													$fatosMensal1728 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 													foreach ($fatosMensal1728 as $fatoMensal1728) {
+														$totalDeCelulas = $fatoMensal1728->$campoCelula + $fatoMensal1728->$campoCelulaBeta;
+														$fatoMensal1728->setMultiplicadormetasetenta($totalDeCelulas);
 														if($fatoMensal1728->getMultiplicadormetasetenta() > 0){
 															if(
 																$fatoMensal1728->getSomacelula() >= ($metaCelula * $fatoMensal1728->getMultiplicadormetasetenta()) &&
@@ -3570,6 +3590,8 @@ public function alunosNaSemanaAction(){
 																$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);
 																$fatosMensal20736 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
 																foreach ($fatosMensal20736 as $fatoMensal20736) {
+																	$totalDeCelulas = $fatoMensal20736->$campoCelula + $fatoMensal20736->$campoCelulaBeta;
+																	$fatoMensal20736->setMultiplicadormetasetenta($totalDeCelulas);
 																	if($fatoMensal20736->getMultiplicadormetasetenta() > 0){
 																		if(
 																			$fatoMensal20736->getSomacelula() >= ($metaCelula * $fatoMensal20736->getMultiplicadormetasetenta()) &&
