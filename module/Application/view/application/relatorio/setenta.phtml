@@ -46,15 +46,17 @@ if($this->filtrado){
 			echo '<div class="panel">';
 			echo '<div class="panel-body">';
 			if($fatoMensal->multiplicadormetasetenta > 0){
-				echo '<p>Pessoas | Meta</p>';
-				echo '<p>' . $fatoMensal->somacelula. ' | ' . ($fatoMensal->multiplicadormetasetenta * 28) . '</p>';
-				echo '<p>Visitantes | Meta</p>';
-				echo '<p>' . $fatoMensal->somavisitantes. ' | ' . ($fatoMensal->multiplicadormetasetenta * 2) . '</p>';
-				echo '<p>P.D. | Meta</p>';
-				echo '<p>';
+				echo '<table class="table table-bordered table-condesed">';
+				echo '<tr class="dark"><td>Pessoas</td><td>Meta</td></tr>';
+				echo '<tr><td>' . $fatoMensal->somacelula. '</td><td>' . ($fatoMensal->multiplicadormetasetenta * 28) . '</td></tr>';
+				echo '<tr class="dark"><td>Visitantes</td><td>Meta</td></tr>';
+				echo '<tr><td>' . $fatoMensal->somavisitantes. '</td><td>' . ($fatoMensal->multiplicadormetasetenta * 2) . '</td></tr>';
+				echo '<tr class="dark"><td>P.D.</td><td>Meta</td></tr>';
+				echo '<tr><td>';
 				echo $fatoMensal->somaparceiro ? number_format($fatoMensal->somaparceiro,2,',','.') : '0,00';
-				echo ' | ' . number_format(($fatoMensal->multiplicadormetasetenta * 40), 2, ',', '.');
-				echo '</p>';
+				echo '</td><td>' . number_format(($fatoMensal->multiplicadormetasetenta * 40), 2, ',', '.');
+				echo '</td></tr>';
+				echo '</table>';
 			}else{
 				echo '<p>Para atualizar envio o relatório</p>';
 			}
