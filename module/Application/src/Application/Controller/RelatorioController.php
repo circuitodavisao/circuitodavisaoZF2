@@ -3538,7 +3538,7 @@ public function alunosNaSemanaAction(){
 								uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
 									$a = $relatorioParcial[$ak];
 									$b = $relatorioParcial[$bk];
-									return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+									return $a->getEntidade() > $b->getEntidade() ? 1 : -1;
 								});
 							}
 							foreach($relatorioParcial as $r){
@@ -3572,7 +3572,7 @@ public function alunosNaSemanaAction(){
 											uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
 												$a = $relatorioParcial[$ak];
 												$b = $relatorioParcial[$bk];
-												return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+												return $a->getEntidade() > $b->getEntidade() ? 1 : -1;
 											});
 										}
 										foreach($relatorioParcial as $r){
@@ -3607,7 +3607,7 @@ public function alunosNaSemanaAction(){
 														uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
 															$a = $relatorioParcial[$ak];
 															$b = $relatorioParcial[$bk];
-															return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+															return $a->getEntidade() > $b->getEntidade() ? 1 : -1;
 														});
 													}
 													foreach($relatorioParcial as $r){
@@ -3641,7 +3641,7 @@ public function alunosNaSemanaAction(){
 																	uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
 																		$a = $relatorioParcial[$ak];
 																		$b = $relatorioParcial[$bk];
-																		return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+																		return $a->getEntidade() > $b->getEntidade() ? 1 : -1;
 																	});
 																}
 																foreach($relatorioParcial as $r){
