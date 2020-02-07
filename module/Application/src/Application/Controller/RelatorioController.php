@@ -3520,6 +3520,7 @@ public function alunosNaSemanaAction(){
 						if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 							$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho12);
 							$fatosMensal12 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+							$relatorioParcial = array();
 							foreach ($fatosMensal12 as $fatoMensal12) {
 								$totalDeCelulas = $fatoMensal12->$campoCelula + $fatoMensal12->$campoCelulaBeta;
 								$fatoMensal12->setMultiplicadormetasetenta($totalDeCelulas);
@@ -3529,9 +3530,19 @@ public function alunosNaSemanaAction(){
 										$fatoMensal12->getSomavisitantes() >= ($metaVisitantes * $fatoMensal12->getMultiplicadormetasetenta()) &&
 										$fatoMensal12->getSomaparceiro() >= ($metaParceiro * $fatoMensal12->getMultiplicadormetasetenta())
 									){
-										$relatorio[] = $fatoMensal12;
+										$relatorioParcial[] = $fatoMensal12;
 									}
 								}
+							}
+							if($total = count($relatorioParcial)){
+								uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
+									$a = $relatorioParcial[$ak];
+									$b = $relatorioParcial[$bk];
+									return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+								});
+							}
+							foreach($relatorioParcial as $r){
+								$relatorio[] = $r;
 							}
 						}	
 						if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
@@ -3543,6 +3554,7 @@ public function alunosNaSemanaAction(){
 									if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 										$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho144);
 										$fatosMensal144 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+										$relatorioParcial = array();
 										foreach ($fatosMensal144 as $fatoMensal144) {
 											$totalDeCelulas = $fatoMensal144->$campoCelula + $fatoMensal144->$campoCelulaBeta;
 											$fatoMensal144->setMultiplicadormetasetenta($totalDeCelulas);
@@ -3552,10 +3564,21 @@ public function alunosNaSemanaAction(){
 													$fatoMensal144->getSomavisitantes() >= ($metaVisitantes * $fatoMensal144->getMultiplicadormetasetenta()) &&
 													$fatoMensal144->getSomaparceiro() >= ($metaParceiro * $fatoMensal144->getMultiplicadormetasetenta())
 												){
-													$relatorio[] = $fatoMensal144;
+													$relatorioParcial[] = $fatoMensal144;
 												}
 											}
 										}
+										if($total = count($relatorioParcial)){
+											uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
+												$a = $relatorioParcial[$ak];
+												$b = $relatorioParcial[$bk];
+												return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+											});
+										}
+										foreach($relatorioParcial as $r){
+											$relatorio[] = $r;
+										}
+
 									}	
 									if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
 										$entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
@@ -3566,6 +3589,7 @@ public function alunosNaSemanaAction(){
 												if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 													$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho1728);
 													$fatosMensal1728 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+													$relatorioParcial = array();
 													foreach ($fatosMensal1728 as $fatoMensal1728) {
 														$totalDeCelulas = $fatoMensal1728->$campoCelula + $fatoMensal1728->$campoCelulaBeta;
 														$fatoMensal1728->setMultiplicadormetasetenta($totalDeCelulas);
@@ -3575,9 +3599,19 @@ public function alunosNaSemanaAction(){
 																$fatoMensal1728->getSomavisitantes() >= ($metaVisitantes * $fatoMensal1728->getMultiplicadormetasetenta()) &&
 																$fatoMensal1728->getSomaparceiro() >= ($metaParceiro * $fatoMensal1728->getMultiplicadormetasetenta())
 															){
-																$relatorio[] = $fatoMensal1728;
+																$relatorioParcial[] = $fatoMensal1728;
 															}
 														}
+													}
+													if($total = count($relatorioParcial)){
+														uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
+															$a = $relatorioParcial[$ak];
+															$b = $relatorioParcial[$bk];
+															return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+														});
+													}
+													foreach($relatorioParcial as $r){
+														$relatorio[] = $r;
 													}
 												}	
 												if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
@@ -3589,6 +3623,7 @@ public function alunosNaSemanaAction(){
 															if($entidadeDoFilho20736->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 																$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoFilho20736);
 																$fatosMensal20736 = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+																$relatorioParcial = array();
 																foreach ($fatosMensal20736 as $fatoMensal20736) {
 																	$totalDeCelulas = $fatoMensal20736->$campoCelula + $fatoMensal20736->$campoCelulaBeta;
 																	$fatoMensal20736->setMultiplicadormetasetenta($totalDeCelulas);
@@ -3598,10 +3633,21 @@ public function alunosNaSemanaAction(){
 																			$fatoMensal20736->getSomavisitantes() >= ($metaVisitantes * $fatoMensal20736->getMultiplicadormetasetenta()) &&
 																			$fatoMensal20736->getSomaparceiro() >= ($metaParceiro * $fatoMensal20736->getMultiplicadormetasetenta())
 																		){
-																			$relatorio[] = $fatoMensal20736;
+																			$relatorioParcial[] = $fatoMensal20736;
 																		}
 																	}
 																}
+																if($total = count($relatorioParcial)){
+																	uksort($relatorioParcial, function ($ak, $bk) use ($relatorioParcial) {
+																		$a = $relatorioParcial[$ak];
+																		$b = $relatorioParcial[$bk];
+																		return $a->getNumero_identificador() > $b->getNumero_identificador() ? 1 : -1;
+																	});
+																}
+																foreach($relatorioParcial as $r){
+																	$relatorio[] = $r;
+																}
+
 															}	
 														}
 													}
