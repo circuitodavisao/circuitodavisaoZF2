@@ -36,13 +36,13 @@ echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 if($this->relatorio){
-	foreach($this->relatorio as $relatorioOrdenado => $resultado){
+	foreach($this->relatorio as $idGrupo => $resultado){
 		echo '<tr>';
 		echo '<td>'.$resultado['entidade'].'</td>';
 		if($this->mostrarIgreja){
 			echo '<td>'.$resultado['nomeIgreja'].'</td>';
 		}
-		echo '<td>'.$resultado['lideres'].'</td>';
+		echo '<td>'.$idGrupo . '-' . $resultado['lideres'].'</td>';
 		echo '<td>'.$resultado['linkWhatsapp'].'</td>';
 		echo '<td>'.$resultado['direfenca'].'</td>';
 		echo '</tr>';
