@@ -4373,6 +4373,7 @@ class IndexController extends CircuitoController {
 						if(!$grupo->verificarSeEstaAtivo()){
 							$dataInativacao = $grupo->getData_inativacaoStringPadraoBanco();
 						}
+
 						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo, $dataInativacao);
 
 						if($qualParte > 50){
@@ -4380,6 +4381,21 @@ class IndexController extends CircuitoController {
 						}
 						if ($numeroIdentificador) {
 							$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAtual, $anoAtual);
+							// limpando fato mensal caso a data de inativacao seja de outro periodo
+							$inicioDoMes = $anoAtual.'-'.$mesAtual.'-01';
+							$fimFoMes = $anoAtual.'-'.$mesAtual.'-'.date('t');	
+							$limparDados = false;
+							if($dataInativacao){
+								$limparDados = true;
+								$dataInativacaoTime = strtotime($dataInativacao);
+								$inicioDoMesTime = strtotime($inicioDoMes);
+								$fimDoMesTime = strtotime($fimFoMes);
+								if($dataInativacaoTime >= $inicioDoMesTime &&
+									$dataInativacaoTime <= $fimDoMesTime){
+										$limparDados = false;
+									}
+							}
+
 							if($fatosMensal[1]->entidade === null){
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
@@ -4413,52 +4429,106 @@ class IndexController extends CircuitoController {
 
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
-									$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL1($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb1($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta1($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL1($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb1($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq1(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta1(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq1(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta1(0);
+										$fatosMensal[$indiceFatoMensal]->setL1(0);
+										$fatosMensal[$indiceFatoMensal]->setLb1(0);
+									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 2){
-									$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL2($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb2($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta2($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL2($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb2($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq2(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta2(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq2(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta2(0);
+										$fatosMensal[$indiceFatoMensal]->setL2(0);
+										$fatosMensal[$indiceFatoMensal]->setLb2(0);
+									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 3){
-									$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL3($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb3($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta3($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL3($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb3($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq3(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta3(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq3(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta3(0);
+										$fatosMensal[$indiceFatoMensal]->setL3(0);
+										$fatosMensal[$indiceFatoMensal]->setLb3(0);
+									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 4){
-									$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL4($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb4($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta4($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL4($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb4($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq4(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta4(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq4(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta4(0);
+										$fatosMensal[$indiceFatoMensal]->setL4(0);
+										$fatosMensal[$indiceFatoMensal]->setLb4(0);
+									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
-									$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL5($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb5($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta5($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL5($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb5($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq5(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta5(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq5(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta5(0);
+										$fatosMensal[$indiceFatoMensal]->setL5(0);
+										$fatosMensal[$indiceFatoMensal]->setLb5(0);
+									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 6){
-									$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
-									$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
-									$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
-									$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
-									$fatosMensal[$indiceFatoMensal]->setL6($lideres);
-									$fatosMensal[$indiceFatoMensal]->setLb6($lideresBeta);
+									if(!$limparDados){
+										$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
+										$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta6($membresiaMetaEstrategica);
+										$fatosMensal[$indiceFatoMensal]->setL6($lideres);
+										$fatosMensal[$indiceFatoMensal]->setLb6($lideresBeta);
+									}else{
+										$fatosMensal[$indiceFatoMensal]->setCq6(0);
+										$fatosMensal[$indiceFatoMensal]->setCqmeta6(0);
+										$fatosMensal[$indiceFatoMensal]->setCbq6(0);
+										$fatosMensal[$indiceFatoMensal]->setCbqmeta6(0);
+										$fatosMensal[$indiceFatoMensal]->setL6(0);
+										$fatosMensal[$indiceFatoMensal]->setLb6(0);
+									}
 								}
 								$contadorDePeriodo[1]++;
 							}
