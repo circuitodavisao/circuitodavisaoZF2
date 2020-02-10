@@ -298,9 +298,9 @@ foreach($this->relatorio as $relatorio){
 			$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
 			if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
 				$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
-				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'. $grupoDoLink . ' ' . $relatorio->lideres.'</a>';
+				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'. $idGrupo . ' ' . $relatorio->lideres.'</a>';
 			} else {
-				$linkDeQuemEstaLogado = $grupoDoLink.' '.$relatorio->lideres;
+				$linkDeQuemEstaLogado = $idGrupo.' '.$relatorio->lideres;
 			}		
 
 			echo ' '.$linkDeQuemEstaLogado;
