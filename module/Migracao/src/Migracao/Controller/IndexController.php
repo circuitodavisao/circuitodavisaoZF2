@@ -4385,9 +4385,13 @@ class IndexController extends CircuitoController {
 							$inicioDoMes = $anoAtual.'-'.$mesAtual.'-01';
 							$fimFoMes = $anoAtual.'-'.$mesAtual.'-'.date('t');	
 							$limparDados = false;
-							if($dataInativacao){
+							$dataParaValidar = null;
+							if($grupo->getGrupoResponsavel()[0]){
+								$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
+							}
+							if($dataParaValidar){
 								$limparDados = true;
-								$dataInativacaoTime = strtotime($dataInativacao);
+								$dataInativacaoTime = strtotime($dataParaValidar);
 								$inicioDoMesTime = strtotime($inicioDoMes);
 								$fimDoMesTime = strtotime($fimFoMes);
 								if($qualParte > 50){
