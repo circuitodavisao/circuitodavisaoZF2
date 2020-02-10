@@ -4390,10 +4390,16 @@ class IndexController extends CircuitoController {
 								$dataInativacaoTime = strtotime($dataInativacao);
 								$inicioDoMesTime = strtotime($inicioDoMes);
 								$fimDoMesTime = strtotime($fimFoMes);
+								if($qualParte > 50){
+									$html .= "<br />limpar dados: " . $limparDados;
+								}
 								if($dataInativacaoTime >= $inicioDoMesTime &&
 									$dataInativacaoTime <= $fimDoMesTime){
 										$limparDados = false;
 									}
+								if($qualParte > 50){
+									$html .= "<br />limpar dados: " . $limparDados;
+								}
 							}
 
 							if($qualParte > 50){
