@@ -82,9 +82,9 @@ class GrupoORM extends CircuitoORM {
 
 			$gruposAtivos = array();
             foreach ($grupos as $grupo) {
-                if (count($grupo->getResponsabilidadesAtivas()) > 0) {
+                //if (count($grupo->getResponsabilidadesAtivas()) > 0) {
                     $gruposAtivos[] = $grupo;
-                }
+                //}
             }
  
 			return $gruposAtivos;
