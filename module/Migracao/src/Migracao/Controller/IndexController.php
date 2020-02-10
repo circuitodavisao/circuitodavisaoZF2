@@ -4394,21 +4394,18 @@ class IndexController extends CircuitoController {
 								$dataInativacaoTime = strtotime($dataParaValidar);
 								$inicioDoMesTime = strtotime($inicioDoMes);
 								$fimDoMesTime = strtotime($fimFoMes);
-								if($qualParte > 50){
-									$html .= "<br />limpar dados: " . $limparDados;
-								}
 								if($dataInativacaoTime >= $inicioDoMesTime &&
 									$dataInativacaoTime <= $fimDoMesTime){
 										$limparDados = false;
+										if($qualParte > 50){
+											$html .= "<br />false: " . $limparDados;
+										}
 									}
 								if($qualParte > 50){
 									$html .= "<br />limpar dados: " . $limparDados;
 								}
 							}
 
-							if($qualParte > 50){
-								$html .= "<br />limpar dados: " . $limparDados;
-							}
 
 							if($fatosMensal[1]->entidade === null){
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
