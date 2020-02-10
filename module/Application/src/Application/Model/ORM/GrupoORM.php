@@ -58,8 +58,7 @@ class GrupoORM extends CircuitoORM {
 	public function gruposPorParte($qualParte){
 		$dqlBase = "SELECT g.id "
 			. "FROM  " . Constantes::$ENTITY_GRUPO . " g "
-			. "WHERE "
-			. "g.data_inativacao is null ORDER BY g.id DESC ";
+			. "ORDER BY g.id DESC ";
 		$totalDivisoes = 50;
 		try {
 			$totalDeGrupos = $this->getEntityManager()
