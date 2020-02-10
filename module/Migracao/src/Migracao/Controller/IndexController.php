@@ -4396,6 +4396,10 @@ class IndexController extends CircuitoController {
 									}
 							}
 
+							if($qualParte > 50){
+								$html .= "<br />limpar dados: " . $limparDados;
+							}
+
 							if($fatosMensal[1]->entidade === null){
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
