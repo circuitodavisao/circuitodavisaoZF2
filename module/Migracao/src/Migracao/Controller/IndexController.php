@@ -4387,7 +4387,7 @@ class IndexController extends CircuitoController {
 							$limparDados = false;
 							$dataParaValidar = null;
 							if($grupo->getGrupoResponsavel()[0]){
-								$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBrasil();
+								$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 							}
 							if($dataParaValidar){
 								$limparDados = true;
