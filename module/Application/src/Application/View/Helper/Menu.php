@@ -306,7 +306,7 @@ $link = 'relatorioNovo';
 					break;
 				case 2:
 					$label = 'C&eacute;lulas Realizadas';
-					$mostrar = false;
+					$mostrar = true;
 $link = 'relatorioNovo';
 					break;
 				case 3:
@@ -434,8 +434,7 @@ $link = 'relatorioNovo';
 
 			if($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 				$html .= '<li>';
-				//$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
-				$html .= '<a href="#" onClick="mostrarSplash();">';
+				$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
 				$html .= 'Células não realizadas no período (Manutenção)';
 				$html .= '</a>';
