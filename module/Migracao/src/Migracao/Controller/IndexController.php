@@ -4389,7 +4389,7 @@ class IndexController extends CircuitoController {
 							if($grupo->getGrupoResponsavel()[0]){
 								$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 							}
-							if($dataParaValidar){
+							if($dataParaValidar || $dataInativacao){
 								$limparDados = true;
 								$dataInativacaoTime = strtotime($dataParaValidar);
 								$inicioDoMesTime = strtotime($inicioDoMes);
