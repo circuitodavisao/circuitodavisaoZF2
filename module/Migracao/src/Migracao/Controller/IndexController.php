@@ -4418,6 +4418,7 @@ class IndexController extends CircuitoController {
 							//}
 							$contadorDePeriodo[1] = 1;
 							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
+
 								// celulas
 								$quantidadeCelulas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 1);
 								$quantidadeCelulasEstrategicas = $grupo->getCelulasPorPeriodo($indiceDePeriodos, 2);
@@ -4436,6 +4437,24 @@ class IndexController extends CircuitoController {
 								}
 								if($quantidadeCelulasEstrategicas > 0){
 									$lideresBeta = count($grupo->getResponsabilidadesAtivas());
+								}
+
+								/* validando data de inativacao */
+								if(true){
+									if($dataParaValidar || $dataInativacao){
+										$dataInativacaoTime = strtotime($dataParaValidar);
+										$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
+										$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+										$dataPeriodoTime = strtotime($dataInicialPeriodo);
+										if($dataInicialPeriodo < $dataPeriodoTime_{
+											$quantidadeCelulas = 0;
+											$quantidadeCelulasEstrategicas = 0;
+											$membresiaMeta = 0;
+											$membresiaMetaEstrategica = 0;
+											$lideres = 0;
+											$lideresBeta = 0;
+										}
+									}
 								}
 
 								$indiceFatoMensal = 1;// mes atual
