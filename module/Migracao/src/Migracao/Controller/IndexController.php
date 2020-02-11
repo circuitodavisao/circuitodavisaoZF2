@@ -4440,13 +4440,12 @@ class IndexController extends CircuitoController {
 								}
 
 								/* validando data de inativacao */
-								if(true){
 									if($dataParaValidar || $dataInativacao){
 										$dataInativacaoTime = strtotime($dataParaValidar);
 										$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
 										$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 										$dataPeriodoTime = strtotime($dataInicialPeriodo);
-										if($dataInicialPeriodo < $dataPeriodoTime)_{
+										if($dataInicialPeriodo < $dataPeriodoTime){
 											$quantidadeCelulas = 0;
 											$quantidadeCelulasEstrategicas = 0;
 											$membresiaMeta = 0;
@@ -4455,7 +4454,6 @@ class IndexController extends CircuitoController {
 											$lideresBeta = 0;
 										}
 									}
-								}
 
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
