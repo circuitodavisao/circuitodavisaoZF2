@@ -4446,7 +4446,7 @@ class IndexController extends CircuitoController {
 										$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
 										$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 										$dataPeriodoTime = strtotime($dataInicialPeriodo);
-										if($dataInicialPeriodo < $dataPeriodoTime_{
+										if($dataInicialPeriodo < $dataPeriodoTime)_{
 											$quantidadeCelulas = 0;
 											$quantidadeCelulasEstrategicas = 0;
 											$membresiaMeta = 0;
