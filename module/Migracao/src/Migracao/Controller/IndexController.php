@@ -4440,20 +4440,25 @@ class IndexController extends CircuitoController {
 								}
 
 								/* validando data de inativacao */
-									if($dataParaValidar || $dataInativacao){
-										$dataInativacaoTime = strtotime($dataParaValidar);
-										$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
-										$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
-										$dataPeriodoTime = strtotime($dataInicialPeriodo);
-										if($dataInicialPeriodo < $dataPeriodoTime){
-											$quantidadeCelulas = 0;
-											$quantidadeCelulasEstrategicas = 0;
-											$membresiaMeta = 0;
-											$membresiaMetaEstrategica = 0;
-											$lideres = 0;
-											$lideresBeta = 0;
-										}
+								if($dataParaValidar || $dataInativacao){
+									$dataInativacaoTime = strtotime($dataParaValidar);
+									$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
+									$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+									$dataInicialPeriodoTime = strtotime($dataInicialPeriodo);
+									$zerarDados = true;
+									if($dataInativacaoTime > $dataInicialPeriodoTime){
+										$zerarDados = false;
 									}
+
+									if($zerarDados){
+										$quantidadeCelulas = 0;
+										$quantidadeCelulasEstrategicas = 0;
+										$membresiaMeta = 0;
+										$membresiaMetaEstrategica = 0;
+										$lideres = 0;
+										$lideresBeta = 0;
+									}
+								}
 
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
