@@ -1545,12 +1545,18 @@ class LancamentoController extends CircuitoController {
 			}
 
 			if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual)){
+				if(!($somaParceiro > 0)){
+					$somaParceiro = 0.00;
+				}
 				if($fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual)){
 					$fatoMensal->setSomaparceiro($somaParceiro);
 					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
 				}
 			}
 			if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior)){
+				if(!($somaParceiro > 0)){
+					$somaParceiro = 0.00;
+				}
 				if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior)){
 					$fatoMensalAnterior->setSomaparceiro($somaParceiro);
 					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
