@@ -424,6 +424,13 @@ if(count($this->discipulos) > 0){
 			echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '. $this->funcaoOnClick($funcaoOnClick) .'/ style="margin:auto;">';
 			echo '<div class="caption">';
 			echo '<h5>'.$pessoa->getNomePrimeiro();
+
+			if($pessoa->getTelefone()){
+				$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+			}else{
+				$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
+			}
+			echo '&nbsp;' . $telefone;
 			echo '<br />';
 			echo '<small>'.$nomeHierarquia. '<small>';
 			echo '<br /><small>'.$grupoFilho->getEntidadeAtiva()->infoEntidade(). '<small>';
