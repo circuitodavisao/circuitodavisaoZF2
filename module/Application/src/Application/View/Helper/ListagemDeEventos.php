@@ -420,6 +420,7 @@ class ListagemDeEventos extends AbstractHelper {
             /* Botões */
             if ($tipoCelula) {
                 $validarMostrarCadastro = true;
+				Funcoes::var_dump(date('d/m/Y h:m:s'));
                 $diaDaSemana = date('w');
                 /* segunda */
                 if($diaDaSemana == 1){
