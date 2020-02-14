@@ -2437,6 +2437,8 @@ class CadastroController extends CircuitoController {
 			$solicitacoesTipo[] = $solicitacaoTipo;
 			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
 			$solicitacoesTipo[] = $solicitacaoTipo;
+			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE);
+			$solicitacoesTipo[] = $solicitacaoTipo;
 
 			$trocaDeResponsaveis = $this->getRepositorio()->getTrocaResponsavelORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
 			$dados['trocaDeResponsaveis'] = $trocaDeResponsaveis;
@@ -2554,85 +2556,88 @@ class CadastroController extends CircuitoController {
 		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
 			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 
-			if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE);
 				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
+
+				if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+					$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_IGREJA);
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+					$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::TRANSFERIR_IGREJA);
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+					$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+					$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
+					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				}
+				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
 				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO);
-				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
-				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
-			}
-			$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
-			$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
-			$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
-			$igrejas = array();
-			$equipes = array();
-			$paraOndeTransferir = array();
-			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
-				$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
+				$igrejas = array();
+				$equipes = array();
+				$paraOndeTransferir = array();
+				foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+					$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
 
-				if($grupo12->getEntidadeAtiva() && $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$igrejas[] = $grupo12;
-					foreach($grupo12->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
-						$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
-					}
-				}	
-	
-				if($grupo12->getEntidadeAtiva() 
-					&& ($grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-					|| $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
-						$paraOndeTransferir[] = $grupo12;
-						$grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal();
-						foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
-							$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+					if($grupo12->getEntidadeAtiva() && $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+						$igrejas[] = $grupo12;
+						foreach($grupo12->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+							$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+						}
+					}	
 
-							if($grupo144->getEntidadeAtiva() && $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-								$igrejas[] = $grupo144;
-								foreach($grupo144->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
-									$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
-								}
-							}	
+					if($grupo12->getEntidadeAtiva() 
+						&& ($grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+						|| $grupo12->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+							$paraOndeTransferir[] = $grupo12;
+							$grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal();
+							foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+								$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
 
-							if($grupo144->getEntidadeAtiva() 
-								&& ($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-								|| $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
-									$paraOndeTransferir[] = $grupo144;
-									$grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal();
-									foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
-										$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+								if($grupo144->getEntidadeAtiva() && $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$igrejas[] = $grupo144;
+									foreach($grupo144->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+										$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+									}
+								}	
 
-										if($grupo1728->getEntidadeAtiva() && $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-											$igrejas[] = $grupo1728;
-											foreach($grupo1728->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
-												$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+								if($grupo144->getEntidadeAtiva() 
+									&& ($grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+									|| $grupo144->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+										$paraOndeTransferir[] = $grupo144;
+										$grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal();
+										foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+											$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+
+											if($grupo1728->getEntidadeAtiva() && $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+												$igrejas[] = $grupo1728;
+												foreach($grupo1728->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+													$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+												}
 											}
-										}
 
-										if($grupo1728->getEntidadeAtiva() 
-											&& ($grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
-											|| $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
-												$paraOndeTransferir[] = $grupo1728;
-												$grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal();
-												foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
-													$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+											if($grupo1728->getEntidadeAtiva() 
+												&& ($grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+												|| $grupo1728->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+													$paraOndeTransferir[] = $grupo1728;
+													$grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal();
+													foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+														$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
 
-													if($grupo20736->getEntidadeAtiva() && $grupo20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-														$igrejas[] = $grupo20736;
-														foreach($grupo20736->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
-															$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+														if($grupo20736->getEntidadeAtiva() && $grupo20736->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+															$igrejas[] = $grupo20736;
+															foreach($grupo20736->getGrupoPaiFilhoFilhosAtivosReal() as $gpfEquipe){
+																$equipes[] = $gpfEquipe->getGrupoPaiFilhoFilho();
+															}
 														}
 													}
 												}
-											}
+										}
 									}
-								}
+							}
 						}
-					}
+				}
 			}
-		}
 
 		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
 		$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){

@@ -3,6 +3,7 @@
 use Application\Controller\Helper\Constantes;
 use Application\Controller\CursoController;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\SolicitacaoTipo;
 use Application\View\Helper\BotaoSimples;
 
 $labelVoltar = $this->translate(Constantes::$TRADUCAO_VOLTAR);
@@ -13,6 +14,7 @@ $form->setAttribute(Constantes::$FORM_ACTION, Constantes::$ROUTE_CADASTRO . 'Sol
 echo $this->form()->openTag($form);
 ?>
 <input type="hidden" id="idGrupo" value="<?php echo $this->grupo->getId(); ?>"/>
+<input type="hidden" id="idEntidadeTipo" value="<?php echo $this->entidade->getEntidadeTipo()->getId(); ?>"/>
 <div align="center">
 <div class="panel mw600">
 <div class="panel-heading text-center"><?php echo $this->titulo; ?></div>
@@ -27,7 +29,14 @@ echo $this->form()->openTag($form);
 			<option value="0">SELECIONE</option>
 <?php
 foreach ($this->solicitacaoTipos as $solicitacaoTipo) {
-	echo '<option value="' . $solicitacaoTipo->getId() . '">' . $solicitacaoTipo->getNome() . '</option>';
+	$nome = $solicitacaoTipo->getNome() ;
+	if($this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		|| $this->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+			if($solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE){
+				$nome = 'TRANSFERIR EQUIPE PARA OUTRA IGREJA';
+			}
+		}
+	echo '<option value="' . $solicitacaoTipo->getId().'">'.$nome.'</option>';
 }
 ?>
 		</select>

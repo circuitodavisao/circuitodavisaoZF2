@@ -80,6 +80,12 @@ function selecionarTipo() {
 		$('.grupoLogado').attr('disabled','disabled');
 	}	
 
+	// coordenacao
+	if(document.getElementById('idEntidadeTipo').value == 3 || 
+		document.getElementById('idEntidadeTipo').value == 4){
+		$('#blocoObjeto3').addClass(hidden);
+	}
+
 	if (parseInt($('#solicitacaoTipo').val()) === TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 		parseInt($('#solicitacaoTipo').val()) === UNIR_CASAL ||
 		parseInt($('#solicitacaoTipo').val()) === SEPARAR ||
@@ -450,6 +456,14 @@ function selecionarNomeEquipe() {
 }
 
 function selecionarObjeto(id, informacao) {
+	const splitId = id.split('_')
+	if(splitId.length > 1){
+		id = splitId[0]
+		if(parseInt(splitId[1]) === 1){
+			/* limpar lideres coordenacao e regiao */
+			buscarIgrejas()
+		}
+	}
 	$(stringDivObjetos).removeClass(hidden);
 	if (parseInt(objetoSelecionado) !== 3) {
 		$(stringDivSelecionarLider).addClass(hidden);
@@ -629,6 +643,11 @@ function selecionarObjeto(id, informacao) {
 						if (parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA){
 							valorParaAdicionar = 100;
 						}
+						if(document.getElementById('idEntidadeTipo').value == 3 || 
+							document.getElementById('idEntidadeTipo').value == 4){
+							valorParaAdicionar = 50;
+							$('#blocoObjeto3').addClass(hidden)
+						}
 						atualizarBarraDeProgresso(valorParaAdicionar);
 						verificarSeMostraOBotaoDeContinuar();
 
@@ -755,6 +774,11 @@ function selecionarObjeto(id, informacao) {
 							$('.mulheres').attr('disabled','disabled')
 							let grupoParaMostrar = $('#homem'+id).attr('class');
 							$('.'+grupoParaMostrar).removeAttr('disabled')
+						}
+
+						if(document.getElementById('idEntidadeTipo').value == 3 || 
+						document.getElementById('idEntidadeTipo').value == 4){
+							$('#blocoObjeto3').addClass(hidden)
 						}
 					}
 				}, 'json')
@@ -1174,6 +1198,31 @@ function buscarDiscipulos(idSolicitacaoTipo){
 			if (idSolicitacaoTipo === SUBIR_LIDER) {
 				$('.grupoEquipe').attr('disabled','disabled');
 				$('.grupoLogado').attr('disabled','disabled');
+			}
+		})
+}
+
+function buscarIgrejas(){
+	const url = '/principalBuscarLideresSolicitacaoIgreja'
+	const idGrupo = document.getElementById('idGrupo').value
+	fetch(
+		url,
+		{
+			method: 'POST',	
+			body: JSON.stringify({
+				"token": idGrupo,
+			}),
+		},
+	)
+		.then(resultado => {
+			if(!resultado.ok){
+				console.log('erro ao buscar discipulos para solicitacao')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			if(json.resultado.discipulos){
+				document.getElementById('idLider').innerHTML = json.resultado.discipulos
 			}
 		})
 }
