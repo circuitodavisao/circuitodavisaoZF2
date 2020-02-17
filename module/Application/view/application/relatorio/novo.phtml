@@ -292,15 +292,26 @@ foreach($this->relatorio as $relatorio){
 		}
 
 		echo '<td class="text-left">';
+
+		$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
+		$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+
 		if($ranking !== count($this->relatorio) - 1){
+			if($grupoDoLink->getEntidadeAtiva() && $grupoDoLink->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+				$hiddenCelular = 'hidden-xs hidden-sm';
+				$entidade = $grupoDoLink->getEntidadeAtiva();
+				if($entidade->getSigla()){
+					echo '<span class="hidden-lg hidden-md"> ' . $entidade->getSigla() . '</span>';
+				} else {
+					echo '<span class="label label-dark hidden-lg hidden-md" data-placement="bottom" data-toggle="popover" data-content="Solicite Sua Sigla" style="cursor: pointer;">SSS</span>';
+				}
+			}
 			echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
-			$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
-			$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
 			if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
 				$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
-				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>'. $idGrupo . ' ' . $relatorio->lideres.'</a>';
+				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>' . $relatorio->lideres.'</a>';
 			} else {
-				$linkDeQuemEstaLogado = $idGrupo.' '.$relatorio->lideres;
+				$linkDeQuemEstaLogado = $relatorio->lideres;
 			}		
 
 			echo ' '.$linkDeQuemEstaLogado;
