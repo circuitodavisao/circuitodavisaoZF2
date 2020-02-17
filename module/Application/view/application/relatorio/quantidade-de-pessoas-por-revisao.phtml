@@ -20,7 +20,7 @@ $anoInicial = 2017;
 $anoFinal = date('Y');
 
 ?>
-<div class="row p5">
+<div class="row p15">
 	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 pb10 pt10">Ano</div>
 		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
 			<select name="ano" id="ano" class="form-control">
@@ -55,21 +55,38 @@ echo '</form>';
 		<td></td>	
 <?php
 for($i = 0;$i < count($this->listaDeIndices); $i++){
-echo '<td>'.$this->listaDeIndices[$i].'</td>';
+	echo '<td>'.$this->listaDeIndices[$i].'</td>';
 }
 ?>
+		<td>TOTAL</td>	
 </tr>
 </thead>
 <tbody>
 <?php
+$total = array();
 foreach($this->relatorio as $chave => $valor){
+$totalEquipe = 0;
 	echo '<tr>';
 	echo '<td>'.$chave.'</td>';
-for($i = 0;$i < count($this->listaDeIndices); $i++){
-	echo '<td>'.$valor[$this->listaDeIndices[$i]].'</td>';
-}
+	for($i = 0;$i < count($this->listaDeIndices); $i++){
+		$total[$this->listaDeIndices[$i]] += $valor[$this->listaDeIndices[$i]];
+		$totalEquipe += $valor[$this->listaDeIndices[$i]];
+		echo '<td>'.$valor[$this->listaDeIndices[$i]].'</td>';
+	}
+	echo '<td>'.$totalEquipe.'</td>';
 	echo '</tr>';
 }
+echo '<tr class="dark">';
+
+echo '<td>TOTAL</td>';
+$totalEquipe = 0;
+for($i = 0;$i < count($this->listaDeIndices); $i++){
+	echo '<td>'.$total[$this->listaDeIndices[$i]].'</td>';
+	$totalEquipe += $total[$this->listaDeIndices[$i]];
+}
+	echo '<td>'.$totalEquipe.'</td>';
+echo '</tr>';
+
 ?>
 </tbody>
 </table>
