@@ -1,213 +1,78 @@
-<?php
-use Application\Controller\Helper\Funcoes;
-use Application\View\Helper\BotaoSimples;
-use Application\Controller\RelatorioController;
-
-//Funcoes::var_dump($this->relatorioPessoasNoRevisao);
-echo $this->templateFormularioTopo('Quantidade de pessoas enviadas para o revisão');
-?>
 <style type="text/css">
 	th {
 		text-align: center;
 	}
-	.colunaEspacamento {
-		width: 5px;
-		background-color: #fff;
+	.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+		padding: 0px;
+	}
+	.table-condensed>tbody>tr:hover{
+		font-weight: bold;
 	}
 </style>
-		<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
-		<form action="/relatorioQuantidadeDePessoasPorRevisao" method="post">
-			<div class="row p5">			
-				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
-				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-					<select name="ano" id="ano" class="form-control">
-					<?php
-					$anoInicial = 2017;
-					$anoFinal = date('Y');
-					for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
-						$selected = '';
-						if ($this->anoParaComparar == $indice) {
-							$selected = 'selected';
-						}
-						echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
-					}  
-					?>	
-					</select>
-				</div>
-				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-					<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
-						<span class="ladda-label">Filtrar</span>
-						<span class="ladda-spinner"></span>
-					</button>
-				</div>
-			</div>
-		</form>
 <?php
-
-$contadorDeEventos = 0;
-foreach($this->eventosNoAno as $evento){    
-	$classeBase = 'evento' . $contadorDeEventos . ' ';
-	$classeBase .= 'hidden-xs';
-	$mostrarBotaoEsquerdo = true;
-	if ($contadorDeEventos === 0) {
-		$mostrarBotaoEsquerdo = false;
-	}
-	$mostrarBotaoDireito = true;
-	if ($contadorDeEventos === count($this->eventosNoAno)) {
-		$mostrarBotaoDireito = false;
-	}
-	$funcaoEsquerda = $this->funcaoOnClick('$(".evento' . ($contadorDeEventos - 1) . '").removeClass("hidden-xs");$(".evento' . $contadorDeEventos . '").addClass("hidden-xs");');
-	$funcaoDireita = $this->funcaoOnClick('$(".evento' . ($contadorDeEventos + 1) . '").removeClass("hidden-xs");$(".evento' . $contadorDeEventos . '").addClass("hidden-xs");');
-	$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-	$botaoDireita = $this->botaoSimples('<i class="fa fa-angle-double-right"></i>', $funcaoDireita, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoADireita);
-	echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center ' . $classeBase . '" style="margin-bottom: 17px;"> ';
-	if ($mostrarBotaoEsquerdo) {
-		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
-	}
-	list($ano, $mes, $dia) = explode('-', $evento->getData());
-	$dataDoEvento = $dia . '-' . $mes . '-' . $ano;
-	echo $dataDoEvento;
-	if ($mostrarBotaoDireito) {
-		echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoDireita . '</span>';
-	}
-	echo '</div>';
-	$contadorDeEventos++;
-}
-
-$funcaoEsquerda = $this->funcaoOnClick('$(".evento' . ($contadorDeEventos - 1) . '").removeClass("hidden-xs");$(".evento' . $contadorDeEventos . '").addClass("hidden-xs");');
-$botaoEsquerda = $this->botaoSimples('<i class="fa fa-angle-double-left"></i>', $funcaoEsquerda, BotaoSimples::botaoPequenoImportante, BotaoSimples::posicaoAEsquerda);
-echo '<div class="hidden-lg p5 hidden-md hidden-sm center-block text-center evento'. $contadorDeEventos . '" style="margin-bottom: 17px;"> ';
-echo '<span class="hidden-lg hidden-md hidden-sm">' . $botaoEsquerda . '</span>';
-echo 'FINAL';
-echo '</div>';
+echo $this->templateFormularioTopo('Quantidade de pessoas enviadas para o revisão');
 ?>
-			<div class="p5">
-				<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
-					<thead>
-						<tr class="dark">
-							<th>Times</th>
+<form action="/relatorioQuantidadeDePessoasPorRevisao" method="post">
 <?php
-echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-$contadorDeEventos = 0;
-if(!$this->coordenacaoOuRegiao){
-	foreach($this->eventosNoAno as $evento){	
-		list($ano, $mes, $dia) = explode('-', $evento->getData());
-		$dataDoEvento = $dia . '-' . $mes . '-' . $ano;
-		echo '<th class="hidden-xs evento'.$contadorDeEventos.'" colspan="1">' . $dataDoEvento . '</th>';
-		echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-		$contadorDeEventos++;
-	}
-}
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2017;
+$anoFinal = date('Y');
 
-echo '<th colspan="1" class="evento'.$contadorDeEventos.'">TOTAL</th>';
 ?>
-						</tr>
-						<tr>
-							<th></th>
-<?php
-echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-$contadorDeEventos = 0;
-if(!$this->coordenacaoOuRegiao){
-	foreach($this->eventosNoAno as $evento){
-		echo '<th class="hidden-xs evento'.$contadorDeEventos.'">TOTAL</th>';	
-		echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
-		$contadorDeEventos++;
+<div class="row p5">
+	<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 pb10 pt10">Ano</div>
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+			<select name="ano" id="ano" class="form-control">
+<?php 					
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
 	}
-}
-
-echo '<th class="evento'.$contadorDeEventos.'">TOTAL</th>';
-?>
-						</tr>
-					</thead>
-					<tbody>
-<?php
-if($this->relatorioPessoasNoRevisao){
-	$relatorioPronto = array();
-	$chaves = array();
-	foreach($this->relatorioPessoasNoRevisao as $chave => $relatorio){
-		$adicionar = false;
-		if($chave !== 'total'){
-			$adicionar = true;
-		}
-		if($adicionar){
-			$chaves[] = $chave;
-			$soma = array();
-			$relatorioTime = array();
-			foreach($this->eventosNoAno as $evento){
-				$total = $relatorio[$evento->getId()];		
-				$soma['total'] += $total;		
-				$relatorioTime[$evento->getId()]['total'] = $total;	
-				$relatorioFinal[$evento->getId()]['total'] += $total;			
-			}
-			$relatorioTime['total'] = $soma['total'];	
-			$relatorioPronto[$chave] = $relatorioTime;
-			$relatorioFinal['total'] += $soma['total'];
-		
-		}
-	}
-
-	$tamanhoArray = count($chaves);
-
-	for ($i = 0; $i < $tamanhoArray; $i++) {
-		for ($j = 0; $j < $tamanhoArray; $j++) {
-
-			$chave1 = $chaves[$i];
-			$chave2 = $chaves[$j];
-
-			if ($relatorioPronto[$chave1]['total'] > $relatorioPronto[$chave2]['total']){
-				$aux = $chave1;
-				$chaves[$i] = $chave2;
-				$chaves[$j] = $aux;
-			}
-		}
-	}
-
-	$htmlTime = '';
-	
-	foreach($chaves as $chave){	
-		$relatorioTime = $relatorioPronto[$chave];
-		$corPerformanceGeral = 'dark';
-		$htmlTime .= '<tr>';
-		$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
-		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-		$contadorDeEventos = 0;
-		if(!$this->coordenacaoOuRegiao){
-			foreach($this->eventosNoAno as $evento){
-				$corPerformance = 'dark';
-				$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.' '.$corPerformance.'">' . number_format($relatorioTime[$evento->getId()]['total']) . '</td>';					
-				$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-				$contadorDeEventos++;
-			}
-		}		
-		$htmlTime .= '<td class="'.$corPerformanceGeral.' evento'.$contadorDeEventos.'">' . number_format($relatorioTime['total']) . '</td>';						
-		$htmlTime .= '</tr>';	
-	}
-
-	$htmlTime .= '<tr>';
-	$htmlTime .= '<td>TOTAL</td>';
-	$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
-
-	$somaPerformancesFinal = 0;
-	$contadorDeEventos = 0;
-	if(!$this->coordenacaoOuRegiao){
-		foreach($this->eventosNoAno as $evento){				
-			$htmlTime .= '<td class="hidden-xs evento'.$contadorDeEventos.'">' . number_format($relatorioFinal[$evento->getId()]['total']) . '</td>';		
-			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';		
-			$contadorDeEventos++;
-		}
-	}
-	
-
-	$htmlTime .= '<td class="evento'.$contadorDeEventos.'">' . number_format($relatorioFinal['total']) . '</td>';
-	$htmlTime .= '</tr>';
-
-	echo $htmlTime;
+	echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
 }
 ?>
-					</tbody>
-				</table>
+			</select>
 		</div>
+
+	<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+			<span class="ladda-label">Filtrar</span>
+			<span class="ladda-spinner"></span>
+		</button>
+	</div>
+</div>
+<?php
+echo '</form>';
+
+?>
+
+	<div class="p5">
+			<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+				<thead>
+					<tr class="dark">
+		<td></td>	
+<?php
+for($i = 0;$i < count($this->listaDeIndices); $i++){
+echo '<td>'.$this->listaDeIndices[$i].'</td>';
+}
+?>
+</tr>
+</thead>
+<tbody>
+<?php
+foreach($this->relatorio as $chave => $valor){
+	echo '<tr>';
+	echo '<td>'.$chave.'</td>';
+for($i = 0;$i < count($this->listaDeIndices); $i++){
+	echo '<td>'.$valor[$this->listaDeIndices[$i]].'</td>';
+}
+	echo '</tr>';
+}
+?>
+</tbody>
+</table>
 	</div>
 <?php
 echo $this->templateFormularioRodape();

@@ -440,97 +440,73 @@ class RelatorioController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);		
-		$coordenacaoOuRegiao = false;
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$coordenacaoOuRegiao = true;
-			$gruposEventoRevisao = Array();
-			$grupoPaiFilhoFilhos12 = $entidade->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-			foreach ($grupoPaiFilhoFilhos12 as $filho12) {
-				$grupoFilho12 = $filho12->getGrupoPaiFilhoFilho();
-				$entidadeDoFilho12 = $grupoFilho12->getEntidadeAtiva();
-				if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-					$gruposEventoRevisaoAuxiliar = $grupoFilho12->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
-				}	
-				foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
-					$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
-				}
-				$grupoPaiFilhoFilhos144 = $entidadeDoFilho12->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-				foreach ($grupoPaiFilhoFilhos144 as $filho144) {
-					if($entidadeDoFilho12->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-						$grupoFilho144 = $filho144->getGrupoPaiFilhoFilho();
-						$entidadeDoFilho144 = $grupoFilho144->getEntidadeAtiva();
-						if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-							$gruposEventoRevisaoAuxiliar = $grupoFilho144->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
-						}	
-						foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
-							$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
-						}
-						$grupoPaiFilhoFilhos1728 = $entidadeDoFilho144->getGrupo()->getGrupoPaiFilhoFilhosAtivosReal();
-						foreach ($grupoPaiFilhoFilhos1728 as $filho1728) {
-							if($entidadeDoFilho144->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-								$grupoFilho1728 = $filho1728->getGrupoPaiFilhoFilho();
-								$entidadeDoFilho1728 = $grupoFilho1728->getEntidadeAtiva();
-								if($entidadeDoFilho1728->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-									$gruposEventoRevisaoAuxiliar = $grupoFilho1728->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
-								}	
-								foreach($gruposEventoRevisaoAuxiliar as $grupoEventoRevisaoAuxiliar){
-									$gruposEventoRevisao[] = $grupoEventoRevisaoAuxiliar;
-								}
-							}
-						}
-					}						
-				}				
-			}		
-		}
 
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-			$gruposEventoRevisao = $entidade->getGrupo()->getGrupoIgreja()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoRevisao);
-		}		
-		
-		$grupoEventos = array();
 		$request = $this->getRequest();
-		if ($request->isPost()) {
-			$post_data = $request->getPost();
-			$anoParaComparar = $post_data['ano'];
-		} else {
-			$anoParaComparar = date('Y');
-		}
-		foreach($gruposEventoRevisao as $grupoEvento){  
-			$evento = $grupoEvento->getEvento();
-			list($ano, $mes, $dia) = explode('-', $evento->getData());   			
-            if($ano == $anoParaComparar) {											
-                $eventosNoAno[] = $evento;
-            }            
-		}		
-		$relatorioPessoasNoRevisao = array();
-		foreach($eventosNoAno as $eventoRevisao){
-			$frequencias = $eventoRevisao->getEventoFrequencia();
-			if($frequencias){
-				foreach($frequencias as $frequencia){
-					if($frequencia->getFrequencia() == 'S') {
-						if($frequencia->getPessoa()->getGrupoPessoaAtivo()){
-							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
-							 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-								$nomeNoRelatorio = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
-								getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome();
-							 }
-							 if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe
-							 || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-								$nomeNoRelatorio = $frequencia->getPessoa()->getGrupoPessoaAtivo()->
-								getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-							 }
-							
-							$relatorioPessoasNoRevisao[$nomeNoRelatorio][$eventoRevisao->getId()]++;						
-							$relatorioPessoasNoRevisao['total']++;
-						}										
+		if($request->isPost()){
+			$ano = $_POST['ano'];
+			$relatorio = array();
+			if(
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe ||
+				$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
+			){
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $entidade->getGrupo());
+				$relatorioCursos = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador);
+				$listaDeIndices = array();
+				$listaDeEquipes = array();
+				foreach($relatorioCursos as $fatoCurso){
+					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
+					if($turma->getAno() === intVal($ano)){
+						$tamanhoNumeroIdentificador = strlen($fatoCurso->getNumero_identificador());
+						$numero = '';
+						if($tamanhoNumeroIdentificador === 8){
+							$numero = $fatoCurso->getNumero_identificador();
+						}else{
+							$numeroEquipe = substr($fatoCurso->getNumero_identificador(), 0, 16);
+							$numero = $numeroEquipe;
+						}
+
+						$nome = '';
+						if(!in_array($numero, $listaDeEquipes)){
+							$idGrupo = substr($numero, (count($numero)-8));
+							$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+							if($grupo->getEntidadeAtiva()){
+								$nome = $grupo->getEntidadeAtiva()->getNome();
+								$listaDeEquipes[$numero] = $nome;
+							}
+						}else{
+							$nome = $listaDeEquipes[$numero];
+						}
+
+						$indice = STR_PAD($turma->getMes(),2, '0', STR_PAD_LEFT).'/'.$turma->getAno();
+						$relatorio[$nome][$indice]++;
+						if(!in_array($indice, $listaDeIndices)){
+							$listaDeIndices[] = $indice;
+						}	
 					}
 				}
 			}
+			$dados['ano'] = $ano;
 		}
-		$dados['relatorioPessoasNoRevisao'] = $relatorioPessoasNoRevisao;
-		$dados['coordenacaoOuRegiao'] = $coordenacaoOuRegiao;
-		$dados['anoParaComparar'] = $anoParaComparar;
-		$dados['eventosNoAno'] = $eventosNoAno;
+
+		for($i = 0;$i < count($listaDeIndices);$i++){
+			for($j = 0;$j < count($listaDeIndices);$j++){
+				$a = $listaDeIndices[$i];
+				$b = $listaDeIndices[$j];
+
+				$aMes = explode('/', $a)[0];
+				$bMes = explode('/', $b)[0];
+				if(intVal($aMes) < intVal($bMes)){
+					$aux = $a;
+					$listaDeIndices[$i] = $b;
+					$listaDeIndices[$j] = $aux;
+				}	
+			}
+		}
+
+		$dados['listaDeIndices'] = $listaDeIndices;
+		$dados['relatorio'] = $relatorio;
+
 		return new ViewModel($dados);
 	}
 
@@ -4823,9 +4799,9 @@ public function alunosNaSemanaAction(){
 
 						$divisor = $diferencaDePeriodos;
 						/* validando data de criacao */
-						$dataDeCriacao = $fatoFilho->getData_criacaoStringPadraoBrasil();
+						$dataDeCriacao = $grupoFilho->getData_criacaoStringPadraoBrasil();
 						$explodeData = explode('/', $dataDeCriacao);
-						if(intVal($explodeData[0]) !== 1){
+						if(intVal($explodeData[1]) === intVal($mes) && intVal($explodeData[2]) === intVal($ano)){
 							/* caso sim mudar divisao */
 							$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 							$comecarAContar = false;
@@ -4834,7 +4810,7 @@ public function alunosNaSemanaAction(){
 							for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 								$arrayPeriodo = Funcoes::montaPeriodo($indiceDeArrays);
 								$dataInicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
-								if($dataInicioPeriodo === $fatoFilho->getData_criacaoStringPadraoBanco()){
+								if($dataInicioPeriodo === $grupoFilho->getData_criacaoStringPadraoBanco()){
 									$comecarAContar = true;
 								}
 								if($comecarAContar){
