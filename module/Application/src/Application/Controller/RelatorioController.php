@@ -4821,12 +4821,38 @@ public function alunosNaSemanaAction(){
 						$somaRealizada = $fatoFilho->getRealizada1() + $fatoFilho->getRealizada2() + $fatoFilho->getRealizada3() + $fatoFilho->getRealizada4() + $fatoFilho->getRealizada5() + $fatoFilho->getRealizada6();
 						$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
 
-						$fatoFilho->setMediamem($somaMembresia/$diferencaDePeriodos);
-						$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
-						$fatoFilho->setMediac($somaC/$diferencaDePeriodos);
-						$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
-						$fatoFilho->setMediarealizada($somaRealizada/$diferencaDePeriodos);
-						$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+						$divisor = $diferencaDePeriodos;
+						/* validando data de criacao */
+						$dataDeCriacao = $fatoFilho->getData_criacaoStringPadraoBrasil();
+						$explodeData = explode('/', $dataDeCriacao);
+						if(intVal($explodeData[0]) !== 1){
+							/* caso sim mudar divisao */
+							$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+							$comecarAContar = false;
+							$contador = 0;
+							$contadorNaoMostrar = 1;
+							for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+								$arrayPeriodo = Funcoes::montaPeriodo($indiceDeArrays);
+								$dataInicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
+								if($dataInicioPeriodo === $fatoFilho->getData_criacaoStringPadraoBanco()){
+									$comecarAContar = true;
+								}
+								if($comecarAContar){
+									$contador++;
+								}else{
+									$campo = 'nao'.$contadorNaoMostrar;	
+									$contadorNaoMostrar++;
+									$fatoFilho->$campo = true;
+								}
+							}
+							$divisor = $contador;
+						}
+						$fatoFilho->setMediamem($somaMembresia/$divisor);
+						$fatoFilho->setMediamemp($somaMembresiap/$divisor);
+						$fatoFilho->setMediac($somaC/$divisor);
+						$fatoFilho->setMediacp($somaCp/$divisor);
+						$fatoFilho->setMediarealizada($somaRealizada/$divisor);
+						$fatoFilho->setMediarealizadap($somaRealizadap/$divisor);
 
 						$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
 						$fatoFilho->setMediamempclass($mediaMemPClass);
@@ -4835,7 +4861,6 @@ public function alunosNaSemanaAction(){
 						$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
 						$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
 						$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
-
 					}
 				}
 			}

@@ -334,57 +334,100 @@ foreach($this->relatorio as $relatorio){
 			$cqmeta = 'cqmeta' . $contadorDePeriodos;
 			$cbqmeta = 'cbqmeta' . $contadorDePeriodos;
 
+			$naoMostrar = 'nao' . $contadorDePeriodos;
+			$iconeRetwiter = '<i class="fa fa-retweet"></i>';
 			if ($this->tipoRelatorio == 1) {
-				$cu = 'cu' . $contadorDePeriodos;
-				$a = 'a' . $contadorDePeriodos;
-				$d = 'd' . $contadorDePeriodos;
-				$mem = 'mem' . $contadorDePeriodos;
-				$memp = 'memp' . $contadorDePeriodos;
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp, 0, ',', '.').' %</td>';
+				if($relatorio->$naoMostrar){
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+				}else{
+					$cu = 'cu' . $contadorDePeriodos;
+					$a = 'a' . $contadorDePeriodos;
+					$d = 'd' . $contadorDePeriodos;
+					$mem = 'mem' . $contadorDePeriodos;
+					$memp = 'memp' . $contadorDePeriodos;
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp, 0, ',', '.').' %</td>';
+				}
 			}
 			if ($this->tipoRelatorio == 2){
-				$realizada = 'realizada' . $contadorDePeriodos;
-				$realizadap = 'realizadap' . $contadorDePeriodos;
-				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cq+$relatorio->$cbq), 0 , ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizada, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format((($relatorio->$cq + $relatorio->$cbq) - $relatorio->$realizada), 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizadap, 0, ',', '.').' %</td>';
+				if($relatorio->$naoMostrar){
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+				}else{
+					$realizada = 'realizada' . $contadorDePeriodos;
+					$realizadap = 'realizadap' . $contadorDePeriodos;
+					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cq+$relatorio->$cbq), 0 , ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizada, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format((($relatorio->$cq + $relatorio->$cbq) - $relatorio->$realizada), 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$realizadap, 0, ',', '.').' %</td>';
+				}
 			}
 			if ($this->tipoRelatorio == 3) {
-				$c = 'c' . $contadorDePeriodos;
-				$cp = 'cp' . $contadorDePeriodos;
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0 , ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
+				if($relatorio->$naoMostrar){
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+				}else{
+					$c = 'c' . $contadorDePeriodos;
+					$cp = 'cp' . $contadorDePeriodos;
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0 , ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
+				}
 			}
 			if ($this->tipoRelatorio == 4) {
-				$c = 'c' . $contadorDePeriodos;
-				$cu = 'cu' . $contadorDePeriodos;
-				$a = 'a' . $contadorDePeriodos;
-				$d = 'd' . $contadorDePeriodos;
-				$l = 'l' . $contadorDePeriodos;
-				$totalCelulas = $relatorio->$cq + $relatorio->$cbq;
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$l, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($totalCelulas, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
-				echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
+				if($relatorio->$naoMostrar){
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+				}else{
+					$c = 'c' . $contadorDePeriodos;
+					$cu = 'cu' . $contadorDePeriodos;
+					$a = 'a' . $contadorDePeriodos;
+					$d = 'd' . $contadorDePeriodos;
+					$l = 'l' . $contadorDePeriodos;
+					$totalCelulas = $relatorio->$cq + $relatorio->$cbq;
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$l, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($totalCelulas, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
+				}
 			}
 			$contadorDePeriodos++;
 		}

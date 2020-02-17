@@ -11,6 +11,12 @@ use Doctrine\ORM\Mapping as ORM;
 class FatoMensal extends CircuitoEntity {
 
 	public $cabecalho;
+	public $nao1;
+	public $nao2;
+	public $nao3;
+	public $nao4;
+	public $nao5;
+	public $nao6;
 
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
