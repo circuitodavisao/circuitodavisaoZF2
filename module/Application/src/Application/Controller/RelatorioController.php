@@ -462,16 +462,38 @@ class RelatorioController extends CircuitoController {
 						if($tamanhoNumeroIdentificador === 8){
 							$numero = $fatoCurso->getNumero_identificador();
 						}else{
-							$numeroEquipe = substr($fatoCurso->getNumero_identificador(), 0, 16);
+							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$numeroEquipe = substr($fatoCurso->getNumero_identificador(), 0, 16);
+							}
+							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+								$numeroEquipe = substr($fatoCurso->getNumero_identificador(), 0, 24);
+							}
 							$numero = $numeroEquipe;
 						}
 
 						$nome = '';
 						if(!in_array($numero, $listaDeEquipes)){
-							$idGrupo = substr($numero, (count($numero)-8));
+							$idGrupo = substr($numero, (strlen($numero)-8));
 							$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+							$entidadeSelecionada = null;
 							if($grupo->getEntidadeAtiva()){
-								$nome = $grupo->getEntidadeAtiva()->getNome();
+								$entidadeSelecionada = $grupo->getEntidadeAtiva();
+							}else{
+								$entidadeSelecionada = $grupo->getUltimaEntidadeInativa();
+							}
+							if($entidadeSelecionada){
+								if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$nome = $entidadeSelecionada->getNome();
+								}
+								if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+									$nome = $entidadeSelecionada->infoEntidade();
+									if(strlen($numero) === 16){ // equipe
+										$nome = $entidadeSelecionada->getNome();
+									}
+								}
+								if($nome === ''){
+									$nome = $grupo->getNomeLideresAtivos();
+								}
 								$listaDeEquipes[$numero] = $nome;
 							}
 						}else{
