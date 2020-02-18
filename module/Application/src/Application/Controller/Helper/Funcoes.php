@@ -442,6 +442,14 @@ class Funcoes {
 		if ($periodoFinal == 0) {
 			$periodoFinal = -1;
 		}
+		$diaDaSemana = date('N');
+		$DOMINGO = 7;
+		if(intVal($diaDaSemana) === $DOMINGO){
+			if ($periodoFinal == -1) {
+				$periodoFinal = 0;
+			}
+		}
+	
 		$arrayDePeriodos[0] = $periodoInicial;
 		$arrayDePeriodos[1] = $periodoFinal;
 		return $arrayDePeriodos;
