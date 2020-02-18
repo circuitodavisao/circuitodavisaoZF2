@@ -500,7 +500,7 @@ class RelatorioController extends CircuitoController {
 							$nome = $listaDeEquipes[$numero];
 						}
 
-						$indice = STR_PAD($turma->getMes(),2, '0', STR_PAD_LEFT);
+						$indice = Funcoes::mesPorExtenso($turma->getMes());
 						$relatorio[$nome][$indice]++;
 						if(!in_array($indice, $listaDeIndices)){
 							$listaDeIndices[] = $indice;
