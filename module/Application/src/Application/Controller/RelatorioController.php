@@ -4105,7 +4105,7 @@ public function alunosNaSemanaAction(){
 			if($mes == date('m') && $ano == date('Y')){
 				$arrayPeriodoDoMes[1] = 0;
 			}
-			$periodoParaUsar = $arrayPeriodoDoMes[1];
+			$periodoParaUsar = 1;
 			$tipoSomado = 2;
 
 			$tipoRelatorio = $tipoSomado;
@@ -4113,28 +4113,28 @@ public function alunosNaSemanaAction(){
 
 			if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 				&& $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
-							/* Discipulado */
-					if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior)){
-						$discipulado = $relatorioDiscipulado['media'];
-						$mostrarDiscipulado = true;
+				/* Discipulado */
+				if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($repositorio, $grupo, $mesAnterior, $anoAnterior)){
+					$discipulado = $relatorioDiscipulado['media'];
+					$mostrarDiscipulado = true;
+				}
 
-						if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
-							foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
-								$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
-								if($filho12->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() !== EntidadeTipo::secretario){
-									foreach($filho12->getPessoasAtivas() as $pessoa){
-										if ($pessoa->getSexo() === 'M') {
-											$discipuladoHomens++;
-										}
-										if ($pessoa->getSexo() === 'F') {
-											$discipuladoMulheres++;
-										}
-									}
+				if($grupoPaiFilhoFilhos12 = $grupo->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar)){
+					foreach($grupoPaiFilhoFilhos12 as $grupoFilho12){
+						$filho12 = $grupoFilho12->getGrupoPaiFilhoFilho();								
+						if($filho12->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() !== EntidadeTipo::secretario){
+							foreach($filho12->getPessoasAtivas() as $pessoa){
+								if ($pessoa->getSexo() === 'M') {
+									$discipuladoHomens++;
+								}
+								if ($pessoa->getSexo() === 'F') {
+									$discipuladoMulheres++;
 								}
 							}
 						}
 					}
 				}
+			}
 		}
 
 		$dados = array();
