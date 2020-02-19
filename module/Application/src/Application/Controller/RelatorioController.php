@@ -2835,7 +2835,7 @@ public function alunosNaSemanaAction(){
 				foreach ($fatosMensal as $fatoMensal) {
 					$somaCelulas = $fatoMensal->$campoCelula + $fatoMensal->$campoCelulaBeta;
 					$fatoMensal->setMultiplicadormetasetenta($somaCelulas);
-					if( $fatoMensal->getMultiplicadormetasetenta() > 0){
+					if($fatoMensal->getMultiplicadormetasetenta() > 0){
 						if(
 							$fatoMensal->getSomacelula() >= ($metaCelula * $fatoMensal->getMultiplicadormetasetenta()) &&
 							$fatoMensal->getSomavisitantes() >= ($metaVisitantes * $fatoMensal->getMultiplicadormetasetenta()) &&
