@@ -2280,8 +2280,29 @@ class RelatorioController extends CircuitoController {
 					}
 				}
 			}
+			/* removendo nao lideres */
+			$fatosFitrados = array();
+			foreach($fatosMensal as $fatoMensal){
+				$idGrupo = substr($fatoMensal->getNumero_identificador(), (count($fatoMensal->getNumero_identificador())-8));
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+				if(
+					$grupo->verificarSeEstaAtivo() &&
+					$grupo->getResponsabilidadesAtivas() > 0
+				){
+					if(
+						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula) ||
+						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)
+					){
+						$fatoMensal->setLideres($grupo->getNomeLideresAtivos());
+						if($fatoMensal->getEntidade() == ''){
+							$fatoMensal->setEntidade(' INATIVO');
+						}
+						$fatosFitrados[] = $fatoMensal;
+					}
+				}
+			}
 			$dados['filtrado'] = true;
-			$dados['fatosMensal'] = $fatosMensal;
+			$dados['fatosMensal'] = $fatosFitrados;
 			$dados['repositorio'] = $this->getRepositorio();
 			
 		}else{
