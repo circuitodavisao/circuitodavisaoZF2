@@ -2322,7 +2322,7 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$periodo = -1;
-		if(parseInt(date('N')) === 1){
+		if(intVal(date('N')) === 1){
 			$periodo = 0;
 		}
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
