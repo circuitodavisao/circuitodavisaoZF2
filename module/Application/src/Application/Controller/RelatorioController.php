@@ -2322,6 +2322,9 @@ class RelatorioController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidadeLogada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$periodo = -1;
+		if(parseInt(date('N')) === 1){
+			$periodo = 0;
+		}
 		$arrayPeriodo = Funcoes::montaPeriodo($periodo);
 		$inicioPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 		$dateFormatada = DateTime::createFromFormat('Y-m-d', $inicioPeriodo);
