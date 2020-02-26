@@ -576,9 +576,6 @@ if(count($this->discipulos) > 0){
 			return resultado.json()
 		})
 		.then(json => {
-			document.getElementById('valorMediaCultos').innerHTML = json.resultado.mediaCultos.toFixed(2)
-			document.getElementById('valorMediaArena').innerHTML = json.resultado.mediaArena.toFixed(2)
-			document.getElementById('valorMediaDomingo').innerHTML = json.resultado.mediaDomingo.toFixed(2)
 			let valorCu = ''
 			let valorA = ''
 			let valorD = ''
@@ -638,9 +635,6 @@ if(count($this->discipulos) > 0){
 			return resultado.json()
 		})
 		.then(json => {
-			document.getElementById('mediaCelulaQuantidade').innerHTML = json.resultado.mediaCelulaQuantidade.toFixed(2)
-			document.getElementById('mediaPessoasFrequentes').innerHTML = json.resultado.mediaPessoasFrequentes.toFixed(2)
-			document.getElementById('mediaCelulaRealizadas').innerHTML = json.resultado.mediaCelulaRealizadas.toFixed(2)
 			let valorQ = ''
 			let valorP = ''
 			let valorR = ''
