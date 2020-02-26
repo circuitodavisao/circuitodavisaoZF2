@@ -1068,6 +1068,19 @@ class IndexController extends CircuitoController {
 				$fatoLiderNovo->setNumero_identificador($numeroIdentificadorNovo);
 				$this->getRepositorio()->getFatoLiderORM()->persistir($fatoLiderNovo);
 			}
+
+			/* cadastrar cultos ao subir lider */
+			if($grupoQueRecebera->getEntidadeAtiva() && $grupoQueRecebera->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+				if($grupoEventos = $grupoQueRecebera->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto, $ativo = 1)){
+					foreach($grupoEventos as $grupoEvento){
+						$culto = new GrupoEvento();
+						$culto->setGrupo($grupoNovo);
+						$culto->setEvento($grupoEvento->getEvento());
+						$this->getRepositorio()->getGrupoEventoORM()->persistir($culto);
+					}
+				}
+			}		
+
 			self::inativarEntidadeDoLider($grupoQueSeraSemeado);
 
 			$resultado = array();
