@@ -15,6 +15,7 @@ use Application\Model\Entity\SolicitacaoTipo;
 use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\Situacao;
 use Application\Model\Helper\FuncoesEntidade;
+use Application\View\Helper\ListagemDePessoasComEventos;
 use Application\Model\ORM\RepositorioORM;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -2858,6 +2859,7 @@ public function alunosNaSemanaAction(){
 				$dados['repositorio'] = $this->getRepositorio();
 			}
 			$dados['filtrado'] = true;
+			$dados['entidade'] = $entidade;
 		}else{
 			$mes = date('m');
 			$ano = date('Y');
@@ -5295,5 +5297,112 @@ public function alunosNaSemanaAction(){
 		$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
 
 		return $fatoFilho;
+	}
+
+	public function atualizarDadosSetentaAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				$mes = $json->mes;
+				$ano = $json->ano;
+				$idEntidadeAtual = $sessao->idEntidadeAtual;
+				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+				$grupo = $entidade->getGrupo();
+
+				$numeroIdentificador =
+					$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+				$fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano);
+
+				$somaCelula = 0;
+				$somaVisitantes = 0;
+				$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+				for($indiceDePeriodos = $arrayPeriodoDoMes[0]; $indiceDePeriodos <= $arrayPeriodoDoMes[1]; $indiceDePeriodos++){
+					$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
+
+					/* visitante */
+					if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+						foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+							if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
+								foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+									if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+										|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+
+										$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+										if ($diaDaSemanaDoEvento === 1) {
+											$diaDaSemanaDoEvento = 7; // domingo
+										} else {
+											$diaDaSemanaDoEvento--;
+										}
+										$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+
+										if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+											$somaVisitantes++;
+										}
+									}
+								}
+							}	
+						}
+					}
+
+					/* quantidade de pessoas em celula */
+					foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+						if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+							|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+
+							$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+							if ($diaDaSemanaDoEvento === 1) {
+								$diaDaSemanaDoEvento = 7; // domingo
+							} else {
+								$diaDaSemanaDoEvento--;
+							}
+							$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+
+							$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
+
+							if($semana === 1){
+								$fatoMensal->setC1($quantidade);
+							}
+							if($semana === 2){
+								$fatoMensal->setC2($quantidade);
+							}
+							if($semana === 3){
+								$fatoMensal->setC3($quantidade);
+							}
+							if($semana === 4){
+								$fatoMensal->setC4($quantidade);
+							}
+							if($semana === 5){
+								$fatoMensal->setC5($quantidade);
+							}
+							if($semana === 6){
+								$fatoMensal->setC6($quantidade);
+							}
+							$somaCelula += $quantidade;
+						}
+					}
+
+					$semana++;
+				}
+
+				$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mes, $ano);
+
+				$fatoMensal->setSomaparceiro($somaParceiro);
+				$fatoMensal->setSomavisitantes($somaVisitantes);
+				$fatoMensal->setSomacelula($somaCelula);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
+
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
 	}
 }

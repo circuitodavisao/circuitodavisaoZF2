@@ -32,19 +32,23 @@ if($this->filtrado){
 			$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
 			$nomeLideres = $grupo->getNomeLideresAtivos();
 			$funcaoOnClick = $this->funcaoOnClick('$("#dados'.$idGrupo.'").toggleClass("hidden")');
-			echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 p10 text-center" '.$funcaoOnClick.'>';
+			echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 p10 text-center">';
 			echo $foto;
 			echo '<div class="caption">';
 			echo '<h5>'.$nomeLideres;
 			echo '<br />';
 			echo '<small>'.$infoEntidade. '</small>';
 			echo '</h5>';
-			echo '<span class="label label-primary" style="cursor: pointer;" >Clique Para Mais Informações</span>';
+			echo '<span class="label label-primary" style="cursor: pointer;" '.$funcaoOnClick.'>Clique Para Mais Informações</span>';
 			echo '</div>';
 
 			echo '<div id="dados'.$idGrupo.'" class="hidden">';
 			echo '<div class="panel">';
 			echo '<div class="panel-body">';
+			if(intVal($idGrupo) === $this->entidade->getGrupo()->getId()){
+				$funcaoOnClickAtualizarDadosSetenta = $this->funcaoOnClick('atualizarDadosSetenta()');
+				echo '<span class="label label-primary" style="cursor: pointer;" '.$funcaoOnClickAtualizarDadosSetenta.'>Atualizar dados Setenta</span>';
+			}
 			if($fatoMensal->multiplicadormetasetenta > 0){
 				echo '<table class="table table-bordered table-condesed">';
 				echo '<tr class="dark"><td>Pessoas</td><td>Meta</td></tr>';
@@ -72,3 +76,26 @@ if($this->filtrado){
 
 }
 echo '</div>';
+?>
+<script type='text/javascript'>
+	function atualizarDadosSetenta(){
+		mostrarSplash();
+		const url = '/relatorioAtualizarDadosSetenta'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"mes": "<?php echo $this->mes; ?>",
+					"ano": "<?php echo $this->ano; ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(resultado.ok){
+				document.location.reload(true)
+			}
+		})
+	}
+</script>
+
