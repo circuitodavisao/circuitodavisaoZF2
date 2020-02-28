@@ -640,14 +640,13 @@ function selecionarObjeto(id, informacao) {
 							parseInt($('#solicitacaoTipo').val()) === REMOVER_LIDER) {
 							valorParaAdicionar = 50;
 						}
-						if (parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA){
-
-							valorParaAdicionar = 100;
-						}
 						if(document.getElementById('idEntidadeTipo').value == 3 || 
 							document.getElementById('idEntidadeTipo').value == 4){
 							valorParaAdicionar = 50;
 							$('#blocoObjeto3').addClass(hidden)
+						}
+						if (parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA){
+							valorParaAdicionar = 100;
 						}
 						atualizarBarraDeProgresso(valorParaAdicionar);
 						verificarSeMostraOBotaoDeContinuar();
