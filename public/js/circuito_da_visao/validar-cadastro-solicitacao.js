@@ -641,6 +641,7 @@ function selecionarObjeto(id, informacao) {
 							valorParaAdicionar = 50;
 						}
 						if (parseInt($('#solicitacaoTipo').val()) === REMOVER_IGREJA){
+
 							valorParaAdicionar = 100;
 						}
 						if(document.getElementById('idEntidadeTipo').value == 3 || 
