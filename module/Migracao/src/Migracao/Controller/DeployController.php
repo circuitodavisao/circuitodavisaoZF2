@@ -41,7 +41,8 @@ class DeployController extends CircuitoController {
 			$linkGit = 'github.com/circuitodavisao/circuitodavisaoZf2.git master';
 			$comando = 'git pull https://' . $gitUser . ':' . $gitPassword . '@' . $linkGit;
 			echo '<pre>';
-			passthru($comando);
+			passthru($comando, $retorno);
+			var_dump($retorno);
 			echo '</pre>';
 		} else {
 			echo "Sem token";
