@@ -2569,8 +2569,8 @@ class CadastroController extends CircuitoController {
 					$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO);
 					$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 				}
-				$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
-				$solicitacaoTiposAjustado[] = $solicitacaoTipo;
+				//$solicitacaoTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarPorId(SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA);
+				//$solicitacaoTiposAjustado[] = $solicitacaoTipo;
 
 				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal();
 				$igrejas = array();
