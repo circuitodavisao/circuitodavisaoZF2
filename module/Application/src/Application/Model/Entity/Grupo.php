@@ -479,7 +479,9 @@ class Grupo extends CircuitoEntity {
                             }                            
                         }
                         if($adicionar2){
-                            $todosFilhos[] = $grupoPaiFilhoFilho;						
+							if($grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getEntidadeTipo($original = true)->getId() !== EntidadeTipo::secretario){
+								$todosFilhos[] = $grupoPaiFilhoFilho;						
+							}
                         }                        
 					}
 				}
