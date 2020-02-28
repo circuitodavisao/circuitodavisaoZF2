@@ -53,12 +53,14 @@ class ListagemFichasParaRevisao extends AbstractHelper {
 						$pessoa->setEntidade($grupoPessoa->getGrupo()->getEntidadeAtiva());
 						$pessoas[] = $pessoa;
 					}else{
-						$grupo = $revisionista->getResponsabilidadesAtivas()[0]->getGrupo();
-						$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
-						$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
-						$pessoa->setGrupoPessoa($nomeIgreja);
-						$pessoa->setEntidade($infoEntidade);
-						$lideres[] = $pessoa;
+						if($revisionista->getResponsabilidadesAtivas()){
+							$grupo = $revisionista->getResponsabilidadesAtivas()[0]->getGrupo();
+							$infoEntidade = $grupo->getEntidadeAtiva()->infoEntidade();
+							$nomeIgreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+							$pessoa->setGrupoPessoa($nomeIgreja);
+							$pessoa->setEntidade($infoEntidade);
+							$lideres[] = $pessoa;
+						}
 					}
 				}
 			}
