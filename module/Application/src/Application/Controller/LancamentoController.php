@@ -204,11 +204,7 @@ class LancamentoController extends CircuitoController {
 					}
 			}
 
-			if(
-				$indiceDePeriodos === -2 
-				|| $indiceDePeriodos === -1
-				|| $indiceDePeriodos === 0
-		   	){
+			if($indiceDePeriodos === -1 || $indiceDePeriodos === 0 ){
 				$relatorio = array();
 				foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 					$tipoCampo = 0;
