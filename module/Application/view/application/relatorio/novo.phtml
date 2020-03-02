@@ -322,7 +322,7 @@ foreach($this->relatorio as $relatorio){
 		$contadorDePeriodos = 1;
 		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 			$classeBase = 'periodo' . $indiceDeArrays . ' ';
-			if ($indiceDeArrays != -1) {
+			if ($indiceDeArrays != -1 && $this->periodoInicial != $this->periodoFinal) {
 				$classeBase .= 'hidden-xs';
 			}
 			$classePeriodoAtual = '';
