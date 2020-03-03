@@ -134,15 +134,6 @@ class PrincipalController extends CircuitoController {
 			'selectedAnterior' => $selectedAnterior,
 		);
 
-		$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
-		if ($grupoPaiFilhoFilhos) {
-			$discipulos = array();
-			foreach ($grupoPaiFilhoFilhos as $gpFilho) {
-				$discipulos[] = $gpFilho;
-			}
-			$dados['discipulos'] = $discipulos;
-		}
-
 		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
 			$dados['discipulado'] = $relatorioDiscipulado;
 		}
@@ -907,6 +898,97 @@ class PrincipalController extends CircuitoController {
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
 				$resultado = RelatorioController::buscarDadosPrincipaisInstituto($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
 				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarDadosPrincipaisMeuTimeAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$html = '';
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivos($periodo = 1);
+				if ($grupoPaiFilhoFilhos) {
+					$discipulos = array();
+					foreach ($grupoPaiFilhoFilhos as $gpFilho) {
+						$discipulos[] = $gpFilho;
+					}
+
+					foreach($discipulos as $discipulo){
+						$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
+						$entidade = $grupoFilho->getEntidadeAtiva();
+						foreach($grupoFilho->getPessoasAtivas() as $pessoa){
+							$vendoDiscipulosAbaixo = 'vendoDiscipulosAbaixoPaginaPrincipal';
+							$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipulosAbaixo;
+							$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
+							$nomeHierarquia = 'Sem Hierarquia';
+							if($pessoa->getPessoaHierarquiaAtivo()){
+								$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+								if ($pessoa->getSexo() === 'F') {
+									if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
+										$nomeHierarquia = $nomeFeminino;
+									}
+								}
+							}
+							if($contadorDeDiscipulosPorLinha === 0){
+								$html .= '<div class="row p10">';
+							}
+							$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
+							$html .= '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" onClick=/"'. $funcaoOnClick .'/" style="margin:auto;">';
+							$html .= '<div class="caption">';
+							$html .= '<h5>'.$pessoa->getNomePrimeiro();
+
+							if($pessoa->getTelefone()){
+								$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+							}else{
+								$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
+							}
+							$html .= '&nbsp;' . $telefone;
+							$html .= '<br />';
+							$html .= '<small>'.$nomeHierarquia. '<small>';
+							$html .= '<br /><small>'.$grupoFilho->getEntidadeAtiva()->infoEntidade(). '<small>';
+							/* pegando o ultimo registro de acesso */
+							$ultimoAcesso = 'Nunca acessou';
+							$cor = 'danger';
+							if($registro = $this->getRepositorio()->getRegistroORM()->encontrarUltimoRegistroDeLogin($grupoFilho->getId())){
+								$ultimoAcesso = $registro->getData_criacaoStringPadraoBrasil();
+								$cor = 'success';
+
+								$data1 = date('Y-m-d');
+								$data2 = $registro->getData_criacaoStringPadraoBanco();
+								$d1 = strtotime($data1); 
+								$d2 = strtotime($data2);
+								$dataFinal = ($d2 - $d1) /86400;
+								if($dataFinal < 0){
+									$dataFinal = $dataFinal * -1;
+								}
+								if($dataFinal > 7){
+									$cor = 'warning';
+								}
+							}
+							$html .= '<br /><span class="text text-'.$cor.'">Acesso: ' .$ultimoAcesso. '<span>';
+							$html .= '</h5>';
+							$html .= '</div>';
+							$html .= '</div>';
+							$contadorDeDiscipulosPorLinha++;
+							if($contadorDeDiscipulosPorLinha === 3){
+								$html .= '</div>';
+								$contadorDeDiscipulosPorLinha = 0;
+							}
+						}
+					}
+				}
+
+				$dados['html'] = $html;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}

@@ -375,97 +375,27 @@ Alunos
 
 <?php } ?>
 
-<?php
-if(count($this->discipulos) > 0){
-?>
-<div class="panel user-group-widget">
+<div class="row mb10">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
+<div class="panel panel-collapsed" id="p1">
 
-<div class="panel-heading">
-<span class="panel-icon">
-<i class="fa fa-users"></i>
+<div class="panel-heading ui-sortable-handle">
+Meu Time
+<span class="panel-controls">
+<a href="#" class="panel-control-collapse" onClick="buscarDadosPrincipaisMeuTime()"></a>
 </span>
-<span class="panel-title">Discípulos</span>
 </div>
 
-<div class="panel-body pn">
-
-<?php
-	$contadorDeDiscipulosPorLinha = 0;
-	foreach($this->discipulos as $discipulo){
-		$grupoFilho = $discipulo->getGrupoPaiFilhoFilho();
-		$entidade = $grupoFilho->getEntidadeAtiva();
-		foreach($grupoFilho->getPessoasAtivas() as $pessoa){
-			$vendoDiscipulosAbaixo = 'vendoDiscipulosAbaixoPaginaPrincipal';
-			$idSessao = $pessoa->getId() . '_' . $entidade->getId() . '_' . $vendoDiscipulosAbaixo;
-			$funcaoOnClick = 'mostrarSplash(); funcaoCircuito("principal", "'.$idSessao.'")';
-			$nomeHierarquia = 'Sem Hierarquia';
-			if($pessoa->getPessoaHierarquiaAtivo()){
-				$nomeHierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
-				if ($pessoa->getSexo() === 'F') {
-					if ($nomeFeminino = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino()) {
-						$nomeHierarquia = $nomeFeminino;
-					}
-				}
-			}
-			if($contadorDeDiscipulosPorLinha === 0){
-				echo '<div class="row p10">';
-			}
-			echo '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
-			echo '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" '. $this->funcaoOnClick($funcaoOnClick) .'/ style="margin:auto;">';
-			echo '<div class="caption">';
-			echo '<h5>'.$pessoa->getNomePrimeiro();
-
-			if($pessoa->getTelefone()){
-				$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-			}else{
-				$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
-			}
-			echo '&nbsp;' . $telefone;
-			echo '<br />';
-			echo '<small>'.$nomeHierarquia. '<small>';
-			echo '<br /><small>'.$grupoFilho->getEntidadeAtiva()->infoEntidade(). '<small>';
-			/* pegando o ultimo registro de acesso */
-			$ultimoAcesso = 'Nunca acessou';
-			$cor = 'danger';
-			if($registro = $this->repositorio->getRegistroORM()->encontrarUltimoRegistroDeLogin($grupoFilho->getId())){
-				$ultimoAcesso = $registro->getData_criacaoStringPadraoBrasil();
-				$cor = 'success';
-
-				$data1 = date('Y-m-d');
-				$data2 = $registro->getData_criacaoStringPadraoBanco();
-				$d1 = strtotime($data1); 
-				$d2 = strtotime($data2);
-				$dataFinal = ($d2 - $d1) /86400;
-				if($dataFinal < 0){
-					$dataFinal = $dataFinal * -1;
-				}
-				if($dataFinal > 7){
-					$cor = 'warning';
-				}
-			}
-			echo '<br /><span class="text text-'.$cor.'">Acesso: ' .$ultimoAcesso. '<span>';
-			echo '</h5>';
-			echo '</div>';
-			echo '</div>';
-			$contadorDeDiscipulosPorLinha++;
-			if($contadorDeDiscipulosPorLinha === 3){
-				echo '</div>';
-				$contadorDeDiscipulosPorLinha = 0;
-			}
-		}
-	}
-?>
-
+<div class="panel-body pt10" style="display: none;">
+<div id="divMeuTime">
+	<img src="img/loader.gif" />
+</div>
 </div>
 
 </div>
-
 </div>
-
+</div>
 <!-- fim panel discipulos -->
-<?php
-}
-?>
 
 <?php
 }
@@ -725,6 +655,28 @@ if(count($this->discipulos) > 0){
 				})
 				html += '</div>'	
 			document.getElementById('divAlunos').innerHTML = html
+		})
+	}
+
+	function buscarDadosPrincipaisMeuTime(){
+		const url = '/principalBuscarDadosPrincipaisMeutime'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					"token": "<?php echo $this->grupo->getId(); ?>",
+				}),
+			},
+		)
+		.then(resultado => {
+			if(!resultado.ok){
+				alert('erro ao buscar dados time')
+			}
+			return resultado.json()
+		})
+		.then(json => {
+			document.getElementById('divMeuTime').innerHTML = json.html
 		})
 	}
 	buscarDadosPrincipaisDiscipulado()
