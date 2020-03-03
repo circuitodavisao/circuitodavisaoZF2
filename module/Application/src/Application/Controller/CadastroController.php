@@ -2653,6 +2653,7 @@ class CadastroController extends CircuitoController {
 			}else{
 				foreach($solicitacaoTiposSemAjuste as $solicitacaoTipo){
 					if($solicitacaoTipo->getId() !== SolicitacaoTipo::SUBIR_LIDER
+						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::TRANSFERIR_IGREJA
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO
 						&& $solicitacaoTipo->getId() !== SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO
