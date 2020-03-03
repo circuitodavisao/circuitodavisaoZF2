@@ -139,15 +139,12 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$quantidadeDeCelulas = 0;
 					if($grupo->verificarSeEstaAtivo()){
 						if($numeroIdentificador = $this->repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->repositorio, $grupo)){
-							$fatosMensal = $this->repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), 2);
+							$fatoMensal = $this->repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), 2);
 							$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 							$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
 							$diferenca += 1;
-							echo '<br /><br />'.$diferenca;
 							$campoCelula = 'cq'.$diferenca;
 							$campoCelulaBeta = 'cbq'.$diferenca;
-							echo '<br />'.$fatosMensal->$campoCelula;
-							echo '<br />'.$fatosMensal->$campoCelulaBeta;
 							$quantidadeDeCelulas = $fatoMensal->$campoCelula + $fatoMensal->$campoCelulaBeta;
 								
 						}
