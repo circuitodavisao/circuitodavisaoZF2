@@ -143,9 +143,13 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 							$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
 							$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
 							$diferenca += 1;
+							echo '<br /><br />'.$diferenca;
 							$campoCelula = 'cq'.$diferenca;
 							$campoCelulaBeta = 'cbq'.$diferenca;
+							echo '<br />'.$fatosMensal->$campoCelula;
+							echo '<br />'.$fatosMensal->$campoCelulaBeta;
 							$quantidadeDeCelulas = $fatoMensal->$campoCelula + $fatoMensal->$campoCelulaBeta;
+								
 						}
 					}
 					$dadosObjeto1 .= ' - Celulas: '.$quantidadeDeCelulas;
