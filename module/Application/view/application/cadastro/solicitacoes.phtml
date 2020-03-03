@@ -131,6 +131,9 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				}
 
 				$dadosObjeto1 .= $grupo->getNomeLideresAtivos();
+				if($solicitacao->getSolicitacaoSituacaoAtiva() && $solicitacao->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO){
+					$dadosObjeto1 .= ' - '.$grupo->getEntidadeAtiva()->infoEntidade();
+				}
 				$htmlTbody .= '<td>'.$dadosObjeto1.'</td>';
 
 				switch($solicitacaoTipo->getId()){
