@@ -139,14 +139,20 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 					$quantidadeDeCelulas = 0;
 					if($grupo->verificarSeEstaAtivo()){
 						if($numeroIdentificador = $this->repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->repositorio, $grupo)){
-							$fatoMensal = $this->repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), 2);
-							$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
-							$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
-							$diferenca += 1;
-							$campoCelula = 'cq'.$diferenca;
-							$campoCelulaBeta = 'cbq'.$diferenca;
-							$quantidadeDeCelulas = $fatoMensal->$campoCelula + $fatoMensal->$campoCelulaBeta;
-								
+							$fatoMensalSomado = $this->repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador, date('m'), date('Y'), 2);
+							$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno(date('m'), date('Y'));
+							$contadorDePeriodos = 0;
+							for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
+								$contadorDePeriodos++;
+							}
+							if($contadorDePeriodos === 0){
+								$contadorDePeriodos = 1;
+							}
+							$cq = 'cq'.$contadorDePeriodos;
+							$cbq = 'cbq'.$contadorDePeriodos;
+							$celulasBoas = $fatoMensalSomado[$cq];
+							$celulasBetas = $fatoMensalSomado[$cbq];
+							$quantidadeDeCelulas = $celulasBoas + $celulasBetas;
 						}
 					}
 					$dadosObjeto1 .= ' - Celulas: '.$quantidadeDeCelulas;
