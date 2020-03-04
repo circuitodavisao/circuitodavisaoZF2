@@ -29,6 +29,7 @@ use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\FatoDiscipulado;
 use Application\Model\Entity\FatoSetenta;
 use Application\Model\Entity\FatoMensal;
+use Application\Model\Entity\Envio;
 use Application\Model\ORM\RepositorioORM;
 use Application\View\Helper\ListagemDePessoasComEventos;
 use DateTime;
@@ -491,6 +492,12 @@ class LancamentoController extends CircuitoController {
 				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 			}
 		}
+
+		$envio = new Envio();
+		$envio->setGrupo_id($grupo->getId());
+		$envio->setStatus(1);
+		$envio->setDataEHoraDeCriacao();
+		$this->getRepositorio()->getEnvioORM()->persistir($envio);
 
 		$this->getRepositorio()->fecharTransacao();
 

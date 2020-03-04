@@ -75,6 +75,7 @@ class RepositorioORM {
 	private $_fatoDiscipuladoORM;
 	private $_fatoCelulaDiscipuladoORM;
 	private $_fatoMensalORM;
+	private $_envioORM;
 
     /**
      * Contrutor
@@ -753,6 +754,13 @@ class RepositorioORM {
 			$this->_grupoEventoORM = new GrupoEventoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_GRUPO_EVENTO);
         }
         return $this->_grupoEventoORM;
+    }
+
+    public function getEnvioORM() {
+        if (is_null($this->_envioORM)) {
+			$this->_envioORM = new EnvioORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ENVIO);
+        }
+        return $this->_envioORM;
     }
 
     /**

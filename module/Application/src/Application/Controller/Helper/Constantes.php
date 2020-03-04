@@ -176,6 +176,7 @@ class Constantes {
     public static $FORM_STRING_FUNCAO_DESABILITAR_ELEMENTO = 'desabilitarElemento(\'#id\')';
 
     /* Entidade do banco de dados */
+    public static $ENTITY_ENVIO = 'Application\Model\Entity\Envio';
     public static $ENTITY_PESSOA = 'Application\Model\Entity\Pessoa';
     public static $ENTITY_ENTIDADE = 'Application\Model\Entity\Entidade';
     public static $ENTITY_ENTIDADE_TIPO = 'Application\Model\Entity\EntidadeTipo';

@@ -1,0 +1,20 @@
+-- Table: public.envio
+
+-- DROP TABLE public.envio;
+
+CREATE TABLE public.envio
+(
+    id serial NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+	grupo_id bigint NOT NULL,
+	status int not null default 1
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.envio
+    OWNER to postgres;
