@@ -4831,7 +4831,7 @@ class IndexController extends CircuitoController {
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
-		$html .= '<h1>Envio do Mes Anterior</h1>';
+		//$html .= '<h1>Envio do Mes Anterior</h1>';
 		try {
 			$mesAtual = date('m');
 			$anoAtual = date('Y');
@@ -4855,8 +4855,8 @@ class IndexController extends CircuitoController {
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						$somaVisitantes = 0;
-							$html .= '<br /><br />grupo: '.$grupo->getId();
-							$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
+							//$html .= '<br /><br />grupo: '.$grupo->getId();
+							//$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
 
 						$semana = 1;
 						$numeroIdentificador =
@@ -4866,33 +4866,8 @@ class IndexController extends CircuitoController {
 						$somaCelula = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 							$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
-								$html .= '<br /><br /><br />periodo: '.$in;
-								$html .= '<br />semana: '.$semana;
-
-							/* visitante */
-							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
-								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
-										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
-												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
-
-												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-												if ($diaDaSemanaDoEvento === 1) {
-													$diaDaSemanaDoEvento = 7; // domingo
-												} else {
-													$diaDaSemanaDoEvento--;
-												}
-												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-
-												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													$somaVisitantes++;
-												}
-											}
-										}
-									}	
-								}
-							}
+								//$html .= '<br /><br /><br />periodo: '.$in;
+								//$html .= '<br />semana: '.$semana;
 
 							$contadorCelulasRealizadas = 0;
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
@@ -4909,7 +4884,7 @@ class IndexController extends CircuitoController {
 									|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
 
 									$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
-									$html .= '<br />celula: '. $quantidade;
+									//$html .= '<br />celula: '. $quantidade;
 
 									if($quantidade > 0 ){
 										$contadorCelulasRealizadas++;
@@ -4974,7 +4949,7 @@ class IndexController extends CircuitoController {
 									}
 
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
-										$html .= '<br />culto: '. $quantidade;
+										//$html .= '<br />culto: '. $quantidade;
 										if($semana === 1){
 											$fatoMensalAnterior->setCu1($quantidade);
 										}
@@ -4996,7 +4971,7 @@ class IndexController extends CircuitoController {
 									}
 
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
-										$html .= '<br />arena: '. $quantidade;
+										//$html .= '<br />arena: '. $quantidade;
 										if($semana === 1){
 											$fatoMensalAnterior->setA1($quantidade);
 										}
@@ -5017,7 +4992,7 @@ class IndexController extends CircuitoController {
 										}
 									}
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
-										$html .= '<br />domingo: '. $quantidade;
+										//$html .= '<br />domingo: '. $quantidade;
 										if($semana === 1){
 											$fatoMensalAnterior->setD1($quantidade);
 										}
@@ -5040,7 +5015,7 @@ class IndexController extends CircuitoController {
 								}
 							}
 
-							$html .= '<br />realizada: '. $contadorCelulasRealizadas;
+							//$html .= '<br />realizada: '. $contadorCelulasRealizadas;
 							if($semana === 1){
 								$fatoMensalAnterior->setRealizada1($contadorCelulasRealizadas);
 							}
@@ -5063,8 +5038,8 @@ class IndexController extends CircuitoController {
 							$semana++;
 						}
 
-						$html .= '<br /><br />visitantes: '.$somaVisitantes;
-						$html .= '<br /><br />soma celulas: '.$somaCelula;
+						//$html .= '<br /><br />visitantes: '.$somaVisitantes;
+						//$html .= '<br /><br />soma celulas: '.$somaCelula;
 						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
