@@ -4861,6 +4861,7 @@ class IndexController extends CircuitoController {
 						$numeroIdentificador =
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+						$quantidade = 0;
 						$fatoMensalAnterior->setC1($quantidade);
 						$fatoMensalAnterior->setC2($quantidade);
 						$fatoMensalAnterior->setC3($quantidade);
