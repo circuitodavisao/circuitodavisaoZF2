@@ -1617,19 +1617,23 @@ class LancamentoController extends CircuitoController {
 				$anoAnterior = $anoAtual;
 			}
 
-			if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual)){
-				if($fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual)){
-					$fatoMensal->setSomaparceiro($somaParceiro);
-					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
-				}
+			$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual);
+			if(!($somaParceiro > 0)){
+				$somaParceiro = 0.00;
 			}
-			if($somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior)){
-				if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior)){
-					$fatoMensalAnterior->setSomaparceiro($somaParceiro);
-					$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
-				}
+			if($fatoMensal = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAtual, $anoAtual)){
+				$fatoMensal->setSomaparceiro($somaParceiro);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensal, false);
 			}
-			/* fim */
+			$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior);
+			if(!($somaParceiro > 0)){
+				$somaParceiro = 0.00;
+			}
+			if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($fatoFinanceiro->getNumero_identificador(), $mesAnterior, $anoAnterior)){
+				$fatoMensalAnterior->setSomaparceiro($somaParceiro);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
+			}
+				/* fim */
 
 			self::registrarLog(RegistroAcao::ACEITOU_PARCEIRO_DE_DEUS, $extra = 'Id: '.$fatoFinanceiro->getId());
 			$this->getRepositorio()->fecharTransacao();
