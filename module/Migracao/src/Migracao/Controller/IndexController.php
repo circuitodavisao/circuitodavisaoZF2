@@ -4894,49 +4894,6 @@ class IndexController extends CircuitoController {
 							//$html .= '<br /><br /><br />periodo: '.$in;
 							//$html .= '<br />semana: '.$semana;
 
-							/* visitante */
-							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
-								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
-										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
-												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
-
-												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-												if ($diaDaSemanaDoEvento === 1) {
-													$diaDaSemanaDoEvento = 7; // domingo
-												} else {
-													$diaDaSemanaDoEvento--;
-												}
-												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-
-												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													$somaVisitantes++;
-												}
-											}
-										}
-									}	
-								}
-							}
-							if($semana === 1){
-								$fatoMensalAnterior->setV1($somaVisitantes);
-							}
-							if($semana === 2){
-								$fatoMensalAnterior->setV2($somaVisitantes);
-							}
-							if($semana === 3){
-								$fatoMensalAnterior->setV3($somaVisitantes);
-							}
-							if($semana === 4){
-								$fatoMensalAnterior->setV4($somaVisitantes);
-							}
-							if($semana === 5){
-								$fatoMensalAnterior->setV5($somaVisitantes);
-							}
-							if($semana === 6){
-								$fatoMensalAnterior->setV6($somaVisitantes);
-							}
-
 							$contadorCelulasRealizadas = 0;
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 								$quantidade = 0;
