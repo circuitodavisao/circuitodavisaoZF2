@@ -4861,6 +4861,30 @@ class IndexController extends CircuitoController {
 						$numeroIdentificador =
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
+						$fatoMensalAnterior->setC1($quantidade);
+						$fatoMensalAnterior->setC2($quantidade);
+						$fatoMensalAnterior->setC3($quantidade);
+						$fatoMensalAnterior->setC4($quantidade);
+						$fatoMensalAnterior->setC5($quantidade);
+						$fatoMensalAnterior->setC6($quantidade);
+						$fatoMensalAnterior->setCu1($quantidade);
+						$fatoMensalAnterior->setCu2($quantidade);
+						$fatoMensalAnterior->setCu3($quantidade);
+						$fatoMensalAnterior->setCu4($quantidade);
+						$fatoMensalAnterior->setCu5($quantidade);
+						$fatoMensalAnterior->setCu6($quantidade);
+						$fatoMensalAnterior->setA1($quantidade);
+						$fatoMensalAnterior->setA2($quantidade);
+						$fatoMensalAnterior->setA3($quantidade);
+						$fatoMensalAnterior->setA4($quantidade);
+						$fatoMensalAnterior->setA5($quantidade);
+						$fatoMensalAnterior->setA6($quantidade);
+						$fatoMensalAnterior->setD1($quantidade);
+						$fatoMensalAnterior->setD2($quantidade);
+						$fatoMensalAnterior->setD3($quantidade);
+						$fatoMensalAnterior->setD4($quantidade);
+						$fatoMensalAnterior->setD5($quantidade);
+						$fatoMensalAnterior->setD6($quantidade);
 
 						$somaCelula = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
@@ -4913,34 +4937,8 @@ class IndexController extends CircuitoController {
 							}
 
 							$contadorCelulasRealizadas = 0;
-							$quantidade = 0;
-							$fatoMensalAnterior->setC1($quantidade);
-							$fatoMensalAnterior->setC2($quantidade);
-							$fatoMensalAnterior->setC3($quantidade);
-							$fatoMensalAnterior->setC4($quantidade);
-							$fatoMensalAnterior->setC5($quantidade);
-							$fatoMensalAnterior->setC6($quantidade);
-							$fatoMensalAnterior->setCu1($quantidade);
-							$fatoMensalAnterior->setCu2($quantidade);
-							$fatoMensalAnterior->setCu3($quantidade);
-							$fatoMensalAnterior->setCu4($quantidade);
-							$fatoMensalAnterior->setCu5($quantidade);
-							$fatoMensalAnterior->setCu6($quantidade);
-							$fatoMensalAnterior->setA1($quantidade);
-							$fatoMensalAnterior->setA2($quantidade);
-							$fatoMensalAnterior->setA3($quantidade);
-							$fatoMensalAnterior->setA4($quantidade);
-							$fatoMensalAnterior->setA5($quantidade);
-							$fatoMensalAnterior->setA6($quantidade);
-							$fatoMensalAnterior->setD1($quantidade);
-							$fatoMensalAnterior->setD2($quantidade);
-							$fatoMensalAnterior->setD3($quantidade);
-							$fatoMensalAnterior->setD4($quantidade);
-							$fatoMensalAnterior->setD5($quantidade);
-							$fatoMensalAnterior->setD6($quantidade);
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 								$quantidade = 0;
-
 								$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
 								if ($diaDaSemanaDoEvento === 1) {
 									$diaDaSemanaDoEvento = 7; // domingo
@@ -5024,7 +5022,6 @@ class IndexController extends CircuitoController {
 									}
 
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
-										//$html .= '<br />culto: '. $quantidade;
 										if($semana === 1){
 											$quantidade += $fatoMensalAnterior->getCu1();
 											$fatoMensalAnterior->setCu1($quantidade);
