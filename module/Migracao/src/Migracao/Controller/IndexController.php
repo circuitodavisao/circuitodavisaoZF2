@@ -4854,9 +4854,8 @@ class IndexController extends CircuitoController {
 				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
-						$somaVisitantes = 0;
-							//$html .= '<br /><br />grupo: '.$grupo->getId();
-							//$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
+						//$html .= '<br /><br />grupo: '.$grupo->getId();
+						//$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
 
 						$semana = 1;
 						$numeroIdentificador =
@@ -4865,11 +4864,80 @@ class IndexController extends CircuitoController {
 
 						$somaCelula = 0;
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+							$somaVisitantes = 0;
 							$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
-								//$html .= '<br /><br /><br />periodo: '.$in;
-								//$html .= '<br />semana: '.$semana;
+							//$html .= '<br /><br /><br />periodo: '.$in;
+							//$html .= '<br />semana: '.$semana;
+
+							/* visitante */
+							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
+										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+
+												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+												if ($diaDaSemanaDoEvento === 1) {
+													$diaDaSemanaDoEvento = 7; // domingo
+												} else {
+													$diaDaSemanaDoEvento--;
+												}
+												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+
+												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+													$somaVisitantes++;
+												}
+											}
+										}
+									}	
+								}
+							}
+							if($semana === 1){
+								$fatoMensalAnterior->setV1($somaVisitantes);
+							}
+							if($semana === 2){
+								$fatoMensalAnterior->setV2($somaVisitantes);
+							}
+							if($semana === 3){
+								$fatoMensalAnterior->setV3($somaVisitantes);
+							}
+							if($semana === 4){
+								$fatoMensalAnterior->setV4($somaVisitantes);
+							}
+							if($semana === 5){
+								$fatoMensalAnterior->setV5($somaVisitantes);
+							}
+							if($semana === 6){
+								$fatoMensalAnterior->setV6($somaVisitantes);
+							}
 
 							$contadorCelulasRealizadas = 0;
+							$quantidade = 0;
+							$fatoMensalAnterior->setC1($quantidade);
+							$fatoMensalAnterior->setC2($quantidade);
+							$fatoMensalAnterior->setC3($quantidade);
+							$fatoMensalAnterior->setC4($quantidade);
+							$fatoMensalAnterior->setC5($quantidade);
+							$fatoMensalAnterior->setC6($quantidade);
+							$fatoMensalAnterior->setCu1($quantidade);
+							$fatoMensalAnterior->setCu2($quantidade);
+							$fatoMensalAnterior->setCu3($quantidade);
+							$fatoMensalAnterior->setCu4($quantidade);
+							$fatoMensalAnterior->setCu5($quantidade);
+							$fatoMensalAnterior->setCu6($quantidade);
+							$fatoMensalAnterior->setA1($quantidade);
+							$fatoMensalAnterior->setA2($quantidade);
+							$fatoMensalAnterior->setA3($quantidade);
+							$fatoMensalAnterior->setA4($quantidade);
+							$fatoMensalAnterior->setA5($quantidade);
+							$fatoMensalAnterior->setA6($quantidade);
+							$fatoMensalAnterior->setD1($quantidade);
+							$fatoMensalAnterior->setD2($quantidade);
+							$fatoMensalAnterior->setD3($quantidade);
+							$fatoMensalAnterior->setD4($quantidade);
+							$fatoMensalAnterior->setD5($quantidade);
+							$fatoMensalAnterior->setD6($quantidade);
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 
 								$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
@@ -4891,21 +4959,27 @@ class IndexController extends CircuitoController {
 									}
 
 									if($semana === 1){
+										$quantidade += $fatoMensalAnterior->getC1();
 										$fatoMensalAnterior->setC1($quantidade);
 									}
 									if($semana === 2){
+										$quantidade += $fatoMensalAnterior->getC2();
 										$fatoMensalAnterior->setC2($quantidade);
 									}
 									if($semana === 3){
+										$quantidade += $fatoMensalAnterior->getC3();
 										$fatoMensalAnterior->setC3($quantidade);
 									}
 									if($semana === 4){
+										$quantidade += $fatoMensalAnterior->getC4();
 										$fatoMensalAnterior->setC4($quantidade);
 									}
 									if($semana === 5){
+										$quantidade += $fatoMensalAnterior->getC5();
 										$fatoMensalAnterior->setC5($quantidade);
 									}
 									if($semana === 6){
+										$quantidade += $fatoMensalAnterior->getC6();
 										$fatoMensalAnterior->setC6($quantidade);
 									}
 									$somaCelula += $quantidade;
@@ -4951,21 +5025,27 @@ class IndexController extends CircuitoController {
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
 										//$html .= '<br />culto: '. $quantidade;
 										if($semana === 1){
+											$quantidade += $fatoMensalAnterior->getCu1();
 											$fatoMensalAnterior->setCu1($quantidade);
 										}
 										if($semana === 2){
+											$quantidade += $fatoMensalAnterior->getCu2();
 											$fatoMensalAnterior->setCu2($quantidade);
 										}
 										if($semana === 3){
+											$quantidade += $fatoMensalAnterior->getCu3();
 											$fatoMensalAnterior->setCu3($quantidade);
 										}
 										if($semana === 4){
+											$quantidade += $fatoMensalAnterior->getCu4();
 											$fatoMensalAnterior->setCu4($quantidade);
 										}
 										if($semana === 5){
+											$quantidade += $fatoMensalAnterior->getCu5();
 											$fatoMensalAnterior->setCu5($quantidade);
 										}
 										if($semana === 6){
+											$quantidade += $fatoMensalAnterior->getCu6();
 											$fatoMensalAnterior->setCu6($quantidade);
 										}
 									}
@@ -4973,42 +5053,54 @@ class IndexController extends CircuitoController {
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
 										//$html .= '<br />arena: '. $quantidade;
 										if($semana === 1){
+											$quantidade += $fatoMensalAnterior->getA1();
 											$fatoMensalAnterior->setA1($quantidade);
 										}
 										if($semana === 2){
+											$quantidade += $fatoMensalAnterior->getA2();
 											$fatoMensalAnterior->setA2($quantidade);
 										}
 										if($semana === 3){
+											$quantidade += $fatoMensalAnterior->getA3();
 											$fatoMensalAnterior->setA3($quantidade);
 										}
 										if($semana === 4){
+											$quantidade += $fatoMensalAnterior->getA4();
 											$fatoMensalAnterior->setA4($quantidade);
 										}
 										if($semana === 5){
+											$quantidade += $fatoMensalAnterior->getA5();
 											$fatoMensalAnterior->setA5($quantidade);
 										}
 										if($semana === 6){
+											$quantidade += $fatoMensalAnterior->getA6();
 											$fatoMensalAnterior->setA6($quantidade);
 										}
 									}
 									if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
 										//$html .= '<br />domingo: '. $quantidade;
 										if($semana === 1){
+											$quantidade += $fatoMensalAnterior->getD1();
 											$fatoMensalAnterior->setD1($quantidade);
 										}
 										if($semana === 2){
+											$quantidade += $fatoMensalAnterior->getD2();
 											$fatoMensalAnterior->setD2($quantidade);
 										}
 										if($semana === 3){
+											$quantidade += $fatoMensalAnterior->getD3();
 											$fatoMensalAnterior->setD3($quantidade);
 										}
 										if($semana === 4){
+											$quantidade += $fatoMensalAnterior->getD4();
 											$fatoMensalAnterior->setD4($quantidade);
 										}
 										if($semana === 5){
+											$quantidade += $fatoMensalAnterior->getD5();
 											$fatoMensalAnterior->setD5($quantidade);
 										}
 										if($semana === 6){
+											$quantidade += $fatoMensalAnterior->getD6();
 											$fatoMensalAnterior->setD6($quantidade);
 										}
 									}
