@@ -4939,6 +4939,7 @@ class IndexController extends CircuitoController {
 							$fatoMensalAnterior->setD5($quantidade);
 							$fatoMensalAnterior->setD6($quantidade);
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+								$quantidade = 0;
 
 								$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
 								if ($diaDaSemanaDoEvento === 1) {
