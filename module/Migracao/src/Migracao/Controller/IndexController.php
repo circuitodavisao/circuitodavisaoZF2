@@ -4894,6 +4894,33 @@ class IndexController extends CircuitoController {
 							//$html .= '<br /><br /><br />periodo: '.$in;
 							//$html .= '<br />semana: '.$semana;
 
+							/* visitante */
+							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
+										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+
+												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+												if ($diaDaSemanaDoEvento === 1) {
+													$diaDaSemanaDoEvento = 7; // domingo
+												} else {
+													$diaDaSemanaDoEvento--;
+												}
+												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+												//$html .= '<br />dia: '.$diaRealDoEvento;
+
+												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+													//$html .= '<br /> visitante ok';
+													$somaVisitantes++;
+												}
+											}
+										}
+									}	
+								}
+							}
+
 							$contadorCelulasRealizadas = 0;
 							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 								$quantidade = 0;
@@ -5086,8 +5113,6 @@ class IndexController extends CircuitoController {
 							$semana++;
 						}
 
-						//$html .= '<br /><br />visitantes: '.$somaVisitantes;
-						//$html .= '<br /><br />soma celulas: '.$somaCelula;
 						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
