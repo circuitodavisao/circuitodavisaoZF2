@@ -135,7 +135,7 @@ class FatoFinanceiroORM extends CircuitoORM {
 
 	public function pegarValorSomadoDoMesDeCelulas($numero_identificador, $mes, $ano){
 		$dataInicial = '01-' . str_pad($mes, 2 , '0',STR_PAD_LEFT) . '-' . $ano;
-		$ultimoDiaDomes = 28;
+		$ultimoDiaDomes = 29;
 		if(
 			$mes == 1 ||
 			$mes == 3 ||
