@@ -3453,12 +3453,12 @@ class IndexController extends CircuitoController {
 							$semana++;
 						}
 
-						$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
-						if(!($somaParceiro > 0)){
-							$somaParceiro = 0.00;
-						}
-
-						$fatoMensalAnterior->setSomaparceiro($somaParceiro);
+//						$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
+//						if(!($somaParceiro > 0)){
+//							$somaParceiro = 0.00;
+//						}
+//
+//						$fatoMensalAnterior->setSomaparceiro($somaParceiro);
 						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						//$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
