@@ -3263,7 +3263,9 @@ class IndexController extends CircuitoController {
 												//$html .= '<br />dia: '.$diaRealDoEvento;
 
 												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													//$html .= '<br /> visitante ok';
+													if($qualParte > 50){
+														$html .= '<br /> visitantes: ' . $somaVisitantes;
+													}
 													$somaVisitantes++;
 												}
 											}
