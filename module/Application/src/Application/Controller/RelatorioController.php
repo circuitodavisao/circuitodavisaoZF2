@@ -5162,8 +5162,7 @@ public function alunosNaSemanaAction(){
 
 		if((int) $tipoRelatorio !== 4){/* resumo */
 			// ordernar os malucos
-			//$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
-			$filhosOrdenado = $todosFilhos;
+			$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
 			foreach($filhosOrdenado as $filho){
 				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 				$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
