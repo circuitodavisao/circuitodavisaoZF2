@@ -1,0 +1,105 @@
+ <style type="text/css">
+ th {
+   text-align: center;
+ }
+ .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+   padding: 0px;
+ }
+ .table-condensed>tbody>tr:hover{
+   font-weight: bold;
+ }
+ </style>
+<?php
+
+use Application\Controller\Helper\Funcoes;
+
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2017;
+$anoFinal = date('Y');
+
+$html = '';
+$label = 'Ranking Setenta';
+$html .= $this->templateFormularioTopo($label);
+$html .= '<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">';
+
+$html .= '<form id="formulario" method="POST" action="/relatorioSetentaBispa" >';
+
+// div mes ano
+$html .= '<div class="row p5">';
+$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">';
+$html .= 'Mês';
+$html .= '</div>';
+$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
+$html .= '<select name="mes" id="mes" class="form-control">';
+for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+	$selected = '';
+	if ($this->mes == $indice) {
+		$selected = 'selected';
+	}
+
+	$html .= '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10"">';
+$html .= 'Ano';
+$html .= '</div>';
+$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">';
+$html .= '<select name="ano" id="ano" class="form-control">';
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
+	}
+	$html .= '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+$html .= '</div>';
+// fim div mes ano
+
+$html .= '<div class="row p10">';
+$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pb10 pt10">';
+$html .= '<button type="button" class="btn btn-primary form-control" onClick="this.form.submit()" >Filtrar</button>';
+$html .= '</div>';
+$html .= '</div>';
+
+$html .= '</form>';
+if($this->postado){
+	$html .= '<table class="table table-condesend table-bordered">';
+	$html .= '<thead>';
+	$html .= '<tr>';
+	$html .= '<th>IGREJA</th>';
+	$html .= '<th>TIME</th>';
+	$html .= '<th>LÍDERES</th>';
+	$html .= '<th>MEMBRESIA</th>';
+	$html .= '<th>QTD CÉLUAS</th>';
+	$html .= '<th>PESSOAS CÉLULAS</th>';
+	$html .= '<th>PARCEIRO</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	if($this->relatorio){
+		foreach($this->relatorio as $relatorio){
+			$class = '';
+			if($relatorio->cabecalho){
+				$class = 'dark';
+			}
+			$html .= '<tr class='.$class.'>';
+			$html .= '<td>'.$relatorio->getNome_igreja().'</td>';
+			$html .= '<td>'.$relatorio->getEntidade().'</td>';
+			$html .= '<td>'.$relatorio->getLideres().'</td>';
+			$html .= '<td>'.number_format($relatorio->mediamem).'</td>';
+			$html .= '<td>'.($relatorio->cq5 + $relatorio->cbq5).'</td>';
+			$html .= '<td>'.$relatorio->mediac.'</td>';
+			$html .= '<td>'.number_format($relatorio->somaParceiro, 2, ',', '.').'</td>';
+			$html .= '</tr>';
+		}
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+}
+$html .= $this->templateFormularioRodape();
+
+echo $html;
