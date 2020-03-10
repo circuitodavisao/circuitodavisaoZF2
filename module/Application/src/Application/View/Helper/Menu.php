@@ -774,7 +774,8 @@ $link = 'relatorioNovo';
 			$html .= '</a>';
 			$html .= '</li>';
 		}
-		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
+		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 			$html .= '<li class="sidebar-label pt20">Ordenação</li>';
 			$html .= '<li>';
 				$html .= '<a href="/consultarOrdenacao" onClick="mostrarSplash();">';
