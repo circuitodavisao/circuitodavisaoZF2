@@ -43,8 +43,11 @@ if ($this->tipoRelatorio == 2) {
 if ($this->tipoRelatorio == 3) {
 	$label = 'Células Quantitativo';
 }
-if ($this->tipoRelatorio == 4) {
+if ($this->tiporelatorio == 4) {
 	$label = 'Resumo';
+}
+if ($this->tiporelatorio == 5) {
+	$label = 'Célula de Elite';
 }
 echo $this->templateFormularioTopo($label);
 ?>
@@ -133,7 +136,7 @@ echo '</form>';
 
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
-	if ($indiceDeArrays != -1) {
+	if ($indiceDeArrays != -1 && $indiceDeArrays != $this->periodoFinal) {
 		$classeBase .= 'hidden-xs';
 	}
 	$mostrarBotaoEsquerdo = true;
@@ -171,7 +174,7 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 echo '<th colspan="2">Periodos</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classePeriodoAtual = '';
-	if ($indiceDeArrays == -1) {
+	if ($indiceDeArrays == -1 || $indiceDeArrays == $this->periodoFinal) {
 		$classePeriodoAtual = 'bg-info';
 	}
 	if ($this->tipoRelatorio == 1) {
@@ -186,14 +189,17 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($this->tipoRelatorio == 4){		
 		$colspan = 8;
 	}
+	if ($this->tipoRelatorio == 5){		
+		$colspan = 3;
+	}
 	echo '<th colspan="' . $colspan . '" class="' . $classePeriodoAtual . '">';
 	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
 	echo '</th>';
 }
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 3) {
-		echo '<th></th>';
-	}
+	echo '<th></th>';
+}
 echo '<th></th>';
 echo '</tr>';
 
@@ -202,18 +208,18 @@ echo '<th></th>';
 echo '<th>TIMES</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
-	if ($indiceDeArrays != -1 && $this->periodoInicial != $this->periodoFinal) {
+	if ($indiceDeArrays != -1 && $indiceDeArrays != $this->periodoFinal) {
 		$classeBase .= 'hidden-xs';
 	}
 	$classePeriodoAtual = '';
-	if ($indiceDeArrays == -1) {
+	if ($indiceDeArrays == -1 || $indiceDeArrays == $this->periodoFinal) {
 		$classePeriodoAtual = 'bg-info';
 	}
 	if ($this->tipoRelatorio == 1) {
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL BETA</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">MET BETA</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL BETA</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">MET BETA</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
@@ -230,32 +236,38 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($this->tipoRelatorio == 3) {
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL BET.</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">MET BET</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">MET BET</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">MET</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QTD</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
 	if ($this->tipoRelatorio == 4) {
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">LÍD Q</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL Q</th>';
-		echo '<th class="' . $classeBase . ' hidden-xs ' . $classePeriodoAtual . '">CÉL BETA Q</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL Q</th>';
+		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL BETA Q</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">TOT CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CÉL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">CUL</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">ARE</th>';
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">DOM</th>';
 	}
+	if ($this->tipoRelatorio == 5) {
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">META</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">QUANTIDADE</th>';
+		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
+	}
 }
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 3) {
-		echo '<th>MÉDIA</th>';
-	}
+	echo '<th>MÉDIA</th>';
+}
 if ($this->tipoRelatorio == 1 ||
 	$this->tipoRelatorio == 2 ||
-	$this->tipoRelatorio == 3) {
-		echo '<th>FINAL</th>';
-	}
+	$this->tipoRelatorio == 3 ||
+	$this->tipoRelatorio == 5) {
+	echo '<th>FINAL</th>';
+}
 echo '</tr>';
 echo '</thead>';
 
@@ -322,7 +334,7 @@ foreach($this->relatorio as $relatorio){
 		$contadorDePeriodos = 1;
 		for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 			$classeBase = 'periodo' . $indiceDeArrays . ' ';
-			if ($indiceDeArrays != -1 && $this->periodoInicial != $this->periodoFinal) {
+			if ($indiceDeArrays != -1 && $indiceDeArrays != $this->periodoFinal) {
 				$classeBase .= 'hidden-xs';
 			}
 			$classePeriodoAtual = '';
@@ -338,10 +350,10 @@ foreach($this->relatorio as $relatorio){
 			$iconeRetwiter = '<i class="fa fa-retweet"></i>';
 			if ($this->tipoRelatorio == 1) {
 				if($relatorio->$naoMostrar){
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
@@ -354,10 +366,10 @@ foreach($this->relatorio as $relatorio){
 					$d = 'd' . $contadorDePeriodos;
 					$mem = 'mem' . $contadorDePeriodos;
 					$memp = 'memp' . $contadorDePeriodos;
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
@@ -385,8 +397,8 @@ foreach($this->relatorio as $relatorio){
 				if($relatorio->$naoMostrar){
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
@@ -395,8 +407,8 @@ foreach($this->relatorio as $relatorio){
 					$cp = 'cp' . $contadorDePeriodos;
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cq, 0 , ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cqmeta, 0, ',', '.').'</td>';
+					echo '<td class=" hidden-xs">'.number_format($relatorio->$cbqmeta, 1, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cqmeta+$relatorio->$cbqmeta), 1, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cp, 0, ',', '.').' %</td>';
@@ -405,8 +417,8 @@ foreach($this->relatorio as $relatorio){
 			if ($this->tipoRelatorio == 4) {
 				if($relatorio->$naoMostrar){
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
+					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
@@ -420,13 +432,26 @@ foreach($this->relatorio as $relatorio){
 					$l = 'l' . $contadorDePeriodos;
 					$totalCelulas = $relatorio->$cq + $relatorio->$cbq;
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$l, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
-					echo '<td class="' . $classeBase . ' hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
+					echo '<td class="hidden-xs">'.number_format($relatorio->$cq, 0, ',', '.').'</td>';
+					echo '<td class="hidden-xs">'.number_format($relatorio->$cbq, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($totalCelulas, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$c, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$cu, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$a, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$d, 0, ',', '.').'</td>';
+				}
+			}
+			if ($this->tipoRelatorio == 5){
+				if($relatorio->$naoMostrar){
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
+				}else{
+					$realizada = 'realizada' . $contadorDePeriodos;
+					$realizadap = 'realizadap' . $contadorDePeriodos;
+					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cq+$relatorio->$cbq), 0 , ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '"></td>';
+					echo '<td class="' . $classeBase . '"></td>';
 				}
 			}
 			$contadorDePeriodos++;
