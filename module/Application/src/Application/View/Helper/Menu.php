@@ -779,7 +779,7 @@ $link = 'relatorioNovo';
 			$html .= '<li>';
 				$html .= '<a href="/consultarOrdenacao" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-user"></span>';
-			$html .= '<span class="sidebar-title">Consultar Pessoa</span>';
+			$html .= '<span class="sidebar-title">Consultar Ordenação</span>';
 			$html .= '</a>';
 			$html .= '</li>';
 		}
