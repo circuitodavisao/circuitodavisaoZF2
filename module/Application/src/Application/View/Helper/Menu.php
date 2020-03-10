@@ -314,21 +314,10 @@ $link = 'relatorioNovo';
 					$mostrar = true;
 $link = 'relatorioNovo';
 					break;
-				case 4:
-					$label = 'Culto da Semana';
-					break;
-				case 5:
-					$label = 'Arena';
-					break;
-				case 6:
-					$label = 'Domingo';
-					break;
-				case 7:
-					$label = 'C&eacute;lula/Arena';
-					break;
-				case 8:
+			case 5:
 					$label = 'C&eacute;lulas de Elite';
 					$mostrar = true;
+$link = 'relatorioNovo';
 					break;
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
@@ -785,6 +774,16 @@ $link = 'relatorioNovo';
 			$html .= '</a>';
 			$html .= '</li>';
 		}
+		if ($this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao) {
+			$html .= '<li class="sidebar-label pt20">Ordenção</li>';
+			$html .= '<li>';
+				$html .= '<a href="/consultarOrdenacao" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-user"></span>';
+			$html .= '<span class="sidebar-title">Consultar Pessoa</span>';
+			$html .= '</a>';
+			$html .= '</li>';
+		}
+	
 		$html .= '</ul>';
 		// End: Sidebar Menu
 		// Start: Sidebar Collapse Button
