@@ -5,29 +5,96 @@ use Application\View\Helper\BotaoSimples;
 
 ?>
 <div class="mw1000 center-block p10">
-    <div class="row ">
-        <div id="content" class="animated fadeIn">
-            <div class="row">
-                <!-- Cadastro de Pessoa -->
-                <div class="admin-form " id="register1" role="tabpanel">
-                    <blockquote class="blockquote-primary">
-                        <p>Fichas Ativas</p>
-                    </blockquote>
+	<div class="row ">
+		<div id="content" class="animated fadeIn">
+			<div class="row">
+				<!-- Cadastro de Pessoa -->
+				<div class="admin-form " id="register1" role="tabpanel">
+					<blockquote class="blockquote-primary">
+						<p>Fichas Ativas</p>
+					</blockquote>
 <?php
-                            $funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroAtivarFichaRevisao",' . $this->evento->getId() . ')');
-                            echo $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
+echo '<div class="alert alert-info">Revisionistas</div>';
+if(count($this->listas[1]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Idade</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Remover</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[1] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->idade . '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td>';
+		$funcaoOnClick = $this->funcaoOnClick('mostrarSplash(); funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $fatoRevisao->matricula . ')');
+		$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 0, $funcaoOnClick);
+		$html .= '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Revisionistas</div>';
+}
+echo '<div class="alert alert-info">Líderes</div>';
+
+if(count($this->listas[2]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter2">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Líder</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Remover</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[2] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td>';
+		$funcaoOnClick = $this->funcaoOnClick('mostrarSplash(); funcaoCadastro("' . Constantes::$PAGINA_REMOVER_REVISIONISTA_ATIVO . '", ' . $fatoRevisao->matricula . ')');
+		$html .= $this->botaoLink($this->translate(Constantes::$TRADUCAO_REMOVER_REVISIONISTA), Constantes::$STRING_HASHTAG, 0, $funcaoOnClick);
+		$html .= '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Líderes</div>';
+}
+
+$funcaoVoltar = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroAtivarFichaRevisao",' . $this->evento->getId() . ')');
+echo $this->botaoSimples('Voltar', $funcaoVoltar, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
 ?>
- 
-                    <br />
-                    <br />
-                    <br />
- <?php echo $this->listagemFichasAtivasRevisao(); ?>
+
+
 					<!-- end .admin-form section -->
-                </div>
-                <!-- end: .admin-form -->
-            </div>
-        </div>
-    </div>
+				</div>
+				<!-- end: .admin-form -->
+			</div>
+		</div>
+	</div>
 </div>
 <?php
 /* Layout com javascript para tela de index */

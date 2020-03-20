@@ -1,159 +1,97 @@
+
 <?php
 
 use Application\Controller\Helper\Constantes;
-use Application\Model\Entity\Entidade;
+use Application\View\Helper\BotaoSimples;
 
-$html = '';
-$homens = array();
-$mulheres = array();
-$arrayDeEventos = Array();
-if($this->multiplos){
-  $arrayDeEventos = $this->arrayDeEventosRevisoes;
-} else {
-  $arrayDeEventos[] = $this->evento;
-}
-
-foreach ($arrayDeEventos as $evento) {
-  $frequencias = $evento->getEventoFrequencia();
-  if (count($frequencias) > 0) {
-      foreach ($frequencias as $frequencia) {
-          if ($frequencia->getFrequencia() == 'S') {
-              $pessoa = $frequencia->getPessoa();
-              if ($pessoa->getGrupoPessoaAtivo()) {
-                  $jaExiste = false;
-                  foreach ($pessoas as $pessoaParaVerificar) {
-                      if ($pessoaParaVerificar->getId() === $pessoa->getId()) {
-                          $jaExiste = true;
-                      }
-                  }
-                  if (!$jaExiste) {
-                      if ($pessoa->getSexo() == 'M') {
-                          $homens[] = $pessoa;
-                      } else {
-                          $mulheres[] = $pessoa;
-                      }
-                  }
-              }
-          }
-      }
-  }
-}
-$html .= $this->templateFormularioTopo('Listagem de Revisionistas para o Revisão de Vidas');
-$html .= '<div class="panel-body bg-light">';
-$html .= '<h3>Homens: '.count($homens).' - Mulheres: '.count($mulheres).'</h3>';
-if (count($homens) > 0) {
-    $html .= '<h2>Revisionistas Homens</h2>';
-    $html .= '<input id="fooFilterHomem" type="text" class="form-control" placeholder="Filtro">';
-    $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterHomem">';
-    $html .= '<thead>';
-    $html .= '<tr>';
-    $html .= '<th>';
-    $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
-    $html .= '</th>';
-    $html .= '<th>';
-    $html .= $this->translate(Constantes::$TRADUCAO_NOME);
-    $html .= '</th>';
-    $html .= '<th>Sexo</th>';
-    $html .= '<th>Igreja</th>';
-    $html .= '<th>Time</th>';
-    $html .= '<th>Idade</th>';
-    $html .= '</tr>';
-    $html .= '</thead>';
-    $html .= '<tbody>';
-    foreach ($homens as $homem) {
-      $nomeEntidadeAcima = '';
-      if($this->multiplos){ 
-        $entidadeAcima = $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
-            $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
-        ){
-            $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
-        }
-        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
-            $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
-        }
-        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-            $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
-        }  
-        if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-            $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
-        }               
-    }
-      $sexo = $homem->getSexo();
-      if(!$sexo) {
-        $sexo = 'Não Informado';
-      }
-        $html .= '<tr>';
-        $html .= '<td>' . $homem->getId() . '</td>';
-        $html .= '<td><span class="visible-lg visible-md">' . $homem->getNome() . '</span><span class="visible-sm visible-xs">' . $homem->getNomePrimeiroUltimo() . '</span></td>';
-        $html .= '<td>' . $homem->getSexo() . '</td>';
-        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
-        $html .= '<td>' . $homem->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
-        $html .= '<td>' . $homem->getIdade() . '</td>';
-        $html .= '</tr>';
-    }
-    $html .= '</tbody>';
-    $html .= '</table>';
-} else {
-    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Homens Cadastrados!</div>';
+?>
+<div class="mw1000 center-block p10">
+	<div class="row ">
+		<div id="content" class="animated fadeIn">
+			<div class="row">
+				<!-- Cadastro de Pessoa -->
+				<div class="admin-form " id="register1" role="tabpanel">
+					<blockquote class="blockquote-primary">
+						<p>Lista de Revisionistas</p>
+					</blockquote>
+<?php
+echo '<div class="alert alert-info">Homens: '.count($this->listas['M']).'</div>';
+if(count($this->listas['M']) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Idade</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas['M'] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->idade . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Homens</div>';
 }
 
-if (count($mulheres) > 0) {
-    $html .= '<h2>Revisionistas Mulheres</h2>';
-    $html .= '<input id="fooFilterMulher" type="text" class="form-control" placeholder="Filtro">';
-    $html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterMulher">';
-    $html .= '<thead>';
-    $html .= '<tr>';
-    $html .= '<th>';
-    $html .= $this->translate(Constantes::$TRADUCAO_MATRICULA);
-    $html .= '</th>';
-    $html .= '<th>';
-    $html .= $this->translate(Constantes::$TRADUCAO_NOME);
-    $html .= '</th>';
-    $html .= '<th>Sexo</th>';
-    $html .= '<th>Igreja</th>';
-    $html .= '<th>Time</th>';
-    $html .= '<th>Idade</th>';
-    $html .= '</tr>';
-    $html .= '</thead>';
-    $html .= '<tbody>';
-    foreach ($mulheres as $mulher) {
-        if($this->multiplos){ 
-            $entidadeAcima = $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
-                $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
-            ){
-                $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
-            }
-            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
-                $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
-            }
-            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-                $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
-            }  
-            if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-                $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
-            }               
-        }   
-      
-        $sexo = $mulher->getSexo();
-        if(!$sexo) {
-            $sexo = 'Não Informado';
-        }
-        $html .= '<tr>';
-        $html .= '<td>' . $mulher->getId() . '</td>';
-        $html .= '<td><span class="visible-lg visible-md">' . $mulher->getNome() . '</span><span class="visible-sm visible-xs">' . $mulher->getNomePrimeiroUltimo() . '</span></td>';
-        $html .= '<td>' . $mulher->getSexo() . '</td>';
-        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
-        $html .= '<td>' . $mulher->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
-        $html .= '<td>' . $mulher->getIdade() . '</td>';
-        $html .= '</tr>';
-    }
-    $html .= '</tbody>';
-    $html .= '</table>';
-} else {
-    $html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem Mulheres Cadastradas!</div>';
+
+echo '<div class="alert alert-info">Mulheres: '.count($this->listas['F']).'</div>';
+if(count($this->listas['F']) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter2">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Idade</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas['F'] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->idade . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Mulheres</div>';
 }
-$html .= '</div>';
-$html .= $this->templateFormularioRodape();
-echo $html;
+
+?>
+
+
+					<!-- end .admin-form section -->
+				</div>
+				<!-- end: .admin-form -->
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSAtivarFichaRevisao;

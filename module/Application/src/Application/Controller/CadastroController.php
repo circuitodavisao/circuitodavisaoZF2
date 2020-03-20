@@ -42,6 +42,7 @@ use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\FatoCelulaDiscipulado;
+use Application\Model\Entity\FatoRevisao;
 use Application\Model\ORM\RepositorioORM;
 use DateTime;
 use Exception;
@@ -1861,7 +1862,6 @@ class CadastroController extends CircuitoController {
 	private function getGrupoSelecionado($repositorioORM) {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
-
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		return $entidade->getGrupo();
 	}
@@ -1869,46 +1869,75 @@ class CadastroController extends CircuitoController {
 	public function salvarPessoaRevisaoAction() {
 		$request = $this->getRequest();
 
-		//            try {
-		$post_data = $request->getPost();
-		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
+		try {
+			$this->getRepositorio()->iniciarTransacao();
+			$post_data = $request->getPost();
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post_data[Constantes::$FORM_ID]);
 
-		/* validação */
-		$pessoa->setNome($post_data[Constantes::$INPUT_PRIMEIRO_NOME] . " " . $post_data[Constantes::$INPUT_ULTIMO_NOME]);
-		$pessoa->setTelefone($post_data[Constantes::$INPUT_DDD] . $post_data[Constantes::$INPUT_TELEFONE]);
-		$pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
-			$post_data[Constantes::$FORM_INPUT_DIA]);
-		$pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
+			/* validação */
+			$pessoa->setNome($post_data[Constantes::$INPUT_PRIMEIRO_NOME] . " " . $post_data[Constantes::$INPUT_ULTIMO_NOME]);
+			$pessoa->setTelefone($post_data[Constantes::$INPUT_DDD] . $post_data[Constantes::$INPUT_TELEFONE]);
+			$pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
+				$post_data[Constantes::$FORM_INPUT_DIA]);
+			$pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
 
-		/* Salvar a pessoa e o grupo pessoa correspondente */
-		$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
-		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		$sessao->idRevisionista = $pessoa->getId();
+			/* Salvar a pessoa e o grupo pessoa correspondente */
+			$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
+			$sessao = new Container(Constantes::$NOME_APLICACAO);
+			$sessao->idRevisionista = $pessoa->getId();
 
-		/* Bloco para inclusao da pessoa no evento frequencia */
-		$idRevisao = $sessao->idRevisao;
-		if ($sessao->idRevisao == null) {
+			/* Bloco para inclusao da pessoa no evento frequencia */
+			$idRevisao = $sessao->idRevisao;
+			if ($sessao->idRevisao == null) {
+				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
+					Constantes::$PAGINA => Constantes::$PAGINA_REVISIONISTAS,
+				));
+			}
+			unset($sessao->idRevisao);
+			$eventoFrequencia = new EventoFrequencia();
+			$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+			$eventoFrequencia->setEvento($eventoRevisao);
+			$eventoFrequencia->setPessoa($pessoa);
+			$eventoFrequencia->setFrequencia('N');
+			$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
+			$sessao->idSessao = $eventoFrequencia->getId();
+
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$equipe = $entidade->getGrupo()->getGrupoEquipe();
+			$igreja = $entidade->getGrupo()->getGrupoIgreja();
+			$date = new DateTime($pessoa->getData_nascimento());
+			$idade = $date->diff(new DateTime(date('Y-m-d')));
+			$idade = intVal($idade->format('%y'));
+			$fatoRevisao = new FatoRevisao();
+			$fatoRevisao->numero_identificador = $numeroIdentificador;
+			$fatoRevisao->matricula = $eventoFrequencia->getId();
+			$fatoRevisao->ativo = 'N';
+			$fatoRevisao->sexo = $pessoa->getSexo();;
+			$fatoRevisao->evento_id = $idRevisao;
+			$fatoRevisao->nome = $pessoa->getNome();
+			$fatoRevisao->nome_equipe = $equipe->getEntidadeAtiva()->getNome();
+			$fatoRevisao->entidade = $entidade->infoEntidade();
+			$fatoRevisao->nome_igreja = $igreja->getEntidadeAtiva()->getNome();
+			$fatoRevisao->lideres = $entidade->getGrupo()->getNomeLideresAtivos();
+			$fatoRevisao->data_nascimento = $pessoa->getData_nascimento();
+			$fatoRevisao->data_revisao = $eventoRevisao->getData();
+			$fatoRevisao->idade = $idade;
+			$fatoRevisao->tipo = 1;
+			$this->getRepositorio()->getFatoRevisaoORM()->persistir($fatoRevisao);
+
+			self::registrarLog(RegistroAcao::CADASTROU_UM_REVISIONISTA, $extra = 'Id: '.$eventoFrequencia->getId());
+
+			$this->getRepositorio()->fecharTransacao();
+
 			return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-				Constantes::$PAGINA => Constantes::$PAGINA_REVISIONISTAS,
+				Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
 			));
+		} catch (Exception $exc) {
+			$this->getRepositorio()->desfazerTransacao();
+			echo $exc->getMessage();
 		}
-		unset($sessao->idRevisao);
-		$eventoFrequencia = new EventoFrequencia();
-		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$eventoFrequencia->setEvento($eventoRevisao);
-		$eventoFrequencia->setPessoa($pessoa);
-		$eventoFrequencia->setFrequencia('N');
-		$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
-		$sessao->idSessao = $eventoFrequencia->getId();
-
-		self::registrarLog(RegistroAcao::CADASTROU_UM_REVISIONISTA, $extra = 'Id: '.$eventoFrequencia->getId());
-
-		return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
-			Constantes::$PAGINA => Constantes::$PAGINA_FICHA_REVISAO,
-		));
-		//            } catch (Exception $exc) {
-		//                echo $exc->getMessage();
-		//            }
 	}
 
 	public function fichaRevisaoAction() {
@@ -1955,29 +1984,18 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
 
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$multiplos = true;
-			$request = $this->getRequest();
-			if ($request->isPost()) {
-				$arrayDeRevisoes = Array();
-				foreach ($_POST as $key => $value) {
-					if (substr($key, 0, 7) == 'revisao') {
-						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
-						$arrayDeEventosRevisoes[] = $eventoRevisao;
-					}
-				}
+		$listas = array();
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				$listas[$fatoRevisao->tipo][] = $fatoRevisao;
 			}
-		} else {
-			$multiplos = false;
 		}
-
+	
 		$view = new ViewModel(array(
-			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
-			'entidade' => $entidade,
-			'multiplos' => $multiplos,
-			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
+			'listas' => $listas,
 		));
 
 		/* Javascript */
@@ -1996,33 +2014,21 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idRevisao = $sessao->idSessao;
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
 
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$multiplos = true;
-			$request = $this->getRequest();
-			if ($request->isPost()) {
-				$arrayDeRevisoes = Array();
-				foreach ($_POST as $key => $value) {
-					if (substr($key, 0, 7) == 'revisao') {
-						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
-						$arrayDeEventosRevisoes[] = $eventoRevisao;
-					}
+		$listas = array();
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				if ($fatoRevisao->tipo === 2 && $fatoRevisao->ativo === 'S') {
+					$listas[$fatoRevisao->sexo][] = $fatoRevisao;
 				}
 			}
-		} else {
-			$multiplos = false;
 		}
 
 		$view = new ViewModel(array(
-			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
-			'entidade' => $entidade,
-			'multiplos' => $multiplos,
-			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
+			'listas' => $listas,
 		));
 
 		/* Javascript */
@@ -2041,33 +2047,21 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idRevisao = $sessao->idSessao;
-		$idEntidadeAtual = $sessao->idEntidadeAtual;
-		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
 
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$multiplos = true;
-			$request = $this->getRequest();
-			if ($request->isPost()) {
-				$arrayDeRevisoes = Array();
-				foreach ($_POST as $key => $value) {
-					if (substr($key, 0, 7) == 'revisao') {
-						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
-						$arrayDeEventosRevisoes[] = $eventoRevisao;
-					}
+		$listas = array();
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				if ($fatoRevisao->tipo === 1 && $fatoRevisao->ativo === 'S') {
+					$listas[$fatoRevisao->sexo][] = $fatoRevisao;
 				}
 			}
-		} else {
-			$multiplos = false;
 		}
 
 		$view = new ViewModel(array(
-			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
-			'entidade' => $entidade,
-			'multiplos' => $multiplos,
-			'arrayDeEventosRevisoes' => $arrayDeEventosRevisoes,
+			'listas' => $listas,
 		));
 
 		/* Javascript */
@@ -2107,22 +2101,13 @@ class CadastroController extends CircuitoController {
 
 		$idRevisao = $sessao->idSessao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
 
 		$listas = array();
-		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
-			foreach ($eventoFrequencias as $eventoFrequencia) {
-				/* Revisionistas */
-				if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-					if ($eventoFrequencia->getFrequencia() == 'S') {
-						$listas['revisionistas'][] = $eventoFrequencia;
-					}
-				} else {
-					/* Lideres */
-					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-						if ($eventoFrequencia->getFrequencia() == 'S') {
-							$listas['lideres'][] = $eventoFrequencia;
-						}
-					}
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				if ($fatoRevisao->ativo === 'S') {
+					$listas[$fatoRevisao->tipo][] = $fatoRevisao;
 				}
 			}
 		}
@@ -2147,10 +2132,25 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+
+		$listas = array();
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				if ($fatoRevisao->ativo === 'S') {
+					if ($fatoRevisao->tipo === 1) {
+						$listas[1][] = $fatoRevisao;
+					}
+					if ($fatoRevisao->tipo === 2) {
+						$listas[2][] = $fatoRevisao;
+					}
+				}
+			}
+		}
+	
 		$view = new ViewModel(array(
-			Constantes::$ENTIDADE => $entidade,
-			'repositorioORM' => $this->getRepositorio(),
 			'evento' => $eventoRevisao,
+			'listas' => $listas,
 		));
 
 		/* Javascript */
@@ -2261,6 +2261,10 @@ class CadastroController extends CircuitoController {
 					}
 				}
 
+				$fatoRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorMatricula($idEventoFrequencia);
+				$fatoRevisao->setAtivo('S');
+				$this->getRepositorio()->getFatoRevisaoORM()->persistir($fatoRevisao, $mudatDataDeCriacao = false);
+
 				self::registrarLog(RegistroAcao::LANCOU_UMA_FICHA_NO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CADASTRO, array(
@@ -2336,6 +2340,36 @@ class CadastroController extends CircuitoController {
 			$this->getRepositorio()->getEventoFrequenciaORM()->persistir($eventoFrequencia);
 			$sessao->idSessao = $eventoFrequencia->getId();
 
+			$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+			$idEntidadeAtual = $sessao->idEntidadeAtual;
+			$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+			$equipe = $entidade->getGrupo()->getGrupoEquipe();
+			$igreja = $entidade->getGrupo()->getGrupoIgreja();
+			$date = new DateTime($pessoaLogada->getData_nascimento());
+			$idade = $date->diff(new DateTime(date('Y-m-d')));
+			$idade = intVal($idade->format('%y'));
+			$hierarquia = $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome();
+			if($eventoFrequencia->getPessoa()->getSexo() == 'F'){
+				$hierarquia = $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino();
+			}
+			$fatoRevisao = new FatoRevisao();
+			$fatoRevisao->numero_identificador = $numeroIdentificador;
+			$fatoRevisao->matricula = $eventoFrequencia->getId();
+			$fatoRevisao->ativo = 'N';
+			$fatoRevisao->sexo = $pessoaLogada->getSexo();;
+			$fatoRevisao->evento_id = $idRevisao;
+			$fatoRevisao->nome = $pessoaLogada->getNome();
+			$fatoRevisao->nome_equipe = $equipe->getEntidadeAtiva()->getNome();
+			$fatoRevisao->entidade = $entidade->infoEntidade();
+			$fatoRevisao->nome_igreja = $igreja->getEntidadeAtiva()->getNome();
+			$fatoRevisao->lideres = $entidade->getGrupo()->getNomeLideresAtivos();
+			$fatoRevisao->data_nascimento = $pessoaLogada->getData_nascimento();
+			$fatoRevisao->data_revisao = $eventoRevisao->getData();
+			$fatoRevisao->idade = $idade;
+			$fatoRevisao->tipo = 2;
+			$fatoRevisao->hierarquia = $hierarquia;
+			$this->getRepositorio()->getFatoRevisaoORM()->persistir($fatoRevisao);
+
 			self::registrarLog(RegistroAcao::CADASTROU_UM_LIDER_AO_REVISAO_DE_VIDAS, $extra = 'Id: '.$idPessoa);
 			$this->getRepositorio()->fecharTransacao();
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -2369,6 +2403,10 @@ class CadastroController extends CircuitoController {
 				$sessao->tipoMensagem = Constantes::$TIPO_MENSAGEM_CADASTRAR_REVISIONISTA;
 				$sessao->textoMensagem = $eventoFrequencia->getPessoa()->getNome();
 				$sessao->idSessao = $eventoFrequencia->getEvento()->getId();
+
+				$fatoRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorMatricula($idEventoFrequencia);
+				$fatoRevisao->setAtivo('N');
+				$this->getRepositorio()->getFatoRevisaoORM()->persistir($fatoRevisao, $mudatDataDeCriacao = false);
 
 				self::registrarLog(RegistroAcao::REMOVEU_UMA_FICHA_DO_REVISAO_DE_VIDAS, $extra = 'Id: ' . $eventoFrequencia->getId());
 				$this->getRepositorio()->fecharTransacao();
@@ -3022,45 +3060,23 @@ class CadastroController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idRevisao = $sessao->idSessao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+
 		$relatorio = array();
 		$soma = array();
-		if ($eventoFrequencias = $eventoRevisao->getEventoFrequencia()) {
-			foreach ($eventoFrequencias as $eventoFrequencia) {
-				/* Revisionistas */
-				if ($grupoPessoaLider = $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-					$grupoLider = $grupoPessoaLider->getGrupo();
-					if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
-						if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-							if ($eventoFrequencia->getFrequencia() == 'S') {
-								$relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['ativas'] ++;
-								$soma['ativas'] ++;
-							}
-							$relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['reservas'] ++;
-							$soma['reservas'] ++;
-						} else {
-							if ($eventoFrequencia->getFrequencia() == 'S') {
-								$relatorio['IGREJA']['ativas'] ++;
-								$soma['ativas'] ++;
-							}
-							$relatorio['IGREJA']['reservas'] ++;
-							$soma['reservas'] ++;
-						}
-					}
-				} else {
-					/* Lideres */
-					if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-						if ($eventoFrequencia->getFrequencia() == 'S') {
-							$grupoLider = $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
-							if ($grupoEquipe = $grupoLider->getGrupoEquipe()) {
-								if ($grupoEquipe->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
-									$relatorio[$grupoEquipe->getEntidadeAtiva()->getNome()]['lideres'] ++;
-									$soma['lideres'] ++;
-								} else {
-									$relatorio['IGREJA']['lideres'] ++;
-									$soma['lideres'] ++;
-								}
-							}
-						}
+		foreach ($fatosRevisao as $fatoRevisao) {
+			if ($fatoRevisao->tipo === 1) {
+				if ($fatoRevisao->ativo === 'S') {
+					$relatorio[$fatoRevisao->nome_equipe]['ativas'] ++;
+					$soma['ativas'] ++;
+				}
+				$relatorio[$fatoRevisao->nome_equipe]['reservas'] ++;
+				$soma['reservas'] ++;
+			} else {
+				if ($fatoRevisao->tipo === 2) {
+					if ($fatoRevisao->ativo === 'S') {
+						$relatorio[$fatoRevisao->nome_equipe]['lideres'] ++;
+						$soma['lideres'] ++;
 					}
 				}
 			}
@@ -3075,75 +3091,31 @@ class CadastroController extends CircuitoController {
 
 	public function selecionarRevisionistaCrachaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idRevisao = $sessao->idSessao;
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$arrayDeEventosRevisoes = Array();	
+		$sessao->idRevisao = $idRevisao;
+		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
+		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
 
-		$relatorio = array();
-		$quantidadeHomensRevisionistas = 0;
-		$quantidadeMulheresRevisionistas = 0;
-		$quantidadeHomensLideres = 0;
-		$quantidadeMulheresLideres = 0;
-		$multiplos = false;
-
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-			$multiplos = true;
-			$request = $this->getRequest();
-			if ($request->isPost()) {
-				foreach ($_POST as $key => $value) {
-					if (substr($key, 0, 7) == 'revisao') {
-						$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($value);
-						$arrayDeEventosRevisoes[] = $eventoRevisao;
-					}
-				}
-			}
-		} 
-		if(!$multiplos){
-			$idRevisao = $sessao->idSessao;		
-			$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-			$arrayDeEventosRevisoes[] = $eventoRevisao;
-		}
-
-		foreach ($arrayDeEventosRevisoes as $evento) {			
-			if ($eventoFrequencias = $evento->getEventoFrequencia()) {
-				foreach ($eventoFrequencias as $eventoFrequencia) {
-					/* Revisionistas */
-					if ($eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()) {
-						if ($eventoFrequencia->getFrequencia() == 'S') {
-							$relatorio['revisionistas'][] = $eventoFrequencia;
-							if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
-								$quantidadeHomensRevisionistas++;
-							}else{
-								$quantidadeMulheresRevisionistas++;
-							}
-						}
-					} else {
-						if ($eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()) {
-							/* Lideres */
-							if ($eventoFrequencia->getFrequencia() == 'S') {
-								$relatorio['lideres'][] = $eventoFrequencia;
-								if($eventoFrequencia->getPessoa()->getSexo() == 'M'){
-									$quantidadeHomensLideres++;
-								}else{
-									$quantidadeMulheresLideres++;
-								}
-							}
-						}
-					}
+		$listas = array();
+		if($fatosRevisao) {
+			foreach ($fatosRevisao as $fatoRevisao) {
+				if($fatoRevisao->ativo === 'S'){
+					$listas[$fatoRevisao->tipo][] = $fatoRevisao;
 				}
 			}
 		}
 
-		$formulario = new SelecionarCrachaForm('SelecionarCracha');
-		return new ViewModel(array(
-			'relatorio' => $relatorio,
+		$formulario = new SelecionarCrachaForm('formulario');
+		$view = new ViewModel(array(
 			'formulario' => $formulario,
-			'quantidadeHomensRevisionistas' => $quantidadeHomensRevisionistas,
-			'quantidadeMulheresRevisionistas' => $quantidadeMulheresRevisionistas,
-			'quantidadeHomensLideres' => $quantidadeHomensLideres,
-			'quantidadeMulheresLideres' => $quantidadeMulheresLideres,
-			'multiplos' => $multiplos,
+			'evento' => $eventoRevisao,
+			'listas' => $listas,
 		));
+
+		return $view;
 	}
 
 	public function gerarCrachaAction() {

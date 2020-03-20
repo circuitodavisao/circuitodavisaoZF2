@@ -1,10 +1,112 @@
 <?php
 
-/**
- * Nome: selecionar_revisionistas.phtml
- * @author Lucas Filipe de Carvalho Cunha <lucsacarvalho.esw@gmail.com> 
- * Descricao: Página de listagem de pessoas para o Revisao
- */
-/* Monta a listagem de eventos baseada no tipo do Evento passado */
-echo $this->listagemFichasParaRevisao(); 
-echo $this->layoutJSEventosValidacao; 
+use Application\Controller\Helper\Constantes;
+use Application\View\Helper\BotaoSimples;
+
+?>
+<div class="mw1000 center-block p10">
+	<div class="row ">
+		<div id="content" class="animated fadeIn">
+			<div class="row">
+				<!-- Cadastro de Pessoa -->
+				<div class="admin-form " id="register1" role="tabpanel">
+					<blockquote class="blockquote-primary">
+						<p>Fichas Revisão de Vidas</p>
+					</blockquote>
+<?php
+echo '<div class="alert alert-info">Revisionistas</div>';
+if(count($this->listas[1]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Sexo</th>';
+	$html .= '<th>Idade</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Ativo</th>';
+	$html .= '<th></th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[1] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->sexo . '</td>';
+		$html .= '<td>' . $fatoRevisao->idade . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td>';
+		if($fatoRevisao->ativo === 'S'){
+			$html .= '<div class="btn btn-xs btn-success">Ativo</div>';
+		}
+		$html .= '</td>';
+		$html .= '<td>';
+		$stringNomeDaFuncaoOnClickInserir = 'funcaoCircuito("cadastro' . Constantes::$PAGINA_FICHA_REVISAO . '", ' . $fatoRevisao->matricula . ', true)';
+		$html .= $this->botaoLink('Ficha', Constantes::$STRING_HASHTAG, 4, $this->funcaoOnClick($stringNomeDaFuncaoOnClickInserir));
+		$html .= '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Revisionistas</div>';
+}
+echo '<div class="alert alert-info">Líderes</div>';
+
+if(count($this->listas[2]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter2">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Líder</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<th>Ativo</th>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[2] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td>';
+		if($fatoRevisao->ativo === 'S'){
+			$html .= '<div class="btn btn-xs btn-success">Ativo</div>';
+		}
+		$html .= '</td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Líderes</div>';
+}
+
+?>
+
+
+					<!-- end .admin-form section -->
+				</div>
+				<!-- end: .admin-form -->
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+/* Layout com javascript para tela de index */
+echo $this->layoutJSAtivarFichaRevisao;

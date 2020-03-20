@@ -41,17 +41,18 @@ foreach ($this->lista['revisionistas'] as $revisionista) {
 	}
 	$eventoFrequencia = $this->repositorio->getEventoFrequenciaORM()->encontrarPorId($revisionista);
 
-	echo '<fieldset style="width: 9cm; height: 5.3cm; font-family: sans-serif; font-size: 10px;">';
+	$fatoRevisao = $this->repositorio->getFatoRevisaoORM()->encontrarPorMatricula($revisionista);
+	echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
 	echo '<div align="center">';
 	echo '<h2>Revisionista</h2>';
-	echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
+	echo '<h1>' . $fatoRevisao->nome . '</h1>';
 	echo '</div>';
 	echo '<hr />';
 	echo '<div align="center" style="font-size:16px;">';
 	echo 'Inscrição: ' . $revisionista . '<br />';
-	echo $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-	echo Funcoes::mudarPadraoData($eventoFrequencia->getEvento()->getData(), 1) . '<br />';
-	echo 'L&iacute;der(es): ' . $eventoFrequencia->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getNomeLideresAtivos() . '<br />';
+	echo $fatoRevisao->entidade. '<br />';
+	echo Funcoes::mudarPadraoData($fatoRevisao->data_revisao, 1) . '<br />';
+	echo 'L&iacute;der(es): ' . $fatoRevisao->lideres . '<br />';
 	echo '</div>';
 	echo '<br />';
 	echo '</fieldset>';
@@ -64,16 +65,17 @@ foreach ($this->lista['lideres'] as $lider) {
 	if($eventoFrequencia->getPessoa()->getSexo() == 'F'){
 		$qualHierarquia = $eventoFrequencia->getPessoa()->getPessoaHierarquiaAtivo()->getHierarquia()->getNome_feminino();
 	}
-	echo '<fieldset style="width: 9cm; height: 5.3cm; font-family: sans-serif; font-size: 10px;">';
+	$fatoRevisao = $this->repositorio->getFatoRevisaoORM()->encontrarPorMatricula($lider);
+	echo '<fieldset style="width: 8cm; height: 5cm; float: ' . $alinhamento . '; font-family: sans-serif; font-size: 10px;">';
 	echo '<div align="center">';
-	echo '<h2>' .$qualHierarquia. '</h2>';
-	echo '<h1>' . $eventoFrequencia->getPessoa()->getNome() . '</h1>';
+	echo '<h2>' . $fatoRevisao->hierarquia . '</h2>';
+	echo '<h1>' . $fatoRevisao->nome . '</h1>';
 	echo '</div>';
 	echo '<hr />';
 	echo '<div align="center" style="font-size:16px;">';
-	echo $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva()->infoEntidade() . '<br />';
-	echo Funcoes::mudarPadraoData($eventoFrequencia->getEvento()->getData(), 1) . '<br />';
-	echo 'L&iacute;der(es): ' . $eventoFrequencia->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getNomeLideresAtivos() . '<br />';
+	echo $fatoRevisao->entidade. '<br />';
+	echo Funcoes::mudarPadraoData($fatoRevisao->data_revisao, 1) . '<br />';
+	echo 'L&iacute;der(es): ' . $fatoRevisao->lideres . '<br />';
 	echo '</div>';
 	echo '<br />';
 	echo '</fieldset>';

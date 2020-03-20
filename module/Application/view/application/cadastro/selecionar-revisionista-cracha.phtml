@@ -27,108 +27,77 @@ echo $this->form()->openTag($form);
         $htmlBotaoGerar .= '</div>';
         echo $htmlBotaoGerar;
  
-        echo '<h2>Revisionistas - Homens: '.$this->quantidadeHomensRevisionistas.' - Mulheres: '.$this->quantidadeMulheresRevisionistas.'</h2>';
+echo '<div class="alert alert-info">Revisionistas</div>';
+if(count($this->listas[1]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Sexo</th>';
+	$html .= '<th>Idade</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<td><input type="checkbox" onclick="marcarTodos(this);"/></td>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[1] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->sexo . '</td>';
+		$html .= '<td>' . $fatoRevisao->idade . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja . '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td><input type="checkbox" id="revisionista' . $fatoRevisao->matricula . '" name="revisionista' . $fatoRevisao->matricula . '" value="' . $fatoRevisao->matricula . '"/></td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Revisionistas</div>';
+}
+echo '<div class="alert alert-info">Líderes</div>';
 
-        if ($relatorioRevisionistas = $this->relatorio['revisionistas']) {
-            echo '<input id="fooFilterRevisionistas" type="text" class="form-control" placeholder="Filtro">';
-            echo '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterRevisionistas">';
-            echo '<thead>';
-            echo '<tr class="text-center">';
-            echo '<th>Inscrição</th>';
-            echo '<th>Revisionista</th>';
-            echo '<th>Sexo</th>';
-            echo '<th>Igreja</th>';
-            echo '<th>Time</th>';
-            echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($relatorioRevisionistas as $relatorio) {
-              if($this->multiplos){ 
-                $entidadeAcima = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
-                    $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
-                ){
-                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
-                }
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
-                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
-                }
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
-                }  
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-                    $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
-                }               
-              }
-              
-                $sexo = $relatorio->getPessoa()->getSexo();
-                if(!$sexo) {
-                  $sexo = 'Não Informado';
-                }
-                $grupoPessoa = $relatorio->getPessoa()->getGrupoPessoaAtivo()->getGrupo();
-                echo '<tr class="text-center">';
-                echo '<td>' . $relatorio->getId() . '</td>';
-                echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
-                echo '<td>' . $sexo . '</td>';
-                echo '<td>' . $grupoPessoa->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
-                echo '<td>' . $grupoPessoa->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
-                echo '<td><input type="checkbox" id="revisionista' . $relatorio->getId() . '" name="revisionista' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        }
-        if ($relatorioLideres = $this->relatorio['lideres']) {
-            echo '<h2>Líderes - Homens: '.$this->quantidadeHomensLideres.' - Mulheres: '.$this->quantidadeMulheresLideres.'</h2>';
-            echo '<input id="fooFilterLideres" type="text" class="form-control" placeholder="Filtro">';
-            echo '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilterLideres">';
-            echo '<thead>';
-            echo '<tr class="text-center">';
-            echo '<th>Inscrição</th>';
-            echo '<th>Líder</th>';
-            echo '<th>Sexo</th>';
-            echo '<th>Igreja</th>';
-            echo '<th>Time</th>';
-            echo '<th><input type="checkbox" onclick="marcarTodos(this);"/></th>';
-            echo '</tr>';
-            echo '</thead>';
-            echo '<tbody>';
-            foreach ($relatorioLideres as $relatorio) {
-              if($this->multiplos){ 
-                $entidadeAcima = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::EQUIPE || 
-                    $entidadeAcima->getEntidadeTipo()->getId() === Entidade::IGREJA                         
-                ){
-                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->getNome();                    
-                }
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){                                  
-                    $nomeEntidadeAcimaArrumado = ' - ' . $entidadeAcima->infoEntidade();                    
-                }
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-                    $nomeEntidadeAcimaArrumado = ' - COORDENAÇÃO: ' . $entidadeAcima->getNumero();                    
-                }  
-                if($entidadeAcima->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-                    $nomeEntidadeAcimaArrumado = ' - REGIÃO: ' . $entidadeAcima->getNome();                    
-                }               
-              }              
-                $sexo = $relatorio->getPessoa()->getSexo();
-                if(!$sexo) {
-                  $sexo = 'Não Informado';
-                }
-                $grupoPessoa = $relatorio->getPessoa()->getResponsabilidadesAtivas()[0]->getGrupo();
-                echo '<tr class="text-center">';
-                echo '<td>' . $relatorio->getId() . '</td>';
-                echo '<td>' . $relatorio->getPessoa()->getNome() . '</td>';
-                echo '<td>' . $sexo . '</td>';
-                echo '<td>' . $grupoPessoa->getGrupoIgreja()->getEntidadeAtiva()->getNome() . '</td>';
-                echo '<td>' . $grupoPessoa->getEntidadeAtiva()->infoEntidade() . $nomeEntidadeAcimaArrumado . '</td>';
-                echo '<td><input type="checkbox" id="lider' . $relatorio->getId() . '" name="lider' . $relatorio->getId() . '" value="' . $relatorio->getId() . '"/></td>';
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        }
+if(count($this->listas[2]) > 0){
+	$html = '';
+	$html .= '<div class="panel-body bg-light">';
+	$html .= '<input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter2">';
+	$html .= '<thead>';
+	$html .= '<tr class="dark">';
+	$html .= '<th>Inscrição</th>';
+	$html .= '<th>Líder</th>';
+	$html .= '<th>Sexo</th>';
+	$html .= '<th>Igreja</th>';
+	$html .= '<th>Time</th>';
+	$html .= '<td><input type="checkbox" onclick="marcarTodos(this);"/></td>';
+	$html .= '</tr>';
+	$html .= '</thead>';
+	$html .= '<tbody>';
+	foreach($this->listas[2] as $fatoRevisao){
+		$html .= '<tr>';
+		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->sexo . '</td>';
+		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';
+		$html .= '<td>' . $fatoRevisao->entidade. '</td>';
+		$html .= '<td><input type="checkbox" id="lider' . $fatoRevisao->matricula . '" name="lider' . $fatoRevisao->matricula . '" value="' . $fatoRevisao->matricula . '"/></td>';
+		$html .= '</tr>';
+	}
+	$html .= '</tbody>';
+	$html .= '</table>';
+	$html .= '</div>';
+	echo $html;
+}else{
+	echo '<div class="alert alert-warning">Sem Líderes</div>';
+}
         echo $htmlBotaoGerar;
         ?>
     </div>

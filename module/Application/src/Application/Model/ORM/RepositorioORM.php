@@ -76,6 +76,7 @@ class RepositorioORM {
 	private $_fatoCelulaDiscipuladoORM;
 	private $_fatoMensalORM;
 	private $_envioORM;
+	private $_fatoRevisaoORM;
 
     /**
      * Contrutor
@@ -761,6 +762,13 @@ class RepositorioORM {
 			$this->_envioORM = new EnvioORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_ENVIO);
         }
         return $this->_envioORM;
+    }
+
+    public function getFatoRevisaoORM() {
+        if (is_null($this->_fatoRevisaoORM)) {
+			$this->_fatoRevisaoORM = new FatoRevisaoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_REVISAO);
+        }
+        return $this->_fatoRevisaoORM;
     }
 
     /**

@@ -1,0 +1,41 @@
+-- Table: fato_revisao
+
+DROP TABLE fato_revisao;
+
+CREATE TABLE fato_revisao
+(
+  id serial NOT NULL, -- Identificação do fato lider
+  numero_identificador character varying(64) NOT NULL, -- Número identificador do grupo
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  matricula integer NOT NULL,
+  evento_id integer NOT NULL,
+  idade integer NOT NULL,
+  nome_equipe character varying(64) NOT NULL,
+  entidade character varying(64) NOT NULL,
+  nome_igreja character varying(64) NOT NULL,
+  nome character varying(64) NOT NULL,
+  lideres character varying(64),
+  data_nascimento character varying(64),
+  data_revisao character varying(64),
+  ativo enumsn NOT NULL DEFAULT ('N'),
+  sexo enummf NOT NULL,
+  tipo integer NOT NULL DEFAULT (1),
+  hierarquia character varying(64),
+  CONSTRAINT pk_fato_revisao PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+-- Index: index_fato_revisao_numero_identificador
+
+-- DROP INDEX index_fato_revisao_numero_identificador;
+
+CREATE INDEX index_fato_revisao_numero_identificador
+  ON fato_revisao
+  USING btree
+  (numero_identificador COLLATE pg_catalog."default");
+
