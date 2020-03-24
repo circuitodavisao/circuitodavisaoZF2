@@ -1983,11 +1983,34 @@ class CadastroController extends CircuitoController {
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$sessao->idRevisao = $idRevisao;
-		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+		$arrayDeEventosRevisoes = array();
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		){
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$arrayDeEventosRevisoes[] = $value;
+					}
+				}
+			}
+		}else{
+			$arrayDeEventosRevisoes[] = $idRevisao;
+		}
+
+		$fatosRevisao = array();
+		foreach($arrayDeEventosRevisoes as $idRevisaoParaPesquisar){
+			$fatosRevisaoPesquisado = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisaoParaPesquisar));
+			foreach($fatosRevisaoPesquisado as $fatoRevisaoPesquisado){
+				$fatosRevisao[] = $fatoRevisaoPesquisado; 
+			}
+		}
 
 		$listas = array();
-		if($fatosRevisao) {
+		if(count($fatosRevisao) > 0) {
 			foreach ($fatosRevisao as $fatoRevisao) {
 				$listas[$fatoRevisao->tipo][] = $fatoRevisao;
 			}
@@ -2012,13 +2035,38 @@ class CadastroController extends CircuitoController {
 
 	public function listaLideresAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
-		$idRevisao = $sessao->idSessao;
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$arrayDeEventosRevisoes = array();
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		){
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$arrayDeEventosRevisoes[] = $value;
+					}
+				}
+			}
+		}else{
+			$idRevisao = $sessao->idSessao;
+			$arrayDeEventosRevisoes[] = $idRevisao;
+		}
+
+		$fatosRevisao = array();
+		foreach($arrayDeEventosRevisoes as $idRevisaoParaPesquisar){
+			$fatosRevisaoPesquisado = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisaoParaPesquisar));
+			foreach($fatosRevisaoPesquisado as $fatoRevisaoPesquisado){
+				$fatosRevisao[] = $fatoRevisaoPesquisado; 
+			}
+		}
 
 		$listas = array();
-		if($fatosRevisao) {
+		if(count($fatosRevisao) > 0) {
 			foreach ($fatosRevisao as $fatoRevisao) {
 				if ($fatoRevisao->tipo === 2 && $fatoRevisao->ativo === 'S') {
 					$listas[$fatoRevisao->sexo][] = $fatoRevisao;
@@ -2045,10 +2093,35 @@ class CadastroController extends CircuitoController {
 
 	public function listaRevisionistasAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 
-		$idRevisao = $sessao->idSessao;
-		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+		$arrayDeEventosRevisoes = array();
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		){
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$arrayDeEventosRevisoes[] = $value;
+					}
+				}
+			}
+		}else{
+			$idRevisao = $sessao->idSessao;
+			$arrayDeEventosRevisoes[] = $idRevisao;
+		}
+
+		$fatosRevisao = array();
+		foreach($arrayDeEventosRevisoes as $idRevisaoParaPesquisar){
+			$fatosRevisaoPesquisado = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisaoParaPesquisar));
+			foreach($fatosRevisaoPesquisado as $fatoRevisaoPesquisado){
+				$fatosRevisao[] = $fatoRevisaoPesquisado; 
+			}
+		}
 
 		$listas = array();
 		if($fatosRevisao) {
@@ -3091,17 +3164,38 @@ class CadastroController extends CircuitoController {
 
 	public function selecionarRevisionistaCrachaAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-
-		$idRevisao = $sessao->idSessao;
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$sessao->idRevisao = $idRevisao;
-		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
-		$fatosRevisao = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisao));
+		$arrayDeEventosRevisoes = array();
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
+		){
+			$request = $this->getRequest();
+			if ($request->isPost()) {
+				$arrayDeRevisoes = Array();
+				foreach ($_POST as $key => $value) {
+					if (substr($key, 0, 7) == 'revisao') {
+						$arrayDeEventosRevisoes[] = $value;
+					}
+				}
+			}
+		}else{
+			$idRevisao = $sessao->idSessao;
+			$arrayDeEventosRevisoes[] = $idRevisao;
+		}
+
+		$fatosRevisao = array();
+		foreach($arrayDeEventosRevisoes as $idRevisaoParaPesquisar){
+			$fatosRevisaoPesquisado = $this->getRepositorio()->getFatoRevisaoORM()->encontrarPorIdEvento(intVal($idRevisaoParaPesquisar));
+			foreach($fatosRevisaoPesquisado as $fatoRevisaoPesquisado){
+				$fatosRevisao[] = $fatoRevisaoPesquisado; 
+			}
+		}
 
 		$listas = array();
-		if($fatosRevisao) {
-			foreach ($fatosRevisao as $fatoRevisao) {
+		if(count($fatosRevisao) > 0) {
+				foreach ($fatosRevisao as $fatoRevisao) {
 				if($fatoRevisao->ativo === 'S'){
 					$listas[$fatoRevisao->tipo][] = $fatoRevisao;
 				}
@@ -3111,7 +3205,6 @@ class CadastroController extends CircuitoController {
 		$formulario = new SelecionarCrachaForm('formulario');
 		$view = new ViewModel(array(
 			'formulario' => $formulario,
-			'evento' => $eventoRevisao,
 			'listas' => $listas,
 		));
 
