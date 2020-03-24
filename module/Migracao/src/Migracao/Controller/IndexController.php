@@ -420,9 +420,6 @@ class IndexController extends CircuitoController {
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '60');
 
-		Funcoes::var_dump(date('d/m/Y H:m:s'));
-		Funcoes::var_dump('data para iantivar: '. self::getDataParaInativacao());
-
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
 		$html = '';
