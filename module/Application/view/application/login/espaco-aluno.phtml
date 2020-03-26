@@ -1,0 +1,66 @@
+<div class='panel text-center'>
+<div class='alert alert-info'>Espaço do Aluno</div>
+<div id='divConsultarMatricula' class='panel text-center p20'>
+<p>Informe a matrícula do aluno</p>
+<input type='number' id='matricula' class='forn-control' />
+<button type='button' onClick='consultarMatricula()' class='btn btn-xs btn-primary'>
+Consultar
+</button>
+</div>
+<div id='divMensagemDeErro'></div>
+<div id='divRetorno'></div>
+<div id='divBotaoVoltar' class='hidden'></div>
+</div>
+
+<script type='text/javascript'>
+function consultarMatricula(){
+		const matricula = document.getElementById('matricula').value;
+		document.getElementById('divMensagemDeErro').classList.add('hidden')
+		if(isNaN(matricula) || matricula === ''){
+			return false
+		}
+		mostrarSplash();
+		const url = '/consultarMatricula'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					matricula,
+				}),
+			},
+		)
+		.then(retorno => {
+			esconderSplash()
+			if(!retorno.ok){
+				const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
+				divMensagemDeErro.classList.remove('hidden')
+				divMensagemDeErro.inerHTML = '<div class="alert alert-warning">Matrícula não encontrada!</div>'
+			}
+			return retorno.json()
+		})
+		.then(json => {
+			if(json.html !== undefined){
+				document.getElementById('divConsultarMatricula').classList.add('hidden')
+				document.getElementById('divRetorno').innerHTML = json.html
+			}else{
+				document.getElementById('divMensagemDeErro').classList.remove('hidden')
+				document.getElementById('divMensagemDeErro').innerHTML = '<div class="alert alert-danger">Matrícula não Encontrada</div>'
+				document.getElementById('matricula').value = ''
+			}
+		})
+}
+
+function mostrarAula(){
+	document.getElementById('divBotaoMostrarVimeo').classList.add('hidden')
+	document.getElementById('divVimeo').classList.remove('hidden')
+}
+
+function sair(){
+	document.getElementById('divBotaoMostrarVimeo').classList.remove('hidden')
+	document.getElementById('divVimeo').classList.add('hidden')
+	document.getElementById('divConsultarMatricula').classList.remove('hidden')
+	document.getElementById('divRetorno').innerHTML = ''
+	document.getElementById('matricula').value = ''
+}
+</script>

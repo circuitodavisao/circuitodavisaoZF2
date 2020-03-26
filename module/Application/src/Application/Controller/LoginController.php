@@ -1084,4 +1084,87 @@ class LoginController extends CircuitoController {
 		}
 	}
 
+	public function espacoAlunoAction(){
+		return new ViewModel();
+	}
+
+
+	public function consultarMatriculaAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$dados['ok'] = false;
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
+					$html = '';
+					if($turmaPessoa->verificarSeEstaAtivo()){
+						$html .= '<div class="panel">';
+						$html .= '<table class="table">';
+
+						$html .= '<tr>';
+						$html .= '<td>Matrícula</td>';
+						$html .= '<td>'.$turmaPessoa->getId().'</td>';
+						$html .= '</tr>';
+
+						$html .= '<tr>';
+						$html .= '<td>Aluno</td>';
+						$html .= '<td>'.$turmaPessoa->getPessoa()->getNome().'</td>';
+						$html .= '</tr>';
+
+						$html .= '<tr>';
+						$html .= '<td>Time</td>';
+						$html .= '<td>'.$turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade().'</td>';
+						$html .= '</tr>';
+
+						$html .= '<tr>';
+						$html .= '<td>Turma</td>';
+						$html .= '<td>';
+						$turma = $turmaPessoa->getTurma();
+						$nomeDisciplina = 'PÓS REVISÃO';
+						if($turma->getTurmaAulaAtiva()){
+							$nomeDisciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+						}
+						$html .= $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina;
+						$html .= '</td>';
+						$html .= '</tr>';
+
+						$html .= '<tr>';
+						$html .= '<td>Aula Aberta</td>';
+						$html .= '<td>';
+						$aulaAberta = '<div class="alert alert-danger">SEM AULA ABERTA</div>';
+						if($turma->getTurmaAulaAtiva()){
+							$aulaAberta = $turma->getTurmaAulaAtiva()->getAula()->getNome();
+						}
+						$html .= $aulaAberta;
+						$html .= '</td>';
+						$html .= '</tr>';
+
+						$html .= '</table>';
+						$html .= '</div>';
+
+						if($turma->getTurmaAulaAtiva()){
+							$html .= '<div id="divBotaoMostrarVimeo" class="panel p10">';
+							$html .= '<button type="button" class="btn btn-primary" onClick="mostrarAula()">Ver Aula</button>';
+							$html .= '</div>';	
+							$html .= '<div id="divVimeo" class="panel p10 hidden">';
+							$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/401096812?byline=0&portrait=0" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+							$html .= '<button type="button" class="btn btn-primary mt10" onClick="sair()">Sair</button>';
+							$html .= '</div>';	
+						}
+					}
+					$dados['html'] = $html;
+					$dados['ok'] = true;
+				}
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
 }
