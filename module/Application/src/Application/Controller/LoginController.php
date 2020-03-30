@@ -13,6 +13,7 @@ use Application\Form\AtualizarCadastroForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\EntidadeTipo;
+use Application\Model\Entity\Situacao;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -1088,7 +1089,6 @@ class LoginController extends CircuitoController {
 		return new ViewModel();
 	}
 
-
 	public function consultarMatriculaAction(){
 		$request = $this->getRequest();
 		$response = $this->getResponse();
@@ -1102,7 +1102,9 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					$html = '';
 					if($turmaPessoa->verificarSeEstaAtivo()){
+						$info = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tempus tortor. Suspendisse turpis nisi, rhoncus eu euismod quis, convallis quis turpis. Proin nunc mi, eleifend sed luctus venenatis, interdum sed libero. Pellentesque condimentum justo consectetur, congue neque a, dignissim mi. Donec vestibulum facilisis mauris, a auctor metus convallis id. Sed lectus mi, suscipit congue enim eget, cursus efficitur leo. Aenean pellentesque vitae velit vel laoreet. Proin eget euismod leo.';
 						$html .= '<div class="panel">';
+						$html .= '<div class="alert alert-success">'.$info.'</div>';
 						$html .= '<table class="table">';
 
 						$html .= '<tr>';
@@ -1133,32 +1135,126 @@ class LoginController extends CircuitoController {
 						$html .= '</tr>';
 
 						$html .= '<tr>';
-						$html .= '<td>Aula Aberta</td>';
-						$html .= '<td>';
-						$aulaAberta = '<div class="alert alert-danger">SEM AULA ABERTA</div>';
-						if($turma->getTurmaAulaAtiva()){
-							$aulaAberta = $turma->getTurmaAulaAtiva()->getAula()->getNome();
+						$html .= '<td>Situação</td>';
+						$corSituacao = 'success';
+						if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
+							$corSituacao = 'primary';
 						}
-						$html .= $aulaAberta;
+						$html .= '<td><span class="label label-'.$corSituacao.'">'.$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
+						$html .= '</tr>';
+
+						$html .= '<tr>';
+						$html .= '<td>Faltas</td>';
+						$html .= '<td>';
+						$listaDeFaltas = array();
+						if($turma->getTurmaAulaAtiva()){
+							$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
+							foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+								if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+									break;
+								}
+								$falta = true;
+								if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+									foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+										if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
+											$falta = false;
+										}
+									}
+								}
+								if($falta){
+									$listaDeFaltas[] = $aula;
+								}
+							}
+						}
+
+						$htmlFaltas = '<div class="alert alert-danger">SEM FALTAS</div>';
+						if(count($listaDeFaltas) > 0){
+							$htmlFaltas = '';
+							foreach($listaDeFaltas as $falta){
+								if($htmlFaltas !== ''){
+									$htmlFaltas .= ', ';
+								}
+								$htmlFaltas .= 'Aula '.$falta->getPosicao();
+							}
+						}
+
+						$html .= $htmlFaltas;
 						$html .= '</td>';
 						$html .= '</tr>';
 
 						$html .= '</table>';
 						$html .= '</div>';
 
-						if($turma->getTurmaAulaAtiva()){
-							$html .= '<div id="divBotaoMostrarVimeo" class="panel p10">';
-							$html .= '<button type="button" class="btn btn-primary" onClick="mostrarAula()">Ver Aula</button>';
-							$html .= '</div>';	
-							$html .= '<div id="divVimeo" class="panel p10 hidden">';
-							$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/401096812?byline=0&portrait=0" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
-							$html .= '<button type="button" class="btn btn-primary mt10" onClick="sair()">Sair</button>';
-							$html .= '</div>';	
+						if(count($listaDeFaltas) > 0){
+							$html .= '<div class="p5">';
+							foreach($listaDeFaltas as $falta){
+								$html .= '<div class="panel panel-primary">';
+								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$falta->getPosicao().' - '.$falta->getNome().'</div>';
+								$html .= '<div class="panel-body">';
+								// TODO
+								$id = 401096812;
+								$url = 'https://player.vimeo.com/video/'.$id.'?byline=0&portrait=0';
+								$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+								$html .= '<div class="alert alert-info mt10">Questionário</div>';
+								// TODO
+								// Perguntas e Respostas
+								$perguntas = array();
+								for($indicePerguntas = 1; $indicePerguntas <= 5; $indicePerguntas++){
+									$dados = array();
+									$dados['id'] = $falta->getId().'_'.$indicePerguntas;
+									$dados['pergunta'] = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tempus tortor. Suspendisse turpis nisi, rhoncus eu?';
+									$dados[1] = 'Lorem ipsum dolor';
+									$dados[2] = 'Lorem ipsum dolor';
+									$dados[3] = 'Lorem ipsum dolor';
+									$dados[4] = 'Lorem ipsum dolor';
+									$dados[5] = 'Lorem ipsum dolor';
+									$perguntas[] = $dados;
+								}
+								foreach($perguntas as $pergunta){
+									$html .= '<div class="panel panel-default mt5">';
+									$html .= '<div class="panel-body">';
+									$html .= '<span>'.$pergunta['pergunta'].'</span>';
+									for($indiceRespostas = 1; $indiceRespostas <= 5; $indiceRespostas++){
+										$html .= '<p><input type="radio" id="'.$pergunta['id'].'" name="'.$pergunta['id'].'" value="'.$pergunta[$indiceRespostas].'"> '.$pergunta[$indiceRespostas].'</p>';
+									}
+									$html .= '</div>';
+									$html .= '</div>';
+								}
+								$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$falta->getId().')">Enviar Respostas</button>';
+								$html .= '</div>';
+								$html .= '</div>';
+							}
+							$html .= '</div>';
 						}
+
+						$html .= '<div id="divSair">';
+						$html .= '<button type="button" class="btn btn-primary mt10" onClick="sair()">Sair</button>';
+						$html .= '</div>';
 					}
 					$dados['html'] = $html;
 					$dados['ok'] = true;
 				}
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function enviarRespostasAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$dados['ok'] = false;
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}

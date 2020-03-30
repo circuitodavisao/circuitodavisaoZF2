@@ -1,4 +1,4 @@
-<div class='panel text-center'>
+<div id="topo" class='panel text-center'>
 <div class='alert alert-info'>Espaço do Aluno</div>
 <div id='divConsultarMatricula' class='panel text-center p20'>
 <p>Informe a matrícula do aluno</p>
@@ -13,8 +13,13 @@ Consultar
 </div>
 
 <script type='text/javascript'>
-function consultarMatricula(){
-		const matricula = document.getElementById('matricula').value;
+function consultarMatricula(item = null){
+		let matricula = null
+		if(item === null){
+			matricula = document.getElementById('matricula').value;
+		}else{
+			matricula = item
+		}
 		document.getElementById('divMensagemDeErro').classList.add('hidden')
 		if(isNaN(matricula) || matricula === ''){
 			return false
@@ -51,14 +56,49 @@ function consultarMatricula(){
 		})
 }
 
-function mostrarAula(){
-	document.getElementById('divBotaoMostrarVimeo').classList.add('hidden')
-	document.getElementById('divVimeo').classList.remove('hidden')
+function enviarRespostas(aula_id){
+	const respostas = []
+	for(let i = 1; i <= 5; i++){
+		const idResposta = `${aula_id}_${i}`
+		const inputResposta = document.getElementById(idResposta)
+		const resposta = {
+			id: i,
+			valor: inputResposta.value,
+		}
+		respostas.push(resposta)
+	} 
+		mostrarSplash();
+		const url = '/enviarRespostas'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					aula_id,
+					respostas,
+				}),
+			},
+		)
+		.then(retorno => {
+			esconderSplash()
+			if(!retorno.ok){
+				const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
+				divMensagemDeErro.classList.remove('hidden')
+				divMensagemDeErro.inerHTML = '<div class="alert alert-warning">Relatório não enviado tente novamente!</div>'
+			}
+			return retorno.json()
+		})
+		.then(json => {
+			if(json.ok){
+				document.location.href='#topo'
+				alert('Aula Reposta')
+				matricula = document.getElementById('matricula').value;
+				consultarMatricula(matricula)
+			}
+		})
 }
 
 function sair(){
-	document.getElementById('divBotaoMostrarVimeo').classList.remove('hidden')
-	document.getElementById('divVimeo').classList.add('hidden')
 	document.getElementById('divConsultarMatricula').classList.remove('hidden')
 	document.getElementById('divRetorno').innerHTML = ''
 	document.getElementById('matricula').value = ''
