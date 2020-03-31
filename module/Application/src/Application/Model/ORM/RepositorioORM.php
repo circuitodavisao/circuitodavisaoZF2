@@ -771,6 +771,14 @@ class RepositorioORM {
         return $this->_fatoRevisaoORM;
     }
 
+    public function getPerguntaORM() {
+        if (is_null($this->_perguntaORM)) {
+			$this->_perguntaORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_PERGUNTA);
+        }
+        return $this->_perguntaORM;
+    }
+
+
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados
      * @return EntityManager

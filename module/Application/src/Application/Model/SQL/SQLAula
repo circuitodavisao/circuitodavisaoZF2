@@ -52,3 +52,5 @@ COMMENT ON COLUMN public.aula.hora_inativacao
 COMMENT ON CONSTRAINT fk_disciplina ON public.aula
     IS 'chave estrangeira que conecta aula à uma disciplina.';
 
+ALTER TABLE aula ADD COLUMN url character varying(200);
+ALTER TABLE aula ADD COLUMN pessoa_id integer;

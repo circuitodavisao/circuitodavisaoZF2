@@ -14,6 +14,9 @@ use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\RegistroAcao;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
+use Application\Model\Entity\CursoAcesso;
+use Application\Model\Entity\Pergunta;
+use Application\View\Helper\BotaoSimples;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -1247,7 +1250,6 @@ class LoginController extends CircuitoController {
 		$response = $this->getResponse();
 		$dados = array();
 		$dados['ok'] = false;
-		$resultado = array();
 		if ($request->isPost()) {
 			try {
 				$body = $request->getContent();
@@ -1263,4 +1265,464 @@ class LoginController extends CircuitoController {
 		return $response;
 	}
 
+	public function espacoCoordenadorAction(){
+		return new ViewModel();
+	}
+
+	public function validarAcessoAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+
+				$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+				$adapter->setIdentityValue($json->email);
+				$adapter->setCredentialValue(md5($json->senha));
+				$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+				if ($authenticationResult->isValid()) {
+					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
+					/* Tem responsabilidade(s) */
+					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+						if ($pessoa->getPessoaCursoAcessoAtivo()) {
+							if ($pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
+								$sessao = new Container(Constantes::$NOME_APLICACAO);
+								$sessao->idPessoa = $pessoa->getId();
+								
+								$html = self::buscarAulasComPerguntas();
+
+								$dados['html'] = $html;
+								$dados['ok'] = true;
+							}
+						}
+					}
+				}
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function voltarAAulasEPerguntasAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$html = self::buscarAulasComPerguntas();
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function buscarAulasComPerguntas(){
+		$html = '';
+		$curso = $this->getRepositorio()->getCursoORM()->encontrarPorId($idCurso = 2);
+		$html .= '<div class="panel panel-default">';
+		$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aulas</div>';
+		$html .= '<div class="panel-body">';
+		$html .= '<div class="table-responsive">';
+		$html .= '<table class="table table-condensed">';
+		$html .= '<thead>';
+		$html .= '<tr>';
+		$html .= '<th colspan="13">Legenda'
+			. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Perguntas e URL</span>'
+			. ' - <span class="label label-xs label-warning"><i class="fa fa-retweet"></i> Tem Perguntas sem URL</span>'
+			. ' - <span class="label label-xs label-warning"><i class="fa fa-retweet"></i> Não tem Pergunta mas tem URL</span>'
+			. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Tem Perguntas e URL</span>'
+	   		. '	- Clique na aula para criar ou alterar as perguntas e a URL do Vimeo</th>';
+		$html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<th>Diciplinas</th>';
+		$html .= '<th colspan="12">Aulas</th>';
+		$html .= '</tr>';
+		$html .= '</thead>';
+		$html .= '<tbody>';
+		$pontosPresenca = Array();
+		foreach ($curso->getDisciplina() as $disciplina) {
+			$html .= '<tr>';
+			$html .= '<td>' . $disciplina->getNome() . '</td>';		
+			foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+				$icone = 'fa-times';
+				$corDoBotao = 'danger';
+				$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+				$temUrl = false;
+				$temPerguntas = false;
+
+				foreach($aula->getPergunta() as $pegunta){
+					if($pegunta->verificarSeEstaAtivo()){
+						$temPerguntas = true;
+						$corDoBotao = 'warning';
+						$icone = 'fa-retweet';
+					}
+				}
+
+				if($aula->getUrl() !== '' && $aula->getUrl() !== null){
+					$temUrl = true;
+					$corDoBotao = 'warning';
+					$icone = 'fa-retweet';
+				}
+
+				if($temUrl && $temPerguntas){
+					$icone = 'fa-check';
+					$corDoBotao = 'success';
+				}
+				$html .= '<td class="text-center">';
+				$html .= $aula->getPosicao();
+				$html .= ' <button onClick="alterarPerguntas('.$aula->getId().');" class="btn btn-xs btn-'.$corDoBotao.'"><i class="fa '.$icone.'"></i></button>';
+				$html .= '</td>';
+			}
+			$html .= '</tr>';
+		}
+		$html .= '</tbody>';
+		$html .= '</table>';
+		$html .= '</div>';
+		$html .= '<br /><button type="button" class="btn btn-sm btn-default" onClick="sair()">Sair</button>';
+		$html .= '</div>';
+		$html .= '</div>';
+		return $html;
+	}
+
+	public function buscarPerguntasAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				
+				$html = self::buscarDadosDeUmaAula($json->aula_id);
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	function buscarDadosDeUmaAula($aula_id){
+		$html = '';
+		$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId($aula_id);
+		$html .= '<div class="panel panel-default m5">';
+		$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
+		$html .= '<div class="panel-body">';
+
+		$html .= '<div class="panel panel-primary">';
+		$html .= '<div class="panel-heading" style="padding: 0 8px;">URL do Vimeo</div>';
+		$html .= '<div class="table-responsive">';
+		$html .= '<table class="table table-condensed">';
+		$html .= '<tbody>';
+		$html .= '<tr>';
+		$html .= '<td>URL do Vimeo</td>';
+		$html .= '<td><input class="form-control" type="text" id="urlVimeo" value="'.$aula->getUrl().'" placeholder="URL" /></td>';
+		$html .= '</tr>';
+		if($aula->getPessoa()){
+			$html .= '<tr>';
+			$html .= '<td>Quem Alterou a URL</td>';
+			$html .= '<td>'.$aula->getPessoa()->getNome().'</td>';
+			$html .= '</tr>';
+		}
+		$html .= '<tr>';
+		$html .= '<td colspan="2"><button type="button" onClick="salvarUrl('.$aula_id.');" class="btn btn-sm btn-primary">Salvar URL</button></td>';
+		$html .= '</tr>';
+		$html .= '</tbody>';
+		$html .= '</table>';
+		$html .= '</div>';
+		$html .= '</div>';
+
+		$html .= '<div class="panel panel-primary">';
+		$html .= '<div class="panel-heading" style="padding: 0 8px;">Perguntas - <button type="button" class="btn btn-sm btn-success" onClick="abrirSalvarPergunta(0, '.$aula->getId().');"><i class="fa fa-plus"></i> Adicionar Pergunta</div>';
+		$perguntasAtivas = false;
+		foreach($aula->getPergunta() as $pegunta){
+			if($pegunta->verificarSeEstaAtivo()){
+				$perguntasAtivas = true;
+			}
+		}
+		if($perguntasAtivas){
+			$html .= '<div class="table-responsive">';
+			$html .= '<table class="table table-condensed">';
+			$html .= '<tbody>';
+			foreach($aula->getPergunta() as $pegunta){
+				if($pegunta->verificarSeEstaAtivo()){
+					$html .= '<tr>';
+					$html .= '<td colspan="2"><hr /></td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Pergunta</td>';
+					$html .= '<td>'.$pegunta->getPergunta().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Resposta 1</td>';
+					$html .= '<td>'.$pegunta->getR1().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Resposta 2</td>';
+					$html .= '<td>'.$pegunta->getR2().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Resposta 3</td>';
+					$html .= '<td>'.$pegunta->getR3().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Resposta 4</td>';
+					$html .= '<td>'.$pegunta->getR4().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Resposta Certa</td>';
+					$html .= '<td>'.$pegunta->getCerta().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Quem criou/alterou</td>';
+					$html .= '<td>'.$pegunta->getPessoa()->getNome().'</td>';
+					$html .= '</tr>';
+					$html .= '<tr>';
+					$html .= '<td>Opções</td>';
+					$html .= '<td>';
+					$html .= '<button type="button" class="btn btn-sm btn-primary" onClick="abrirSalvarPergunta('.$pegunta->getId().','.$aula->getId().');"><i class="fa fa-pencil"></i> Alterar</button>';
+					$html .= '&nbsp;<button type="button" class="btn btn-sm btn-danger" onClick="removerPergunta('.$pegunta->getId().','.$aula->getId().');"><i class="fa fa-times"></i> Remover</button>';
+					$html .= '</td>';
+					$html .= '</tr>';
+				}
+			}
+			$html .= '</tbody>';
+			$html .= '</table>';
+		}else{
+			$html .= '<div class="alert alert-danger">Sem perguntas Cadastradas</div>';
+		}
+		$html .= '</div>';
+
+		$html .= '<button type="button" onClick="voltarAAulasEPerguntas();" class="btn btn-sm btn-default">Voltar</button>';
+
+		$html .= '</div>';
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	public function abrirSalvarPerguntaAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$perguntaSelecionada = null;
+				if(intVal($json->pergunta_id) !== 0){
+					$perguntaSelecionada = $this->getRepositorio()->getPerguntaORM()->encontrarPorId(intVal($json->pergunta_id));
+				}
+
+				$html .= '<div class="panel panel-default m5">';
+				$html .= '<div class="panel-heading" style="padding: 0px 8px;">Salvar Pergunta</div>';
+				$html .= '<div class="panel-body">';
+				$idPergunta = $perguntaSelecionada ? $perguntaSelecionada->getId() : 0;
+				$html .= '<input type="hidden" id="pergunta_id" value="'.$idPergunta.'"/>';
+				$html .= '<input type="hidden" id="aula_id" value="'.$json->aula_id.'"/>';
+
+				$html .= '<table class="table table-condensed">';
+				$html .= '<tbody>';
+				$html .= '<tr>';
+				$html .= '<td>Pergunta</td>';
+				$pergunta = $perguntaSelecionada ? $perguntaSelecionada->getPergunta() : '';
+				$html .= '<td><input class="form-control" type="text" id="pergunta" value="'.$pergunta.'" placeholder="Pergunta" /></td>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td>Resposta 1</td>';
+				$r1 = $perguntaSelecionada ? $perguntaSelecionada->getR1() : '';
+				$html .= '<td><input class="form-control" type="text" id="r1" value="'.$r1.'" placeholder="Resposta 1" /></td>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td>Resposta 2</td>';
+				$r2 = $perguntaSelecionada ? $perguntaSelecionada->getR2() : '';
+				$html .= '<td><input class="form-control" type="text" id="r2" value="'.$r2.'" placeholder="Resposta 2" /></td>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td>Resposta 3</td>';
+				$r3 = $perguntaSelecionada ? $perguntaSelecionada->getR3() : '';
+				$html .= '<td><input class="form-control" type="text" id="r3" value="'.$r3.'" placeholder="Resposta 3" /></td>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td>Resposta 4</td>';
+				$r4 = $perguntaSelecionada ? $perguntaSelecionada->getR4() : '';
+				$html .= '<td><input class="form-control" type="text" id="r4" value="'.$r4.'" placeholder="Resposta 4" /></td>';
+				$html .= '</tr>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td>Resposta Certa</td>';
+				$html .= '<td>';
+				$certa = $perguntaSelecionada ? $perguntaSelecionada->getCerta() : '';
+				$selected1 = '';
+				if($certa === 1){
+					$selected1 = 'selected';
+				}
+				$selected2 = '';
+				if($certa === 2){
+					$selected2 = 'selected';
+				}
+				$selected3 = '';
+				if($certa === 3){
+					$selected3 = 'selected';
+				}
+				$selected4 = '';
+				if($certa === 4){
+					$selected4 = 'selected';
+				}
+				$html .= '<select id="certa" class="form-control">';
+				$html .= '<option value="0">Selecione</option>';
+				$html .= '<option '.$selected1.' value="1">Resposta 1</option>';
+				$html .= '<option '.$selected2.' value="2">Resposta 2</option>';
+				$html .= '<option '.$selected3.' value="3">Resposta 3</option>';
+				$html .= '<option '.$selected4.' value="4">Resposta 4</option>';
+				$html .= '</select>';
+				$html .= '</td>';
+				$html .= '</tr>';
+				$html .= '<tr>';
+				$html .= '<td colspan="2">';
+				$html .= '<button class="btn btn-sm btn-primary" onClick="salvarPergunta();">Salvar Pergunta</button>';
+				$html .= '&nbsp;<button class="btn btn-sm btn-default" onClick="voltarAAula('.$json->aula_id.');">Voltar</button>';
+				$html .= '</td>';
+				$html .= '</tr>';
+				$html .= '</tbody>';
+				$html .= '</table>';
+
+				$html .= '</div>';
+				$html .= '</div>';
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function salvarPerguntaAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$perguntaSelecionada = null;
+				if(intVal($json->pergunta_id) !== 0){
+					$perguntaSelecionada = $this->getRepositorio()->getPerguntaORM()->encontrarPorId(intVal($json->pergunta_id));
+				}else{
+					$perguntaSelecionada = new Pergunta();
+				}
+				$perguntaSelecionada->setPergunta($json->pergunta);
+				$perguntaSelecionada->setR1($json->r1);
+				$perguntaSelecionada->setR2($json->r2);
+				$perguntaSelecionada->setR3($json->r3);
+				$perguntaSelecionada->setR4($json->r4);
+				$perguntaSelecionada->setCerta($json->certa);
+				$perguntaSelecionada->setAula($this->getRepositorio()->getAulaORM()->encontrarPorId(intVal($json->aula_id)));
+				$perguntaSelecionada->setPessoa($this->getRepositorio()->getPessoaORM()->encontrarPorId(intVal($sessao->idPessoa)));
+				$this->getRepositorio()->getPerguntaORM()->persistir($perguntaSelecionada);
+
+				$html = self::buscarDadosDeUmaAula($json->aula_id);
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function removerPerguntaAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$perguntaSelecionada = $this->getRepositorio()->getPerguntaORM()->encontrarPorId(intVal($json->pergunta_id));
+				$perguntaSelecionada->setDataEHoraDeInativacao();
+				$this->getRepositorio()->getPerguntaORM()->persistir($perguntaSelecionada, $mudarDataDeCriacao = false);
+
+				$html = self::buscarDadosDeUmaAula($json->aula_id);
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function salvarUrlAction() {
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['ok'] = false;
+		$html = '';
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId(intVal($json->aula_id));
+				$aula->setUrl($json->urlVimeo);
+				$aula->setPessoa($this->getRepositorio()->getPessoaORM()->encontrarPorId(intVal($sessao->idPessoa)));
+				$this->getRepositorio()->getAulaORM()->persistir($aula, $mudarDataDeCriacao = false);
+
+				$html = self::buscarDadosDeUmaAula($json->aula_id);
+
+				$dados['html'] = $html;
+				$dados['ok'] = true;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function sairEspacoCoordenadorAction(){
+        $sessao = new Container(Constantes::$NOME_APLICACAO);
+		$response = $this->getResponse();
+
+		if($sessao->getManager()){
+			$sessao->getManager()->destroy();
+		}
+
+		$dados = array();	
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+	
 }

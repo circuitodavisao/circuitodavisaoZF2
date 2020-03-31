@@ -19,6 +19,9 @@ class Aula extends CircuitoEntity {
     /** @ORM\Column(type="string") */
     protected $nome;
 
+    /** @ORM\Column(type="string") */
+    protected $url;
+
     /** @ORM\Column(type="integer") */
     protected $disciplina_id;
 
@@ -46,11 +49,54 @@ class Aula extends CircuitoEntity {
      */
     protected $turmaPessoaVisto;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Pergunta", mappedBy="aula")  
+     */
+    protected $pergunta;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Pessoa", inversedBy="aula")
+     * @ORM\JoinColumn(name="pessoa_id", referencedColumnName="id")
+     */
+    protected $pessoa;
+
+    /** @ORM\Column(type="integer") */
+    protected $pessoa_id;
+
     public function __construct() {
+        $this->pergunta = new ArrayCollection();
         $this->turmaAula = new ArrayCollection();
         $this->turmaPessoaAula = new ArrayCollection();
         $this->turmaPessoaVisto = new ArrayCollection();
     }
+
+	function getPessoa(){
+		return $this->pessoa;
+	}
+
+	function getPessoa_id(){
+		return $this->pessoa_id;
+	}
+
+	function setPessoa($i){
+		$this->pessoa = $i;
+	}
+
+	function setPessoa_id($i){
+		$this->pessoa_id = $i;
+	}
+	
+    function getUrl() {
+        return $this->url;
+    }
+
+    function getPergunta() {
+        return $this->pergunta;
+    }
+
+	function setPergunta($i){
+		$this->pergunta = $i;
+	}
 
     function getNome() {
         return $this->nome;
@@ -87,6 +133,10 @@ class Aula extends CircuitoEntity {
     function getTurmaAula() {
         return $this->turmaAula;
     }
+
+	function setUrl($i){
+		$this->url = $i;
+	}
 
     function setTurmaAula($turmaAula) {
         $this->turmaAula = $turmaAula;

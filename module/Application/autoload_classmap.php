@@ -36,6 +36,7 @@ return array(
     'Application\Form\HierarquiaForm'                            => __DIR__ . '/src/Application/Form/HierarquiaForm.php',
     'Application\Form\AtivarFichaForm'                           => __DIR__ . '/src/Application/Form/AtivarFichaForm.php',
     'Application\Model\Helper\FuncoesEntidade'                   => __DIR__ . '/src/Application/Model/Helper/FuncoesEntidade.php',
+    'Application\Model\Entity\Pergunta'                       => __DIR__ . '/src/Application/Model/Entity/Pergunta.php',
     'Application\Model\Entity\FatoRevisao'                       => __DIR__ . '/src/Application/Model/Entity/FatoRevisao.php',
     'Application\Model\Entity\PessoaCursoAcesso'                 => __DIR__ . '/src/Application/Model/Entity/PessoaCursoAcesso.php',
     'Application\Model\Entity\FatoCelulaDiscipulado'             => __DIR__ . '/src/Application/Model/Entity/FatoCelulaDiscipulado.php',

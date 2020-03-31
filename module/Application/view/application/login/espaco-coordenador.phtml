@@ -1,0 +1,334 @@
+<div id="topo" class='panel text-center'>
+<div class='alert alert-info'>Espaço do Coordenador</div>
+<div id='divConsultarMatricula' class='panel text-center p20'>
+<p>Informe a seu usuário e senha</p>
+<input type='email' id='email' class='form-control' placeholder="Usuário"/>
+<br />
+<br />
+<input type='password' id='senha' class='form-control' placeholder="Senha" />
+<br />
+<br />
+<button type='button' onClick='validarAcesso()' class='btn btn-sm btn-primary'>
+Acessar
+</button>
+</div>
+<div id='divMensagemDeErro'></div>
+<div id='divRetorno'></div>
+<div id='divBotaoVoltar' class='hidden'></div>
+</div>
+
+<script type='text/javascript'>
+function validarAcesso(){
+		const email = document.getElementById('email').value;
+		const senha = document.getElementById('senha').value;
+		const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
+		const mensagemDeErro = '<div class="alert alert-warning">Usuário e/ou Senha inválido ou sem acesso!</div>'
+		document.getElementById('divMensagemDeErro').classList.add('hidden')
+		if(email === ''){
+			return false
+		}
+		if(senha === ''){
+			return false
+		}
+		mostrarSplash();
+		const url = '/validarAcesso'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					email,
+					senha,
+				}),
+			},
+		)
+		.then(retorno => {
+			esconderSplash()
+			if(!retorno.ok){
+				divMensagemDeErro.classList.remove('hidden')
+				divMensagemDeErro.innerHTML = mensagemDeErro
+			}
+			return retorno.json()
+		})
+		.then(json => {
+			if(json.html !== undefined){
+				document.getElementById('divConsultarMatricula').classList.add('hidden')
+				document.getElementById('divRetorno').innerHTML = json.html
+			}else{
+				divMensagemDeErro.classList.remove('hidden')
+				divMensagemDeErro.innerHTML = mensagemDeErro
+				document.getElementById('email').value = ''
+				document.getElementById('senha').value = ''
+			}
+		})
+}
+
+function alterarPerguntas(aula_id){
+		mostrarSplash();
+		const url = '/buscarPerguntas'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					aula_id,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+}
+
+function voltarAAulasEPerguntas(){
+		mostrarSplash();
+		const url = '/voltarAAulasEPerguntas'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+}
+
+function abrirSalvarPergunta(pergunta_id, aula_id){
+		mostrarSplash();
+		const url = '/abrirSalvarPergunta'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					pergunta_id,
+					aula_id,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+}
+
+function voltarAAula(aula_id){
+		mostrarSplash();
+		const url = '/buscarPerguntas'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					aula_id,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+}
+
+function salvarPergunta(){
+	const pergunta_id = document.getElementById('pergunta_id').value
+	const aula_id = document.getElementById('aula_id').value
+	const pergunta = document.getElementById('pergunta').value
+	const r1 = document.getElementById('r1').value
+	const r2 = document.getElementById('r2').value
+	const r3 = document.getElementById('r3').value
+	const r4 = document.getElementById('r4').value
+	const certa = document.getElementById('certa').value
+
+	let mostrarErro = false
+	let camposComErro = ''
+	if(pergunta === ''){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Pergunta'
+	}
+	if(r1 === ''){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Resposta 1'
+	}
+	if(r2 === ''){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Resposta 2'
+	}
+	if(r3 === ''){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Resposta 3'
+	}
+	if(r4 === ''){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Resposta 4'
+	}
+	if(parseInt(certa) === 0){
+		mostrarErro = true
+		if(camposComErro !== ''){
+			camposComErro += ', '	
+		}
+		camposComErro += 'Resposta Certa'
+	}
+	if(mostrarErro){
+		alert('Campos inválidos: ' + camposComErro)
+		return false
+	}else{
+		mostrarSplash();
+		const url = '/salvarPergunta'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					aula_id,
+					pergunta_id,
+					pergunta,
+					r1,
+					r2,
+					r3,
+					r4,
+					certa,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				alert('Pergunta Salva com sucesso!')
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+	}
+}
+
+function removerPergunta(pergunta_id, aula_id){
+	const confirmacao = confirm('Realemnte deseja remover essa pergunta?')
+
+	if(!confirmacao){
+		return false
+	}else{
+		mostrarSplash();
+		const url = '/removerPergunta'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					pergunta_id,
+					aula_id,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				alert('Pergunta Removida!')
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+	}
+}
+
+function salvarUrl(aula_id){
+	const urlVimeo = document.getElementById('urlVimeo').value
+	let mostrarErro = false
+	let camposComErro = ''
+	if(urlVimeo === ''){
+		mostrarErro = true
+		camposComErro += 'Url do Vimeo'
+	}
+	if(mostrarErro){
+		alert('Campos inválidos: ' + camposComErro)
+		return false
+	}else{
+		mostrarSplash();
+		const url = '/salvarUrl'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					aula_id,
+					urlVimeo,
+				}),
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			if(json.html !== undefined){
+				alert('URL Salva com sucesso!')
+				document.getElementById('divRetorno').innerHTML = json.html
+			}
+		})
+	}
+}
+
+function sair(){
+		mostrarSplash();
+		const url = '/sairEspacoCoordenador'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+			},
+		)
+		.then(retorno => {
+			return retorno.json()
+		})
+		.then(json => {
+			esconderSplash()
+			document.getElementById('divConsultarMatricula').classList.remove('hidden')
+			document.getElementById('divRetorno').innerHTML = ''
+			document.getElementById('email').value = ''
+			document.getElementById('senha').value = ''
+		})
+}
+
+</script>

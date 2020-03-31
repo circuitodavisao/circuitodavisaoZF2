@@ -1,0 +1,35 @@
+-- Table: public.pergunta
+
+-- DROP TABLE public.pergunta;
+
+CREATE TABLE public.pergunta
+(
+    id serial NOT NULL,
+    data_criacao date NOT NULL,
+    hora_criacao time without time zone NOT NULL,
+    pergunta character varying(200) NOT NULL,
+    r1 character varying(200) NOT NULL,
+    r2 character varying(200) NOT NULL,
+    r3 character varying(200) NOT NULL,
+    r4 character varying(200) NOT NULL,
+    certa integer NOT NULL,
+    aula_id integer NOT NULL,
+    pessoa_id integer NOT NULL,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_pergunta PRIMARY KEY (id),
+    CONSTRAINT fk_aula FOREIGN KEY (aula_id)
+        REFERENCES public.aula (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_pessoa FOREIGN KEY (pessoa_id)
+        REFERENCES public.pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.pergunta
+    OWNER to postgres;
