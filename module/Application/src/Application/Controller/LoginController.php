@@ -1352,6 +1352,7 @@ class LoginController extends CircuitoController {
 						if (
 							($pessoa->getPessoaCursoAcessoAtivo() && $pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)
 							|| $pessoa->getEmail() === 'diegokort@gmail.com'
+							|| $pessoa->getEmail() === 'julianafmo@gmail.com'
 						) {
 							$sessao = new Container(Constantes::$NOME_APLICACAO);
 							$sessao->idPessoa = $pessoa->getId();
