@@ -1107,13 +1107,18 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					$html = '';
 					if($turmaPessoa->verificarSeEstaAtivo()){
-						$info = 'Seja muito bem vindo ao Espaço do Aluno. Esse espaço é destinadi a reposição de aulas.
-
+						$info = 'Seja muito bem vindo ao Espaço do Aluno. Esse espaço é destinado a reposição de aulas.
+							<br />
+							<br />
 É necessário que você assista a aula até o final, em seguida responda ao questionário. 
+<br />
+							<br />
 Cada aula tem um questionário específico e é necessário que você acerte pelo menos 70% ou seja 7 das 10 questões para ser efetivada a sua reposição.
-
+<br />
+							<br />
 Uma vez respondido o questionário, a sua reposição será efetivada e o visto pedagógico daquela aula também.
-
+<br />
+							<br />
 Boa reposição.';
 						$html .= '<div class="panel">';
 
