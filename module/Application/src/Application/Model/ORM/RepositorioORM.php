@@ -77,6 +77,7 @@ class RepositorioORM {
 	private $_fatoMensalORM;
 	private $_envioORM;
 	private $_fatoRevisaoORM;
+	private $_perguntaORM;
 
     /**
      * Contrutor

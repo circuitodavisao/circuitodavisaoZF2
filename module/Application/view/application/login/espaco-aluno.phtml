@@ -14,6 +14,11 @@ Consultar
 </div>
 
 <script type='text/javascript'>
+
+let estado = {
+	respostas: [],
+}
+
 function consultarMatricula(item = null){
 		let matricula = null
 		if(item === null){
@@ -54,20 +59,19 @@ function consultarMatricula(item = null){
 				document.getElementById('divMensagemDeErro').innerHTML = '<div class="alert alert-danger">Matrícula não Encontrada</div>'
 				document.getElementById('matricula').value = ''
 			}
+
 		})
 }
 
+function mostrarFaltas(){
+	document.getElementById('divEspacoAluno').classList.add('hidden')
+	document.getElementById('divFaltas').classList.remove('hidden')
+}
+
 function enviarRespostas(aula_id){
-	const respostas = []
-	for(let i = 1; i <= 5; i++){
-		const idResposta = `${aula_id}_${i}`
-		const inputResposta = document.getElementById(idResposta)
-		const resposta = {
-			id: i,
-			valor: inputResposta.value,
-		}
-		respostas.push(resposta)
-	} 
+		const { respostas, } = estado
+		matricula = document.getElementById('matricula').value;
+
 		mostrarSplash();
 		const url = '/enviarRespostas'
 		fetch(
@@ -77,6 +81,7 @@ function enviarRespostas(aula_id){
 				body: JSON.stringify({
 					aula_id,
 					respostas,
+					matricula,
 				}),
 			},
 		)
@@ -86,15 +91,17 @@ function enviarRespostas(aula_id){
 				const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
 				divMensagemDeErro.classList.remove('hidden')
 				divMensagemDeErro.inerHTML = '<div class="alert alert-warning">Relatório não enviado tente novamente!</div>'
+				return false
 			}
 			return retorno.json()
 		})
 		.then(json => {
 			if(json.ok){
 				document.location.href='#topo'
-				alert('Aula Reposta')
-				matricula = document.getElementById('matricula').value;
+				alert('Parabéns a aula foi reposta!')
 				consultarMatricula(matricula)
+			}else{
+				alert('Você não acertou 70% do exercírcios refaça o questionário')
 			}
 		})
 }

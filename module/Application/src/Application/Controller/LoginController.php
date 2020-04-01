@@ -16,6 +16,8 @@ use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\Pergunta;
+use Application\Model\Entity\TurmaPessoaAula;
+use Application\Model\Entity\TurmaPessoaVisto;
 use Application\View\Helper\BotaoSimples;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -1107,7 +1109,16 @@ class LoginController extends CircuitoController {
 					if($turmaPessoa->verificarSeEstaAtivo()){
 						$info = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tempus tortor. Suspendisse turpis nisi, rhoncus eu euismod quis, convallis quis turpis. Proin nunc mi, eleifend sed luctus venenatis, interdum sed libero. Pellentesque condimentum justo consectetur, congue neque a, dignissim mi. Donec vestibulum facilisis mauris, a auctor metus convallis id. Sed lectus mi, suscipit congue enim eget, cursus efficitur leo. Aenean pellentesque vitae velit vel laoreet. Proin eget euismod leo.';
 						$html .= '<div class="panel">';
+
+						/* mensagem */
+						$html .= '<div id="divEspacoAluno">';
 						$html .= '<div class="alert alert-success">'.$info.'</div>';
+						$html .= '<button type="button" class="btn btn-sm btn-primary mb10" onClick="mostrarFaltas()">Prosseguir</button>';
+						$html .= '</div>';
+						/* fim mensagem */
+
+						$html .= '<div id="divFaltas" class="hidden">';
+						$html .= '<input type="hidden" id="matricula" value="'.$json->matricula.'" />';
 						$html .= '<table class="table">';
 
 						$html .= '<tr>';
@@ -1145,10 +1156,12 @@ class LoginController extends CircuitoController {
 						}
 						$html .= '<td><span class="label label-'.$corSituacao.'">'.$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
 						$html .= '</tr>';
+						$html .= '</table>';
 
-						$html .= '<tr>';
-						$html .= '<td>Faltas</td>';
-						$html .= '<td>';
+						/* faltas */
+						$html .= '<div class="panel panel-danger m5">';
+						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Faltas</div>';
+						$html .= '<div class="panel-body">';
 						$listaDeFaltas = array();
 						if($turma->getTurmaAulaAtiva()){
 							$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
@@ -1180,12 +1193,8 @@ class LoginController extends CircuitoController {
 								$htmlFaltas .= 'Aula '.$falta->getPosicao();
 							}
 						}
-
 						$html .= $htmlFaltas;
-						$html .= '</td>';
-						$html .= '</tr>';
-
-						$html .= '</table>';
+						$html .= '</div>';
 						$html .= '</div>';
 
 						if(count($listaDeFaltas) > 0){
@@ -1194,36 +1203,38 @@ class LoginController extends CircuitoController {
 								$html .= '<div class="panel panel-primary">';
 								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$falta->getPosicao().' - '.$falta->getNome().'</div>';
 								$html .= '<div class="panel-body">';
-								// TODO
-								$id = 401096812;
-								$url = 'https://player.vimeo.com/video/'.$id.'?byline=0&portrait=0';
-								$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+								if($falta->getUrl() !== null && $falta->getUrl() !== ''){
+									$idVideo = $falta->getUrl();
+									$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
+									$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+								}else{
+									$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
+								}
 								$html .= '<div class="alert alert-info mt10">Questionário</div>';
-								// TODO
-								// Perguntas e Respostas
-								$perguntas = array();
-								for($indicePerguntas = 1; $indicePerguntas <= 5; $indicePerguntas++){
-									$dados = array();
-									$dados['id'] = $falta->getId().'_'.$indicePerguntas;
-									$dados['pergunta'] = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec tempus tortor. Suspendisse turpis nisi, rhoncus eu?';
-									$dados[1] = 'Lorem ipsum dolor';
-									$dados[2] = 'Lorem ipsum dolor';
-									$dados[3] = 'Lorem ipsum dolor';
-									$dados[4] = 'Lorem ipsum dolor';
-									$dados[5] = 'Lorem ipsum dolor';
-									$perguntas[] = $dados;
-								}
-								foreach($perguntas as $pergunta){
-									$html .= '<div class="panel panel-default mt5">';
-									$html .= '<div class="panel-body">';
-									$html .= '<span>'.$pergunta['pergunta'].'</span>';
-									for($indiceRespostas = 1; $indiceRespostas <= 5; $indiceRespostas++){
-										$html .= '<p><input type="radio" id="'.$pergunta['id'].'" name="'.$pergunta['id'].'" value="'.$pergunta[$indiceRespostas].'"> '.$pergunta[$indiceRespostas].'</p>';
+								$temPerguntas = false;
+								foreach($falta->getPergunta() as $pergunta){
+									if($pergunta->verificarSeEstaAtivo()){
+										$temPerguntas = true;
 									}
-									$html .= '</div>';
-									$html .= '</div>';
 								}
-								$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$falta->getId().')">Enviar Respostas</button>';
+								if($temPerguntas){
+									foreach($falta->getPergunta() as $pergunta){
+										if($pergunta->verificarSeEstaAtivo()){
+											$html .= '<div class="panel panel-default mt5">';
+											$html .= '<div class="panel-body">';
+											$html .= '<span>'.$pergunta->getPergunta().'</span>';
+											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
+											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
+											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
+											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
+											$html .= '</div>';
+											$html .= '</div>';
+										}
+									}
+									$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$falta->getId().')">Enviar Respostas</button>';
+								}else{
+									$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
+								}
 								$html .= '</div>';
 								$html .= '</div>';
 							}
@@ -1231,7 +1242,10 @@ class LoginController extends CircuitoController {
 						}
 
 						$html .= '<div id="divSair">';
-						$html .= '<button type="button" class="btn btn-primary mt10" onClick="sair()">Sair</button>';
+						$html .= '<button type="button" class="btn btn-primary mb10" onClick="sair()">Sair</button>';
+						$html .= '</div>';
+
+						/* fim div faltas */
 						$html .= '</div>';
 					}
 					$dados['html'] = $html;
@@ -1254,9 +1268,56 @@ class LoginController extends CircuitoController {
 			try {
 				$body = $request->getContent();
 				$json = Json::decode($body);
+				$aulaReposta = false;
 
-				$dados['html'] = $html;
-				$dados['ok'] = true;
+				$contagemRespostasCertas = 0;
+				foreach($json->respostas as $resposta){
+					$pergunta = $this->getRepositorio()->getPerguntaORM()->encontrarPorId(intVal($resposta->pergunta_id));
+					if($pergunta->getAula()->getId() === intVal($json->aula_id)){
+						if(intVal($resposta->resposta) === $pergunta->getCerta()){
+							$contagemRespostasCertas++;
+						}
+					}
+				}
+
+				$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId(intVal($json->aula_id));
+				$contagemDeAulas = 0;
+				foreach($aula->getPergunta() as $perguntasParaValidar){
+					if($perguntasParaValidar->verificarSeEstaAtivo()){
+						$contagemDeAulas++;
+					}
+				}
+
+				$percentual = $contagemRespostasCertas / $contagemDeAulas * 100;
+				if($percentual >= 70){
+					$aulaReposta = true;
+				}
+
+				if($aulaReposta){
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId(intVal($json->matricula));
+					$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+					if (!$turmaPessoaAula) {
+						$turmaPessoaAula = new TurmaPessoaAula();
+						$turmaPessoaAula->setAula($aula);
+						$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+					}
+					$turmaPessoaAula->setData_inativacao(null);
+					$turmaPessoaAula->setHora_inativacao(null);
+					$turmaPessoaAula->setReposicao('S');
+					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+
+					$turmaPessoaVisto = $turmaPessoa->getTurmaPessoaVistoPorAula($aula->getId());
+					if (!$turmaPessoaVisto) {
+						$turmaPessoaVisto = new TurmaPessoaVisto();
+						$turmaPessoaVisto->setAula($aula);
+						$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+					}
+					$turmaPessoaVisto->setData_inativacao(null);
+					$turmaPessoaVisto->setHora_inativacao(null);
+					$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
+	
+					$dados['ok'] = true;
+				}
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
 			}
@@ -1427,22 +1488,22 @@ class LoginController extends CircuitoController {
 		$html .= '<div class="panel-body">';
 
 		$html .= '<div class="panel panel-primary">';
-		$html .= '<div class="panel-heading" style="padding: 0 8px;">URL do Vimeo</div>';
+		$html .= '<div class="panel-heading" style="padding: 0 8px;">Número de identificação do vídeo do Vimeo</div>';
 		$html .= '<div class="table-responsive">';
 		$html .= '<table class="table table-condensed">';
 		$html .= '<tbody>';
 		$html .= '<tr>';
-		$html .= '<td>URL do Vimeo</td>';
-		$html .= '<td><input class="form-control" type="text" id="urlVimeo" value="'.$aula->getUrl().'" placeholder="URL" /></td>';
+		$html .= '<td>Número de identificação do vídeo do Vimeo</td>';
+		$html .= '<td><input class="form-control" type="number" id="urlVimeo" value="'.$aula->getUrl().'" placeholder="Número" /></td>';
 		$html .= '</tr>';
 		if($aula->getPessoa()){
 			$html .= '<tr>';
-			$html .= '<td>Quem Alterou a URL</td>';
+			$html .= '<td>Quem Alterou/Salvou</td>';
 			$html .= '<td>'.$aula->getPessoa()->getNome().'</td>';
 			$html .= '</tr>';
 		}
 		$html .= '<tr>';
-		$html .= '<td colspan="2"><button type="button" onClick="salvarUrl('.$aula_id.');" class="btn btn-sm btn-primary">Salvar URL</button></td>';
+		$html .= '<td colspan="2"><button type="button" onClick="salvarUrl('.$aula_id.');" class="btn btn-sm btn-primary">Salvar Número</button></td>';
 		$html .= '</tr>';
 		$html .= '</tbody>';
 		$html .= '</table>';
