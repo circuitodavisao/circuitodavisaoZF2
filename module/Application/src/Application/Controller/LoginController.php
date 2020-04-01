@@ -1234,11 +1234,11 @@ Boa reposição.';
 										if($pergunta->verificarSeEstaAtivo()){
 											$html .= '<div class="panel panel-default mt5">';
 											$html .= '<div class="panel-body">';
-											$html .= '<span>'.$pergunta->getPergunta().'</span>';
-											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
-											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
-											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
-											$html .= '<p><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
+											$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
 											$html .= '</div>';
 											$html .= '</div>';
 										}
