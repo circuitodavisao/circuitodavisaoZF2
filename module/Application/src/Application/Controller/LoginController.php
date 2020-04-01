@@ -1349,19 +1349,17 @@ class LoginController extends CircuitoController {
 					$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
 					/* Tem responsabilidade(s) */
 					if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
-						if ($pessoa->getPessoaCursoAcessoAtivo()) {
-							if (
-								$pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR
-								|| $pessoa->getEmail() === 'diegokort@gmail.com'
-							) {
-								$sessao = new Container(Constantes::$NOME_APLICACAO);
-								$sessao->idPessoa = $pessoa->getId();
-								
-								$html = self::buscarAulasComPerguntas();
+						if (
+							($pessoa->getPessoaCursoAcessoAtivo() && $pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR)
+							|| $pessoa->getEmail() === 'diegokort@gmail.com'
+						) {
+							$sessao = new Container(Constantes::$NOME_APLICACAO);
+							$sessao->idPessoa = $pessoa->getId();
 
-								$dados['html'] = $html;
-								$dados['ok'] = true;
-							}
+							$html = self::buscarAulasComPerguntas();
+
+							$dados['html'] = $html;
+							$dados['ok'] = true;
 						}
 					}
 				}
