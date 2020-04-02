@@ -4889,6 +4889,7 @@ public function alunosNaSemanaAction(){
 				}
 			}
 
+
 		if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao
 			|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial ){
@@ -4899,7 +4900,13 @@ public function alunosNaSemanaAction(){
 				// dados discipulos
 				$fatosDiscipulos = array();
 				if(count($todosFilhos)){
+					//$todosFilhos = array();
+					//$grupo = $repositorio->getGrupoORM()->encontrarPorId(12624);
+					//$todosFilhos[] = $grupo->getGrupoPaiFilhoPai()[0];
+					$relatorioPorIgrejaDaRegiao = array();
 					foreach($todosFilhos as $filho){
+						$relatorioPorIgrejaDaRegiao[$filho->getId()] = array();
+
 						$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 						$entidade = $grupoFilho->getEntidadeAtiva();
 						$idEntidadeTipo = $entidade->getEntidadeTipo()->getId();
@@ -4998,27 +5005,32 @@ public function alunosNaSemanaAction(){
 															$idEntidadeTipo3 = $entidade3->getEntidadeTipo()->getId();
 															if($idEntidadeTipo3 === EntidadeTipo::igreja){
 																$fatoFilho3 = self::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
-																$arrayFatoMensal3 = (array)$fatoFilho3;
-																foreach($arrayFatoMensal3 as $k => $v){
-																	$aux = explode ("\0", $k);
-																	$k = $aux[count($aux)-1];
-																	if(
-																		$k !== 'id' &&
-																		$k !== 'numero_identificador' &&
-																		$k !== 'entidade' &&
-																		$k !== 'lideres' &&
-																		$k !== 'mes' &&
-																		$k !== 'ano' &&
-																		$k !== 'data_criacao' &&
-																		$k !== 'hora_criacao' &&
-																		$k !== 'data_inativacao' &&
-																		$k !== 'hora_inativacao'
-																	){
-																		$novoValor = $fatoFinal->$k + $v;
-																		$fatoFinal->$k = $novoValor;
-																		$novoValor1 = $fatoFilho->$k + $v;
-																		$fatoFilho->$k = $novoValor1;
+																if((int) $tipoRelatorio !== 6){
+																	$arrayFatoMensal3 = (array)$fatoFilho3;
+																	foreach($arrayFatoMensal3 as $k => $v){
+																		$aux = explode ("\0", $k);
+																		$k = $aux[count($aux)-1];
+																		if(
+																			$k !== 'id' &&
+																			$k !== 'numero_identificador' &&
+																			$k !== 'entidade' &&
+																			$k !== 'lideres' &&
+																			$k !== 'mes' &&
+																			$k !== 'ano' &&
+																			$k !== 'data_criacao' &&
+																			$k !== 'hora_criacao' &&
+																			$k !== 'data_inativacao' &&
+																			$k !== 'hora_inativacao'
+																		){
+																			$novoValor = $fatoFinal->$k + $v;
+																			$fatoFinal->$k = $novoValor;
+																			$novoValor1 = $fatoFilho->$k + $v;
+																			$fatoFilho->$k = $novoValor1;
+																		}
 																	}
+																}
+																if((int) $tipoRelatorio === 6){
+																	$relatorioPorIgrejaDaRegiao[$filho->getId()][] = $fatoFilho3;
 																}
 															}
 														}
@@ -5026,27 +5038,32 @@ public function alunosNaSemanaAction(){
 												}
 												if($idEntidadeTipo2 === EntidadeTipo::igreja){
 													$fatoFilho2 = self::fatoMensalSomado($filho2, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
-													$arrayFatoMensal2 = (array)$fatoFilho2;
-													foreach($arrayFatoMensal2 as $k => $v){
-														$aux = explode ("\0", $k);
-														$k = $aux[count($aux)-1];
-														if(
-															$k !== 'id' &&
-															$k !== 'numero_identificador' &&
-															$k !== 'entidade' &&
-															$k !== 'lideres' &&
-															$k !== 'mes' &&
-															$k !== 'ano' &&
-															$k !== 'data_criacao' &&
-															$k !== 'hora_criacao' &&
-															$k !== 'data_inativacao' &&
-															$k !== 'hora_inativacao'
-														){
-															$novoValor = $fatoFinal->$k + $v;
-															$fatoFinal->$k = $novoValor;
-															$novoValor1 = $fatoFilho->$k + $v;
-															$fatoFilho->$k = $novoValor1;
+													if((int) $tipoRelatorio !== 6){
+														$arrayFatoMensal2 = (array)$fatoFilho2;
+														foreach($arrayFatoMensal2 as $k => $v){
+															$aux = explode ("\0", $k);
+															$k = $aux[count($aux)-1];
+															if(
+																$k !== 'id' &&
+																$k !== 'numero_identificador' &&
+																$k !== 'entidade' &&
+																$k !== 'lideres' &&
+																$k !== 'mes' &&
+																$k !== 'ano' &&
+																$k !== 'data_criacao' &&
+																$k !== 'hora_criacao' &&
+																$k !== 'data_inativacao' &&
+																$k !== 'hora_inativacao'
+															){
+																$novoValor = $fatoFinal->$k + $v;
+																$fatoFinal->$k = $novoValor;
+																$novoValor1 = $fatoFilho->$k + $v;
+																$fatoFilho->$k = $novoValor1;
+															}
 														}
+													}
+													if((int) $tipoRelatorio === 6){
+														$relatorioPorIgrejaDaRegiao[$filho->getId()][] = $fatoFilho2;
 													}
 												}
 											}
@@ -5054,113 +5071,120 @@ public function alunosNaSemanaAction(){
 									}
 									if($idEntidadeTipo1 === EntidadeTipo::igreja){
 										$fatoFilho1 = self::fatoMensalSomado($filho1, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
-										$arrayFatoMensal1 = (array)$fatoFilho1;
-										foreach($arrayFatoMensal1 as $k => $v){
-											$aux = explode ("\0", $k);
-											$k = $aux[count($aux)-1];
-											if(
-												$k !== 'id' &&
-												$k !== 'numero_identificador' &&
-												$k !== 'entidade' &&
-												$k !== 'lideres' &&
-												$k !== 'mes' &&
-												$k !== 'ano' &&
-												$k !== 'data_criacao' &&
-												$k !== 'hora_criacao' &&
-												$k !== 'data_inativacao' &&
-												$k !== 'hora_inativacao'
-											){
-												$novoValor = $fatoFinal->$k + $v;
-												$fatoFinal->$k = $novoValor;
-												$novoValor1 = $fatoFilho->$k + $v;
-												$fatoFilho->$k = $novoValor1;
+										if((int) $tipoRelatorio !== 6){
+											$arrayFatoMensal1 = (array)$fatoFilho1;
+											foreach($arrayFatoMensal1 as $k => $v){
+												$aux = explode ("\0", $k);
+												$k = $aux[count($aux)-1];
+												if(
+													$k !== 'id' &&
+													$k !== 'numero_identificador' &&
+													$k !== 'entidade' &&
+													$k !== 'lideres' &&
+													$k !== 'mes' &&
+													$k !== 'ano' &&
+													$k !== 'data_criacao' &&
+													$k !== 'hora_criacao' &&
+													$k !== 'data_inativacao' &&
+													$k !== 'hora_inativacao'
+												){
+													$novoValor = $fatoFinal->$k + $v;
+													$fatoFinal->$k = $novoValor;
+													$novoValor1 = $fatoFilho->$k + $v;
+													$fatoFilho->$k = $novoValor1;
+												}
 											}
+										}
+										if((int) $tipoRelatorio === 6){
+											$relatorioPorIgrejaDaRegiao[$filho->getId()][] = $fatoFilho1;
 										}
 									}
 								}
 							}
-
 						}
 						if($idEntidadeTipo === EntidadeTipo::igreja){
-							$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
-							$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
-
-							$arrayFatoMensal = (array)$fatoFilho;
-							foreach($arrayFatoMensal as $k => $v){
-								$aux = explode ("\0", $k);
-								$k = $aux[count($aux)-1];
-								if(
-									$k !== 'id' &&
-									$k !== 'numero_identificador' &&
-									$k !== 'entidade' &&
-									$k !== 'lideres' &&
-									$k !== 'mes' &&
-									$k !== 'ano' &&
-									$k !== 'data_criacao' &&
-									$k !== 'hora_criacao' &&
-									$k !== 'data_inativacao' &&
-									$k !== 'hora_inativacao'
-								){
-									$novoValor = $fatoFinal->$k + $v;
-									$fatoFinal->$k = $novoValor;
+							$fatoFilho1 = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+							$grupoFilho1 = $filho->getGrupoPaiFilhoFilho();
+							$fatosDiscipulos[$grupoFilho1->getId()] = $fatoFilho1;
+							if((int) $tipoRelatorio !== 6){
+								$arrayFatoMensal = (array)$fatoFilho1;
+								foreach($arrayFatoMensal as $k => $v){
+									$aux = explode ("\0", $k);
+									$k = $aux[count($aux)-1];
+									if(
+										$k !== 'id' &&
+										$k !== 'numero_identificador' &&
+										$k !== 'entidade' &&
+										$k !== 'lideres' &&
+										$k !== 'mes' &&
+										$k !== 'ano' &&
+										$k !== 'data_criacao' &&
+										$k !== 'hora_criacao' &&
+										$k !== 'data_inativacao' &&
+										$k !== 'hora_inativacao'
+									){
+										$novoValor = $fatoFinal->$k + $v;
+										$fatoFinal->$k = $novoValor;
+									}
 								}
 							}
 						}
 
-						// ajustando percentual somado
-						for($w = 1;$w <= 6;$w++){
-							$cqmeta = 'cqmeta' . $w;
-							$cbqmeta = 'cbqmeta' . $w;
-							// membresia
-							$mem = 'mem' . $w;
-							$memp = 'memp' . $w;
-							$culto = 'cu' . $w;
-							$arena = 'a' . $w;
-							$domingo = 'd' . $w;
-							$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
-							$membresia = RelatorioController::calculaMembresia($fatoFilho->$culto, $fatoFilho->$arena, $fatoFilho->$domingo);
-							$fatoFilho->$mem = $membresia;
-							$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
-							// celulas
-							$c = 'c' . $w;
-							$cp = 'cp' . $w;
-							$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
-							//realizada
-							$cq = 'cq' . $w;
-							$cbq = 'cbq' . $w;
-							$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
-							$realizada = 'realizada' . $w;
-							$realizadap = 'realizadap' . $w;
-							$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
+						if((int) $tipoRelatorio !== 6){
+							// ajustando percentual somado
+							for($w = 1;$w <= 6;$w++){
+								$cqmeta = 'cqmeta' . $w;
+								$cbqmeta = 'cbqmeta' . $w;
+								// membresia
+								$mem = 'mem' . $w;
+								$memp = 'memp' . $w;
+								$culto = 'cu' . $w;
+								$arena = 'a' . $w;
+								$domingo = 'd' . $w;
+								$membresiaMetaSomada = $fatoFilho->$cqmeta + $fatoFilho->$cbqmeta;
+								$membresia = RelatorioController::calculaMembresia($fatoFilho->$culto, $fatoFilho->$arena, $fatoFilho->$domingo);
+								$fatoFilho->$mem = $membresia;
+								$fatoFilho->$memp = ($fatoFilho->$mem / $membresiaMetaSomada * 100);
+								// celulas
+								$c = 'c' . $w;
+								$cp = 'cp' . $w;
+								$fatoFilho->$cp = ($fatoFilho->$c / $membresiaMetaSomada * 100);
+								//realizada
+								$cq = 'cq' . $w;
+								$cbq = 'cbq' . $w;
+								$quantidadeDeCelulas = $fatoFilho->$cq + $fatoFilho->$cbq;
+								$realizada = 'realizada' . $w;
+								$realizadap = 'realizadap' . $w;
+								$fatoFilho->$realizadap = ($fatoFilho->$realizada / $quantidadeDeCelulas * 100);
+							}
+
+							$somaMembresia = $fatoFilho->getMem1() + $fatoFilho->getMem2() + $fatoFilho->getMem3() + $fatoFilho->getMem4() + $fatoFilho->getMem5() + $fatoFilho->getMem6();
+							$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
+							$somaC = $fatoFilho->getC1() + $fatoFilho->getC2() + $fatoFilho->getC3() + $fatoFilho->getC4() + $fatoFilho->getC5() + $fatoFilho->getC6();
+							$somaCp = $fatoFilho->getCp1() + $fatoFilho->getCp2() + $fatoFilho->getCp3() + $fatoFilho->getCp4() + $fatoFilho->getCp5() + $fatoFilho->getCp6();
+							$somaRealizada = $fatoFilho->getRealizada1() + $fatoFilho->getRealizada2() + $fatoFilho->getRealizada3() + $fatoFilho->getRealizada4() + $fatoFilho->getRealizada5() + $fatoFilho->getRealizada6();
+							$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
+
+							$fatoFilho->setMediamem($somaMembresia/$diferencaDePeriodos);
+							$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
+							$fatoFilho->setMediac($somaC/$diferencaDePeriodos);
+							$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
+							$fatoFilho->setMediarealizada($somaRealizada/$diferencaDePeriodos);
+							$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
+
+							$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
+							$fatoFilho->setMediamempclass($mediaMemPClass);
+							$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
+							$fatoFilho->setMediacpclass($mediaCPClass);
+							$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
+							$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
+							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 						}
-
-						$somaMembresia = $fatoFilho->getMem1() + $fatoFilho->getMem2() + $fatoFilho->getMem3() + $fatoFilho->getMem4() + $fatoFilho->getMem5() + $fatoFilho->getMem6();
-						$somaMembresiap = $fatoFilho->getMemp1() + $fatoFilho->getMemp2() + $fatoFilho->getMemp3() + $fatoFilho->getMemp4() + $fatoFilho->getMemp5() + $fatoFilho->getMemp6();
-						$somaC = $fatoFilho->getC1() + $fatoFilho->getC2() + $fatoFilho->getC3() + $fatoFilho->getC4() + $fatoFilho->getC5() + $fatoFilho->getC6();
-						$somaCp = $fatoFilho->getCp1() + $fatoFilho->getCp2() + $fatoFilho->getCp3() + $fatoFilho->getCp4() + $fatoFilho->getCp5() + $fatoFilho->getCp6();
-						$somaRealizada = $fatoFilho->getRealizada1() + $fatoFilho->getRealizada2() + $fatoFilho->getRealizada3() + $fatoFilho->getRealizada4() + $fatoFilho->getRealizada5() + $fatoFilho->getRealizada6();
-						$somaRealizadap = $fatoFilho->getRealizadap1() + $fatoFilho->getRealizadap2() + $fatoFilho->getRealizadap3() + $fatoFilho->getRealizadap4() + $fatoFilho->getRealizadap5() + $fatoFilho->getRealizadap6();
-
-						$fatoFilho->setMediamem($somaMembresia/$diferencaDePeriodos);
-						$fatoFilho->setMediamemp($somaMembresiap/$diferencaDePeriodos);
-						$fatoFilho->setMediac($somaC/$diferencaDePeriodos);
-						$fatoFilho->setMediacp($somaCp/$diferencaDePeriodos);
-						$fatoFilho->setMediarealizada($somaRealizada/$diferencaDePeriodos);
-						$fatoFilho->setMediarealizadap($somaRealizadap/$diferencaDePeriodos);
-
-						$mediaMemPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediamemp());
-						$fatoFilho->setMediamempclass($mediaMemPClass);
-						$mediaCPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediacp());
-						$fatoFilho->setMediacpclass($mediaCPClass);
-						$mediaRealizadaPClass = RelatorioController::corDaLinhaPelaPerformance($fatoFilho->getMediarealizadap());
-						$fatoFilho->setMediarealizadapclass($mediaRealizadaPClass);
-						$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 					}
 				}
 			}
 
-		if((int) $tipoRelatorio !== 4){/* resumo */
+		if((int) $tipoRelatorio !== 4 && (int) $tipoRelatorio !== 6){/* resumo e membresias por igrejas */
 			// ordernar os malucos
 			$filhosOrdenado = RelatorioController::ordenacaoDiscipulos($todosFilhos, $fatosDiscipulos, $tipoRelatorio, $novo = true);
 			foreach($filhosOrdenado as $filho){
@@ -5170,7 +5194,19 @@ public function alunosNaSemanaAction(){
 		}else{
 			foreach($todosFilhos as $filho){
 				$grupoFilho = $filho->getGrupoPaiFilhoFilho();
-				$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+				if((int) $tipoRelatorio !== 6){
+					$relatorio[] = $fatosDiscipulos[$grupoFilho->getId()];
+				}
+				if((int) $tipoRelatorio === 6){
+					$fatoMensal = new FatoMensal();
+					$fatoMensal->numero_identificador = -1;
+					$fatoMensal->entidade = $grupoFilho->getEntidadeAtiva()->getNome();
+					$fatoMensal->lideres = $grupoFilho->getNomeLideresAtivos();
+					$relatorio[] = $fatoMensal;
+					foreach($relatorioPorIgrejaDaRegiao[$filho->getId()] as $relatorioIgreja){
+						$relatorio[] = $relatorioIgreja;
+					}
+				}
 			}
 		}
 

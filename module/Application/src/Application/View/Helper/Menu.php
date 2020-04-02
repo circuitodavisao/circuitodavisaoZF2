@@ -317,8 +317,17 @@ $link = 'relatorioNovo';
 			case 5:
 					$label = 'C&eacute;lulas de Elite';
 					$mostrar = true;
+//$link = 'relatorioNovo';
+					break;
+				case 6:
+					$label = 'Membresia das Igrejas';
+
+		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+					$mostrar = true;
+}
 $link = 'relatorioNovo';
 					break;
+	
 				case 9:
 					$label = 'Parceiro de Deus Consolidado';
 					$mostrar = true;

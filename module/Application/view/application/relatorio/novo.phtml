@@ -177,7 +177,10 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($indiceDeArrays == -1 || $indiceDeArrays == $this->periodoFinal) {
 		$classePeriodoAtual = 'bg-info';
 	}
-	if ($this->tipoRelatorio == 1) {
+	if (
+		$this->tipoRelatorio == 1 ||
+		$this->tipoRelatorio == 6
+	) {
 		$colspan = 10;
 	}
 	if ($this->tipoRelatorio == 2) {
@@ -196,8 +199,11 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	echo Funcoes::montaPeriodo($indiceDeArrays)[0];
 	echo '</th>';
 }
-if ($this->tipoRelatorio == 1 ||
-	$this->tipoRelatorio == 3) {
+if (
+	$this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 6 ||
+	$this->tipoRelatorio == 3
+) {
 	echo '<th></th>';
 }
 echo '<th></th>';
@@ -215,7 +221,10 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 	if ($indiceDeArrays == -1 || $indiceDeArrays == $this->periodoFinal) {
 		$classePeriodoAtual = 'bg-info';
 	}
-	if ($this->tipoRelatorio == 1) {
+	if (
+		$this->tipoRelatorio == 1 || 
+		$this->tipoRelatorio == 6
+	) {
 		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL</th>';
 		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">CÉL BETA</th>';
 		echo '<th class=" hidden-xs ' . $classePeriodoAtual . '">MET CÉL</th>';
@@ -258,11 +267,15 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 		echo '<th class="' . $classeBase . $classePeriodoAtual . '">%</th>';
 	}
 }
-if ($this->tipoRelatorio == 1 ||
-	$this->tipoRelatorio == 3) {
+if (
+	$this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 6 ||
+	$this->tipoRelatorio == 3
+) {
 	echo '<th>MÉDIA</th>';
 }
 if ($this->tipoRelatorio == 1 ||
+	$this->tipoRelatorio == 6 ||
 	$this->tipoRelatorio == 2 ||
 	$this->tipoRelatorio == 3 ||
 	$this->tipoRelatorio == 5) {
@@ -281,7 +294,10 @@ foreach($this->relatorio as $relatorio){
 	}
 	if($mostrar){
 		$class = '';
-		if ($this->tipoRelatorio == 1) {
+		if (
+			$this->tipoRelatorio == 1 ||
+			$this->tipoRelatorio == 6
+		) {
 			$class = $relatorio->mediamempclass;
 		}
 		if ($this->tipoRelatorio == 2) {
@@ -297,7 +313,12 @@ foreach($this->relatorio as $relatorio){
 		}
 
 		echo '<tr class="'.$class.'">';
-		if($this->tipoRelatorio != 4 && $ranking !== count($this->relatorio) - 1 && $ranking !== 0){
+		if(
+			$this->tipoRelatorio != 4 
+			&& $this->tipoRelatorio != 6 
+			&& $ranking !== count($this->relatorio) - 1 
+			&& $ranking !== 0
+		){
 			echo '<td>'.$ranking.'º</td>';
 		}else{
 			echo '<td></td>';
@@ -305,26 +326,34 @@ foreach($this->relatorio as $relatorio){
 
 		echo '<td class="text-left">';
 
-		$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
-		$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+		$grupoDoLink = null;
+		if($this->tipoRelatorio != 6){
+			$idGrupo = (int) substr($relatorio->numero_identificador, (count($relatorio->numero_identificador)-8));
+			$grupoDoLink = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+		}
 
 		if($ranking !== count($this->relatorio) - 1){
-			if($grupoDoLink->getEntidadeAtiva() && $grupoDoLink->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
-				$hiddenCelular = 'hidden-xs hidden-sm';
-				$entidade = $grupoDoLink->getEntidadeAtiva();
-				if($entidade->getSigla()){
-					echo '<span class="hidden-lg hidden-md"> ' . $entidade->getSigla() . '</span>';
-				} else {
-					echo '<span class="label label-dark hidden-lg hidden-md" data-placement="bottom" data-toggle="popover" data-content="Solicite Sua Sigla" style="cursor: pointer;">SSS</span>';
+			if($this->tipoRelatorio != 6){
+				if($grupoDoLink->getEntidadeAtiva() && $grupoDoLink->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe){
+					$hiddenCelular = 'hidden-xs hidden-sm';
+					$entidade = $grupoDoLink->getEntidadeAtiva();
+					if($entidade->getSigla()){
+						echo '<span class="hidden-lg hidden-md"> ' . $entidade->getSigla() . '</span>';
+					} else {
+						echo '<span class="label label-dark hidden-lg hidden-md" data-placement="bottom" data-toggle="popover" data-content="Solicite Sua Sigla" style="cursor: pointer;">SSS</span>';
+					}
 				}
 			}
-			echo '<span class="hidden-xs">'.$relatorio->entidade.' - </span>';
-			if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
-				$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
-				$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>' . $relatorio->lideres.'</a>';
-			} else {
-				$linkDeQuemEstaLogado = $relatorio->lideres;
-			}		
+			echo '<span class="hidden-xs">'.$relatorio->entidade.'</span>';
+			if($this->tipoRelatorio != 6){
+				echo ' - ';
+				if($ranking !== 0 && $grupoDoLink && $grupoDoLink->getGrupoResponsavelAtivo()){
+					$funcaoOnClickPessoal = 'mostrarSplash(); funcaoCircuito("relatorioNovo/'.$url.'",'.$idGrupo.')';
+					$linkDeQuemEstaLogado = '<a href="#" '.$this->funcaoOnclick($funcaoOnClickPessoal).'>' . $relatorio->lideres.'</a>';
+				} else {
+					$linkDeQuemEstaLogado = $relatorio->lideres;
+				}		
+			}
 
 			echo ' '.$linkDeQuemEstaLogado;
 		}
@@ -348,7 +377,13 @@ foreach($this->relatorio as $relatorio){
 
 			$naoMostrar = 'nao' . $contadorDePeriodos;
 			$iconeRetwiter = '<i class="fa fa-retweet"></i>';
-			if ($this->tipoRelatorio == 1) {
+			if (
+				$relatorio->numero_identificador != -1 &&
+				(
+					$this->tipoRelatorio == 1 ||
+					$this->tipoRelatorio == 6
+				)
+			) {
 				if($relatorio->$naoMostrar){
 					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
 					echo '<td class=" hidden-xs">'.$iconeRetwiter.'</td>';
@@ -377,6 +412,9 @@ foreach($this->relatorio as $relatorio){
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp, 0, ',', '.').' %</td>';
 				}
+			}else{
+					echo '<td colspan="4" class=" hidden-xs"></td>';
+					echo '<td colspan="6" class="' . $classeBase . '"></td>';
 			}
 			if ($this->tipoRelatorio == 2){
 				if($relatorio->$naoMostrar){
@@ -456,9 +494,17 @@ foreach($this->relatorio as $relatorio){
 			}
 			$contadorDePeriodos++;
 		}
-		if ($this->tipoRelatorio == 1){
+		if (
+			$relatorio->numero_identificador != -1 &&
+			(
+				$this->tipoRelatorio == 1 ||
+				$this->tipoRelatorio == 6
+			)
+		){
 			echo '<td>'.number_format($relatorio->mediamem, 0, ',', '.').'</td>';
 			echo '<td>'.number_format($relatorio->mediamemp, 0, ',', '.').' %</td>';
+		}else{
+			echo '<td colspan="2"></td>';
 		}
 		if ($this->tipoRelatorio == 2){
 			echo '<td>'.number_format($relatorio->mediarealizadap, 0, ',', '.').' %</td>';
