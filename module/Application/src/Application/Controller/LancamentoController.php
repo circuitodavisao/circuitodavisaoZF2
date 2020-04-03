@@ -626,7 +626,7 @@ class LancamentoController extends CircuitoController {
 					$periodos[2] = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesParaVerificar[2], $anoParaVerificar[2]);
 					$contador[2] = 1;
 					$fatosMensal[2] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesParaVerificar[2], $anoParaVerificar[2]);
-					$contadorDePeriodo[2] = $contador[1];
+					$contadorDePeriodo[2] = $contador[2];
 					$fimLancamento = 2;
 				}
 				/* fim */
