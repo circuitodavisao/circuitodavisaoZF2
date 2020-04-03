@@ -509,221 +509,343 @@ class LancamentoController extends CircuitoController {
      * Muda a frequência de um evento
      * @return Json
      */
-    public function mudarFrequenciaAction() {
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        $resposta = false;
-        $hostname = 'www.google.com.br';
-        if (!$sock = @fsockopen($hostname, 80, $num, $error, 5)) {
-            $response->setContent(Json::encode(array('response' => $resposta)));
-            return $response;
-        }
-        if ($request->isPost()) {
-            try {
-                $this->getRepositorio()->iniciarTransacao();
+	public function mudarFrequenciaAction() {
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$resposta = false;
+		$hostname = 'www.google.com.br';
+		if (!$sock = @fsockopen($hostname, 80, $num, $error, 5)) {
+			$response->setContent(Json::encode(array('response' => $resposta)));
+			return $response;
+		}
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
 
-                $post_data = $request->getPost();
-                $valor = $post_data['valor'];
-                $idPessoa = $post_data['idPessoa'];
-                $idEvento = $post_data['idEvento'];
-                $diaRealDoEvento = $post_data['diaRealDoEvento'];
-                $periodo = $post_data['periodo'];
-                $dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
+				$post_data = $request->getPost();
+				$valor = $post_data['valor'];
+				$idPessoa = $post_data['idPessoa'];
+				$idEvento = $post_data['idEvento'];
+				$diaRealDoEvento = $post_data['diaRealDoEvento'];
+				$periodo = $post_data['periodo'];
+				$dateFormatada = DateTime::createFromFormat('Y-m-d', $diaRealDoEvento);
 
-                $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
-                $evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoa);
+				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
 
-                $valorParaSomar = 0;
-                if ($valor === 'S') {
-                    $valorParaSomar = 1;
-                } else {
-                    $valorParaSomar = -1;
-                }
+				/* Frequencia */
+				$eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
+				if ($eventosFiltrado) {
+					$frequencia = $eventosFiltrado;
+					$frequencia->setFrequencia($valor);
+				} else {
+					$frequencia = new EventoFrequencia();
+					$frequencia->setPessoa($pessoa);
+					$frequencia->setEvento($evento);
+					$frequencia->setFrequencia($valor);
+					$frequencia->setDia($dateFormatada);
+				}
+				$this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
+				/* fim frequencia */
 
-                $sessao = new Container(Constantes::$NOME_APLICACAO);
-                $idEntidadeAtual = $sessao->idEntidadeAtual;
-                $entidadeSelecionada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-                if ($entidadeSelecionada->getData_inativacaoStringPadraoBanco()) {
-                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
-                            $this->getRepositorio(), $entidadeSelecionada->getGrupo(), $entidadeSelecionada->getData_inativacaoStringPadraoBanco());
-                } else {
-                    $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
-                }
-
-                $dimensaoSelecionada = null;
-                $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
-                $dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
-                $dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
-                $fatoCicloSelecionado = $this->getRepositorio()->getFatoCicloORM()->encontrarPorNumeroIdentificadorEDataCriacao(
-                        $numeroIdentificador, $dataDoPeriodoFormatada, $this->getRepositorio());
-
-                if ($fatoCicloSelecionado->getDimensao()) {
-                    foreach ($fatoCicloSelecionado->getDimensao() as $dimensao) {
-                        switch ($dimensao->getDimensaoTipo()->getId()) {
-                            case DimensaoTipo::CELULA:
-                                $dimensoes[DimensaoTipo::CELULA] = $dimensao;
-                                break;
-                            case DimensaoTipo::CULTO:
-                                $dimensoes[DimensaoTipo::CULTO] = $dimensao;
-                                break;
-                            case DimensaoTipo::ARENA:
-                                $dimensoes[DimensaoTipo::ARENA] = $dimensao;
-                                break;
-                            case DimensaoTipo::DOMINGO:
-                                $dimensoes[DimensaoTipo::DOMINGO] = $dimensao;
-                                break;
-                        }
-                    }
-                }
-                $tipoCampo = 0;
-                if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
-                    $diaDeSabado = 7;
-                    $diaDeDomingo = 1;
-                    switch ($evento->getDia()) {
-                        case $diaDeSabado:
-                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::ARENA];
-                            $tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
-                            break;
-                        case $diaDeDomingo:
-                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::DOMINGO];
-                            $tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
-                            break;
-                        default:
-                            $dimensaoSelecionada = $dimensoes[DimensaoTipo::CULTO];
-                            $tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
-                            break;
-                    };
+				$tipoCampo = 0;
+				if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
+					$diaDeSabado = 7;
+					$diaDeDomingo = 1;
+					switch ($evento->getDia()) {
+					case $diaDeSabado:
+						$tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
+						break;
+					case $diaDeDomingo:
+						$tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
+						break;
+					default:
+						$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
+						break;
+					};
 
 					self::registrarLog(RegistroAcao::LANCOU_CULTO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
 				}
 				if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula
 					|| $evento->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
-						$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
-						$dimensaoSelecionada = $dimensoes[DimensaoTipo::CELULA];
+					$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+				}
 
-						/* Atualiza o relatorio de celulas */
-						$criteria = Criteria::create()
-							->andWhere(Criteria::expr()->eq("dia", $dateFormatada));
+				$valorParaSomar = 0;
+				if ($valor === 'S') {
+					$valorParaSomar = 1;
+				} else {
+					$valorParaSomar = -1;
+				}
 
-						$frequencias = $evento->getEventoFrequencia()->matching($criteria);
-						$somaFrequencias = 0;
-						foreach ($frequencias as $frequenca) {
-							if ($frequenca->getFrequencia() === 'S') {
-								$somaFrequencias++;
-							}
-						}
+				$sessao = new Container(Constantes::$NOME_APLICACAO);
+				$idEntidadeAtual = $sessao->idEntidadeAtual;
+				$entidadeSelecionada = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+				if ($entidadeSelecionada->getData_inativacaoStringPadraoBanco()) {
+					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador(
+						$this->getRepositorio(), $entidadeSelecionada->getGrupo(), $entidadeSelecionada->getData_inativacaoStringPadraoBanco());
+				} else {
+					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio());
+				}
 
-						/* Atualizando relatorio individual da celula no periodo */
-						if ($somaFrequencias === 0) {
-							$realizada = 0;
-						} else {
-							$realizada = 1;
-						}
+				/* descobrir os periodos e o meses */
+				$periodoParaUsar[1] = 1;
+				$periodoParaUsar[2] = null;
+				$mesParaVerificar[1] = null;
+				$mesParaVerificar[2] = null;
+				$anoParaVerificar[1] = null;
+				$anoParaVerificar[2] = null;
+				$resultadoPeriodo = Funcoes::montaPeriodo($periodo);
 
-						$eventoCelulaId = $evento->getEventoCelula()->getId();
+				$periodoParaUsar[1] = 1;
+				$mesParaVerificar[1] = $resultadoPeriodo[2];
+				$anoParaVerificar[1] = $resultadoPeriodo[3];
+				if($resultadoPeriodo[2] !== $resultadoPeriodo[5]){
+					$periodoParaUsar[2] = 1;
+					$mesParaVerificar[2] = $resultadoPeriodo[5];
+					$anoParaVerificar[2] = $resultadoPeriodo[6];
+				}
 
-						$fatosCelulas = null;
-						$fatoCelulaSelecionado = null;
-
-						if(count($fatoCicloSelecionado->getFatoCelula()) > 0){
-							$fatoCelulas = $fatoCicloSelecionado->getFatoCelula();
-							foreach ($fatoCelulas as $fatoCelula) {
-								if ($fatoCelula->getEvento_celula_id() == $eventoCelulaId) {
-									$fatoCelulaSelecionado = $fatoCelula;
-								}
-							}
-						}
-
-						if(!$fatoCelulaSelecionado){
-							$fatoCelulaSelecionado = $this->getRepositorio()->getFatoCelulaORM()->criarFatoCelula($fatoCicloSelecionado, $eventoCelulaId);
-						}
-
-						$realizadaAntesDeMudar = $fatoCelulaSelecionado->getRealizada();
-						$fatoCelulaSelecionado->setRealizada($realizada);
-						$setarDataEHora = false;
-						$this->getRepositorio()->getFatoCelulaORM()->persistir($fatoCelulaSelecionado, $setarDataEHora);
-
-						self::registrarLog(RegistroAcao::LANCOU_CELULA, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
+				$periodos = array();
+				$periodos[1] = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesParaVerificar[1], $anoParaVerificar[1]);
+				$contador[1] = 0;
+				for($indiceDePeriodos = $periodos[1][0]; $indiceDePeriodos <= $periodos[1][1]; $indiceDePeriodos++){
+					$contador[1]++;
+					if(intVal($indiceDePeriodos) === intVal($periodo)){
+						break;
 					}
-                $tipoPessoa = 0;
-                if ($pessoa->getGrupoPessoaAtivo()) {
-                    /* Pessoa volateis */
-                    $valorDoCampo = 0;
-                    switch ($pessoa->getGrupoPessoaAtivo()->getGrupoPessoaTipo()->getId()) {
-                        case GrupoPessoaTipo::VISITANTE:
-                            $valorDoCampo = $dimensaoSelecionada->getVisitante();
-                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
-                                $valorParaSomar = 0;
-                            }
-                            $dimensaoSelecionada->setVisitante($valorDoCampo + $valorParaSomar);
-                            $tipoPessoa = GrupoPessoaTipo::VISITANTE;
+				}
+				if(intVal($periodo) === 0 && $periodo[1][1] === -1){
+					$contador[1]++;
+				}
+				$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesParaVerificar[1], $anoParaVerificar[1]);
+				$contadorDePeriodo[1] = $contador[1];
+				$fimLancamento = 1;
 
-							self::registrarLog(RegistroAcao::LANCOU_VISITANTE, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
-							break;
-                        case GrupoPessoaTipo::CONSOLIDACAO:
-                            $valorDoCampo = $dimensaoSelecionada->getConsolidacao();
-                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
-                                $valorParaSomar = 0;
-                            }
-                            $dimensaoSelecionada->setConsolidacao($valorDoCampo + $valorParaSomar);
-                            $tipoPessoa = GrupoPessoaTipo::CONSOLIDACAO;
+				if($periodoParaUsar[2] !== null){
+					$periodos[2] = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesParaVerificar[2], $anoParaVerificar[2]);
+					$contador[2] = 1;
+					$fatosMensal[2] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesParaVerificar[2], $anoParaVerificar[2]);
+					$contadorDePeriodo[2] = $contador[1];
+					$fimLancamento = 2;
+				}
+				/* fim */
 
-							self::registrarLog(RegistroAcao::LANCOU_CONSOLIDACAO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
-                            break;
-                        case GrupoPessoaTipo::MEMBRO:
-                            $valorDoCampo = $dimensaoSelecionada->getMembro();
-                            if ($valorDoCampo === 0 && $valorParaSomar === -1) {
-                                $valorParaSomar = 0;
-                            }
-                            $dimensaoSelecionada->setMembro($valorDoCampo + $valorParaSomar);
-                            $tipoPessoa = GrupoPessoaTipo::MEMBRO;
+				$mudarVisitante = false;
+				if($grupoPessoa = $pessoa->getGrupoPessoaAtivo()){
+					$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
+					if($tipoPessoa === GrupoPessoaTipo::VISITANTE){
+						$mudarVisitante = true;
+					}
+				}
 
-							self::registrarLog(RegistroAcao::LANCOU_MEMBRO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
-                            break;
-                    }
-                } else {
-                    $tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
-                    $valorDoCampo = $dimensaoSelecionada->getLider();
-                    if ($valorDoCampo === 0 && $valorParaSomar === -1) {
-                        $valorParaSomar = 0;
-                    }
-                    $dimensaoSelecionada->setLider($valorDoCampo + $valorParaSomar);
-                }
-                $this->getRepositorio()->getDimensaoORM()->persistir($dimensaoSelecionada, false);
+				for($indiceFatoMensal = 1; $indiceFatoMensal <= $fimLancamento; $indiceFatoMensal++){
+					if($tipoCampo === LancamentoController::TIPO_CAMPO_CELULA){
+						if($mudarVisitante){
+							$somaVisitante = $fatosMensal[$indiceFatoMensal]->getSomaVisitantes() + $valorParaSomar;
+							if($somaVisitante < 0){
+								$somaVisitante = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setSomaVisitantes($somaVisitante);
+						}
+						$somaCelula = $fatosMensal[$indiceFatoMensal]->getSomaCelula() + $valorParaSomar;
+						if($somaCelula < 0){
+							$somaCelula = 0;
+						}
+						$fatosMensal[$indiceFatoMensal]->setSomaCelula($somaCelula);
 
-                /* Frequencia */
-                $eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
-                if ($eventosFiltrado) {
-                    /* Frequencia existe */
-                    $frequencia = $eventosFiltrado;
-                    $frequencia->setFrequencia($valor);
-                } else {
-                    /* Persitir frequencia */
-                    $frequencia = new EventoFrequencia();
-                    $frequencia->setPessoa($pessoa);
-                    $frequencia->setEvento($evento);
-                    $frequencia->setFrequencia($valor);
-                    $frequencia->setDia($dateFormatada);
-                }
-                $this->getRepositorio()->getEventoFrequenciaORM()->persistir($frequencia);
-                if ($pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento)) {
-                    $resposta = true;
-                }
-                $this->getRepositorio()->fecharTransacao();
-                $response->setContent(Json::encode(
-                                array('response' => $resposta,
-                                    'idEvento' => $evento->getId())));
-            } catch (Exception $exc) {
-                $this->getRepositorio()->desfazerTransacao();
-                echo $exc->getTraceAsString();
-            }
-        }  /* Helper Controller */
+						if($contadorDePeriodo[$indiceFatoMensal] === 1){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC1() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC1($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 2){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC2() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC2($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 3){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC3() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC3($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 4){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC4() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC4($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 5){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC5() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC5($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$soma = $fatosMensal[$indiceFatoMensal]->getC6() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setC6($soma);
+						}
+					}
+					if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
+						if($contadorDePeriodo[$indiceFatoMensal] === 1){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu1() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu1($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 2){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu2() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu2($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 3){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu3() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu3($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 4){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu4() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu4($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 5){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu5() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu5($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$soma = $fatosMensal[$indiceFatoMensal]->getCu6() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setCu6($soma);
+						}
+					}
+					if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
+						if($contadorDePeriodo[$indiceFatoMensal] === 1){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA1() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA1($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 2){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA2() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA2($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 3){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA3() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA3($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 4){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA4() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA4($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 5){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA5() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA5($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$soma = $fatosMensal[$indiceFatoMensal]->getA6() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA6($soma);
+						}
+					}
+					if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
+						if($contadorDePeriodo[$indiceFatoMensal] === 1){
+							$soma = $fatosMensal[$indiceFatoMensal]->getD1() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setD1($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 2){
+							$soma = $fatosMensal[$indiceFatoMensal]->getD2() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setA2($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 3){
+							$soma = $fatosMensal[$indiceFatoMensal]->getrD3() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setD3($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 4){
+							$soma = $fatosMensal[$indiceFatoMensal]->getD4() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setD4($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 5){
+							$soma = $fatosMensal[$indiceFatoMensal]->getD5() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setD5($soma);
+						}
+						if($contadorDePeriodo[$indiceFatoMensal] === 6){
+							$soma = $fatosMensal[$indiceFatoMensal]->getD6() + $valorParaSomar;
+							if($soma < 0){
+								$soma = 0;
+							}
+							$fatosMensal[$indiceFatoMensal]->setD6($soma);
+						}
+					}
 
-        $tipos = $this->getRepositorio()->getGrupoPessoaTipoORM()->tipoDePessoaLancamento();
-        /* Formulario */
-        $formCadastrarPessoa = new CadastrarPessoaForm(Constantes::$FORM_CADASTRAR_PESSOA, $tipos);
-        return $response;
-    }
+					$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
+				}
+
+				$resposta = true;
+				$this->getRepositorio()->fecharTransacao();
+				$response->setContent(Json::encode(
+					array('response' => $resposta,
+					'idEvento' => $evento->getId())));
+			} catch (Exception $exc) {
+				$this->getRepositorio()->desfazerTransacao();
+				echo $exc->getTraceAsString();
+			}
+		}
+
+		return $response;
+	}
 
     /**
      * Abri tela para cadastro de pessoa para lançamento
