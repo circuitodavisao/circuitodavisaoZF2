@@ -49,6 +49,9 @@ if ($this->tiporelatorio == 4) {
 if ($this->tiporelatorio == 5) {
 	$label = 'Célula de Elite';
 }
+if ($this->tiporelatorio == 6) {
+	$label = 'Membresia por Igreja';
+}
 echo $this->templateFormularioTopo($label);
 ?>
 	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
@@ -412,9 +415,13 @@ foreach($this->relatorio as $relatorio){
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$mem, 0, ',', '.').'</td>';
 					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$memp, 0, ',', '.').' %</td>';
 				}
-			}else{
-					echo '<td colspan="4" class=" hidden-xs"></td>';
-					echo '<td colspan="6" class="' . $classeBase . '"></td>';
+			}
+			if (
+				$relatorio->numero_identificador == -1 &&
+				$this->tipoRelatorio == 6
+			) {
+				echo '<td colspan="4" class=" hidden-xs"></td>';
+				echo '<td colspan="6" class="' . $classeBase . '"></td>';
 			}
 			if ($this->tipoRelatorio == 2){
 				if($relatorio->$naoMostrar){
