@@ -510,7 +510,11 @@ foreach($this->relatorio as $relatorio){
 		){
 			echo '<td>'.number_format($relatorio->mediamem, 0, ',', '.').'</td>';
 			echo '<td>'.number_format($relatorio->mediamemp, 0, ',', '.').' %</td>';
-		}else{
+		}
+		if (
+			$relatorio->numero_identificador == -1 &&
+			$this->tipoRelatorio == 6
+		) {
 			echo '<td colspan="2"></td>';
 		}
 		if ($this->tipoRelatorio == 2){
