@@ -117,6 +117,8 @@ class PrincipalController extends CircuitoController {
 			$pessoalOuEquipe = 2; // Trazer os dados da equipe
 		}
 
+		$registros = $this->getRepositorio()->getRegistroORM()->encontrarUltimosRegistroPorIdGrupoELimite($grupo->getId(), 3);
+
 		$dados = array(
 			'grupoIdPessoaVerificada' => $grupoIdPessoaVerificada,
 			'mostrarPrincipal' => $mostrarPrincipal,
@@ -132,6 +134,7 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'selectedAtual' => $selectedAtual,
 			'selectedAnterior' => $selectedAnterior,
+			'registros' => $registros,
 		);
 
 		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){

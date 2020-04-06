@@ -55,4 +55,26 @@ class RegistroORM extends CircuitoORM {
             echo $exc->getMessage();
         }
     }
+
+   public function encontrarUltimosRegistroPorIdGrupoELimite($idGrupo = null, $limit = 10) {
+        $dql = "SELECT "
+                . " r "
+                . "FROM  " . Constantes::$ENTITY_REGISTRO . " r "
+                . "WHERE "
+				. "#idGrupo " 
+                . "ORDER BY r.id DESC ";
+		if($idGrupo === null){
+			$dql = str_replace('#idGrupo', '', $dql);
+		}else{
+			$dql = str_replace('#idGrupo', 'r.grupo_id = '.$idGrupo, $dql);
+		}
+        try {
+            $result = $this->getEntityManager()->createQuery($dql)
+					->setMaxResults($limit)
+                    ->getResult();
+            return $result;
+        } catch (Exception $exc) {
+            echo $exc->getMessage();
+        }
+    }
 }
