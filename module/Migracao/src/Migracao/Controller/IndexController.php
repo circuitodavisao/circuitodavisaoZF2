@@ -1102,13 +1102,17 @@ class IndexController extends CircuitoController {
 		$grupoEventoCelulasHomem = $grupo1->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 		if($grupoEventoCelulasEstrategicasHomem = $grupo1->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
 			foreach($grupoEventoCelulasEstrategicasHomem as $eventoCelulasEstrategicasHomem){
-				$grupoEventoCelulasHomem[] = $eventoCelulasEstrategicasHomem;
+				if($eventoCelulasEstrategicasHomem->verificarSeEstaAtivo()){
+					$grupoEventoCelulasHomem[] = $eventoCelulasEstrategicasHomem;
+				}
 			}
 		}
 		$grupoEventoCelulasMulher = $grupo2->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula);
 		if($grupoEventoCelulasEstrategicasMulher = $grupo2->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
 			foreach($grupoEventoCelulasEstrategicasMulher as $eventoCelulasEstrategicasMulher){
-				$grupoEventoCelulasMulher[] = $eventoCelulasEstrategicasMulher;
+				if($eventoCelulasEstrategicasMulher->verificarSeEstaAtivo()){
+					$grupoEventoCelulasMulher[] = $eventoCelulasEstrategicasMulher;
+				}
 			}
 		}
 		$discipulosHomem = $grupo1->getGrupoPaiFilhoFilhosAtivos(1);
@@ -1155,20 +1159,24 @@ class IndexController extends CircuitoController {
 		if($grupoEventoCelulasHomem){
 			$temAlgumaCelula = true;
 			foreach($grupoEventoCelulasHomem as $grupoEventoHomem){
-				$grupoEvento = new GrupoEvento();
-				$grupoEvento->setGrupo($grupoNovo);
-				$grupoEvento->setEvento($grupoEventoHomem->getEvento());
-				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+				if($grupoEventoHomem->verificarSeEstaAtivo()){
+					$grupoEvento = new GrupoEvento();
+					$grupoEvento->setGrupo($grupoNovo);
+					$grupoEvento->setEvento($grupoEventoHomem->getEvento());
+					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+				}
 			}
 		}
 		/* celulas mulher */
 		if($grupoEventoCelulasMulher){
 			$temAlgumaCelula = true;
 			foreach($grupoEventoCelulasMulher as $grupoEventoMulher){
-				$grupoEvento = new GrupoEvento();
-				$grupoEvento->setGrupo($grupoNovo);
-				$grupoEvento->setEvento($grupoEventoMulher->getEvento());
-				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+				if($grupoEventoMulher->verificarSeEstaAtivo()){
+					$grupoEvento = new GrupoEvento();
+					$grupoEvento->setGrupo($grupoNovo);
+					$grupoEvento->setEvento($grupoEventoMulher->getEvento());
+					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento);
+				}
 			}
 		}
 		/* discipulos abaixos */
