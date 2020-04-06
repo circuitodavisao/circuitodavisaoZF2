@@ -1549,12 +1549,14 @@ class IndexController extends CircuitoController {
 		/* celulas */
 		if($grupoEventoCelulas = $grupo->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCelula)){
 			foreach($grupoEventoCelulas as $grupoEvento){
-				$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
+				if($grupoEvento->verificarSeEstaAtivo()){
+					$grupoEvento->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getGrupoEventoORM()->persistir($grupoEvento, false);
 
-				$evento = $grupoEvento->getEvento();
-				$evento->setDataEHoraDeInativacao($dataParaInativar);
-				$this->getRepositorio()->getEventoORM()->persistir($evento, false);
+					$evento = $grupoEvento->getEvento();
+					$evento->setDataEHoraDeInativacao($dataParaInativar);
+					$this->getRepositorio()->getEventoORM()->persistir($evento, false);
+				}
 			}
 		}
 
