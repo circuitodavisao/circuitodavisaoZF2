@@ -1537,7 +1537,13 @@ Boa reposição.';
 			$html .= '<div class="table-responsive">';
 			$html .= '<table class="table table-condensed">';
 			$html .= '<tbody>';
-			foreach($aula->getPergunta() as $pegunta){
+
+			$perguntas = $aula->getPergunta();
+			uksort($perguntas, function ($a, $b) use ($perguntas) {
+				return ($perguntas[$a]->getId() > $perguntas[$b]->getId()) ? -1 : 1;
+			});
+
+			foreach($perguntas as $pegunta){
 				if($pegunta->verificarSeEstaAtivo()){
 					$html .= '<tr>';
 					$html .= '<td colspan="2"><hr /></td>';
@@ -1621,7 +1627,7 @@ Boa reposição.';
 				$html .= '<tr>';
 				$html .= '<td>Pergunta</td>';
 				$pergunta = $perguntaSelecionada ? $perguntaSelecionada->getPergunta() : '';
-				$html .= '<td><input class="form-control" type="text" id="pergunta" value="'.$pergunta.'" placeholder="Pergunta" /></td>';
+				$html .= '<td><textarea class="form-control" id="pergunta" placeholder="Pergunta" />'.$pergunta.'</textarea></td>';
 				$html .= '</tr>';
 				$html .= '<tr>';
 				$html .= '<td>Resposta 1</td>';
@@ -1711,6 +1717,7 @@ Boa reposição.';
 					$perguntaSelecionada = $this->getRepositorio()->getPerguntaORM()->encontrarPorId(intVal($json->pergunta_id));
 				}else{
 					$perguntaSelecionada = new Pergunta();
+					$perguntaSelecionada->setDataEHoraDeCriacao();
 				}
 				$perguntaSelecionada->setPergunta($json->pergunta);
 				$perguntaSelecionada->setR1($json->r1);
@@ -1720,7 +1727,7 @@ Boa reposição.';
 				$perguntaSelecionada->setCerta($json->certa);
 				$perguntaSelecionada->setAula($this->getRepositorio()->getAulaORM()->encontrarPorId(intVal($json->aula_id)));
 				$perguntaSelecionada->setPessoa($this->getRepositorio()->getPessoaORM()->encontrarPorId(intVal($sessao->idPessoa)));
-				$this->getRepositorio()->getPerguntaORM()->persistir($perguntaSelecionada);
+				$this->getRepositorio()->getPerguntaORM()->persistir($perguntaSelecionada, false);
 
 				$html = self::buscarDadosDeUmaAula($json->aula_id);
 
