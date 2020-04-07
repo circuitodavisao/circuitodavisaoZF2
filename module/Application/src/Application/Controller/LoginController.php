@@ -1508,7 +1508,7 @@ Boa reposição.';
 		$html .= '<table class="table table-condensed">';
 		$html .= '<tbody>';
 		$html .= '<tr>';
-		$html .= '<td>Número de identificação do vídeo do Vimeo</td>';
+		$html .= '<td>Número</td>';
 		$html .= '<td><input class="form-control" type="number" id="urlVimeo" value="'.$aula->getUrl().'" placeholder="Número" /></td>';
 		$html .= '</tr>';
 		if($aula->getPessoa()){
@@ -1534,10 +1534,6 @@ Boa reposição.';
 			}
 		}
 		if($perguntasAtivas){
-			$html .= '<div class="table-responsive">';
-			$html .= '<table class="table table-condensed">';
-			$html .= '<tbody>';
-
 			$perguntas = $aula->getPergunta();
 			uksort($perguntas, function ($a, $b) use ($perguntas) {
 				return ($perguntas[$a]->getId() > $perguntas[$b]->getId()) ? -1 : 1;
@@ -1545,48 +1541,20 @@ Boa reposição.';
 
 			foreach($perguntas as $pegunta){
 				if($pegunta->verificarSeEstaAtivo()){
-					$html .= '<tr>';
-					$html .= '<td colspan="2"><hr /></td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Pergunta</td>';
-					$html .= '<td>'.$pegunta->getPergunta().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Resposta 1</td>';
-					$html .= '<td>'.$pegunta->getR1().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Resposta 2</td>';
-					$html .= '<td>'.$pegunta->getR2().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Resposta 3</td>';
-					$html .= '<td>'.$pegunta->getR3().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Resposta 4</td>';
-					$html .= '<td>'.$pegunta->getR4().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Resposta Certa</td>';
-					$html .= '<td>'.$pegunta->getCerta().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Quem criou/alterou</td>';
-					$html .= '<td>'.$pegunta->getPessoa()->getNome().'</td>';
-					$html .= '</tr>';
-					$html .= '<tr>';
-					$html .= '<td>Opções</td>';
-					$html .= '<td>';
+					$html .= '<hr />';
+					$html .= '<p class="text-left">Pergunta: '.$pegunta->getPergunta().'</p>';
+					$html .= '<p class="text-left">Reposta 1: '.$pegunta->getR1().'</p>';
+					$html .= '<p class="text-left">Reposta 2: '.$pegunta->getR2().'</p>';
+					$html .= '<p class="text-left">Reposta 3: '.$pegunta->getR3().'</p>';
+					$html .= '<p class="text-left">Reposta 4: '.$pegunta->getR4().'</p>';
+					$html .= '<p class="text-left">Certa: '.$pegunta->getCerta().'</p>';
+					$html .= '<p class="text-left">Quem Criou/Alterou: '.$pegunta->getPessoa()->getNome().'</p>';
+					$html .= '<p class="text-left">Opções: ';
 					$html .= '<button type="button" class="btn btn-sm btn-primary" onClick="abrirSalvarPergunta('.$pegunta->getId().','.$aula->getId().');"><i class="fa fa-pencil"></i> Alterar</button>';
 					$html .= '&nbsp;<button type="button" class="btn btn-sm btn-danger" onClick="removerPergunta('.$pegunta->getId().','.$aula->getId().');"><i class="fa fa-times"></i> Remover</button>';
-					$html .= '</td>';
-					$html .= '</tr>';
+					$html .= '</p>';
 				}
 			}
-			$html .= '</tbody>';
-			$html .= '</table>';
 		}else{
 			$html .= '<div class="alert alert-danger">Sem perguntas Cadastradas</div>';
 		}
