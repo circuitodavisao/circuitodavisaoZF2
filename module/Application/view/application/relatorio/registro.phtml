@@ -6,23 +6,99 @@ use Application\Controller\Helper\Funcoes;
 <div class="panel">
 <div class="panel-heading text-center">Registro</div>
 <div class="panel-body pn">
+
 <?php
-if($registros = $this->registros){
+$url = $this->mes . '/' . $this->ano;
+echo '<form action="/relatorioRegistro/' . $url . '" method="post">';
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2019;
+$anoFinal = date('Y');
+?>
+
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Líder</div>
+	<div class="col-lg-11 col-md-11 col-sm-11 col-xs-12 pb10 pt10">
+				<select name="idGrupo" id="IdGrupo" class="form-control">
+<?php 
+foreach($this->lideres as $lider){
+	$selected = '';
+	if ($this->idGrupo == $lider->getId()) {
+		$selected = 'selected';
+	}
+
+	echo '<option value="' . $lider->getId() . '" ' . $selected . '>' . $lider->getEntidadeAtiva()->infoEntidade().' - '.$lider->getNomeLideresAtivos(). '</option>';
+}
+?>
+			</select>
+	</div>
+</div>
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="mes" id="mes" class="form-control">
+<?php 
+for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+	$selected = '';
+	if ($this->mes == $indice) {
+		$selected = 'selected';
+	}
+
+	echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+}
+?>
+			</select>
+		</div>
+		<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="ano" id="ano" class="form-control">
+<?php 					
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
+	}
+	echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+}
+?>
+			</select>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+			<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+				<span class="ladda-label">Filtrar</span>
+				<span class="ladda-spinner"></span>
+			</button>
+		</div>
+	</div>
+</form>
+
+<?php
+$registros = $this->registros;
 	echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
-	foreach($registros as $dia => $registroDia){
+	for($indiceDias = 1; $indiceDias <= 31; $indiceDias++){
+		$chave = STR_PAD($indiceDias, 2, '0', STR_PAD_LEFT).'/'.STR_PAD($this->mes,2,'0',STR_PAD_LEFT).'/'.$this->ano;
 		echo '<tr class="dark">';
-		echo '<td colspan="3">'.$dia.'</td>';
+		echo '<td colspan="3">'.$chave.'</td>';
 		echo '</tr>';
-		foreach($registroDia as $registro){
-			echo '<tr>';
-			echo '<td>'.$registro->getHora_criacao().'</td>';
-			echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
-			echo '<td class="text-left">'.$registro->getExtra().'</td>';
-			echo '</tr>';
+		$teveAcesso = false;
+		foreach($registros[$chave] as $registro){
+				echo '<tr>';
+				echo '<td>'.$registro->getHora_criacao().'</td>';
+				echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
+				echo '<td class="text-left">'.$registro->getExtra().'</td>';
+				echo '</tr>';
+		$teveAcesso = true;
 		}
+		if(!$teveAcesso){
+				echo '<tr>';
+				echo '<td colspan="3">Não acessou esse dia</td>';
+				echo '</tr>';
+		}
+		echo '<tr>';
+		echo '<td colspan="3"></td>';
+		echo '</tr>';
 	}
 	echo '</table>';
-}
 ?>
 </div>
 </div>

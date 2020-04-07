@@ -5,6 +5,7 @@ namespace Application\Controller;
 use Migracao\Controller\IndexController;
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Controller\CursoController;
 use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\FatoMensal;
 use Application\Model\Entity\Grupo;
@@ -2872,20 +2873,60 @@ public function alunosNaSemanaAction(){
 	}
 
 	public function registroAction(){
+		$request = $this->getRequest();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+		$grupoLogado = $entidade->getGrupo();
 
-		$registros = $entidade->getGrupo()->getRegistro();
+		if($sessao->idSessao > 0){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($sessao->idSessao);
+		}
+
+		$request = $this->getRequest();
+		$post_data = $request->getPost();
+		$idGrupo = $post_data['idGrupo'];
+
+		if($idGrupo > 0){
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+		}
+
+		$mes = $post_data['mes'];
+		$ano = $post_data['ano'];
+		if (empty($mes)) {
+			$mes = (int) $this->params()->fromRoute('mes', 0);
+			if ($mes == 0) {
+				$mes = date('m');
+			}
+		}
+		if (empty($ano)) {
+			$ano = (int) $this->params()->fromRoute('ano', 0);
+			if ($ano == 0) {
+				$ano = date('Y');
+			}
+		}
+
+		$registros = $grupo->getRegistroPorMesEAno($mes, $ano);
 		$registrosOrganizados = array();
 
+		$lideres = array();
+		$lideres[] = $grupoLogado;
+		$lideresAbaixo = CursoController::todosLideresAPartirDoGrupo($grupoLogado);
+		foreach($lideresAbaixo as $liderAbaixo){
+			$lideres[] = $liderAbaixo;
+		}
 		foreach($registros as $registro){
 			$registrosOrganizados[$registro->getData_criacaoStringPadraoBrasil()][] = $registro;
 		}
 
 		$dados = array();
 		$dados['registros'] = $registrosOrganizados;
+		$dados['idGrupo'] = $grupo->getId();
+		$dados['mes'] = $mes;
+		$dados['ano'] = $ano;
+		$dados['lideres'] = $lideres;
 
 		self::registrarLog(RegistroAcao::VER_RELATORIO_DE_REGISTRO, $extra = '');
 

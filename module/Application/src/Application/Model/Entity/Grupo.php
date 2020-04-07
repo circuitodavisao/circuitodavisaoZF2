@@ -1636,4 +1636,17 @@ class Grupo extends CircuitoEntity {
 	function getRegistro(){
 		return $this->registro;
 	}
+
+    function getRegistroPorMesEAno($mes, $ano) {
+        $registros = array();
+        foreach ($this->getRegistro() as $registro) {
+			if (
+                    $registro->getData_criacaoMes() == $mes &&
+					$registro->getData_criacaoAno() == $ano
+			) {
+                $registros[] = $registro;
+            }
+        }
+        return $registros;
+    }
 }
