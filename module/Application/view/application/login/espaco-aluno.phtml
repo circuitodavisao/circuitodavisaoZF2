@@ -63,12 +63,20 @@ function consultarMatricula(item = null){
 		})
 }
 
-function mostrarFaltas(){
+function mostrarDados(){
 	document.getElementById('divEspacoAluno').classList.add('hidden')
+	document.getElementById('divDados').classList.remove('hidden')
+}
+
+function mostrarAulaAberta(){
+	document.getElementById('divAulaAberta').classList.remove('hidden')
+}
+
+function mostrarFaltas(){
 	document.getElementById('divFaltas').classList.remove('hidden')
 }
 
-function enviarRespostas(aula_id){
+function enviarRespostas(aula_id, tipo = 0){
 		const { respostas, } = estado
 		matricula = document.getElementById('matricula').value;
 
@@ -82,6 +90,7 @@ function enviarRespostas(aula_id){
 					aula_id,
 					respostas,
 					matricula,
+					tipo,
 				}),
 			},
 		)
@@ -98,7 +107,11 @@ function enviarRespostas(aula_id){
 		.then(json => {
 			if(json.ok){
 				document.location.href='#topo'
-				alert('Parabéns a aula foi reposta!')
+				let mensagem = 'Parabéns a aula foi reposta!'
+				if(tipo === 1){
+					mensagem = 'Parabéns você recebeu presença na Aula!'
+				}
+				alert(mensagem)
 				consultarMatricula(matricula)
 			}else{
 				alert('Você não acertou 70% do exercícios refaça o questionário')

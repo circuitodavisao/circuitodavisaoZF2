@@ -1125,11 +1125,11 @@ Boa reposição.';
 						/* mensagem */
 						$html .= '<div id="divEspacoAluno">';
 						$html .= '<div class="alert alert-success">'.$info.'</div>';
-						$html .= '<button type="button" class="btn btn-sm btn-primary mb10" onClick="mostrarFaltas()">Prosseguir</button>';
+						$html .= '<button type="button" class="btn btn-sm btn-primary mb10" onClick="mostrarDados()">Prosseguir</button>';
 						$html .= '</div>';
 						/* fim mensagem */
 
-						$html .= '<div id="divFaltas" class="hidden">';
+						$html .= '<div id="divDados" class="hidden">';
 						$html .= '<input type="hidden" id="matricula" value="'.$json->matricula.'" />';
 						$html .= '<table class="table">';
 
@@ -1170,6 +1170,19 @@ Boa reposição.';
 						$html .= '</tr>';
 						$html .= '</table>';
 
+						/* Aula aberta */
+						$html .= '<div class="panel panel-success m5">';
+						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
+						$html .= '<div class="panel-body">';
+						if($turma->getTurmaAulaAtiva()){
+							$html .= 'Aula '.$turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+							$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarAulaAberta()">Ver Aula</button>';
+						}else{
+							$html .= '<div class="alert alert-danger">Sem Aula aberta entre em contato com seu líder</div>';
+						}
+						$html .= '</div>';
+						$html .= '</div>';
+
 						/* faltas */
 						$html .= '<div class="panel panel-danger m5">';
 						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Faltas</div>';
@@ -1206,11 +1219,57 @@ Boa reposição.';
 							}
 						}
 						$html .= $htmlFaltas;
+						$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarFaltas()">Fazer Reposições</button>';
 						$html .= '</div>';
 						$html .= '</div>';
 
+						/* div aula aberta */
+						if($turma->getTurmaAulaAtiva()){
+							$aula = $turma->getTurmaAulaAtiva()->getAula();
+							$html .= '<div id="divAulaAberta" class="p5 hidden">';
+								$html .= '<div class="panel panel-primary">';
+								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
+								$html .= '<div class="panel-body">';
+								if($aula->getUrl() !== null && $aula->getUrl() !== ''){
+									$idVideo = $aula->getUrl();
+									$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
+									$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+								}else{
+									$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
+								}
+								$html .= '<div class="alert alert-info mt10">Questionário</div>';
+								$temPerguntas = false;
+								foreach($aula->getPergunta() as $pergunta){
+									if($pergunta->verificarSeEstaAtivo()){
+										$temPerguntas = true;
+									}
+								}
+								if($temPerguntas){
+									foreach($aula->getPergunta() as $pergunta){
+										if($pergunta->verificarSeEstaAtivo()){
+											$html .= '<div class="panel panel-default mt5">';
+											$html .= '<div class="panel-body">';
+											$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
+											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
+											$html .= '</div>';
+											$html .= '</div>';
+										}
+									}
+									$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$aula->getId().', 1)">Enviar Respostas</button>';
+								}else{
+									$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
+								}
+								$html .= '</div>';
+								$html .= '</div>';
+							$html .= '</div>';
+						}
+
+						/* div faltas */
 						if(count($listaDeFaltas) > 0){
-							$html .= '<div class="p5">';
+							$html .= '<div id="divFaltas" class="p5 hidden">';
 							foreach($listaDeFaltas as $falta){
 								$html .= '<div class="panel panel-primary">';
 								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$falta->getPosicao().' - '.$falta->getNome().'</div>';
@@ -1316,17 +1375,24 @@ Boa reposição.';
 					$turmaPessoaAula->setData_inativacao(null);
 					$turmaPessoaAula->setHora_inativacao(null);
 					$turmaPessoaAula->setReposicao('S');
+					/* presença */
+					if(intVal($json->tipo) === 1){
+						$turmaPessoaAula->setReposicao('N');
+					}
 					$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
 
-					$turmaPessoaVisto = $turmaPessoa->getTurmaPessoaVistoPorAula($aula->getId());
-					if (!$turmaPessoaVisto) {
-						$turmaPessoaVisto = new TurmaPessoaVisto();
-						$turmaPessoaVisto->setAula($aula);
-						$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+					/* reposição */
+					if(intVal($json->tipo) === 0){
+						$turmaPessoaVisto = $turmaPessoa->getTurmaPessoaVistoPorAula($aula->getId());
+						if (!$turmaPessoaVisto) {
+							$turmaPessoaVisto = new TurmaPessoaVisto();
+							$turmaPessoaVisto->setAula($aula);
+							$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+						}
+						$turmaPessoaVisto->setData_inativacao(null);
+						$turmaPessoaVisto->setHora_inativacao(null);
+						$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
 					}
-					$turmaPessoaVisto->setData_inativacao(null);
-					$turmaPessoaVisto->setHora_inativacao(null);
-					$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
 	
 					$dados['ok'] = true;
 				}
