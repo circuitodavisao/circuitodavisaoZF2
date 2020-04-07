@@ -18,7 +18,7 @@ $anoFinal = date('Y');
 
 <div class="row p5">
 	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Líder</div>
-	<div class="col-lg-11 col-md-11 col-sm-11 col-xs-12 pb10 pt10">
+	<div class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
 				<select name="idGrupo" id="IdGrupo" class="form-control">
 <?php 
 foreach($this->lideres as $lider){
@@ -63,7 +63,7 @@ for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
 ?>
 			</select>
 		</div>
-		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+		<div class="mt5 col-lg-4 col-md-4 col-sm-4 col-xs-12">
 			<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
 				<span class="ladda-label">Filtrar</span>
 				<span class="ladda-spinner"></span>
@@ -72,6 +72,7 @@ for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
 	</div>
 </form>
 
+<div class="p5">
 <?php
 $registros = $this->registros;
 	echo '<table class="text-center table table-condensed table-hover bg-light mt15">';
@@ -85,7 +86,7 @@ $registros = $this->registros;
 				echo '<tr>';
 				echo '<td>'.$registro->getHora_criacao().'</td>';
 				echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
-				echo '<td class="text-left">'.$registro->getExtra().'</td>';
+				echo '<td class="text-left hidden-xs">'.$registro->getExtra().'</td>';
 				echo '</tr>';
 		$teveAcesso = true;
 		}
@@ -100,6 +101,7 @@ $registros = $this->registros;
 	}
 	echo '</table>';
 ?>
+</div>
 </div>
 </div>
 </div>

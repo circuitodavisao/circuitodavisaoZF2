@@ -564,11 +564,12 @@ class LancamentoController extends CircuitoController {
 						break;
 					};
 
-					self::registrarLog(RegistroAcao::LANCOU_CULTO, $extra = 'Id: '.$pessoa->getId().' Nome: '.$pessoa->getNome());
+					self::registrarLog(RegistroAcao::LANCOU_CULTO, $extra = Funcoes::mudarPadraoData($diaRealDoEvento,1) .' - '.$pessoa->getId().' - '.$pessoa->getNome());
 				}
 				if ($evento->getEventoTipo()->getId() === EventoTipo::tipoCelula
 					|| $evento->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
 					$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+					self::registrarLog(RegistroAcao::LANCOU_CELULA, $extra = Funcoes::mudarPadraoData($diaRealDoEvento,1).' - '.$pessoa->getId().' - '.$pessoa->getNome());
 				}
 
 				$valorParaSomar = 0;
@@ -635,6 +636,7 @@ class LancamentoController extends CircuitoController {
 				if($grupoPessoa = $pessoa->getGrupoPessoaAtivo()){
 					$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
 					if($tipoPessoa === GrupoPessoaTipo::VISITANTE){
+						self::registrarLog(RegistroAcao::LANCOU_VISITANTE, $extra = $pessoa->getId().' - '.$pessoa->getNome());
 						$mudarVisitante = true;
 					}
 				}
