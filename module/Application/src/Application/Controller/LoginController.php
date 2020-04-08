@@ -1847,7 +1847,6 @@ Boa reposição.';
 	}
 
 	public function checkoutAction() {
-		$this->setResponseWithHeader();
 		$response = $this->getResponse();
 		$request = $this->getRequest();
 
