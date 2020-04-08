@@ -40,13 +40,16 @@ class IndexController extends AbstractRestfulController {
 
 		if ($request->isPost()) {
 
+			error_log('Json');
 			$data = Json::decode($request->getContent());
-			error_log('json: '. print_r($data, true));
+			error_log(print_r($data, true));
 
+			error_log('post');
 			$dataPost = $request->getPost();
-			error_log('post: '.print_r($dataPost,true));
+			error_log(print_r($dataPost,true));
+
+			Funcoes::enviarEmail('falecomleonardopereira@gmail.com', 'teste chekout cielo', 'json post');
 		}
-		Funcoes::enviarEmail('falecomleonardopereira@gmail.com', 'teste chekout cielo', 'json: '.$data.' post: '.$dataPost);
 
 		$response->setContent(Json::encode(array('ok' => true,)));
 		return $response;
