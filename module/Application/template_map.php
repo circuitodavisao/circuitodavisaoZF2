@@ -19,6 +19,7 @@ return array(
     'application/login/recuperar-senha'                       => __DIR__ . '/view/application/login/recuperar-senha.phtml',
     'application/login/espaco-aluno'                          => __DIR__ . '/view/application/login/espaco-aluno.phtml',
     'application/login/espaco-coordenador'                    => __DIR__ . '/view/application/login/espaco-coordenador.phtml',
+    'application/login/pagamento-realizado'                   => __DIR__ . '/view/application/login/pagamento-realizado.phtml',
     'application/relatorio/registro'                          => __DIR__ . '/view/application/relatorio/registro.phtml',
     'application/relatorio/exclusao-celulas'                  => __DIR__ . '/view/application/relatorio/exclusao-celulas.phtml',
     'application/relatorio/celulas-nao-realizadas'            => __DIR__ . '/view/application/relatorio/celulas-nao-realizadas.phtml',

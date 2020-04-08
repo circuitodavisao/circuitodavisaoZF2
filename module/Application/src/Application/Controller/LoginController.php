@@ -1841,5 +1841,9 @@ Boa reposição.';
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
+
+	public function pagamentoRealizadoAction(){
+		return new ViewModel();
+	}
 	
 }
