@@ -23,14 +23,32 @@ class IndexController extends AbstractRestfulController {
 
 	public function checkoutAction() {
 		$this->setResponseWithHeader();
+		$response = $this->getResponse();
 		$request = $this->getRequest();
 
-		if ($request->isPost()) {
-			$json = Json::decode($request->getContent());
-			error_log(print_r($json, true));
-			Funcoes::enviarEmail('falecomleonardopereira@gmail.com', 'teste chekout cielo', 'json: '.$json);
+		error_log('checkoutAction');
+
+		if ($request->isGet()) {
+			error_log('get');
 		}
 
-		return new JsonModel(array('ok' => true));
+		if ($request->isPost()) {
+			error_log('post');
+		}
+
+		error_log(print_r($request->getPost(), true));
+
+		if ($request->isPost()) {
+
+			$data = Json::decode($request->getContent());
+			error_log($data);
+
+			$dataPost = $request->getPost();
+			error_log($dataPost);
+		}
+		Funcoes::enviarEmail('falecomleonardopereira@gmail.com', 'teste chekout cielo', 'json: '.$data.' post: '.$dataPost);
+
+		$response->setContent(Json::encode(array('ok' => true,)));
+		return $response;
 	}
 }

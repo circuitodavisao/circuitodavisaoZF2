@@ -85,7 +85,7 @@ class Funcoes {
 			if(!$mail->Send()){
 				$mensagemRetorno = 'Erro ao enviar formulário: '. $mail->ErrorInfo;
 			}else{
-				$mensagemRetorno = 'Formulário enviado com sucesso!';
+				$mensagemRetorno = 'Email enviado com sucesso!';
 			} 
 			error_log($mensagemRetorno);
 		} catch (Exception $exc) {
