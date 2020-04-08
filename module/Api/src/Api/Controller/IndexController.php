@@ -18,10 +18,10 @@ class IndexController extends AbstractRestfulController {
 		$response = $this->getResponse();
 		$response->getHeaders()
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
-			->addHeaderLine('Access-Control-Allow-Methods', 'POST ');
+			->addHeaderLine('Access-Control-Allow-Methods', 'POST');
 	}
 
-	public function checkoutAction() {
+	public function desativadoAction() {
 		$this->setResponseWithHeader();
 		$response = $this->getResponse();
 		$request = $this->getRequest();
