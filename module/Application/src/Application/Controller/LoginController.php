@@ -2162,6 +2162,7 @@ Boa reposição.';
 								$cadastroNovo = true;						
 							}
 							$turmaPessoaFinanceiro->setDisciplina($disciplina);
+							$turmaPessoaFinanceiro->setTurma_pessoa($turmaPessoa);
 							$qualAvaliacao = null;
 							$mes = date('m');
 							$ano = date('Y');
