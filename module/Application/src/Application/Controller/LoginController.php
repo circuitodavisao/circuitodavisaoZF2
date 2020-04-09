@@ -19,6 +19,7 @@ use Application\Model\Entity\CursoAcesso;
 use Application\Model\Entity\Pergunta;
 use Application\Model\Entity\TurmaPessoaAula;
 use Application\Model\Entity\TurmaPessoaVisto;
+use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\View\Helper\BotaoSimples;
 use DateTime;
 use Doctrine\ORM\EntityManager;
