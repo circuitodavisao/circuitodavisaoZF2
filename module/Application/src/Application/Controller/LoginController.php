@@ -2142,17 +2142,17 @@ Boa reposição.';
 							$indiceFinalModulos = 3;
 							$parcela3 = true;
 						}
-						for($indiceModulo = $indiceInicialModulos;$indiceModulo <= $indiceFinalModulos;$indiceModulo++){
+						for($indiceModulo = $indiceInicialModulos; $indiceModulo <= $indiceFinalModulos; $indiceModulo++){
 							$cadastroNovo = false;				
 							$idDisciplina = null;
 							if($indiceModulo === 1){
-								$idDisciplina === Disciplina::MODULO_UM;
+								$idDisciplina = Disciplina::MODULO_UM;
 							}
 							if($indiceModulo === 2){
-								$idDisciplina === Disciplina::MODULO_DOIS;
+								$idDisciplina = Disciplina::MODULO_DOIS;
 							}
 							if($indiceModulo === 3){
-								$idDisciplina === Disciplina::MODULO_TRES;
+								$idDisciplina = Disciplina::MODULO_TRES;
 							}
 							$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
 							$turmaPessoaFinanceiro = $turmaPessoa->getTurmaPessoaFinanceiroPorDisciplina($disciplina->getId());
