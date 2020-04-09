@@ -2036,18 +2036,26 @@ Boa reposição.';
 		static $ESTADO_PAGO = 2;
 		static $ESTADO_AUTORIZADO_CARTAO_CREDITO = 7;
 		static $PRODUTO_TESTE = '68373664-2be7-40ba-84f3-34451f7a13d3';
-
-		error_log('checkoutAction');
-
-		error_log(print_r($request->getPost(), true));
+		static $PRODUTO_TUDO = '';
+		static $PRODUTO_TUDO_PARCELADO = '';
+		static $PRODUTO_MODULO_1 = '';
+		static $PRODUTO_PARCELA_1_MODULO_1 = '';
+		static $PRODUTO_PARCELA_2_MODULO_1 = '';
+		static $PRODUTO_PARCELA_3_MODULO_1 = '';
+		static $PRODUTO_MODULO_2 = '';
+		static $PRODUTO_PARCELA_1_MODULO_2 = '';
+		static $PRODUTO_PARCELA_2_MODULO_2 = '';
+		static $PRODUTO_PARCELA_3_MODULO_2 = '68373664-2be7-40ba-84f3-34451f7a13d3';
+		static $PRODUTO_MODULO_3 = '';
+		static $PRODUTO_PARCELA_1_MODULO_3 = '';
+		static $PRODUTO_PARCELA_2_MODULO_3 = '';
+		static $PRODUTO_PARCELA_3_MODULO_3 = '';
 
 		if ($request->isPost()) {
-			error_log('post');
 			$dataPost = $request->getPost();
 			$email = $dataPost['customer_email'];
 			$produto_id = $dataPost['product_id'];
-			error_log('product_id');
-			error_log($produto_id);
+
 			if($produto_id === $PRODUTO_TESTE){
 				error_log('produto teste');
 			}
@@ -2056,58 +2064,153 @@ Boa reposição.';
 				intVal($estado_pagamento) === $ESTADO_PAGO ||
 				intVal($estado_pagamento) === $ESTADO_AUTORIZADO_CARTAO_CREDITO
 			){
-				error_log('AUTORIZADO');
-				error_log('email: '.$email);
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)){
-				error_log('ACHOU PESSOA');
-				error_log('pessoa: '.$pessoa->getId());
-				if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
-				error_log('EH ALUNO');
-
-					/* validar qual produto e alterar o financeiro */
-//					$alterarDataDeCriacaoFinanceiro = false;
-//					$cadastroNovo = false;				
-//					$idDisciplina = null;
-//					$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
-//					$turmaPessoaFinanceiro = $turmaPessoa->getTurmaPessoaFinanceiroPorDisciplina($disciplina->getId());
-//					if (!$turmaPessoaFinanceiro) {
-//						$turmaPessoaFinanceiro = new TurmaPessoaFinanceiro();	
-//						$cadastroNovo = true;						
-//					}
-//					$turmaPessoaFinanceiro->setDisciplina($disciplina);
-//					$qualAvaliacao = null;
-//					$mes = date('m');
-//					$ano = date('Y');
-//					switch ($qualAvaliacao) {
-//					case 1:
-//						$turmaPessoaFinanceiro->setValor1($valor);
-//						$turmaPessoaFinanceiro->setMes1($mes);
-//						$turmaPessoaFinanceiro->setAno1($ano);
-//						break;
-//					case 2:
-//						$turmaPessoaFinanceiro->setValor2($valor);
-//						$turmaPessoaFinanceiro->setMes2($mes);
-//						$turmaPessoaFinanceiro->setAno2($ano);
-//						break;
-//					case 3:
-//						$turmaPessoaFinanceiro->setValor3($valor);
-//						$turmaPessoaFinanceiro->setMes3($mes);
-//						$turmaPessoaFinanceiro->setAno3($ano);
-//						break;
-//					}
-//					if($cadastroNovo){
-//						$alterarDataDeCriacaoFinanceiro = true;
-//						if(!$turmaPessoaFinanceiro->getValor1()){
-//							$turmaPessoaFinanceiro->setValor1('N');
-//						}
-//						if(!$turmaPessoaFinanceiro->getValor2()){
-//							$turmaPessoaFinanceiro->setValor2('N');
-//						}
-//						if(!$turmaPessoaFinanceiro->getValor3()){
-//							$turmaPessoaFinanceiro->setValor3('N');
-//						}
-//					}					
-				}
+					if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
+						/* validar qual produto e alterar o financeiro */
+						$alterarDataDeCriacaoFinanceiro = false;
+						$indiceInicialModulos = 0;
+						$indiceFinalModulos = 0;
+						$todasParcelas = false;
+						$parcela1 = false;
+						$parcela2 = false;
+						$parcela3 = false;
+						if(
+							$produto_id === $PRODUTO_TUDO ||
+							$produto_id === $PRODUTO_TUDO_PARCELADO
+						){
+							$indiceInicialModulos = 1;
+							$indiceFinalModulos = 3;
+							$todasParcelas = true;
+						}
+						if($produto_id === $PRODUTO_MODULO_1){
+							$indiceInicialModulos = 1;
+							$indiceFinalModulos = 1;
+							$todasParcelas = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_1_MODULO_1){
+							$indiceInicialModulos = 1;
+							$indiceFinalModulos = 1;
+							$parcela1 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_2_MODULO_1){
+							$indiceInicialModulos = 1;
+							$indiceFinalModulos = 1;
+							$parcela2 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_3_MODULO_1){
+							$indiceInicialModulos = 1;
+							$indiceFinalModulos = 1;
+							$parcela3 = true;
+						}
+						if($produto_id === $PRODUTO_MODULO_2){
+							$indiceInicialModulos = 2;
+							$indiceFinalModulos = 2;
+							$todasParcelas = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_1_MODULO_2){
+							$indiceInicialModulos = 2;
+							$indiceFinalModulos = 2;
+							$parcela1 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_2_MODULO_2){
+							$indiceInicialModulos = 2;
+							$indiceFinalModulos = 2;
+							$parcela2 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_3_MODULO_2){
+							$indiceInicialModulos = 2;
+							$indiceFinalModulos = 2;
+							$parcela3 = true;
+						}
+						if($produto_id === $PRODUTO_MODULO_3){
+							$indiceInicialModulos = 3;
+							$indiceFinalModulos = 3;
+							$todasParcelas = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_1_MODULO_3){
+							$indiceInicialModulos = 3;
+							$indiceFinalModulos = 3;
+							$parcela1 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_2_MODULO_3){
+							$indiceInicialModulos = 3;
+							$indiceFinalModulos = 3;
+							$parcela2 = true;
+						}
+						if($produto_id === $PRODUTO_PARCELA_3_MODULO_3){
+							$indiceInicialModulos = 3;
+							$indiceFinalModulos = 3;
+							$parcela3 = true;
+						}
+						for($indiceModulo = $indiceInicialModulos;$indiceModulo <= $indiceFinalModulos;$indiceModulo++){
+							$cadastroNovo = false;				
+							$idDisciplina = null;
+							if($indiceModulo === 1){
+								$idDisciplina === Disciplina::MODULO_UM;
+							}
+							if($indiceModulo === 2){
+								$idDisciplina === Disciplina::MODULO_DOIS;
+							}
+							if($indiceModulo === 3){
+								$idDisciplina === Disciplina::MODULO_TRES;
+							}
+							$disciplina = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId($idDisciplina);
+							$turmaPessoaFinanceiro = $turmaPessoa->getTurmaPessoaFinanceiroPorDisciplina($disciplina->getId());
+							if (!$turmaPessoaFinanceiro) {
+								$turmaPessoaFinanceiro = new TurmaPessoaFinanceiro();	
+								$cadastroNovo = true;						
+							}
+							$turmaPessoaFinanceiro->setDisciplina($disciplina);
+							$qualAvaliacao = null;
+							$mes = date('m');
+							$ano = date('Y');
+							$valor1 = 'N';
+							$valor2 = 'N';
+							$valor3 = 'N';
+							if($todasParcelas){
+								$valor1 = 'S';
+								$valor2 = 'S';
+								$valor3 = 'S';
+							}
+							if($parcela1){
+								$valor1 = 'S';
+							}
+							if($parcela2){
+								$valor2 = 'S';
+							}
+							if($parcela3){
+								$valor3 = 'S';
+							}
+							if($valor1 === 'S'){
+								$turmaPessoaFinanceiro->setValor1($valor1);
+								$turmaPessoaFinanceiro->setMes1($mes);
+								$turmaPessoaFinanceiro->setAno1($ano);
+							}
+							if($valor2 === 'S'){
+								$turmaPessoaFinanceiro->setValor2($valor2);
+								$turmaPessoaFinanceiro->setMes2($mes);
+								$turmaPessoaFinanceiro->setAno2($ano);
+							}
+							if($valor3 === 'S'){
+								$turmaPessoaFinanceiro->setValor3($valor3);
+								$turmaPessoaFinanceiro->setMes3($mes);
+								$turmaPessoaFinanceiro->setAno3($ano);
+							}
+							if($cadastroNovo){
+								$alterarDataDeCriacaoFinanceiro = true;
+								if(!$turmaPessoaFinanceiro->getValor1()){
+									$turmaPessoaFinanceiro->setValor1('N');
+								}
+								if(!$turmaPessoaFinanceiro->getValor2()){
+									$turmaPessoaFinanceiro->setValor2('N');
+								}
+								if(!$turmaPessoaFinanceiro->getValor3()){
+									$turmaPessoaFinanceiro->setValor3('N');
+								}
+							}					
+							$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro, $alterarDataDeCriacaoFinanceiro);
+						}
+					}
 				}
 			}
 		}
@@ -2116,5 +2219,4 @@ Boa reposição.';
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
-	
 }
