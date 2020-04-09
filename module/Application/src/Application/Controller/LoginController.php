@@ -2035,6 +2035,7 @@ Boa reposição.';
 
 		static $ESTADO_PAGO = 2;
 		static $ESTADO_AUTORIZADO_CARTAO_CREDITO = 7;
+		static $PRODUTO_TESTE = '68373664-2be7-40ba-84f3-34451f7a13d3';
 
 		error_log('checkoutAction');
 
@@ -2047,6 +2048,9 @@ Boa reposição.';
 			$produto_id = $dataPost['product_id'];
 			error_log('product_id');
 			error_log($produto_id);
+			if($produto_id === $PRODUTO_TESTE){
+				error_log('produto teste');
+			}
 			$estado_pagamento = $dataPost['payment_status'];
 			if(
 				intVal($estado_pagamento) === $ESTADO_PAGO ||
