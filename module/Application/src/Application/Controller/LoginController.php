@@ -1109,29 +1109,9 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					$html = '';
 					if($turmaPessoa->verificarSeEstaAtivo()){
-						$info = 'Seja muito bem vindo ao Espaço do Aluno. Esse espaço é destinado a reposição de aulas.
-							<br />
-							<br />
-É necessário que você assista a aula até o final, em seguida responda ao questionário. 
-<br />
-							<br />
-Cada aula tem um questionário específico e é necessário que você acerte pelo menos 70% ou seja 7 das 10 questões para ser efetivada a sua reposição.
-<br />
-							<br />
-Uma vez respondido o questionário, a sua reposição será efetivada e o visto pedagógico daquela aula também.
-<br />
-							<br />
-Boa reposição.';
 						$html .= '<div class="panel">';
 
-						/* mensagem */
-						$html .= '<div id="divEspacoAluno">';
-						$html .= '<div class="alert alert-success">'.$info.'</div>';
-						$html .= '<button type="button" class="btn btn-sm btn-primary mb10" onClick="mostrarDados()">Prosseguir</button>';
-						$html .= '</div>';
-						/* fim mensagem */
-
-						$html .= '<div id="divDados" class="hidden">';
+						$html .= '<div id="divDados">';
 						$html .= '<input type="hidden" id="matricula" value="'.$json->matricula.'" />';
 						$html .= '<table class="table">';
 
@@ -1221,7 +1201,9 @@ Boa reposição.';
 							}
 						}
 						$html .= $htmlFaltas;
-						$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarFaltas()">Fazer Reposições</button>';
+						if(count($listaDeFaltas) > 0){
+							$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarFaltas()">Fazer Reposições</button>';
+						}
 						$html .= '</div>';
 						$html .= '</div>';
 
@@ -1300,49 +1282,58 @@ Boa reposição.';
 						$html .= '</div>';
 						$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
 						$html .= '</div>';
+
+						$html .= '<div id="divSair" class="mt5">';
+						$html .= '<button type="button" class="btn btn-primary mb10" onClick="sair()">Sair</button>';
+						$html .= '</div>';
+	
+						/* fim panel dados */
+						$html .= '</div>';
+						/* fim div dados */
 						$html .= '</div>';
 
 						/* div aula aberta */
 						if($turma->getTurmaAulaAtiva()){
 							$aula = $turma->getTurmaAulaAtiva()->getAula();
 							$html .= '<div id="divAulaAberta" class="p5 hidden">';
-								$html .= '<div class="panel panel-primary">';
-								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
-								$html .= '<div class="panel-body">';
-								if($aula->getUrl() !== null && $aula->getUrl() !== ''){
-									$idVideo = $aula->getUrl();
-									$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
-									$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
-								}else{
-									$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
+							$html .= '<div class="panel panel-primary">';
+							$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
+							$html .= '<div class="panel-body">';
+							if($aula->getUrl() !== null && $aula->getUrl() !== ''){
+								$idVideo = $aula->getUrl();
+								$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
+								$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+							}else{
+								$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
+							}
+							$html .= '<div class="alert alert-info mt10">Questionário</div>';
+							$temPerguntas = false;
+							foreach($aula->getPergunta() as $pergunta){
+								if($pergunta->verificarSeEstaAtivo()){
+									$temPerguntas = true;
 								}
-								$html .= '<div class="alert alert-info mt10">Questionário</div>';
-								$temPerguntas = false;
+							}
+							if($temPerguntas){
 								foreach($aula->getPergunta() as $pergunta){
 									if($pergunta->verificarSeEstaAtivo()){
-										$temPerguntas = true;
+										$html .= '<div class="panel panel-default mt5">';
+										$html .= '<div class="panel-body">';
+										$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
+										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
+										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
+										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
+										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
+										$html .= '</div>';
+										$html .= '</div>';
 									}
 								}
-								if($temPerguntas){
-									foreach($aula->getPergunta() as $pergunta){
-										if($pergunta->verificarSeEstaAtivo()){
-											$html .= '<div class="panel panel-default mt5">';
-											$html .= '<div class="panel-body">';
-											$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
-											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
-											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
-											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
-											$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
-											$html .= '</div>';
-											$html .= '</div>';
-										}
-									}
-									$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$aula->getId().', 1)">Enviar Respostas</button>';
-								}else{
-									$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
-								}
-								$html .= '</div>';
-								$html .= '</div>';
+								$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$aula->getId().', 1)">Enviar Respostas</button>';
+							}else{
+								$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
+							}
+							$html .= '</div>';
+
+							$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
 							$html .= '</div>';
 						}
 
@@ -1388,21 +1379,18 @@ Boa reposição.';
 								$html .= '</div>';
 								$html .= '</div>';
 							}
+							$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
 							$html .= '</div>';
 						}
-
-						$html .= '<div id="divSair">';
-						$html .= '<button type="button" class="btn btn-primary mb10" onClick="sair()">Sair</button>';
-						$html .= '</div>';
 
 						/* fim div faltas */
 						$html .= '</div>';
 
 						/* div pagamentos */
-						$html .= '<div id="divPagamentos" class="p5 ">';
+						$html .= '<div id="divPagamentos" class="p5 hidden">';
 						$email = $turmaPessoa->getPessoa()->getEmail();
 						if($email === 'atualize' || $email === null || $email === ''){
-							$html .= '<div class="panel panel-primary">';
+							$html .= '<div id="divEmail" class="panel panel-primary">';
 							$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
 							$html .= '<div class="panel-body">';
 
@@ -1417,6 +1405,8 @@ Boa reposição.';
 							$html .= '</div>';
 
 							$html .= '</div>';
+
+							$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
 							$html .= '</div>';
 						}else{
 							$html .= self::pagamentos($turmaPessoa);
@@ -1424,7 +1414,8 @@ Boa reposição.';
 
 						/* fim div pagamentos */
 						$html .= '</div>';
-					}
+
+				}
 					$dados['html'] = $html;
 					$dados['ok'] = true;
 				}
@@ -1438,20 +1429,23 @@ Boa reposição.';
 
 	function pagamentos($turmaPessoa){
 		$html = '';
+		$url = 'https://cieloecommerce.cielo.com.br/transactionalvnext/order/buynow/';
 		$email = $turmaPessoa->getPessoa()->getEmail();
 		$html .= '<div class="panel panel-primary">';
 		$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
 		$html .= '<div class="panel-body">';
 
 		$html .= '<div class="table-responsive">';
-		$html .= '<table class="table table-condensed">';
+		$html .= '<table class="table table-condensed text-left">';
 		$html .= '<tr>';
 		$html .= '<td>Tudo à vista - R$100,00</td>';
-		$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+		$id = self::$PRODUTO_TUDO;
+		$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td>Tudo parcelado em 3 vezes - R$120,00</td>';
-		$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+		$id = self::$PRODUTO_TUDO_PARCELADO;
+		$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 		$html .= '</tr>';
 	
 		for($indiceModulo = 1; $indiceModulo <= 3; $indiceModulo++){
@@ -1461,7 +1455,16 @@ Boa reposição.';
 			}
 			$html .= '<tr>';
 			$html .= '<td>'.$indiceModulo.'º Módulo Completo - R$'.$valorModulor.',00</td>';
-			$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+			if($indiceModulo === 1){
+				$id = self::$PRODUTO_MODULO_1;
+			}
+			if($indiceModulo === 2){
+				$id = self::$PRODUTO_MODULO_2;
+			}
+			if($indiceModulo === 3){
+				$id = self::$PRODUTO_MODULO_3;
+			}
+			$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 			$html .= '</tr>';
 			for($indiceParcela = 1; $indiceParcela <= 3; $indiceParcela++){
 				$valorParcela = 15;
@@ -1470,7 +1473,41 @@ Boa reposição.';
 				}
 				$html .= '<tr>';
 				$html .= '<td>'.$indiceParcela.'º Parcela do '.$indiceModulo.'º Módulo - R$'.$valorParcela.',00</td>';
-				$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+				if($indiceModulo === 1){
+					if($indiceParcela === 1){
+						$id = self::$PRODUTO_PARCELA_1_MODULO_1;
+					}
+					if($indiceParcela === 2){
+						$id = self::$PRODUTO_PARCELA_2_MODULO_1;
+					}
+					if($indiceParcela === 3){
+						$id = self::$PRODUTO_PARCELA_3_MODULO_1;
+					}
+				}
+				if($indiceModulo === 2){
+					if($indiceParcela === 1){
+						$id = self::$PRODUTO_PARCELA_1_MODULO_2;
+					}
+					if($indiceParcela === 2){
+						$id = self::$PRODUTO_PARCELA_2_MODULO_2;
+					}
+					if($indiceParcela === 3){
+						$id = self::$PRODUTO_PARCELA_3_MODULO_2;
+					}
+				}
+				if($indiceModulo === 3){
+					if($indiceParcela === 1){
+						$id = self::$PRODUTO_PARCELA_1_MODULO_3;
+					}
+					if($indiceParcela === 2){
+						$id = self::$PRODUTO_PARCELA_2_MODULO_3;
+					}
+					if($indiceParcela === 3){
+						$id = self::$PRODUTO_PARCELA_3_MODULO_3;
+					}
+				}
+	
+				$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 				$html .= '</tr>';
 			}
 		}
@@ -1479,6 +1516,8 @@ Boa reposição.';
 
 
 		$html .= '</div>';
+
+		$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
 		$html .= '</div>';
 		return $html;
 	}
@@ -2030,40 +2069,36 @@ Boa reposição.';
 		return new ViewModel();
 	}
 
+	static $ESTADO_PAGO = 2;
+	static $ESTADO_AUTORIZADO_CARTAO_CREDITO = 7;
+	static $PRODUTO_TESTE = '68373664-2be7-40ba-84f3-34451f7a13d3';
+	static $PRODUTO_TUDO = 'b11a589e-93fd-4532-bc21-e01379ec82a1';
+	static $PRODUTO_TUDO_PARCELADO = '89246bd1-9be1-4d44-a1b6-5c6d83543a75';
+	static $PRODUTO_MODULO_1 = '281faaf1-f4e7-4800-9619-e6c33ff09474';
+	static $PRODUTO_PARCELA_1_MODULO_1 = '59ded433-689f-4fe9-b587-eff429f9db3d';
+	static $PRODUTO_PARCELA_2_MODULO_1 = 'b974d23b-148d-42cc-bc7f-21bc20600ebd';
+	static $PRODUTO_PARCELA_3_MODULO_1 = 'cfa0a967-3257-4039-89dc-2a59c3bd9070';
+	static $PRODUTO_MODULO_2 = 'ee4cce00-e8e2-4889-87ed-10668c8924aa';
+	static $PRODUTO_PARCELA_1_MODULO_2 = '908a825b-5fbd-4178-a518-3af92965abc0';
+	static $PRODUTO_PARCELA_2_MODULO_2 = 'b275c76a-4f89-4877-93b7-bec027574c4f';
+	static $PRODUTO_PARCELA_3_MODULO_2 = '3364ed80-dd6f-4fa4-8e83-5d7992c5d87d';
+	static $PRODUTO_MODULO_3 = '95166276-6f1a-496b-814b-b13467b415b3';
+	static $PRODUTO_PARCELA_1_MODULO_3 = '7581785f-d6fb-4f21-b4a3-ae71fe0dd8b2';
+	static $PRODUTO_PARCELA_2_MODULO_3 = 'ce981f85-12ca-4132-9880-29b2de6322dd';
+	static $PRODUTO_PARCELA_3_MODULO_3 = '9b3e2cc9-ea13-47dd-9351-3ef360625e52';
+
 	public function checkoutAction() {
 		$response = $this->getResponse();
 		$request = $this->getRequest();
-
-		static $ESTADO_PAGO = 2;
-		static $ESTADO_AUTORIZADO_CARTAO_CREDITO = 7;
-		static $PRODUTO_TESTE = '68373664-2be7-40ba-84f3-34451f7a13d3';
-		static $PRODUTO_TUDO = '';
-		static $PRODUTO_TUDO_PARCELADO = '68373664-2be7-40ba-84f3-34451f7a13d3';
-		static $PRODUTO_MODULO_1 = '';
-		static $PRODUTO_PARCELA_1_MODULO_1 = '';
-		static $PRODUTO_PARCELA_2_MODULO_1 = '';
-		static $PRODUTO_PARCELA_3_MODULO_1 = '';
-		static $PRODUTO_MODULO_2 = '';
-		static $PRODUTO_PARCELA_1_MODULO_2 = '';
-		static $PRODUTO_PARCELA_2_MODULO_2 = '';
-		static $PRODUTO_PARCELA_3_MODULO_2 = '';
-		static $PRODUTO_MODULO_3 = '';
-		static $PRODUTO_PARCELA_1_MODULO_3 = '';
-		static $PRODUTO_PARCELA_2_MODULO_3 = '';
-		static $PRODUTO_PARCELA_3_MODULO_3 = '';
 
 		if ($request->isPost()) {
 			$dataPost = $request->getPost();
 			$email = $dataPost['customer_email'];
 			$produto_id = $dataPost['product_id'];
-
-			if($produto_id === $PRODUTO_TESTE){
-				error_log('produto teste');
-			}
 			$estado_pagamento = $dataPost['payment_status'];
 			if(
-				intVal($estado_pagamento) === $ESTADO_PAGO ||
-				intVal($estado_pagamento) === $ESTADO_AUTORIZADO_CARTAO_CREDITO
+				intVal($estado_pagamento) === self::$ESTADO_PAGO ||
+				intVal($estado_pagamento) === self::$ESTADO_AUTORIZADO_CARTAO_CREDITO
 			){
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)){
 					if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
@@ -2076,69 +2111,69 @@ Boa reposição.';
 						$parcela2 = false;
 						$parcela3 = false;
 						if(
-							$produto_id === $PRODUTO_TUDO ||
-							$produto_id === $PRODUTO_TUDO_PARCELADO
+							$produto_id === self::$PRODUTO_TUDO ||
+							$produto_id === self::$PRODUTO_TUDO_PARCELADO
 						){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
 						}
-						if($produto_id === $PRODUTO_MODULO_1){
+						if($produto_id === self::$PRODUTO_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$todasParcelas = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_1_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela1 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_2_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela2 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_3_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela3 = true;
 						}
-						if($produto_id === $PRODUTO_MODULO_2){
+						if($produto_id === self::$PRODUTO_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$todasParcelas = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_1_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela1 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_2_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela2 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_3_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela3 = true;
 						}
-						if($produto_id === $PRODUTO_MODULO_3){
+						if($produto_id === self::$PRODUTO_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_1_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela1 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_2_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela2 = true;
 						}
-						if($produto_id === $PRODUTO_PARCELA_3_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela3 = true;

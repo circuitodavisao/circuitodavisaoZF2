@@ -4,11 +4,31 @@
 <p>Informe a matrícula do aluno</p>
 <input type='number' id='matricula' class='form-control' />
 <br />
-<button type='button' onClick='consultarMatricula()' class='btn btn-sm btn-primary'>
+<button type='button' onClick='mostrarMensagem()' class='btn btn-sm btn-primary'>
 Consultar
 </button>
 </div>
 <div id='divMensagemDeErro'></div>
+<div id="divMensagem" class="hidden">
+<div class="alert alert-success">
+	Seja muito bem vindo ao Espaço do Aluno. Esse espaço é destinado a reposição de aulas.
+	<br />
+	<br />
+	É necessário que você assista a aula até o final, em seguida responda ao questionário. 
+	<br />
+	<br />
+	Cada aula tem um questionário específico e é necessário que você acerte pelo menos 70% ou seja 7 das 10 questões para ser efetivada a sua reposição.
+	<br />
+	<br />
+	Uma vez respondido o questionário, a sua reposição será efetivada e o visto pedagógico daquela aula também.
+	<br />
+	<br />
+	Boa reposição.
+	<br />
+	<br />
+	<button type="button" class="btn btn-sm btn-primary mb10" onClick="consultarMatricula()">Prosseguir</button>
+</div>
+</div>
 <div id='divRetorno'></div>
 <div id='divBotaoVoltar' class='hidden'></div>
 </div>
@@ -17,6 +37,11 @@ Consultar
 
 let estado = {
 	respostas: [],
+}
+
+function mostrarMensagem(){
+	document.getElementById('divConsultarMatricula').classList.add('hidden')
+	document.getElementById('divMensagem').classList.remove('hidden')
 }
 
 function consultarMatricula(item = null){
@@ -51,37 +76,57 @@ function consultarMatricula(item = null){
 			return retorno.json()
 		})
 		.then(json => {
+			document.getElementById('divMensagem').classList.add('hidden')
 			if(json.html !== undefined){
-				document.getElementById('divConsultarMatricula').classList.add('hidden')
 				document.getElementById('divRetorno').innerHTML = json.html
 			}else{
 				document.getElementById('divMensagemDeErro').classList.remove('hidden')
 				document.getElementById('divMensagemDeErro').innerHTML = '<div class="alert alert-danger">Matrícula não Encontrada</div>'
 				document.getElementById('matricula').value = ''
 			}
-
 		})
 }
 
 function mostrarDados(){
 	document.getElementById('divEspacoAluno').classList.add('hidden')
-	document.getElementById('divDados').classList.remove('hidden')
 }
 
 function mostrarAulaAberta(){
+	document.getElementById('divDados').classList.add('hidden')
 	document.getElementById('divAulaAberta').classList.remove('hidden')
 }
 
 function mostrarFaltas(){
+	document.getElementById('divDados').classList.add('hidden')
 	document.getElementById('divFaltas').classList.remove('hidden')
 }
 
 function mostrarPagamentos(){
+	document.getElementById('divDados').classList.add('hidden')
 	document.getElementById('divPagamentos').classList.remove('hidden')
 }
 
 function mostrarCadastrarEmail(){
+	document.getElementById('divDados').classList.add('hidden')
+	document.getElementById('divEmail').classList.remove('hidden')
 	document.getElementById('divCadastrarEmail').classList.remove('hidden')
+}
+
+function voltarAosDados(){
+	document.getElementById('divDados').classList.remove('hidden')
+	let divAulaAberta = null
+	let divFaltas = null
+	let divPagamentos = null
+	if(divAulaAberta = document.getElementById('divAulaAberta')){
+		divAulaAberta.classList.add('hidden')
+	}
+	if(divFaltas = document.getElementById('divFaltas')){
+		divFaltas.classList.add('hidden')
+	}
+	if(divPagamentos = document.getElementById('divPagamentos')){
+		divPagamentos.classList.add('hidden')
+	}
+	location.href='#topo'
 }
 
 function enviarRespostas(aula_id, tipo = 0){
@@ -114,7 +159,7 @@ function enviarRespostas(aula_id, tipo = 0){
 		})
 		.then(json => {
 			if(json.ok){
-				document.location.href='#topo'
+				location.href='#topo'
 				let mensagem = 'Parabéns a aula foi reposta!'
 				if(tipo === 1){
 					mensagem = 'Parabéns você recebeu presença na Aula!'
