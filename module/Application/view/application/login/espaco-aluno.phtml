@@ -76,6 +76,14 @@ function mostrarFaltas(){
 	document.getElementById('divFaltas').classList.remove('hidden')
 }
 
+function mostrarPagamentos(){
+	document.getElementById('divPagamentos').classList.remove('hidden')
+}
+
+function mostrarCadastrarEmail(){
+	document.getElementById('divCadastrarEmail').classList.remove('hidden')
+}
+
 function enviarRespostas(aula_id, tipo = 0){
 		const { respostas, } = estado
 		matricula = document.getElementById('matricula').value;
@@ -115,6 +123,42 @@ function enviarRespostas(aula_id, tipo = 0){
 				consultarMatricula(matricula)
 			}else{
 				alert('Você não acertou 70% do exercícios refaça o questionário')
+			}
+		})
+}
+
+function salvarEmail(){
+		email = document.getElementById('email').value;
+		matricula = document.getElementById('matricula').value;
+
+		mostrarSplash();
+		const url = '/salvarEmail'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					matricula,
+					email,
+				}),
+			},
+		)
+		.then(retorno => {
+			esconderSplash()
+			if(!retorno.ok){
+				const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
+				divMensagemDeErro.classList.remove('hidden')
+				divMensagemDeErro.inerHTML = '<div class="alert alert-warning">Erro ao salvar email tente novamente</div>'
+				return false
+			}
+			return retorno.json()
+		})
+		.then(json => {
+			if(json.ok){
+				alert('Email salvo com sucesso!')
+				document.getElementById('divPagamentos').innerHTML = json.html	
+			}else{
+				alert('Email inválido ou já utilizado!')
 			}
 		})
 }

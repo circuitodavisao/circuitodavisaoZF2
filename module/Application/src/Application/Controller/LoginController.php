@@ -12,6 +12,7 @@ use Application\Form\RecuperarAcessoForm;
 use Application\Form\AtualizarCadastroForm;
 use Application\Form\RecuperarSenhaForm;
 use Application\Model\Entity\RegistroAcao;
+use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\EntidadeTipo;
 use Application\Model\Entity\Situacao;
 use Application\Model\Entity\CursoAcesso;
@@ -1223,6 +1224,83 @@ Boa reposição.';
 						$html .= '</div>';
 						$html .= '</div>';
 
+						/* financeiro */
+						$html .= '<div class="panel panel-primary m5">';
+						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
+						$html .= '<div class="panel-body">';
+
+							$html .= '<div class="table-responsive">';
+							$html .= '<table class="table table-condensed">';
+							$html .= '<thead>';
+
+							$html .= '<tr>';
+							$html .= '<th colspan="3">Legenda'
+								. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Pagamento</span>'
+								. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Pago</span></th>';
+							$html .= '</tr>';
+
+							$html .= '<tr>';
+							$html .= '<th>Diciplinas</th>';
+							$html .= '<th colspan="3" class="text-center">Mensalidade</th>';
+							$html .= '</tr>';
+							$html .= '</thead>';
+							$html .= '<tbody>';
+							$pontosFinanceiro = Array();		
+							$validacaoFinanceiro = 1;		
+							foreach ($turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
+								if ($disciplina->getId() !== Disciplina::POS_REVISAO) {				
+									$html .= '<tr>';	
+									$html .= '<td>' . $disciplina->getNome() . '</td>';			
+									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+										$mensalidadeFinanceiro = Array();
+										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+											if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {							
+												$mensalidadeFinanceiro['valor1'] = $turmaPessoaFinanceiro->getValor1();
+												$mensalidadeFinanceiro['valor2'] = $turmaPessoaFinanceiro->getValor2();
+												$mensalidadeFinanceiro['valor3'] = $turmaPessoaFinanceiro->getValor3();
+											}
+										}
+									}
+
+
+									for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
+										$extra = '';
+										$icone = 'fa-times';
+										$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;				
+
+										if($mensalidadeFinanceiro['valor'.$indiceMensalidade] == 'S'){
+											$pontosFinanceiro[$disciplina->getNome()] += 1;
+											$icone = 'fa-check';
+											$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+										}
+										$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+										$idBotao = 'botao_' . $turmaPessoa->getId() . '_' . $disciplina->getId() . '_3' . '_' . $indiceMensalidade;
+
+										$html .= '<td>';
+										$mostrarRecibo = 'hidden';
+										if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+											$corDoSpan = 'success';
+										}
+										if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+											$corDoSpan = 'danger';
+										}						
+										$html .= '<span class="btn-xs btn-'.$corDoSpan.'">';
+										$html .= $iconeBotao;
+										$html .= '</span>';				
+
+										$html .= '</td>';
+									}
+
+									$html .= '</tr>';
+								}
+							}
+							$html .= '</tbody>';
+							$html .= '</table>';
+						$html .= '</div>';
+						$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
+						$html .= '</div>';
+						$html .= '</div>';
+
 						/* div aula aberta */
 						if($turma->getTurmaAulaAtiva()){
 							$aula = $turma->getTurmaAulaAtiva()->getAula();
@@ -1318,9 +1396,114 @@ Boa reposição.';
 
 						/* fim div faltas */
 						$html .= '</div>';
+
+						/* div pagamentos */
+						$html .= '<div id="divPagamentos" class="p5 ">';
+						$email = $turmaPessoa->getPessoa()->getEmail();
+						if($email === 'atualize' || $email === null || $email === ''){
+							$html .= '<div class="panel panel-primary">';
+							$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
+							$html .= '<div class="panel-body">';
+
+							$html .= '<p>Para realizar um pagamento você precisa ter o email cadastrado</p>';
+							$html .= '<p>Sem Email cadastrado</p>';
+							$html .= '<p><button type="button" class="btn btn-xs btn-primary" onClick="mostrarCadastrarEmail()">Cadastrar email</button></p>';
+							$html .= '<div id="divCadastrarEmail" class="p5 hidden">';
+							$html .= '<p>Informe o email</p>';
+							$html .= '<input type="email" id="email" class="form-control" />';
+							$html .= '<br />';
+							$html .= '<button type="button" onClick="salvarEmail()" class="btn btn-sm btn-primary">Salvar</button>';
+							$html .= '</div>';
+
+							$html .= '</div>';
+							$html .= '</div>';
+						}else{
+							$html .= self::pagamentos($turmaPessoa);
+						}
+
+						/* fim div pagamentos */
+						$html .= '</div>';
 					}
 					$dados['html'] = $html;
 					$dados['ok'] = true;
+				}
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	function pagamentos($turmaPessoa){
+		$html = '';
+		$email = $turmaPessoa->getPessoa()->getEmail();
+		$html .= '<div class="panel panel-primary">';
+		$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
+		$html .= '<div class="panel-body">';
+
+		$html .= '<div class="table-responsive">';
+		$html .= '<table class="table table-condensed">';
+		$html .= '<tr>';
+		$html .= '<td>Tudo à vista - R$100,00</td>';
+		$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+		$html .= '</tr>';
+		$html .= '<tr>';
+		$html .= '<td>Tudo parcelado em 3 vezes - R$120,00</td>';
+		$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+		$html .= '</tr>';
+	
+		for($indiceModulo = 1; $indiceModulo <= 3; $indiceModulo++){
+			$valorModulor = 45;
+			if($indiceModulo === 1){
+				$valorModulor = 30;
+			}
+			$html .= '<tr>';
+			$html .= '<td>'.$indiceModulo.'º Módulo Completo - R$'.$valorModulor.',00</td>';
+			$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+			$html .= '</tr>';
+			for($indiceParcela = 1; $indiceParcela <= 3; $indiceParcela++){
+				$valorParcela = 15;
+				if($indiceModulo === 1){
+					$valorParcela = 10;
+				}
+				$html .= '<tr>';
+				$html .= '<td>'.$indiceParcela.'º Parcela do '.$indiceModulo.'º Módulo - R$'.$valorParcela.',00</td>';
+				$html .= '<td><button type="button" onClick="" class="btn btn-xs btn-primary">Pagar</button></td>';
+				$html .= '</tr>';
+			}
+		}
+		$html .= '</table>';
+		$html .= '</div>';
+
+
+		$html .= '</div>';
+		$html .= '</div>';
+		return $html;
+	}
+
+	public function salvarEmailAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$dados['ok'] = false;
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
+					$pessoa = $turmaPessoa->getPessoa();
+					$emailDisponivel = true;
+					if ($pessoaPesquisada = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email)) {
+						$emailDisponivel = false;
+					}
+					if($emailDisponivel){
+						$pessoa->setEmail($json->email);
+						$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $alterarDataDeCriacao = false);
+						$dados['ok'] = true;
+						$dados['html'] = self::pagamentos($turmaPessoa);
+					}
 				}
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
@@ -1868,8 +2051,10 @@ Boa reposição.';
 				intVal($estado_pagamento) === $ESTADO_AUTORIZADO_CARTAO_CREDITO
 			){
 				error_log('AUTORIZADO');
+				error_log('email: '.$email);
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)){
 				error_log('ACHOU PESSOA');
+				error_log('pessoa: '.$pessoa->getId());
 				if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
 				error_log('EH ALUNO');
 
