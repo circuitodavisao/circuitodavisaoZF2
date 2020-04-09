@@ -2045,6 +2045,8 @@ Boa reposição.';
 			$dataPost = $request->getPost();
 			$email = $dataPost['customer_email'];
 			$produto_id = $dataPost['product_id'];
+			error_log('product_id');
+			error_log($produto_id);
 			$estado_pagamento = $dataPost['payment_status'];
 			if(
 				intVal($estado_pagamento) === $ESTADO_PAGO ||
