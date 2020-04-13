@@ -1,5 +1,5 @@
 <div id="topo" class='panel text-center'>
-<div class='alert alert-info'>Espaço do Aluno</div>
+<div class='alert alert-primary'>Espaço do Aluno</div>
 <div id='divConsultarMatricula' class='panel text-center p20'>
 <p>Informe a matrícula do aluno</p>
 <input type='number' id='matricula' class='form-control' />
@@ -17,7 +17,7 @@ Consultar
 	É necessário que você assista a aula até o final, em seguida responda ao questionário. 
 	<br />
 	<br />
-	Cada aula tem um questionário específico e é necessário que você acerte pelo menos 70% ou seja 7 das 10 questões para ser efetivada a sua reposição.
+	Cada aula tem um questionário específico e é necessário que você acerte pelo menos 70% das questões para ser efetivada a sua reposição.
 	<br />
 	<br />
 	Uma vez respondido o questionário, a sua reposição será efetivada e o visto pedagógico daquela aula também.
@@ -96,13 +96,20 @@ function mostrarAulaAberta(){
 	document.getElementById('divAulaAberta').classList.remove('hidden')
 }
 
-function mostrarFaltas(){
+function verReposicao(idFalta){
 	document.getElementById('divDados').classList.add('hidden')
 	document.getElementById('divFaltas').classList.remove('hidden')
+	document.getElementById('divFalta'+idFalta).classList.remove('hidden')
+}
+
+function mostrarSituacaoFinanceira(){
+	document.getElementById('divDados').classList.add('hidden')
+	document.getElementById('divSituacaoFinanceira').classList.remove('hidden')
+	document.getElementById('divPagamentos').classList.add('hidden')
 }
 
 function mostrarPagamentos(){
-	document.getElementById('divDados').classList.add('hidden')
+	document.getElementById('divSituacaoFinanceira').classList.add('hidden')
 	document.getElementById('divPagamentos').classList.remove('hidden')
 }
 
@@ -117,6 +124,7 @@ function voltarAosDados(){
 	let divAulaAberta = null
 	let divFaltas = null
 	let divPagamentos = null
+	let divSituacaoFinanceira = null
 	if(divAulaAberta = document.getElementById('divAulaAberta')){
 		divAulaAberta.classList.add('hidden')
 	}
@@ -125,6 +133,13 @@ function voltarAosDados(){
 	}
 	if(divPagamentos = document.getElementById('divPagamentos')){
 		divPagamentos.classList.add('hidden')
+	}
+	if(divSituacaoFinanceira = document.getElementById('divSituacaoFinanceira')){
+		divSituacaoFinanceira.classList.add('hidden')
+	}
+	const elementosFaltas = document.getElementsByClassName('falta')
+	for(let i = 0; i < elementosFaltas.length; i++){
+		elementosFaltas[i].classList.add('hidden')
 	}
 	location.href='#topo'
 }
