@@ -4941,9 +4941,6 @@ public function alunosNaSemanaAction(){
 				// dados discipulos
 				$fatosDiscipulos = array();
 				if(count($todosFilhos)){
-					//$todosFilhos = array();
-					//$grupo = $repositorio->getGrupoORM()->encontrarPorId(12624);
-					//$todosFilhos[] = $grupo->getGrupoPaiFilhoPai()[0];
 					$relatorioPorIgrejaDaRegiao = array();
 					foreach($todosFilhos as $filho){
 						$relatorioPorIgrejaDaRegiao[$filho->getId()] = array();
@@ -5047,6 +5044,7 @@ public function alunosNaSemanaAction(){
 															if($idEntidadeTipo3 === EntidadeTipo::igreja){
 																$fatoFilho3 = self::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 																if((int) $tipoRelatorio !== 6){
+																	Funcoes::var_dump('QQQQQ');
 																	$arrayFatoMensal3 = (array)$fatoFilho3;
 																	foreach($arrayFatoMensal3 as $k => $v){
 																		$aux = explode ("\0", $k);
@@ -5144,11 +5142,11 @@ public function alunosNaSemanaAction(){
 							}
 						}
 						if($idEntidadeTipo === EntidadeTipo::igreja){
-							$fatoFilho1 = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
-							$grupoFilho1 = $filho->getGrupoPaiFilhoFilho();
-							$fatosDiscipulos[$grupoFilho1->getId()] = $fatoFilho1;
+							$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+							$grupoFilho = $filho->getGrupoPaiFilhoFilho();
+							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 							if((int) $tipoRelatorio !== 6){
-								$arrayFatoMensal = (array)$fatoFilho1;
+								$arrayFatoMensal = (array)$fatoFilho;
 								foreach($arrayFatoMensal as $k => $v){
 									$aux = explode ("\0", $k);
 									$k = $aux[count($aux)-1];
@@ -5168,6 +5166,9 @@ public function alunosNaSemanaAction(){
 										$fatoFinal->$k = $novoValor;
 									}
 								}
+							}
+							if((int) $tipoRelatorio === 6){
+								$relatorioPorIgrejaDaRegiao[$filho->getId()][] = $fatoFilho;
 							}
 						}
 
