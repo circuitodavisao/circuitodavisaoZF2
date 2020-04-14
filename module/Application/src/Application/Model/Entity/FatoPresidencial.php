@@ -72,7 +72,7 @@ class FatoPresidencial extends CircuitoEntity {
     }
 
     function setRegioes($i) {
-        $this->return = $i;
+        $this->regioes = $i;
     }
 
     function setCoordenacoes($i) {
