@@ -78,6 +78,7 @@ class RepositorioORM {
 	private $_envioORM;
 	private $_fatoRevisaoORM;
 	private $_perguntaORM;
+	private $_fatoPresidencialORM;
 
     /**
      * Contrutor
@@ -779,6 +780,12 @@ class RepositorioORM {
         return $this->_perguntaORM;
     }
 
+    public function getFatoPresidencialORM() {
+        if (is_null($this->_fatoPresidencialORM)) {
+			$this->_fatoPresidencialORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PRESIDENCIAL);
+        }
+        return $this->_fatoPresidencialORM;
+    }
 
     /**
      * Metodo public para obter a instancia EntityManager com acesso ao banco de dados

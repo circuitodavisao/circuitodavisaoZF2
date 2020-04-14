@@ -1,0 +1,25 @@
+-- Table: fato_presidencial
+
+-- DROP TABLE fato_presidencial;
+
+CREATE TABLE fato_presidencial
+(
+  id serial NOT NULL, -- Identificação 
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação do relatório
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação do relatório
+  data_inativacao date, -- Data de inativação do relatório
+  hora_inativacao time without time zone, -- Hora de inativação do relatório
+  lideres integer , 
+  celulas integer , 
+  discipulados integer , 
+  regioes integer , 
+  coordenacoes integer , 
+  igrejas integer , 
+  parceiro integer , 
+  CONSTRAINT pk_fato_presidencial PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_presidencial
+  OWNER TO postgres;

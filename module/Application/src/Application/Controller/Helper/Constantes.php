@@ -178,6 +178,7 @@ class Constantes {
     /* Entidade do banco de dados */
     public static $ENTITY_ENVIO = 'Application\Model\Entity\Envio';
     public static $ENTITY_FATO_REVISAO = 'Application\Model\Entity\FatoRevisao';
+    public static $ENTITY_FATO_PRESIDENCIAL = 'Application\Model\Entity\FatoPresidencial';
     public static $ENTITY_PERGUNTA = 'Application\Model\Entity\Pergunta';
     public static $ENTITY_PESSOA = 'Application\Model\Entity\Pessoa';
     public static $ENTITY_ENTIDADE = 'Application\Model\Entity\Entidade';

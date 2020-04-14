@@ -823,7 +823,23 @@ class PrincipalController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
-				$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
+				if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+					$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $json->mes, $json->ano, $json->pessoalOuEquipe);
+				}
+				if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+					$fatoPresidencial = $this->getRepositorio()->getFatoPresidencialORM()->buscarTodosRegistrosEntidade($campoOrderBy = 'id', $sentidoOrderBy = 'DESC')[0];
+					$resultado['lideres'] = $fatoPresidencial->getLideres();
+					$resultado['celulas'] = $fatoPresidencial->getCelulas();
+					$resultado['discipulados'] = $fatoPresidencial->getDiscipulados();
+					$resultado['regioes'] = $fatoPresidencial->getRegioes();
+					$resultado['coordenacoes'] = $fatoPresidencial->getCoordenacoes();
+					$resultado['igrejas'] = $fatoPresidencial->getIgrejas();
+					$resultado['parceiro'] = $fatoPresidencial->getParceiro();
+					$resultado['mostrarRegioes'] = true;
+					$resultado['mostrarCoordenacoes'] = true;
+					$resultado['mostrarIgrejas'] = true;
+				}
+	
 				$dados['resultado'] = $resultado;
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();

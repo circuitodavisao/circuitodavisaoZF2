@@ -7,6 +7,7 @@ use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
 use Application\Controller\RelatorioController;
 use Application\Model\Entity\GrupoPessoaTipo;
+use Application\Model\Entity\FatoPresidencial;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Entidade;
 use Application\Model\Entity\EntidadeTipo;
@@ -4854,7 +4855,6 @@ class IndexController extends CircuitoController {
 		));
 	}
 
-
 	function envioAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
@@ -5157,6 +5157,41 @@ class IndexController extends CircuitoController {
 					}
 				}
 			}
+		} catch (Exception $exc) {
+			error_log('################## error ###############'.$exc->getMessage());
+			echo $exc->getTraceAsString();
+		}
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_end = (float) $sec + (float) $usec;
+		$elapsed_time = round($script_end - $script_start, 5);
+
+		$html .= '<br /><br />Elapsed time: ' . $elapsed_time . ' secs. Memory usage: ' . round(((memory_get_peak_usage(true) / 1024) / 1024), 2) . 'Mb';
+		return new ViewModel(array('html' => $html));
+	}
+
+	function gerarFatoPresidencialAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '120');
+
+		list($usec, $sec) = explode(' ', microtime());
+		$script_start = (float) $sec + (float) $usec;
+		$html = '';
+		try {
+			$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo = 7696);
+			$mes = date('m');
+			$ano = date('Y');
+			$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano, $equipe = 2);
+			$fatoPresidencial = new FatoPresidencial();
+			$fatoPresidencial->setLideres($resultado['lideres']);
+			$fatoPresidencial->setCelulas($resultado['celulas']);
+			$fatoPresidencial->setDiscipulados($resultado['discipulados']);
+			$fatoPresidencial->setRegioes($resultado['regioes']);
+			$fatoPresidencial->setCoordenacoes($resultado['coordenacoes']);
+			$fatoPresidencial->setIgrejas($resultado['igrejas']);
+			$fatoPresidencial->setParceiro($resultado['parceiros']);
+			$this->getRepositorio()->getFatoPresidencialORM()->persistir($fatoPresidencial);
 		} catch (Exception $exc) {
 			error_log('################## error ###############'.$exc->getMessage());
 			echo $exc->getTraceAsString();

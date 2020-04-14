@@ -72,6 +72,7 @@ return array(
     'Application\Model\Entity\GrupoAtendimentoComentario'        => __DIR__ . '/src/Application/Model/Entity/GrupoAtendimentoComentario.php',
     'Application\Model\Entity\FatoLider'                         => __DIR__ . '/src/Application/Model/Entity/FatoLider.php',
     'Application\Model\Entity\Profissao'                         => __DIR__ . '/src/Application/Model/Entity/Profissao.php',
+    'Application\Model\Entity\FatoPresidencial'                  => __DIR__ . '/src/Application/Model/Entity/FatoPresidencial.php',
     'Application\Model\Entity\PessoaFatoFinanceiroAcesso'        => __DIR__ . '/src/Application/Model/Entity/PessoaFatoFinanceiroAcesso.php',
     'Application\Model\Entity\Curso'                             => __DIR__ . '/src/Application/Model/Entity/Curso.php',
     'Application\Model\Entity\TurmaPessoaFinanceiro'             => __DIR__ . '/src/Application/Model/Entity/TurmaPessoaFinanceiro.php',
