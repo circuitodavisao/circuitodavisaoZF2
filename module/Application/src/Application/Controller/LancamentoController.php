@@ -1267,7 +1267,7 @@ class LancamentoController extends CircuitoController {
         $layoutJS->setTemplate(Constantes::$TEMPLATE_JS_LANCAMENTO_ATENDIMENTO);
         $view->addChild($layoutJS, Constantes::$STRING_JS_LANCAMENTO_ATENDIMENTO);
 
-		self::registrarLog(RegistroAcao::LANCAR_ATENDIMENTO, $extra = '');
+		self::registrarLog(RegistroAcao::LANCAR_ATENDIMENTO, $extra = 'Filtro: '.$mesSelecionado.'/'.$anoSelecionado);
         return $view;
     }
 
@@ -1323,6 +1323,18 @@ class LancamentoController extends CircuitoController {
                 $explodeProgresso = explode('_', $this->retornaProgressoUsuarioNoMesEAno($this->getRepositorio(), $mesSelecionado, $anoSelecionado));
                 $progresso = number_format($explodeProgresso[0], 2, '.', '');
                 $colorBarTotal = LancamentoController::retornaClassBarradeProgressoPeloValor($progresso);
+
+
+				$extra = '';
+                if ($tipo === $tipoLancar) {
+					$extra = 'Lançou atendimento de '.$grupoLancado->getNomeLideresAtivos();
+				}
+                if ($tipo === $tipoRemover) {
+					$extra = 'Removeu atendimento de '.$grupoLancado->getNomeLideresAtivos();
+				}
+				$extra .= ' - '.$mesSelecionado.'/'.$anoSelecionado;
+
+				self::registrarLog(RegistroAcao::LANCAR_ATENDIMENTO_LIDER, $extra);
 
                 $this->getRepositorio()->fecharTransacao();
                 $response->setContent(Json::encode(

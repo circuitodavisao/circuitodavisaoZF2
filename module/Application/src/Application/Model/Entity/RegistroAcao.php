@@ -92,6 +92,7 @@ class RegistroAcao extends CircuitoEntity {
 	const LANCOU_MEMBRO = 75;
 	const LANCOU_CULTO = 76;
 	const LANCOU_CELULA = 77;
+	const LANCAR_ATENDIMENTO_LIDER = 78;
 
     /**
      * @ORM\OneToMany(targetEntity="Registro", mappedBy="registroAcao") 
