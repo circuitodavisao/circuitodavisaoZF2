@@ -698,7 +698,7 @@ class RelatorioController extends CircuitoController {
 		));
 	}
 
-	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true, $pessoalOuEquipe = 2){		
+	static public function relatorioAlunosETurmas($repositorio, $entidade, $turmasAtivas = true, $pessoalOuEquipe = 2, $ordernar = true){		
 		$relatorioAjustado = array();
 		if($numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo())){
 			if($relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe)){
@@ -722,32 +722,34 @@ class RelatorioController extends CircuitoController {
 				}
 
 				$relatorioAjustado = array();
-				foreach($relatorioInicial as $relatorio){
-					foreach($turmasComAulaAberta as $turma){
-						if($relatorio->getTurma_id() === $turma->getId()){
-							$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
-							$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
-							$situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
-							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-								$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
-							}
-							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
-								$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
-								if($grupo->getGrupoSubEquipe()->getEntidadeAtiva()->getNumero()){
-									$sub = $nomeDaEquipe . ' ' .$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->getNumero();
-									$relatorioAjustado[$sub][$turma->getId()][$situacao->getNome()]++;								
+				if($ordernar){
+					foreach($relatorioInicial as $relatorio){
+						foreach($turmasComAulaAberta as $turma){
+							if($relatorio->getTurma_id() === $turma->getId()){
+								$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+								$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+								$situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
+								if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()][$situacao->getNome()]++;
 								}
-							}
-							if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){							
-								if(count($grupo->getResponsabilidadesAtivas()) > 0){
-									$relatorioAjustado[$grupo->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;	
+								if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
+									$nomeDaEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+									if($grupo->getGrupoSubEquipe()->getEntidadeAtiva()->getNumero()){
+										$sub = $nomeDaEquipe . ' ' .$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->getNumero();
+										$relatorioAjustado[$sub][$turma->getId()][$situacao->getNome()]++;								
+									}
 								}
-								if(count($grupo->getResponsabilidadesAtivas()) == 0){
-									$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
-								}											
+								if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){							
+									if(count($grupo->getResponsabilidadesAtivas()) > 0){
+										$relatorioAjustado[$grupo->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;	
+									}
+									if(count($grupo->getResponsabilidadesAtivas()) == 0){
+										$relatorioAjustado[$grupo->getGrupoSubEquipe()->getEntidadeAtiva()->infoEntidade()][$turma->getId()][$situacao->getNome()]++;
+									}											
+								}
+								$relatorioAjustado[$turma->getId()][$situacao->getId()]++;
+								$relatorioAjustado['total'][$situacao->getId()]++;
 							}
-							$relatorioAjustado[$turma->getId()][$situacao->getId()]++;
-							$relatorioAjustado['total'][$situacao->getId()]++;
 						}
 					}
 				}

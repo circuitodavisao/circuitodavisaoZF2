@@ -985,7 +985,7 @@ class CursoController extends CircuitoController {
 				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idSub'])->getEntidadeAtiva();
 			}
 		}
-		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar);
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar, $turmasAtivas = true, $pessoalOuEquipe = 2, $ordenar = false);
 		$turmas = $resultado[1];
 
 		if(!$pessoa->getPessoaCursoAcessoAtivo() 
