@@ -5044,7 +5044,6 @@ public function alunosNaSemanaAction(){
 															if($idEntidadeTipo3 === EntidadeTipo::igreja){
 																$fatoFilho3 = self::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 																if((int) $tipoRelatorio !== 6){
-																	Funcoes::var_dump('QQQQQ');
 																	$arrayFatoMensal3 = (array)$fatoFilho3;
 																	foreach($arrayFatoMensal3 as $k => $v){
 																		$aux = explode ("\0", $k);
