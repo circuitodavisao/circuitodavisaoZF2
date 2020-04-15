@@ -4597,10 +4597,8 @@ class IndexController extends CircuitoController {
 							}
 
 
-							if($fatosMensal[1]->entidade === null){
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
-							}
 							//if($fatosMensal[1]->nome_igreja === '' || $fatosMensal[1]->nome_igreja === null){
 								//if($grupo->getGrupoIgreja()){
 								//	$fatosMensal[1]->nome_igreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
