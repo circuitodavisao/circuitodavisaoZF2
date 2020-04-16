@@ -2302,6 +2302,7 @@ class LoginController extends CircuitoController {
 						$resultado['mostrarIgrejas'] = true;
 					}
 					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+					$resultado['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 					$dados['perfils'][] = $resultado;
 				}
 			  }
