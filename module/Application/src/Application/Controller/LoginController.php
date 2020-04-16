@@ -2270,6 +2270,7 @@ class LoginController extends CircuitoController {
 		if ($request->isPost()) {
 			$body = $request->getContent();
 			$json = Json::decode($body);
+			error_log(print_r($json, true));
 			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
 			$adapter->setIdentityValue($json->email);
 			$adapter->setCredentialValue(md5($json->senha));
