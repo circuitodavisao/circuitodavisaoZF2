@@ -2321,6 +2321,7 @@ class LoginController extends CircuitoController {
 			->addHeaderLine('x-download-options', 'noopen')
 			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
 			->addHeaderLine('x-xss-protection', '1; mode=block');
+		error_log(print_r($dados, true));
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
