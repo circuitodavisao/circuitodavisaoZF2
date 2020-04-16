@@ -2315,7 +2315,12 @@ class LoginController extends CircuitoController {
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
 			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
 			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-			->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
+			->addHeaderLine('Content-Type', 'application/json; charset=utf-8')
+			->addHeaderLine('x-content-type-options', 'nosniff')
+			->addHeaderLine('x-dns-prefetch-control', 'off')
+			->addHeaderLine('x-download-options', 'noopen')
+			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
+			->addHeaderLine('x-xss-protection', '1; mode=block');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
