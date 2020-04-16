@@ -2313,7 +2313,8 @@ class LoginController extends CircuitoController {
 		$dados['ok'] = $ok;
 		$response->getHeaders()
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
-			->addHeaderLine('Access-Control-Allow-Methods', 'POST');
+			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+			->addHeaderLine('Access-Control-Allow-Methods', 'POST, OPTIONS');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
