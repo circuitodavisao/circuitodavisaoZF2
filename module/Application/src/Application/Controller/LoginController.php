@@ -2268,15 +2268,16 @@ class LoginController extends CircuitoController {
 		$dados = array();
 		$ok = false;
 		if ($request->isPost()) {
-			$post = $this->getRequest()->getPost();
+			$body = $request->getContent();
+			$json = Json::decode($body);
 			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
-			$adapter->setIdentityValue($post['email']);
-			$adapter->setCredentialValue(md5($post['senha']));
+			$adapter->setIdentityValue($json->email);
+			$adapter->setCredentialValue(md5($json->senha));
 			$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
 			if ($authenticationResult->isValid()) {
 				$mes = date('m');	
 				$ano = date('Y');	
-				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($post['email']);
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					$ok = true;
 
