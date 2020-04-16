@@ -2267,7 +2267,10 @@ class LoginController extends CircuitoController {
 		$request = $this->getRequest();
 		$dados = array();
 		$ok = false;
+		
+		error_log('###########################################');
 		if ($request->isPost()) {
+			error_log('POST');
 			$body = $request->getContent();
 			$json = Json::decode($body);
 			error_log(print_r($json, true));
@@ -2322,6 +2325,7 @@ class LoginController extends CircuitoController {
 			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
 			->addHeaderLine('x-xss-protection', '1; mode=block');
 		error_log(print_r($dados, true));
+		error_log('###########################################');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
