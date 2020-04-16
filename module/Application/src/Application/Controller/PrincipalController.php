@@ -845,6 +845,9 @@ class PrincipalController extends CircuitoController {
 				$dados['message'] = $exc->getMessage();
 			}
 		}
+		$response->getHeaders()
+			->addHeaderLine('Access-Control-Allow-Origin', '*')
+			->addHeaderLine('Access-Control-Allow-Methods', 'POST');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}

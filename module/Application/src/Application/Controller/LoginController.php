@@ -324,11 +324,7 @@ class LoginController extends CircuitoController {
         return $response;
     }
 
-    /**
-     * Função que tenta logar
-     * POST /logarJason
-     */
-    public function validarSenhaAction() {
+   public function validarSenhaAction() {
         $data = $this->getRequest()->getPost();
         $response = $this->getResponse();
         $request = $this->getRequest();
@@ -2262,6 +2258,59 @@ class LoginController extends CircuitoController {
 		}
 
 		$dados = array();	
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function sincronizarAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$ok = false;
+		if ($request->isPost()) {
+			$post = $this->getRequest()->getPost();
+			$adapter = $this->getDoctrineAuthenticationServicer()->getAdapter();
+			$adapter->setIdentityValue($post['email']);
+			$adapter->setCredentialValue(md5($post['senha']));
+			$authenticationResult = $this->getDoctrineAuthenticationServicer()->authenticate();
+			if ($authenticationResult->isValid()) {
+				$mes = date('m');	
+				$ano = date('Y');	
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($post['email']);
+				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
+					$ok = true;
+
+				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
+
+				$dados['perfils'] = array();
+				foreach($grupoResponsaveis as $grupoResponsavel){
+					$grupo = $grupoResponsavel->getGrupo();
+					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+						$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano, $equipe = 2);
+					}
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
+						$fatoPresidencial = $this->getRepositorio()->getFatoPresidencialORM()->buscarTodosRegistrosEntidade($campoOrderBy = 'id', $sentidoOrderBy = 'DESC')[0];
+						$resultado['lideres'] = $fatoPresidencial->getLideres();
+						$resultado['celulas'] = $fatoPresidencial->getCelulas();
+						$resultado['discipulados'] = $fatoPresidencial->getDiscipulados();
+						$resultado['regioes'] = $fatoPresidencial->getRegioes();
+						$resultado['coordenacoes'] = $fatoPresidencial->getCoordenacoes();
+						$resultado['igrejas'] = $fatoPresidencial->getIgrejas();
+						$resultado['parceiro'] = $fatoPresidencial->getParceiro();
+						$resultado['mostrarRegioes'] = true;
+						$resultado['mostrarCoordenacoes'] = true;
+						$resultado['mostrarIgrejas'] = true;
+					}
+					$dados['perfils'][] = $resultado;
+				}
+			  }
+		   }
+		}
+		$dados['ok'] = $ok;
+		$response->getHeaders()
+			->addHeaderLine('Access-Control-Allow-Origin', '*')
+			->addHeaderLine('Access-Control-Allow-Methods', 'POST');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
