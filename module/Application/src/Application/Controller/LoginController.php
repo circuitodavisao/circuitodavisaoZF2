@@ -2285,7 +2285,6 @@ class LoginController extends CircuitoController {
 				$dados['perfils'] = array();
 				foreach($grupoResponsaveis as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
-					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
 					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 						$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano, $equipe = 2);
 					}
@@ -2302,6 +2301,7 @@ class LoginController extends CircuitoController {
 						$resultado['mostrarCoordenacoes'] = true;
 						$resultado['mostrarIgrejas'] = true;
 					}
+					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
 					$dados['perfils'][] = $resultado;
 				}
 			  }
