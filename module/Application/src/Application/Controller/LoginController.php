@@ -2314,7 +2314,7 @@ class LoginController extends CircuitoController {
 		$response->getHeaders()
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
 			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-			->addHeaderLine('Access-Control-Allow-Methods', 'POST, OPTIONS');
+			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
