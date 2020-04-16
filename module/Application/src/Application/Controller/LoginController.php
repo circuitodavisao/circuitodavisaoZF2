@@ -2281,6 +2281,7 @@ class LoginController extends CircuitoController {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					$ok = true;
+					$dados['email'] = $json->email;
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
 
