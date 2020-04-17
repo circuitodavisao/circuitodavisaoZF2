@@ -105,7 +105,7 @@ class FatoCursoORM extends CircuitoORM {
 		$dqlBase = "SELECT fc.id "
 			. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
 			. "ORDER BY fc.id DESC ";
-		$totalDivisoes = 30;
+		$totalDivisoes = 10;
 		try {
 			$totalDeGrupos = $this->getEntityManager()
 				->createQuery($dqlBase)
@@ -126,7 +126,12 @@ class FatoCursoORM extends CircuitoORM {
 				->getResult();
 
 			foreach($entidades as $entidade){
-				$resposta[] = $entidade;
+				if(
+					$entidade->getSituacao_id() === $idSituacao &&
+					$entidade->getData_inativacao() === null
+				){
+					$resposta[] = $entidade;
+				}
 			}
 
 			return $resposta;
