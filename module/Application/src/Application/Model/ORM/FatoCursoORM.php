@@ -105,7 +105,7 @@ class FatoCursoORM extends CircuitoORM {
 		$dqlBase = "SELECT fc.id "
 			. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
 			. "ORDER BY fc.id DESC ";
-		$totalDivisoes = 10;
+		$totalDivisoes = 50;
 		try {
 			$totalDeGrupos = $this->getEntityManager()
 				->createQuery($dqlBase)
