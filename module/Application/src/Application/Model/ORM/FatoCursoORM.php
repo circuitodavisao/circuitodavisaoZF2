@@ -96,4 +96,19 @@ class FatoCursoORM extends CircuitoORM {
 			echo $exc->getTraceAsString();
 		}
 	}
+
+	public function encontrarFatoCursoPorSituacao($idSituacao) {
+		$resposta = null;
+		try {
+			$entidade = $this->getEntityManager()
+				->getRepository($this->getEntity())
+				->findBy(array('situacao_id' => $idSituacao));
+			if ($entidade) {
+				$resposta = $entidade;
+			}
+			return $resposta;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
 }

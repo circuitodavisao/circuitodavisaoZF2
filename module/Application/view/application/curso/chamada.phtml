@@ -185,8 +185,9 @@ if($this->filtrado){
 									$html .= '<tr class="'.$corSituacao.'">';
 									$html .= '<td class="text-center">' . $stringSituacao . '</td>';									
 									$html .= '<td class="text-center"><a target="_blanck" href="/cursoAluno/' . $turmaPessoa->getId() . '" class="btn btn-xs btn-primary" >' . $turmaPessoa->getId(). '</a></td>';
+									$link = ' <a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$turmaPessoa->getPessoa()->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 										
-									$html .= '<td>'. $turmaPessoa->getPessoa()->getNome() . '</td>';
+									$html .= '<td>'.$link.' '.$turmaPessoa->getPessoa()->getNome() . '</td>';
 									$html .= '<th class="text-center">' . $nomeEquipe . '</th>';
 									if($this->postado['mostrarAulas'] == 1){
 										foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
