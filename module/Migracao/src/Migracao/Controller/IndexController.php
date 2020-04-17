@@ -3509,151 +3509,57 @@ class IndexController extends CircuitoController {
 		ini_set('memory_limit', '-1');
 		ini_set('max_execution_time', '180');
 
-		$html = '';
-		$turmas = $this->getRepositorio()->getTurmaORM()->buscarTodosRegistrosEntidade();
-		$turmasDoIV = array();
-		foreach($turmas as $turma){
-			if($turma->getCurso()->getId() === Curso::INSTITUTO_DE_VENCEDORES){
-				$turmasDoIV[] = $turma;
+		$html = 'Reprovando';
+		$listaDeAulaAberta = array();
+		$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacao(Situacao::ATIVO);
+		$html .= '<br /><br />Fatos: '.count($fatosCurso);
+		$contador = 1;
+		foreach($fatosCurso as $fatoCurso){
+			$contador++;
+			if($contador === 10000){
+				//break;
 			}
-		}
+			$turmaAulaAtiva = null;
+			if(in_array($fatoCurso->getTurma_id(), $listaDeAulaAberta)){
+				$turmaAulaAtiva = $listaDeAulaAberta[$fatoCurso->getTurma_id()];
+			}else{
+				$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($fatoCurso->getTurma_id());
+				if($turma->getTurmaAulaAtiva()){
+					$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
+				}
+			}
 
-		foreach($turmasDoIV as $turma){
-			if($turmaAulaAtiva = $turma->getTurmaAulaAtiva()){
-				if($turmaPessoas = $turma->getTurmaPessoa()){
-					foreach($turmaPessoas as $turmaPessoa){
-						$html .= '<br />'.$turmaPessoa->GetPessoa()->getNome();
-						if($fatoCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-						// REPROVAÇÃO POR FINANCEIRO							
-						$idSegundoModulo = 7;
-						$idTerceiroModulo = 8;
-						$reprovadoPorFinanceiro = false;
-						$pontosFinanceiro = 0;
-							if($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO || $fatoCurso[0]->getSituacao_id() === Situacao::ESPECIAL){								
-//								if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idSegundoModulo || $turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
-//									$idDisciplinaAtual = $turmaAulaAtiva->getAula()->getDisciplina()->getId();
-//									$idDisciplinaAnterior = $idDisciplinaAtual -1;
-//									if($turmaAulaAtiva->getAula()->getDisciplina()->getId() == $idTerceiroModulo){
-//										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior -1;
-//										$pontosParaPassar = 6;
-//									} else {
-//										$idDisciplinaAnteriorDaAnterior = $idDisciplinaAnterior;
-//										$pontosParaPassar = 3;
-//									}									
-//									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
-//										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
-//											if (($turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnterior ||
-//												$turmaPessoaFinanceiro->getDisciplina()->getId() === $idDisciplinaAnteriorDaAnterior) &&
-//											 $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {
-//												if($turmaPessoaFinanceiro->getValor1() == 'S' &&
-//													$turmaPessoaFinanceiro->getValor2() == 'S' &&
-//													$turmaPessoaFinanceiro->getValor3() == 'S'){
-//														$pontosFinanceiro += 3;
-//												}											
-//											}
-//										}
-//									}	
-//									if($pontosFinanceiro < $pontosParaPassar){
-//										$reprovadoPorFinanceiro = true;
-//									}								
-//								}
-								
-								if($reprovadoPorFinanceiro){
-									$html .= '<br /><span class="label label-danger">Reprovar por financeiro</span>';
-									$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
-									$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
-
-									$turmaPessoaSituacao = new TurmaPessoaSituacao();
-									$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-									$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FINANCEIRO));
-									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
-
-									if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-										foreach($fatosCurso as $fatoCurso){
-											if($fatoCurso->verificarSeEstaAtivo()){
-												$fatoCurso->setDataEHoraDeInativacao();
-												$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
-											}
-										}
-									}
-									if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-										$numeroIdentificador =
-											$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
-										$fatoCurso = new FatoCurso();
-										$fatoCurso->setNumero_identificador($numeroIdentificador);
-										$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-										$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-										$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FINANCEIRO);
-										$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
+			$cotagemDeFaltas = 0;
+			if($turmaAulaAtiva){
+				if($turmaAulaAtiva->getAula()->getId() !== 43){
+					foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
+						if($turmaAulaAtiva->getAula()->getId() === $aula->getId()){
+							break;
+						}
+						if ($aula->getPosicao() <= ($turmaAulaAtiva->getAula()->getPosicao() - 1)) {
+							$frequencia = false;
+							if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($fatoCurso->getTurma_pessoa_id(), $aula->getId())){
+								if($turmaPessoaAula->verificarSeEstaAtivo()){
+									$frequencia = true;
+									if ($turmaPessoaAula->getReposicao() == 'S') {
+										$frequencia = false;
 									}
 								}
-							}
-						// REPROVAÇÃO POR FALTA
-							if(!$reprovadoPorFinanceiro && ($fatoCurso[0]->getSituacao_id() === Situacao::ATIVO 
-							|| $fatoCurso[0]->getSituacao_id() === Situacao::ESPECIAL)){
-								$contagemDeFaltas = 0;
-								foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
-									if($aula->getPosicao() < $turmaAulaAtiva->getAula()->getPosicao()){
-										$encontrei = false;
-										if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
-											foreach($turmaPessoaAulas as $turmaPessoaAula){
-												if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
-													$encontrei = true;
-													break;
-												}
-											}
-
-										}
-										if(!$encontrei){
-											$contagemDeFaltas++;
-										}else{
-											if(!$turmaPessoaAula->verificarSeEstaAtivo()){
-												$contagemDeFaltas++;
-											}else{
-												if($turmaPessoaAula->getReposicao() == 'S' 
-												&& $fatoCurso[0]->getSituacao_id() === Situacao::ATIVO){													
-													$contagemDeFaltas++;
-												}
-											}
-										}
-									}
-								}
-								if($contagemDeFaltas >= 4){
-									$html .= '<br /><span class="label label-danger">Reprovar por faltas</span>';
-									$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
-									$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $mudatDataDeCriacao = false);
-
-									$turmaPessoaSituacao = new TurmaPessoaSituacao();
-									$turmaPessoaSituacao->setTurma_pessoa($turmaPessoa);
-									$turmaPessoaSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::REPROVADO_POR_FALTA));
-									$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacao);
-
-									if($fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId())){
-										foreach($fatosCurso as $fatoCurso){
-											if($fatoCurso->verificarSeEstaAtivo()){
-												$fatoCurso->setDataEHoraDeInativacao();
-												$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $trocarDataDeCriacao = false);
-											}
-										}
-									}
-									if($grupoPessoaAtivo = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()){
-										$numeroIdentificador =
-											$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoPessoaAtivo->getGrupo());
-										$fatoCurso = new FatoCurso();
-										$fatoCurso->setNumero_identificador($numeroIdentificador);
-										$fatoCurso->setTurma_pessoa_id($turmaPessoa->getId());
-										$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
-										$fatoCurso->setSituacao_id(Situacao::REPROVADO_POR_FALTA);
-										$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-									}
-								}
-
-								$html .= '<br />'.$contagemDeFaltas;
 							}
 						}
+						if(!$frequencia){
+							$cotagemDeFaltas++;	
+						}
+						if($cotagemDeFaltas === 4){
+							break;
+						}
 					}
+				}
+
+				if($cotagemDeFaltas === 4){
+					$html .= '<br /><br />Matricula PAra Reprovar: '.$fatoCurso->getTurma_pessoa_id();;
+					$fatoCurso->setSituacao_id(SITUACAO::REPROVADO_POR_FALTA);
+					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $alterarDataDeCriacao = false);
 				}
 			}
 		}

@@ -14,6 +14,7 @@ use Exception;
 class TurmaPessoaAulaORM extends CircuitoORM {
 
 	public function encontrarPorTurmaPessoaEAula($idTurmaPessoa, $idAula) {
+		$resposta = null;
 		$dql = "SELECT "
 			. " tpa "
 			. "FROM  " . Constantes::$ENTITY_TURMA_PESSOA_AULA . " tpa "
@@ -26,7 +27,11 @@ class TurmaPessoaAulaORM extends CircuitoORM {
 				->setParameter(2,(int) $idAula)
 				->getResult();
 
-			return $resultado[0];
+			if($resultado){
+				$resposta = $resultado[0];
+			}
+
+			return $resposta;
 		} catch (Exception $exc) {
 			echo $exc->getMessage();
 		}

@@ -87,7 +87,10 @@ class FatoCursoORM extends CircuitoORM {
 		try {
 			$entidade = $this->getEntityManager()
 				->getRepository($this->getEntity())
-				->findBy(array('turma_id' => $idTurma));
+				->findBy(array(
+					'turma_id' => $idTurma,
+					'data_inativacao' => null,
+				));
 			if ($entidade) {
 				$resposta = $entidade;
 			}
@@ -102,7 +105,10 @@ class FatoCursoORM extends CircuitoORM {
 		try {
 			$entidade = $this->getEntityManager()
 				->getRepository($this->getEntity())
-				->findBy(array('situacao_id' => $idSituacao));
+				->findBy(array(
+					'situacao_id' => $idSituacao,
+					'data_inativacao' => null,
+				));
 			if ($entidade) {
 				$resposta = $entidade;
 			}
