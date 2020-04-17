@@ -100,18 +100,35 @@ class FatoCursoORM extends CircuitoORM {
 		}
 	}
 
-	public function encontrarFatoCursoPorSituacao($idSituacao) {
-		$resposta = null;
+	public function encontrarFatoCursoPorSituacaoEParte($idSituacao, $qualParte) {
+		$resposta = array();
+		$dqlBase = "SELECT fc.id "
+			. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc "
+			. "ORDER BY fc.id DESC ";
+		$totalDivisoes = 30;
 		try {
-			$entidade = $this->getEntityManager()
-				->getRepository($this->getEntity())
-				->findBy(array(
-					'situacao_id' => $idSituacao,
-					'data_inativacao' => null,
-				));
-			if ($entidade) {
-				$resposta = $entidade;
+			$totalDeGrupos = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setMaxResults(1)
+				->getResult()[0]['id'];
+			$fracaoParaMontar = intVal($totalDeGrupos)/intVal($totalDivisoes);
+			$inicio = 1;
+			if($qualParte > 1){
+				$inicio = $fracaoParaMontar * ($qualParte - 1);
 			}
+
+			$dqlBase = "SELECT fc "
+				. "FROM  " . Constantes::$ENTITY_FATO_CURSO . " fc ";
+			$entidades = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setFirstResult($inicio)
+				->setMaxResults(intVal($fracaoParaMontar))
+				->getResult();
+
+			foreach($entidades as $entidade){
+				$resposta[] = $entidade;
+			}
+
 			return $resposta;
 		} catch (Exception $exc) {
 			echo $exc->getTraceAsString();

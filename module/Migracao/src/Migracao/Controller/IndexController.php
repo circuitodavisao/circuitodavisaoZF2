@@ -3511,14 +3511,10 @@ class IndexController extends CircuitoController {
 
 		$html = 'Reprovando';
 		$listaDeAulaAberta = array();
-		$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacao(Situacao::ATIVO);
+		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
+		$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacaoEParte(Situacao::ATIVO, $qualParte);
 		$html .= '<br /><br />Fatos: '.count($fatosCurso);
-		$contador = 1;
 		foreach($fatosCurso as $fatoCurso){
-			$contador++;
-			if($contador === 10000){
-				//break;
-			}
 			$turmaAulaAtiva = null;
 			if(in_array($fatoCurso->getTurma_id(), $listaDeAulaAberta)){
 				$turmaAulaAtiva = $listaDeAulaAberta[$fatoCurso->getTurma_id()];
