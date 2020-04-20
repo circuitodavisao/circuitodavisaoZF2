@@ -534,6 +534,7 @@ class LancamentoController extends CircuitoController {
 				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
 
 				/* Frequencia */
+
 				$eventosFiltrado = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($idEvento, $diaRealDoEvento);
 				if ($eventosFiltrado) {
 					$frequencia = $eventosFiltrado;
@@ -803,7 +804,7 @@ class LancamentoController extends CircuitoController {
 							$fatosMensal[$indiceFatoMensal]->setA2($soma);
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 3){
-							$soma = $fatosMensal[$indiceFatoMensal]->getrD3() + $valorParaSomar;
+							$soma = $fatosMensal[$indiceFatoMensal]->getD3() + $valorParaSomar;
 							if($soma < 0){
 								$soma = 0;
 							}
@@ -834,7 +835,6 @@ class LancamentoController extends CircuitoController {
 
 					$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
 				}
-
 				$resposta = true;
 				$this->getRepositorio()->fecharTransacao();
 				$response->setContent(Json::encode(
