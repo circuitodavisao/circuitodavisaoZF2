@@ -2331,4 +2331,105 @@ class LoginController extends CircuitoController {
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
+
+	public function sincronizarAlunoAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$dados['message'] = 'Matrícula incorreta ou inativa';
+		$ok = false;
+		if ($request->isPost()) {
+			$body = $request->getContent();
+			$json = Json::decode($body);
+
+				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
+					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
+						if($turmaPessoa->verificarSeEstaAtivo()){
+							$usuario = array();
+							$usuario['matricula'] = $turmaPessoa->getId();
+							$usuario['nome'] = $turmaPessoa->getPessoa()->getNome();
+							$usuario['time'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
+
+							$turma = $turmaPessoa->getTurma();
+							$nomeDisciplina = 'PÓS REVISÃO';
+							if($turma->getTurmaAulaAtiva()){
+								$nomeDisciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+							}
+							$nomeTurma = $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina;
+	
+							$usuario['turma'] = $nomeTurma;
+							$usuario['situacao'] = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome();
+							/* faltas */
+							$listaDeFaltas = array();
+							if($turma->getTurmaAulaAtiva()){
+								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
+								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+										break;
+									}
+									$falta = true;
+									if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+										foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+											if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
+												$falta = false;
+											}
+										}
+									}
+									if($falta){
+										$listaDeFaltas[] = $aula;
+									}
+								}
+							}
+
+							$faltas = array();
+							if(count($listaDeFaltas) > 0){
+								foreach($listaDeFaltas as $falta){
+									$item = array();
+									$item['id'] = $falta->getId();
+									$item['posicao'] = $falta->getPosicao();
+									foreach($falta->getPergunta() as $pergunta){
+										if($pergunta->verificarSeEstaAtivo()){
+											$temPerguntas = true;
+										}
+									}
+									if($temPerguntas){
+										foreach($falta->getPergunta() as $pergunta){
+											if($pergunta->verificarSeEstaAtivo()){
+												$item['pergunta'] = $pergunta->getPergunta();
+												$item['r1'] = $pergunta->getR1();
+												$item['r2'] = $pergunta->getR1();
+												$item['r3'] = $pergunta->getR1();
+												$item['r4'] = $pergunta->getR1();
+											}
+										}
+									}else{
+										$item['pergunta'] = false;
+									}
+									$faltas[] = $item;
+								}
+							}
+							$usuario['faltas'] = $faltas;
+							$dados['usuario'] = $usuario;
+							$dados['ok'] = true;
+						}
+					}else{
+						$dados['false'] = true;
+						$dados['message'] = 'Sua igreja não tem acesso!';
+					}
+					}
+				}
+		$dados['ok'] = $ok;
+		$response->getHeaders()
+			->addHeaderLine('Access-Control-Allow-Origin', '*')
+			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+			->addHeaderLine('Content-Type', 'application/json; charset=utf-8')
+			->addHeaderLine('x-content-type-options', 'nosniff')
+			->addHeaderLine('x-dns-prefetch-control', 'off')
+			->addHeaderLine('x-download-options', 'noopen')
+			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
+			->addHeaderLine('x-xss-protection', '1; mode=block');
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
 }
