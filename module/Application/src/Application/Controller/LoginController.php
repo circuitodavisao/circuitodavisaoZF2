@@ -2345,6 +2345,7 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
 						if($turmaPessoa->verificarSeEstaAtivo()){
+							$dados['message'] = '';
 							$usuario = array();
 							$usuario['matricula'] = $turmaPessoa->getId();
 							$usuario['nome'] = $turmaPessoa->getPessoa()->getNome();
@@ -2397,9 +2398,9 @@ class LoginController extends CircuitoController {
 											if($pergunta->verificarSeEstaAtivo()){
 												$item['pergunta'] = $pergunta->getPergunta();
 												$item['r1'] = $pergunta->getR1();
-												$item['r2'] = $pergunta->getR1();
-												$item['r3'] = $pergunta->getR1();
-												$item['r4'] = $pergunta->getR1();
+												$item['r2'] = $pergunta->getR2();
+												$item['r3'] = $pergunta->getR3();
+												$item['r4'] = $pergunta->getR4();
 											}
 										}
 									}else{
