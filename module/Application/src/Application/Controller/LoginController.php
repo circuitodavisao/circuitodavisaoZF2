@@ -2411,7 +2411,7 @@ class LoginController extends CircuitoController {
 							}
 							$usuario['faltas'] = $faltas;
 							$dados['usuario'] = $usuario;
-							$dados['ok'] = true;
+							$ok = true;
 						}
 					}else{
 						$dados['false'] = true;
