@@ -2401,6 +2401,7 @@ class LoginController extends CircuitoController {
 												$item['r2'] = $pergunta->getR2();
 												$item['r3'] = $pergunta->getR3();
 												$item['r4'] = $pergunta->getR4();
+												$item['certa'] = $pergunta->getCerta();
 											}
 										}
 									}else{
