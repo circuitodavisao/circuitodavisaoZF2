@@ -42,6 +42,7 @@ let estado = {
 function mostrarMensagem(){
 	document.getElementById('divConsultarMatricula').classList.add('hidden')
 	document.getElementById('divMensagem').classList.remove('hidden')
+	document.getElementById('divMensagemDeErro').classList.add('hidden')
 }
 
 function consultarMatricula(item = null){
@@ -68,20 +69,16 @@ function consultarMatricula(item = null){
 		)
 		.then(retorno => {
 			esconderSplash()
-			if(!retorno.ok){
-				const divMensagemDeErro = document.getElementById('divMensagemDeErro')	
-				divMensagemDeErro.classList.remove('hidden')
-				divMensagemDeErro.inerHTML = '<div class="alert alert-warning">Matrícula não encontrada!</div>'
-			}
 			return retorno.json()
 		})
 		.then(json => {
 			document.getElementById('divMensagem').classList.add('hidden')
-			if(json.html !== undefined){
+			if(json.ok){
 				document.getElementById('divRetorno').innerHTML = json.html
 			}else{
+				document.getElementById('divConsultarMatricula').classList.remove('hidden')
 				document.getElementById('divMensagemDeErro').classList.remove('hidden')
-				document.getElementById('divMensagemDeErro').innerHTML = '<div class="alert alert-danger">Matrícula não Encontrada</div>'
+				document.getElementById('divMensagemDeErro').innerHTML = `<div class="alert alert-danger">${json.message}</div>`
 				document.getElementById('matricula').value = ''
 			}
 		})

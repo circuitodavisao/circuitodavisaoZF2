@@ -1097,185 +1097,140 @@ class LoginController extends CircuitoController {
 		$response = $this->getResponse();
 		$dados = array();
 		$dados['ok'] = false;
+		$dados['message'] = 'Matrícula não encontrada!';
 		$resultado = array();
 		if ($request->isPost()) {
 			try {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
-					$html = '';
-					if($turmaPessoa->verificarSeEstaAtivo()){
-						$html .= '<div class="panel">';
+					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
+						$html = '';
+						if($turmaPessoa->verificarSeEstaAtivo()){
+							$html .= '<div class="panel">';
 
-						$html .= '<div id="divDados">';
-						$html .= '<input type="hidden" id="matricula" value="'.$json->matricula.'" />';
-						$html .= '<table class="table table-condensed text-left">';
+							$html .= '<div id="divDados">';
+							$html .= '<input type="hidden" id="matricula" value="'.$json->matricula.'" />';
+							$html .= '<table class="table table-condensed text-left">';
 
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Matrícula</td>';
-						$html .= '<td>'.$turmaPessoa->getId().'</td>';
-						$html .= '</tr>';
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Matrícula</td>';
+							$html .= '<td>'.$turmaPessoa->getId().'</td>';
+							$html .= '</tr>';
 
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Aluno</td>';
-						$html .= '<td>'.$turmaPessoa->getPessoa()->getNome().'</td>';
-						$html .= '</tr>';
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Aluno</td>';
+							$html .= '<td>'.$turmaPessoa->getPessoa()->getNome().'</td>';
+							$html .= '</tr>';
 
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Time</td>';
-						$html .= '<td>'.$turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade().'</td>';
-						$html .= '</tr>';
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Time</td>';
+							$html .= '<td>'.$turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade().'</td>';
+							$html .= '</tr>';
 
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Turma</td>';
-						$html .= '<td>';
-						$turma = $turmaPessoa->getTurma();
-						$nomeDisciplina = 'PÓS REVISÃO';
-						if($turma->getTurmaAulaAtiva()){
-							$nomeDisciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
-						}
-						$html .= $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina;
-						$html .= '</td>';
-						$html .= '</tr>';
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Turma</td>';
+							$html .= '<td>';
+							$turma = $turmaPessoa->getTurma();
+							$nomeDisciplina = 'PÓS REVISÃO';
+							if($turma->getTurmaAulaAtiva()){
+								$nomeDisciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+							}
+							$html .= $turma->getCurso()->getNomeSigla() . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1) . '/' . $turma->getAno() . ' - ' . $nomeDisciplina;
+							$html .= '</td>';
+							$html .= '</tr>';
 
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Situação</td>';
-						$corSituacao = 'success';
-						if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
-							$corSituacao = 'primary';
-						}
-						$html .= '<td><span class="label label-'.$corSituacao.'">'.$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
-						$html .= '</tr>';
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Situação</td>';
+							$corSituacao = 'success';
+							if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL) {
+								$corSituacao = 'primary';
+							}
+							$html .= '<td><span class="label label-'.$corSituacao.'">'.$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
+							$html .= '</tr>';
 
-						/* financeiro */
-						$html .= '<tr>';
-						$html .= '<td class="text-right">Financeiro</td>';
-						$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
-						$html .= '</tr>';
-	
-						$html .= '</table>';
+							/* financeiro */
+							$html .= '<tr>';
+							$html .= '<td class="text-right">Financeiro</td>';
+							$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
+							$html .= '</tr>';
 
-						/* Aula aberta */
-//						$html .= '<div class="panel panel-success m5">';
-//						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
-//						$html .= '<div class="panel-body">';
-//						if($turma->getTurmaAulaAtiva()){
-//							$html .= 'Aula '.$turma->getTurmaAulaAtiva()->getAula()->getPosicao();
-//							$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarAulaAberta()">Ver Aula</button>';
-//						}else{
-//							$html .= '<div class="alert alert-danger">Sem Aula aberta entre em contato com seu líder</div>';
-//						}
-//						$html .= '</div>';
-//						$html .= '</div>';
+							$html .= '</table>';
 
-						/* faltas */
-						$html .= '<div class="panel panel-primary m5">';
-						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Reposições</div>';
-						$html .= '<div class="panel-body">';
-						$listaDeFaltas = array();
-						if($turma->getTurmaAulaAtiva()){
-							$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
-							foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-								if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
-									break;
-								}
-								$falta = true;
-								if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
-									foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
-										if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
-											$falta = false;
+							/* Aula aberta */
+							//						$html .= '<div class="panel panel-success m5">';
+							//						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
+							//						$html .= '<div class="panel-body">';
+							//						if($turma->getTurmaAulaAtiva()){
+							//							$html .= 'Aula '.$turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+							//							$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarAulaAberta()">Ver Aula</button>';
+							//						}else{
+							//							$html .= '<div class="alert alert-danger">Sem Aula aberta entre em contato com seu líder</div>';
+							//						}
+							//						$html .= '</div>';
+							//						$html .= '</div>';
+
+							/* faltas */
+							$html .= '<div class="panel panel-primary m5">';
+							$html .= '<div class="panel-heading" style="padding: 0px 8px;">Reposições</div>';
+							$html .= '<div class="panel-body">';
+							$listaDeFaltas = array();
+							if($turma->getTurmaAulaAtiva()){
+								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
+								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+										break;
+									}
+									$falta = true;
+									if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+										foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+											if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
+												$falta = false;
+											}
 										}
 									}
-								}
-								if($falta){
-									$listaDeFaltas[] = $aula;
-								}
-							}
-						}
-
-						$htmlFaltas = '<div class="alert alert-danger">SEM FALTAS</div>';
-						if(count($listaDeFaltas) > 0){
-							$htmlFaltas = '';
-							$htmlFaltas .= '<table class="table table-condesed text-left">';
-							foreach($listaDeFaltas as $falta){
-								$htmlFaltas .= '<tr>';
-								$htmlFaltas .= '<td class="text-right">';
-								$htmlFaltas .= 'Aula '.$falta->getPosicao();
-								$htmlFaltas .= '</td>';
-								$htmlFaltas .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$falta->getId().')">Ver Reposição</button></td>';
-								$htmlFaltas .= '</tr>';
-							}
-							$htmlFaltas .= '</table>';
-						}
-						$html .= $htmlFaltas;
-						$html .= '</div>';
-						$html .= '</div>';
-
-						$html .= '<div id="divSair" class="mt5">';
-						$html .= '<button type="button" class="btn btn-primary mb10" onClick="sair()">Sair</button>';
-						$html .= '</div>';
-	
-						/* fim panel dados */
-						$html .= '</div>';
-						/* fim div dados */
-						$html .= '</div>';
-
-						/* div aula aberta */
-						if($turma->getTurmaAulaAtiva()){
-							$aula = $turma->getTurmaAulaAtiva()->getAula();
-							$html .= '<div id="divAulaAberta" class="p5 hidden">';
-							$html .= '<div class="panel panel-primary">';
-							$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
-							$html .= '<div class="panel-body">';
-							if($aula->getUrl() !== null && $aula->getUrl() !== ''){
-								$idVideo = $aula->getUrl();
-								$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
-								$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
-							}else{
-								$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
-							}
-							$html .= '<div class="alert alert-primary mt10">Questionário</div>';
-							$temPerguntas = false;
-							foreach($aula->getPergunta() as $pergunta){
-								if($pergunta->verificarSeEstaAtivo()){
-									$temPerguntas = true;
-								}
-							}
-							if($temPerguntas){
-								foreach($aula->getPergunta() as $pergunta){
-									if($pergunta->verificarSeEstaAtivo()){
-										$html .= '<div class="panel panel-default mt5">';
-										$html .= '<div class="panel-body">';
-										$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
-										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
-										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
-										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
-										$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
-										$html .= '</div>';
-										$html .= '</div>';
+									if($falta){
+										$listaDeFaltas[] = $aula;
 									}
 								}
-								$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$aula->getId().', 1)">Enviar Respostas</button>';
-							}else{
-								$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
 							}
+
+							$htmlFaltas = '<div class="alert alert-danger">Sem aulas para serem repostas</div>';
+							if(count($listaDeFaltas) > 0){
+								$htmlFaltas = '';
+								$htmlFaltas .= '<table class="table table-condesed text-left">';
+								foreach($listaDeFaltas as $falta){
+									$htmlFaltas .= '<tr>';
+									$htmlFaltas .= '<td class="text-right">';
+									$htmlFaltas .= 'Aula '.$falta->getPosicao();
+									$htmlFaltas .= '</td>';
+									$htmlFaltas .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$falta->getId().')">Ver Reposição</button></td>';
+									$htmlFaltas .= '</tr>';
+								}
+								$htmlFaltas .= '</table>';
+							}
+							$html .= $htmlFaltas;
+							$html .= '</div>';
 							$html .= '</div>';
 
-							$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
+							$html .= '<div id="divSair" class="mt5">';
+							$html .= '<button type="button" class="btn btn-primary mb10" onClick="sair()">Sair</button>';
 							$html .= '</div>';
 
+							/* fim panel dados */
 							$html .= '</div>';
-						}
+							/* fim div dados */
+							$html .= '</div>';
 
-						/* div faltas */
-						if(count($listaDeFaltas) > 0){
-							$html .= '<div id="divFaltas" class="p5 hidden">';
-							foreach($listaDeFaltas as $falta){
-								$html .= '<div id="divFalta'.$falta->getId().'" class="panel panel-primary hidden falta">';
-								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$falta->getPosicao().' - '.$falta->getNome().'</div>';
+							/* div aula aberta */
+							if($turma->getTurmaAulaAtiva()){
+								$aula = $turma->getTurmaAulaAtiva()->getAula();
+								$html .= '<div id="divAulaAberta" class="p5 hidden">';
+								$html .= '<div class="panel panel-primary">';
+								$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$aula->getPosicao().' - '.$aula->getNome().'</div>';
 								$html .= '<div class="panel-body">';
-								if($falta->getUrl() !== null && $falta->getUrl() !== ''){
-									$idVideo = $falta->getUrl();
+								if($aula->getUrl() !== null && $aula->getUrl() !== ''){
+									$idVideo = $aula->getUrl();
 									$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
 									$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
 								}else{
@@ -1283,13 +1238,13 @@ class LoginController extends CircuitoController {
 								}
 								$html .= '<div class="alert alert-primary mt10">Questionário</div>';
 								$temPerguntas = false;
-								foreach($falta->getPergunta() as $pergunta){
+								foreach($aula->getPergunta() as $pergunta){
 									if($pergunta->verificarSeEstaAtivo()){
 										$temPerguntas = true;
 									}
 								}
 								if($temPerguntas){
-									foreach($falta->getPergunta() as $pergunta){
+									foreach($aula->getPergunta() as $pergunta){
 										if($pergunta->verificarSeEstaAtivo()){
 											$html .= '<div class="panel panel-default mt5">';
 											$html .= '<div class="panel-body">';
@@ -1302,21 +1257,68 @@ class LoginController extends CircuitoController {
 											$html .= '</div>';
 										}
 									}
-									$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$falta->getId().')">Enviar Respostas</button>';
+									$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$aula->getId().', 1)">Enviar Respostas</button>';
 								}else{
 									$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
 								}
 								$html .= '</div>';
+
+								$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
+								$html .= '</div>';
+
 								$html .= '</div>';
 							}
-							$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="voltarAosDados()">Voltar</button>';
-							$html .= '</div>';
-						}
 
-						/* situacao financeira */
-						$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
-						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
-						$html .= '<div class="panel-body">';
+							/* div faltas */
+							if(count($listaDeFaltas) > 0){
+								$html .= '<div id="divFaltas" class="p5 hidden">';
+								foreach($listaDeFaltas as $falta){
+									$html .= '<div id="divFalta'.$falta->getId().'" class="panel panel-primary hidden falta">';
+									$html .= '<div class="panel-heading" style="padding: 0 8px;">Aula '.$falta->getPosicao().' - '.$falta->getNome().'</div>';
+									$html .= '<div class="panel-body">';
+									if($falta->getUrl() !== null && $falta->getUrl() !== ''){
+										$idVideo = $falta->getUrl();
+										$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
+										$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+									}else{
+										$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
+									}
+									$html .= '<div class="alert alert-primary mt10">Questionário</div>';
+									$temPerguntas = false;
+									foreach($falta->getPergunta() as $pergunta){
+										if($pergunta->verificarSeEstaAtivo()){
+											$temPerguntas = true;
+										}
+									}
+									if($temPerguntas){
+										foreach($falta->getPergunta() as $pergunta){
+											if($pergunta->verificarSeEstaAtivo()){
+												$html .= '<div class="panel panel-default mt5">';
+												$html .= '<div class="panel-body">';
+												$html .= '<p class="text-left">'.$pergunta->getPergunta().'</p><br /><br />';
+												$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 1});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="1"> '.$pergunta->getR1().'</p>';
+												$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 2});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="2"> '.$pergunta->getR2().'</p>';
+												$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 3});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="3"> '.$pergunta->getR3().'</p>';
+												$html .= '<p class="text-left"><input onClick="estado.respostas.push({pergunta_id: '.$pergunta->getId().', resposta: 4});" type="radio" id="'.$pergunta->getId().'" name="'.$pergunta->getId().'" value="4"> '.$pergunta->getR4().'</p>';
+												$html .= '</div>';
+												$html .= '</div>';
+											}
+										}
+										$html .= '<button type="button" class="btn btn-primary mt10" onClick="enviarRespostas('.$falta->getId().')">Enviar Respostas</button>';
+									}else{
+										$html .= '<div class="alert alert-danger">Sem perguntas cadastradas entre em contato com seu líder para resolver</div>';
+									}
+									$html .= '</div>';
+									$html .= '</div>';
+								}
+								$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="voltarAosDados()">Voltar</button>';
+								$html .= '</div>';
+							}
+
+							/* situacao financeira */
+							$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
+							$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
+							$html .= '<div class="panel-body">';
 
 							$html .= '<div class="table-responsive">';
 							$html .= '<table class="table table-condensed">';
@@ -1385,44 +1387,48 @@ class LoginController extends CircuitoController {
 							}
 							$html .= '</tbody>';
 							$html .= '</table>';
-						$html .= '</div>';
-						$html .= '<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
-						$html .= '&nbsp;&nbsp;<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
-						$html .= '</div>';
-						$html .= '</div>';
-						/* fim div situacao financeira */
+							$html .= '</div>';
+							$html .= '<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
+							$html .= '&nbsp;&nbsp;<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
+							$html .= '</div>';
+							$html .= '</div>';
+							/* fim div situacao financeira */
 
-						/* div pagamentos */
-						$html .= '<div id="divPagamentos" class="p5 hidden">';
-						$email = $turmaPessoa->getPessoa()->getEmail();
-						if($email === 'atualize' || $email === null || $email === ''){
-							$html .= '<div id="divEmail" class="panel panel-primary">';
-							$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
-							$html .= '<div class="panel-body">';
+							/* div pagamentos */
+							$html .= '<div id="divPagamentos" class="p5 hidden">';
+							$email = $turmaPessoa->getPessoa()->getEmail();
+							if($email === 'atualize' || $email === null || $email === ''){
+								$html .= '<div id="divEmail" class="panel panel-primary">';
+								$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
+								$html .= '<div class="panel-body">';
 
-							$html .= '<p>Para realizar um pagamento você precisa ter o email cadastrado</p>';
-							$html .= '<p>Sem Email cadastrado</p>';
-							$html .= '<p><button type="button" class="btn btn-xs btn-primary" onClick="mostrarCadastrarEmail()">Cadastrar email</button></p>';
-							$html .= '<div id="divCadastrarEmail" class="p5 hidden">';
-							$html .= '<p>Informe o email</p>';
-							$html .= '<input type="email" id="email" class="form-control" />';
-							$html .= '<br />';
-							$html .= '<button type="button" onClick="salvarEmail()" class="btn btn-sm btn-primary">Salvar</button>';
+								$html .= '<p>Para realizar um pagamento você precisa ter o email cadastrado</p>';
+								$html .= '<p>Sem Email cadastrado</p>';
+								$html .= '<p><button type="button" class="btn btn-xs btn-primary" onClick="mostrarCadastrarEmail()">Cadastrar email</button></p>';
+								$html .= '<div id="divCadastrarEmail" class="p5 hidden">';
+								$html .= '<p>Informe o email</p>';
+								$html .= '<input type="email" id="email" class="form-control" />';
+								$html .= '<br />';
+								$html .= '<button type="button" onClick="salvarEmail()" class="btn btn-sm btn-primary">Salvar</button>';
+								$html .= '</div>';
+
+								$html .= '</div>';
+
+								$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="mostrarSituacaoFinanceira()">Voltar</button>';
+								$html .= '</div>';
+							}else{
+								$html .= self::pagamentos($turmaPessoa);
+							}
+							/* fim div pagamentos */
 							$html .= '</div>';
 
-							$html .= '</div>';
-
-							$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="mostrarSituacaoFinanceira()">Voltar</button>';
-							$html .= '</div>';
-						}else{
-							$html .= self::pagamentos($turmaPessoa);
 						}
-						/* fim div pagamentos */
-						$html .= '</div>';
-
-				}
-					$dados['html'] = $html;
-					$dados['ok'] = true;
+						$dados['html'] = $html;
+						$dados['ok'] = true;
+					}else{
+						$dados['false'] = true;
+						$dados['message'] = 'Sua igreja não tem acesso!';
+					}
 				}
 			} catch (Exception $exc) {
 				$dados['message'] = $exc->getMessage();
