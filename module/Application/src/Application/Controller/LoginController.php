@@ -2388,6 +2388,7 @@ class LoginController extends CircuitoController {
 									$item = array();
 									$item['id'] = $falta->getId();
 									$item['posicao'] = $falta->getPosicao();
+									$item['idVimeo'] = $falta->getUrl();
 									foreach($falta->getPergunta() as $pergunta){
 										if($pergunta->verificarSeEstaAtivo()){
 											$temPerguntas = true;
@@ -2402,7 +2403,6 @@ class LoginController extends CircuitoController {
 												$item['r3'] = $pergunta->getR3();
 												$item['r4'] = $pergunta->getR4();
 												$item['certa'] = $pergunta->getCerta();
-												$item['idVimeo'] = $pergunta->getUrl();
 											}
 										}
 									}else{
