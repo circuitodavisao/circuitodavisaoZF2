@@ -1176,6 +1176,27 @@ class LoginController extends CircuitoController {
 							$html .= '<div class="panel-body">';
 							$listaDeFaltas = array();
 							if($turma->getTurmaAulaAtiva()){
+								$idPrimeiroModulo = 6;
+								if($disciplina->getId() === $idPrimeiroModulo){
+									$disciplinaPosRevisao = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(5);
+									foreach ($disciplinaPosRevisao->getAulaOrdenadasPorPosicao() as $aula) {
+									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+										break;
+									}
+									$falta = true;
+									if (count($turmaPessoa->getTurmaPessoaAula()) > 0) {
+										foreach ($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula) {
+											if ($turmaPessoaAula->getAula()->getId() === $aula->getId() && $turmaPessoaAula->verificarSeEstaAtivo()) {
+												$falta = false;
+											}
+										}
+									}
+									if($falta){
+										$listaDeFaltas[] = $aula;
+									}
+								}
+								}
+
 								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
 								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
