@@ -425,6 +425,7 @@ class Module {
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/cadastroFichaRevisao' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/lancamentoDiscipulado' ||
 			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/principalEmail' ||
+			$e->getRequest()->getUriString() == $stringHttps . $stringUrl . '/vimeo' ||
 			!$pessoa->getData_nascimento() || 
 			!$pessoa->getSexo() || 
 			!$pessoa->getProfissao() || 

@@ -2456,4 +2456,9 @@ class LoginController extends CircuitoController {
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
+
+	public function vimeoAction() {
+        $idVimeo = $this->params()->fromRoute('id');
+		return new ViewModel(array('idVimeo' => $idVimeo));	
+	}
 }
