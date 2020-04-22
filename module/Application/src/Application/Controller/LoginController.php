@@ -1177,6 +1177,7 @@ class LoginController extends CircuitoController {
 							$listaDeFaltas = array();
 							if($turma->getTurmaAulaAtiva()){
 								$idPrimeiroModulo = 6;
+								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
 								if($disciplina->getId() === $idPrimeiroModulo){
 									$disciplinaPosRevisao = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(5);
 									foreach ($disciplinaPosRevisao->getAulaOrdenadasPorPosicao() as $aula) {
@@ -1197,7 +1198,6 @@ class LoginController extends CircuitoController {
 								}
 								}
 
-								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
 								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
 										break;
