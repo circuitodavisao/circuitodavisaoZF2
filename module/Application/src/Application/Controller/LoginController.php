@@ -2415,15 +2415,18 @@ class LoginController extends CircuitoController {
 											$temPerguntas = true;
 										}
 									}
+									$item['perguntas'] = array();
 									if($temPerguntas){
 										foreach($falta->getPergunta() as $pergunta){
 											if($pergunta->verificarSeEstaAtivo()){
-												$item['pergunta'] = $pergunta->getPergunta();
-												$item['r1'] = $pergunta->getR1();
-												$item['r2'] = $pergunta->getR2();
-												$item['r3'] = $pergunta->getR3();
-												$item['r4'] = $pergunta->getR4();
-												$item['certa'] = $pergunta->getCerta();
+												$pergunta = array();
+												$pergunta['pergunta'] = $pergunta->getPergunta();
+												$pergunta['r1'] = $pergunta->getR1();
+												$pergunta['r2'] = $pergunta->getR2();
+												$pergunta['r3'] = $pergunta->getR3();
+												$pergunta['r4'] = $pergunta->getR4();
+												$pergunta['certa'] = $pergunta->getCerta();
+												$item['perguntas'][] = $pergunta;
 											}
 										}
 									}else{
