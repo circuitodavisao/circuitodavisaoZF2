@@ -2420,6 +2420,7 @@ class LoginController extends CircuitoController {
 										foreach($falta->getPergunta() as $pergunta){
 											if($pergunta->verificarSeEstaAtivo()){
 												$perguntaItem = array();
+												$perguntaItem['id'] = $pergunta->getId();
 												$perguntaItem['pergunta'] = $pergunta->getPergunta();
 												$perguntaItem['r1'] = $pergunta->getR1();
 												$perguntaItem['r2'] = $pergunta->getR2();
