@@ -2362,8 +2362,27 @@ class LoginController extends CircuitoController {
 		if ($request->isPost()) {
 			$body = $request->getContent();
 			$json = Json::decode($body);
+			$dados = self::dadosAluno($json->matricula);
+		
+				}
+		$dados['ok'] = $ok;
+		$response->getHeaders()
+			->addHeaderLine('Access-Control-Allow-Origin', '*')
+			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+			->addHeaderLine('Content-Type', 'application/json; charset=utf-8')
+			->addHeaderLine('x-content-type-options', 'nosniff')
+			->addHeaderLine('x-dns-prefetch-control', 'off')
+			->addHeaderLine('x-download-options', 'noopen')
+			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
+			->addHeaderLine('x-xss-protection', '1; mode=block');
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
 
-				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
+function dadosAluno($matricula){
+$dados = array();
+		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($matricula)){
 					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
@@ -2445,21 +2464,8 @@ class LoginController extends CircuitoController {
 						$dados['message'] = 'Sua igreja não tem acesso!';
 					}
 					}
-				}
-		$dados['ok'] = $ok;
-		$response->getHeaders()
-			->addHeaderLine('Access-Control-Allow-Origin', '*')
-			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-			->addHeaderLine('Content-Type', 'application/json; charset=utf-8')
-			->addHeaderLine('x-content-type-options', 'nosniff')
-			->addHeaderLine('x-dns-prefetch-control', 'off')
-			->addHeaderLine('x-download-options', 'noopen')
-			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
-			->addHeaderLine('x-xss-protection', '1; mode=block');
-		$response->setContent(Json::encode($dados));
-		return $response;
-	}
+return $dados;
+}
 
 	public function vimeoAction() {
         $idVimeo = $this->params()->fromRoute('id');
