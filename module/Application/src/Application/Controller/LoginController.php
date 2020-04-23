@@ -2419,14 +2419,14 @@ class LoginController extends CircuitoController {
 									if($temPerguntas){
 										foreach($falta->getPergunta() as $pergunta){
 											if($pergunta->verificarSeEstaAtivo()){
-												$pergunta = array();
-												$pergunta['pergunta'] = $pergunta->getPergunta();
-												$pergunta['r1'] = $pergunta->getR1();
-												$pergunta['r2'] = $pergunta->getR2();
-												$pergunta['r3'] = $pergunta->getR3();
-												$pergunta['r4'] = $pergunta->getR4();
-												$pergunta['certa'] = $pergunta->getCerta();
-												$item['perguntas'][] = $pergunta;
+												$perguntaItem = array();
+												$perguntaItem['pergunta'] = $pergunta->getPergunta();
+												$perguntaItem['r1'] = $pergunta->getR1();
+												$perguntaItem['r2'] = $pergunta->getR2();
+												$perguntaItem['r3'] = $pergunta->getR3();
+												$perguntaItem['r4'] = $pergunta->getR4();
+												$perguntaItem['certa'] = $pergunta->getCerta();
+												$item['perguntas'][] = $perguntaItem;
 											}
 										}
 									}else{
