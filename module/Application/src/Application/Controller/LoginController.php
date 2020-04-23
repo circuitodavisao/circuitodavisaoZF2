@@ -2506,6 +2506,8 @@ return $dados;
 			$turmaPessoaVisto->setHora_inativacao(null);
 			$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
 			$ok = true;
+
+			$dados = self::dadosAluno($json->matricula);
 		}
 		$dados['ok'] = $ok;
 		$response->getHeaders()
