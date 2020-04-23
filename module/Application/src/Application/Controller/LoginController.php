@@ -2363,6 +2363,7 @@ class LoginController extends CircuitoController {
 			$body = $request->getContent();
 			$json = Json::decode($body);
 			$dados = self::dadosAluno($json->matricula);
+			$ok = true;
 		
 				}
 		$dados['ok'] = $ok;
