@@ -2465,4 +2465,54 @@ class LoginController extends CircuitoController {
         $idVimeo = $this->params()->fromRoute('id');
 		return new ViewModel(array('idVimeo' => $idVimeo));	
 	}
+
+	public function efetivarReposicaoAlunoAction() {
+		$response = $this->getResponse();
+		$request = $this->getRequest();
+		$dados = array();
+		$ok = false;
+		if ($request->isPost()) {
+			$body = $request->getContent();
+			$json = Json::decode($body);
+
+			$aula = $this->getRepositorio()->getAulaORM()->encontrarPorId(intVal($json->aula_id));
+
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId(intVal($json->matricula));
+			$turmaPessoaAula = $turmaPessoa->getTurmaPessoaAulaPorAula($aula->getId());
+			if (!$turmaPessoaAula) {
+				$turmaPessoaAula = new TurmaPessoaAula();
+				$turmaPessoaAula->setAula($aula);
+				$turmaPessoaAula->setTurma_pessoa($turmaPessoa);
+			}
+			$turmaPessoaAula->setData_inativacao(null);
+			$turmaPessoaAula->setHora_inativacao(null);
+			$turmaPessoaAula->setReposicao('S');
+			$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
+
+			/* reposição */
+			$turmaPessoaVisto = $turmaPessoa->getTurmaPessoaVistoPorAula($aula->getId());
+			if (!$turmaPessoaVisto) {
+				$turmaPessoaVisto = new TurmaPessoaVisto();
+				$turmaPessoaVisto->setAula($aula);
+				$turmaPessoaVisto->setTurma_pessoa($turmaPessoa);
+			}
+			$turmaPessoaVisto->setData_inativacao(null);
+			$turmaPessoaVisto->setHora_inativacao(null);
+			$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
+			$ok = true;
+		}
+		$dados['ok'] = $ok;
+		$response->getHeaders()
+			->addHeaderLine('Access-Control-Allow-Origin', '*')
+			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+			->addHeaderLine('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+			->addHeaderLine('Content-Type', 'application/json; charset=utf-8')
+			->addHeaderLine('x-content-type-options', 'nosniff')
+			->addHeaderLine('x-dns-prefetch-control', 'off')
+			->addHeaderLine('x-download-options', 'noopen')
+			->addHeaderLine('x-frame-options', 'SAMEORIGIN')
+			->addHeaderLine('x-xss-protection', '1; mode=block');
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
 }
