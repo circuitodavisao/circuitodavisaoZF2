@@ -2365,6 +2365,7 @@ try{
 			$dados = self::dadosAluno($json->matricula);
 }catch(Exception $e){
 	$dados['error'] = $e->getMessage();
+	$dados['ok'] = false;
 }
 		
 				}
