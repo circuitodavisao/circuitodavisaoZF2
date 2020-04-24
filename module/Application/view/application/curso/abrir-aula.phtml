@@ -62,6 +62,43 @@ $html .= '</select>';
 $html .= '</div>';
 $html .= '</div>';
 
+if($this->mostarLinkDoZoom){
+	$html .= '<div class="row">';
+	$html .= '<div class="form-group">';
+	$html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate('Informe os links do ZOOM') . '</label>';
+	for($i = 1; $i <= 7; $i++){
+		$label = '';
+		if($i === 1){
+			$label = 'Segunda-Feira';
+		}
+		if($i === 2){
+			$label = 'Terça-Feira';
+		}
+		if($i === 3){
+			$label = 'Quarta-Feira';
+		}
+		if($i === 4){
+			$label = 'Quinta-Feira';
+		}
+		if($i === 5){
+			$label = 'Sexta-Feira';
+		}
+		if($i === 6){
+			$label = 'Sábado';
+		}
+		if($i === 7){
+			$label = 'Domingo';
+		}
+
+		$url = 'url'.$i;
+
+		$html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate($label) . '</label>';
+		$html .= '<input id="url'.$i.'" name="url'.$i.'" type="text" class="form-control" value="'.$this->$url.'" />';
+	}
+	$html .= '</div>';
+	$html .= '</div>';
+}
+
 $html .= '<div class="row">';
 $html .= '<div class="form-group">';
 $html .= '<label class="field-label text-muted fs18 mb10">' . $this->translate('Informe sua Senha') . '</label>';

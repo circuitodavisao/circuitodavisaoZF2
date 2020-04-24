@@ -806,9 +806,29 @@ class CursoController extends CircuitoController {
 		$idTurma = $sessao->idSessao;
 		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
 
+		$mostarLinkDoZoom = false;
+		if($turma->getGrupo()->getGrupoRegiao()->getId() === 3110){
+			$mostarLinkDoZoom = true;
+		}
+
 		$idAulaAtiva = 0;
+		$url1 = '';
+		$url2 = '';
+		$url3 = '';
+		$url4 = '';
+		$url5 = '';
+		$url6 = '';
+		$url7 = '';
 		if ($turma->getTurmaAulaAtiva()) {
 			$idAulaAtiva = $turma->getTurmaAulaAtiva()->getAula()->getId();
+			$turmaAula = $turma->getTurmaAulaAtiva();
+			$url1 = $turmaAula->getUrl1();
+			$url2 = $turmaAula->getUrl2();
+			$url3 = $turmaAula->getUrl3();
+			$url4 = $turmaAula->getUrl4();
+			$url5 = $turmaAula->getUrl5();
+			$url6 = $turmaAula->getUrl6();
+			$url7 = $turmaAula->getUrl7();
 		}
 		$opcoes = array();
 		$curso = $turma->getCurso();
@@ -825,6 +845,14 @@ class CursoController extends CircuitoController {
 		return new ViewModel(array(
 			'turma' => $turma,
 			'opcoes' => $opcoes,
+			'mostarLinkDoZoom' => $mostarLinkDoZoom,
+			'url1' => $url1,
+			'url2' => $url2,
+			'url3' => $url3,
+			'url4' => $url4,
+			'url5' => $url5,
+			'url6' => $url6,
+			'url7' => $url7,
 		));
 	}
 
@@ -852,6 +880,36 @@ class CursoController extends CircuitoController {
 					$turmaAula->setTurma($turma);
 					$turmaAula->setAula($this->getRepositorio()->getAulaORM()->encontrarPorId($idAula));
 					$turmaAula->setPessoa($pessoa);
+					if($turma->getGrupo()->getGrupoRegiao()->getId() === 3110){
+						$url1 = $_POST['url1'];
+						$url2 = $_POST['url2'];
+						$url3 = $_POST['url3'];
+						$url4 = $_POST['url4'];
+						$url5 = $_POST['url5'];
+						$url6 = $_POST['url6'];
+						$url7 = $_POST['url7'];
+						if($url1 !== '' && $url1 !== null){
+							$turmaAula->setUrl1($url1);
+						}
+						if($url2 !== '' && $url2 !== null){
+							$turmaAula->setUrl2($url2);
+						}
+						if($url3 !== '' && $url3 !== null){
+							$turmaAula->setUrl3($url3);
+						}
+						if($url4 !== '' && $url4 !== null){
+							$turmaAula->setUrl4($url4);
+						}
+						if($url5 !== '' && $url5 !== null){
+							$turmaAula->setUrl5($url5);
+						}
+						if($url6 !== '' && $url6 !== null){
+							$turmaAula->setUrl6($url6);
+						}
+						if($url7 !== '' && $url7 !== null){
+							$turmaAula->setUrl7($url7);
+						}
+					}
 					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
 				}
 

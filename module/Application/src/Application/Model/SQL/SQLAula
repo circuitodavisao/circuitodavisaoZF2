@@ -54,3 +54,4 @@ COMMENT ON CONSTRAINT fk_disciplina ON public.aula
 
 ALTER TABLE aula ADD COLUMN url character varying(200);
 ALTER TABLE aula ADD COLUMN pessoa_id integer;
+

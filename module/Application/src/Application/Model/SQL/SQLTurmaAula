@@ -57,3 +57,5 @@ COMMENT ON CONSTRAINT fk_turma_aula_aula_id ON public.turma_aula
 
 ALTER TABLE turma_aula ADD COLUMN pessoa_id INTEGER NOT NULL;
 ALTER TABLE turma_aula ADD CONSTRAINT "fk_turma_aula_pessoa_id" FOREIGN KEY (pessoa_id) REFERENCES pessoa(id) ;
+
+ALTER TABLE turma_aula ADD COLUMN url1 character varying(200);

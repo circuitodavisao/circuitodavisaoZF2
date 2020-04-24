@@ -137,7 +137,6 @@ class Aula extends CircuitoEntity {
 	function setUrl($i){
 		$this->url = $i;
 	}
-
     function setTurmaAula($turmaAula) {
         $this->turmaAula = $turmaAula;
     }
