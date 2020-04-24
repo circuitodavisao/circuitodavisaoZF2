@@ -2361,7 +2361,11 @@ class LoginController extends CircuitoController {
 		if ($request->isPost()) {
 			$body = $request->getContent();
 			$json = Json::decode($body);
+try{
 			$dados = self::dadosAluno($json->matricula);
+}catch(Exception $e){
+	$dados['error'] = $e->getMessage();
+}
 		
 				}
 		$response->getHeaders()
