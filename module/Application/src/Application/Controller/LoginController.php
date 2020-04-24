@@ -2358,15 +2358,12 @@ class LoginController extends CircuitoController {
 		$request = $this->getRequest();
 		$dados = array();
 		$dados['message'] = 'Matrícula incorreta ou inativa';
-		$ok = false;
 		if ($request->isPost()) {
 			$body = $request->getContent();
 			$json = Json::decode($body);
 			$dados = self::dadosAluno($json->matricula);
-			$ok = true;
 		
 				}
-		$dados['ok'] = $ok;
 		$response->getHeaders()
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
 			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -2461,10 +2458,10 @@ $dados = array();
 							$ok = true;
 						}
 					}else{
-						$dados['false'] = true;
 						$dados['message'] = 'Sua igreja não tem acesso!';
 					}
 					}
+$dados['ok'] = $ok;
 return $dados;
 }
 
@@ -2507,8 +2504,6 @@ return $dados;
 			$turmaPessoaVisto->setHora_inativacao(null);
 			$this->getRepositorio()->getTurmaPessoaVistoORM()->persistir($turmaPessoaVisto);
 			$ok = true;
-
-			$dados = self::dadosAluno($json->matricula);
 		}
 		$dados['ok'] = $ok;
 		$response->getHeaders()
