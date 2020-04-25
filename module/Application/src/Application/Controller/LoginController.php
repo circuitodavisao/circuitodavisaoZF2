@@ -1158,7 +1158,7 @@ class LoginController extends CircuitoController {
 							$html .= '</table>';
 
 							/* Aula aberta */
-													$html .= '<div class="panel panel-success m5">';
+													$html .= '<div class="panel panel-primary m5">';
 													$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
 													$html .= '<div class="panel-body">';
 													if($turma->getTurmaAulaAtiva()){
