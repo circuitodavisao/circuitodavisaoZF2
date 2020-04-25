@@ -888,27 +888,13 @@ class CursoController extends CircuitoController {
 						$url5 = $_POST['url5'];
 						$url6 = $_POST['url6'];
 						$url7 = $_POST['url7'];
-						if($url1 !== '' && $url1 !== null){
 							$turmaAula->setUrl1($url1);
-						}
-						if($url2 !== '' && $url2 !== null){
 							$turmaAula->setUrl2($url2);
-						}
-						if($url3 !== '' && $url3 !== null){
 							$turmaAula->setUrl3($url3);
-						}
-						if($url4 !== '' && $url4 !== null){
 							$turmaAula->setUrl4($url4);
-						}
-						if($url5 !== '' && $url5 !== null){
 							$turmaAula->setUrl5($url5);
-						}
-						if($url6 !== '' && $url6 !== null){
 							$turmaAula->setUrl6($url6);
-						}
-						if($url7 !== '' && $url7 !== null){
 							$turmaAula->setUrl7($url7);
-						}
 					}
 					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
 				}

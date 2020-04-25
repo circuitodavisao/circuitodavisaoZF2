@@ -1158,17 +1158,79 @@ class LoginController extends CircuitoController {
 							$html .= '</table>';
 
 							/* Aula aberta */
-							//						$html .= '<div class="panel panel-success m5">';
-							//						$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
-							//						$html .= '<div class="panel-body">';
-							//						if($turma->getTurmaAulaAtiva()){
-							//							$html .= 'Aula '.$turma->getTurmaAulaAtiva()->getAula()->getPosicao();
-							//							$html .= '&nbsp;&nbsp;<button type="button" class="btn btn-xs btn-primary" onClick="mostrarAulaAberta()">Ver Aula</button>';
-							//						}else{
-							//							$html .= '<div class="alert alert-danger">Sem Aula aberta entre em contato com seu líder</div>';
-							//						}
-							//						$html .= '</div>';
-							//						$html .= '</div>';
+													$html .= '<div class="panel panel-success m5">';
+													$html .= '<div class="panel-heading" style="padding: 0px 8px;">Aula Aberta</div>';
+													$html .= '<div class="panel-body">';
+													if($turma->getTurmaAulaAtiva()){
+														$turmaAula = $turma->getTurmaAulaAtiva();
+														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
+														$htmlU = '';
+														$htmlU .= '<table class="table table-condesed text-left">';
+
+														if($turmaAula->getUrl1()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Segunda-Feira';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl1().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl2()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Terça-Feira';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl2().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl3()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Quarta-Feira';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl3().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl4()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Quinta-Feira';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl4().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl5()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Sexta-Feira';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl5().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl6()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Sábado';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl6().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+														if($turmaAula->getUrl7()){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td class="text-right">';
+															$htmlU .= 'Domingo';
+															$htmlU .= '</td>';
+															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl7().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+		
+														$htmlU .= '</table>';
+														$html .= $htmlU;
+													}else{
+														$html .= '<div class="alert alert-danger">Sem Aula aberta entre em contato com seu líder</div>';
+													}
+													$html .= '</div>';
+													$html .= '</div>';
 
 							/* faltas */
 							$html .= '<div class="panel panel-primary m5">';
