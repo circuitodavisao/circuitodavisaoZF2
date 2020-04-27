@@ -2465,9 +2465,39 @@ $dados = array();
 	
 							$usuario['turma'] = $nomeTurma;
 							$usuario['situacao'] = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome();
-							/* faltas */
 							$listaDeFaltas = array();
 							if($turma->getTurmaAulaAtiva()){
+							/* links Aula aberta */
+								$turmaAula = $turma->getTurmaAulaAtiva();
+							$listaDeLinks = array();
+							if($turmaAula->getUrl1()){
+								$listaDeLinks[] = $turmaAula->getUrl1();
+							}
+							if($turmaAula->getUrl2()){
+								$listaDeLinks[] = $turmaAula->getUrl2();
+							}
+
+							if($turmaAula->getUrl3()){
+								$listaDeLinks[] = $turmaAula->getUrl3();
+							}
+
+							if($turmaAula->getUrl4()){
+								$listaDeLinks[] = $turmaAula->getUrl4();
+							}
+
+							if($turmaAula->getUrl5()){
+								$listaDeLinks[] = $turmaAula->getUrl5();
+							}
+
+							if($turmaAula->getUrl6()){
+								$listaDeLinks[] = $turmaAula->getUrl6();
+							}
+
+							if($turmaAula->getUrl7()){
+								$listaDeLinks[] = $turmaAula->getUrl7();
+							}
+
+							/* faltas */
 								$disciplina = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina();
 								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
 									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
@@ -2521,6 +2551,7 @@ $dados = array();
 								}
 							}
 							$usuario['faltas'] = $faltas;
+							$usuario['links'] = $listaDeLinks;
 							$dados['usuario'] = $usuario;
 							$ok = true;
 						}
