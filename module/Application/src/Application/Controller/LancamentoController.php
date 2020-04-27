@@ -72,12 +72,14 @@ class LancamentoController extends CircuitoController {
         
         $periodo = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);        
 
+		$ativo = true;
         if (!$entidade->verificarSeEstaAtivo()) {
 			$periodoVerificar = Funcoes::encontrarPeriodoDadoDataDeInativacao($entidade->getData_inativacaoStringPadraoBanco());
             if ($periodo > $periodoVerificar) {
                 $periodo = $periodoVerificar;
             }
-        }
+			$ativo = false;
+		}
 
 		if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
 			/* Verificando se posso recuar no periodo */
@@ -125,6 +127,7 @@ class LancamentoController extends CircuitoController {
             'possoAlterar' => $possoAlterar,
 			'grupoEventos' => $grupoEventoNoPeriodo,
 			'grupoPessoas' => $grupoPessoasNoPeriodo,
+			'ativo' => $ativo,
                 )
         );
 

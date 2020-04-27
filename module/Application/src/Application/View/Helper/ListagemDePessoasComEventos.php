@@ -48,7 +48,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$pessoas = array();
 		$pessoasGrupo = array();
 
-		$grupoResponsabilidadesAtivas = $this->view->grupo->getResponsabilidadesAtivas();
+		$inativos = false;
+		if(!$this->view->ativo){
+			$inativos = true;
+		}
+
+		$grupoResponsabilidadesAtivas = $this->view->grupo->getResponsabilidadesAtivas($inativos);
 		foreach ($grupoResponsabilidadesAtivas as $gr) {
 			$p = $gr->getPessoa();
 			$p->setTipo('LP');
