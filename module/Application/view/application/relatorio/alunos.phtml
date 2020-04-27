@@ -60,6 +60,7 @@ echo $this->templateFormularioTopo($titulo);
 							}
 							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
 								echo '<th>Time</th>';
+								echo '<th>Total</th>';
 								echo '<th>Assitiu</th>';
 								echo '<th>Não Assitiu</th>';
 							}
@@ -94,6 +95,7 @@ echo $this->templateFormularioTopo($titulo);
 									$dados['assitiu'] += $relatorio['assitiu'];
 									$dados['naoAssitiu'] += $relatorio['naoAssitiu'];
 									echo '<td>'.$relatorio['time'].'</td>';
+									echo '<td>'.($relatorio['assitiu'] + $relatorio['naoAssitiu']).'</td>';
 									echo '<td>'.$relatorio['assitiu'].'</td>';
 									echo '<td>'.$relatorio['naoAssitiu'].'</td>';
 								}
@@ -103,6 +105,7 @@ echo $this->templateFormularioTopo($titulo);
 							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
 								echo '<tr class="dark">';
 								echo '<td class="text-right">'.$dados['time'].'</td>';
+								echo '<td>'.(intVal($dados['assitiu']) + intVal($dados['naoAssitiu'])).'</td>';
 								echo '<td>'.$dados['assitiu'].'</td>';
 								echo '<td>'.$dados['naoAssitiu'].'</td>';
 								echo '</tr>';
@@ -110,14 +113,23 @@ echo $this->templateFormularioTopo($titulo);
 							echo '</tbody>';
 							echo '</table>';
 
+
+						}else{
+							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
+						}
+						echo '</div>';
+						echo '</div>';
+					}
+				}
 							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
 								echo '<table  class="table table-bordered table-condensed footable mt20" data-filter="#fooFilter">';
 								echo '<thead>';
 								echo '<tr class="dark">';
-								echo '<th colSpan="3">TOTAL</th>';
+								echo '<th colSpan="4">TOTAL</th>';
 								echo '</tr>';
 								echo '<tr class="dark">';
 								echo '<th>Time</th>';
+								echo '<th>Total</th>';
 								echo '<th>Assitiu</th>';
 								echo '<th>Não Assitiu</th>';
 								echo '</tr>';
@@ -126,6 +138,7 @@ echo $this->templateFormularioTopo($titulo);
 								foreach($total as $t){
 									echo '<tr>';
 									echo '<td>'.$t['time'].'</td>';
+									echo '<td>'.(intVal($t['assitiu']) + intVal($t['naoAssitiu'])).'</td>';
 									echo '<td>'.$t['assitiu'].'</td>';
 									echo '<td>'.$t['naoAssitiu'].'</td>';
 									echo '</tr>';
@@ -133,13 +146,6 @@ echo $this->templateFormularioTopo($titulo);
 								echo '</tbody>';
 								echo '</table>';
 							}
-						}else{
-							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
-						}
-						echo '</div>';
-						echo '</div>';
-					}
-				}
 			}
 			?>
 
