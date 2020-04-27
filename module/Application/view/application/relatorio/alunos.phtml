@@ -135,7 +135,14 @@ echo $this->templateFormularioTopo($titulo);
 								echo '</tr>';
 								echo '</thead>';
 								echo '<tbody>';
+								$soma = array();
+								$soma['total'] = 0;
+								$soma['assitiu'] = 0;
+								$soma['naoAssitiu'] = 0;
 								foreach($total as $t){
+								$soma['total'] += (intVal($t['assitiu']) + intVal($t['naoAssitiu']));
+								$soma['assitiu'] += $t['assitiu'];
+								$soma['naoAssitiu'] += $t['naoAssitiu'];
 									echo '<tr>';
 									echo '<td>'.$t['time'].'</td>';
 									echo '<td>'.(intVal($t['assitiu']) + intVal($t['naoAssitiu'])).'</td>';
@@ -143,6 +150,13 @@ echo $this->templateFormularioTopo($titulo);
 									echo '<td>'.$t['naoAssitiu'].'</td>';
 									echo '</tr>';
 								}
+								echo '<tr class="dark">';
+								echo '<td class="text-right">'.$dados['time'].'</td>';
+								echo '<td>'.$soma['total'].'</td>';
+								echo '<td>'.$soma['assitiu'].'</td>';
+								echo '<td>'.$soma['naoAssitiu'].'</td>';
+								echo '</tr>';
+	
 								echo '</tbody>';
 								echo '</table>';
 							}
