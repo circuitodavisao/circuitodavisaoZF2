@@ -2471,11 +2471,12 @@ class RelatorioController extends CircuitoController {
 
 const relatorioAlunosQueNaoForamAAula = 1;
 const relatorioAlunosComFaltas = 2;
+const relatorioAlunosQuemFoiOuNaoProTurma = 3;
 public function alunosAction(){
 	$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 	$tipoRelatorio = (int) $this->params()->fromRoute('tipoRelatorio');
-	switch(tipoRelatorio){
+	switch($tipoRelatorio){
 	case self::relatorioAlunosQueNaoForamAAula: self::registrarLog(RegistroAcao::VER_RELATORIO_ALUNOS_QUE_NAO_FORAM_A_AULA, $extra = ''); break;
 	case self::relatorioAlunosComFaltas: self::registrarLog(RegistroAcao::VER_RELATORIO_ALUNOS_REPROVANDO, $extra = ''); break;
 	}
@@ -2489,85 +2490,152 @@ public function alunosAction(){
 	$relatorioAjustado = array();
 	$turmas = $grupo->getGrupoIgreja()->getTurma();
 
-	foreach($relatorioInicial as $relatorio){
-		if($relatorio->getSituacao_id() === Situacao::ATIVO || $relatorio->getSituacao_id() === Situacao::ESPECIAL){
-			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
-			foreach($turmas as $turma){
-				if($relatorio->getTurma_id() === $turma->getId() && $turmaPessoa->verificarSeEstaAtivo()){
-					if($turma->getTurmaAulaAtiva()){						
+	$listaDeAulasAtivas = array();
+	foreach($turmas as $turma){
+		if($turma->getTurmaAulaAtiva()){						
+			$listaDeAulasAtivas[$turma->getId()] = $turma->getTurmaAulaAtiva();
+		}else{
+			$listaDeAulasAtivas[$turma->getId()] = null;
+		}
+	}
 
-						$linkWhatsapp = '<i class="btn btn-xs btn-default btn-disabled fa fa-ban"></i>';
-						$telefone = 'SEM TELEFONE';
-						if($turmaPessoa->getPessoa()->getTelefone()){
-							$linkWhatsapp = '<a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$turmaPessoa->getPessoa()->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-							$telefone = $turmaPessoa->getPessoa()->getTelefone();
-						}
-						$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
-						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+	$listaDeEquipes = array();
+	foreach($relatorioInicial as $relatorio){
+		if(
+				$relatorio->getSituacao_id() === Situacao::ATIVO || 
+				$relatorio->getSituacao_id() === Situacao::ESPECIAL
+			&& $listaDeAulasAtivas[$relatorio->getTurma_id()] !== null
+		){
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+			if($turmaPessoa->verificarSeEstaAtivo()){
+
+				if($tipoRelatorio !== self::relatorioAlunosQuemFoiOuNaoProTurma){
+					$linkWhatsapp = '<i class="btn btn-xs btn-default btn-disabled fa fa-ban"></i>';
+					$telefone = 'SEM TELEFONE';
+					if($turmaPessoa->getPessoa()->getTelefone()){
+						$linkWhatsapp = '<a  class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$turmaPessoa->getPessoa()->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+						$telefone = $turmaPessoa->getPessoa()->getTelefone();
+					}
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$nomeEquipe = '';
+					if(!in_array($idGrupo, $listaDeEquipes)){
 						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
 						if($nomeEquipe == ''){
 							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
 						}
+						$listaDeEquipes[$idGrupo] = $nomeEquipe;
+					}else{
+						$nomeEquipe = $listaDeEquipes[$idGrupo];
+					}
 
-						if($tipoRelatorio === self::relatorioAlunosQueNaoForamAAula){
-							if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
-								$assistiuAAula = false;
-								foreach($turmaPessoaAulas as $turmaPessoaAula){
-									if($turmaPessoaAula->getAula()->getId() === $turma->getTurmaAulaAtiva()->getAula()->getId()){
-										if($turmaPessoaAula->verificarSeEstaAtivo()){
-											$assistiuAAula = true;
-											break;
-										}
-									}
+				}
 
-								}
-							}
-
-							if(!$assistiuAAula){
-								$dados = array();
-								$dados['matricula'] = $turmaPessoa->getId();
-								$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
-								$dados['time'] = $nomeEquipe;
-								$dados['telefone'] = $telefone;
-								$dados['mensagem'] = $linkWhatsapp;
-								$relatorioAjustado[$turma->getId()][] = $dados;
-							}
-
-						}
-						if($tipoRelatorio === self::relatorioAlunosComFaltas){
-							$contadorDeFaltas = 0;
-							$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
-							foreach ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula) {
-								$temFalta = true;
-								if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
-									break;
-								}
-								if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
+				if($tipoRelatorio === self::relatorioAlunosQueNaoForamAAula){
+					if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+						$assistiuAAula = false;
+						$aulaAtiva = $listaDeAulasAtivas[$relatorio->getTurma_id()];
+						if($aulaAtiva){
+							foreach($turmaPessoaAulas as $turmaPessoaAula){
+								if($turmaPessoaAula->getAula()->getId() === $aulaAtiva->getAula()->getId()){
 									if($turmaPessoaAula->verificarSeEstaAtivo()){
-										if ($turmaPessoaAula->getReposicao() == 'N') {
-											$temFalta = false;
-
-										}
+										$assistiuAAula = true;
+										break;
 									}
 								}
-								if($temFalta){
-									$contadorDeFaltas++;
-								}
-							}
-
-							if($contadorDeFaltas > 1 && $contadorDeFaltas <= 3){
-								$dados = array();
-								$dados['matricula'] = $turmaPessoa->getId();
-								$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
-								$dados['time'] = $nomeEquipe;
-								$dados['telefone'] = $telefone;
-								$dados['mensagem'] = $linkWhatsapp;
-								$dados['faltas'] = $contadorDeFaltas;
-								$relatorioAjustado[$turma->getId()][] = $dados;
 							}
 						}
 					}
-					break;
+
+					if(!$assistiuAAula){
+						$dados = array();
+						$dados['matricula'] = $turmaPessoa->getId();
+						$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
+						$dados['time'] = $nomeEquipe;
+						$dados['telefone'] = $telefone;
+						$dados['mensagem'] = $linkWhatsapp;
+						$relatorioAjustado[$relatorio->getTurma_id()][] = $dados;
+					}
+				}
+
+				if($tipoRelatorio === self::relatorioAlunosComFaltas){
+					$contadorDeFaltas = 0;
+					$aulaAtiva = $listaDeAulasAtivas[$relatorio->getTurma_id()];
+					if($aulaAtiva){
+						foreach ($aulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula) {
+							$temFalta = true;
+							if($aulaAtiva->getAula()->getId() === $aula->getId()){
+								break;
+							}
+							if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
+								if($turmaPessoaAula->verificarSeEstaAtivo()){
+									if ($turmaPessoaAula->getReposicao() == 'N') {
+										$temFalta = false;
+									}
+								}
+							}
+							if($temFalta){
+								$contadorDeFaltas++;
+							}
+						}
+					}
+
+					if($contadorDeFaltas > 1 && $contadorDeFaltas <= 3){
+						$dados = array();
+						$dados['matricula'] = $turmaPessoa->getId();
+						$dados['nome'] = $turmaPessoa->getPessoa()->getNome();
+						$dados['time'] = $nomeEquipe;
+						$dados['telefone'] = $telefone;
+						$dados['mensagem'] = $linkWhatsapp;
+						$dados['faltas'] = $contadorDeFaltas;
+						$relatorioAjustado[$relatorio->getTurma_id()][] = $dados;
+					}
+				}
+
+				if($tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoProTurma){
+					$assistiuAAula = false;
+					if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
+						$aulaAtiva = $listaDeAulasAtivas[$relatorio->getTurma_id()];
+						if($aulaAtiva){
+							foreach($turmaPessoaAulas as $turmaPessoaAula){
+								if($turmaPessoaAula->getAula()->getId() === $aulaAtiva->getAula()->getId()){
+									if($turmaPessoaAula->verificarSeEstaAtivo()){
+										$assistiuAAula = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$nomeEquipe = '';
+					if(!in_array($idGrupo, $listaDeEquipes)){
+						$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						if($nomeEquipe == ''){
+							$nomeEquipe = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
+						}
+						$listaDeEquipes[$idGrupo] = $nomeEquipe;
+					}else{
+						$nomeEquipe = $listaDeEquipes[$idGrupo];
+					}
+
+					$dados = null;
+					if($relatorioAjustado[$relatorio->getTurma_id()][$nomeEquipe]){
+						$dados = $relatorioAjustado[$relatorio->getTurma_id()][$nomeEquipe];
+					}else{
+						$dados = array();
+						$dados['time'] = $nomeEquipe;
+						$dados['assitiu'] = 0;
+						$dados['naoAssitiu'] = 0;
+					}
+					if(!$assistiuAAula){
+						$dados['naoAssitiu']++;	
+					}else{
+						$dados['assitiu']++;	
+					}
+					$relatorioAjustado[$relatorio->getTurma_id()][$nomeEquipe] = $dados;
 				}
 			}
 		}

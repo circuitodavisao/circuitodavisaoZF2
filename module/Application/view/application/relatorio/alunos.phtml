@@ -8,6 +8,9 @@ $titulo = 'Alunos que ainda não foram a aula';
 if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 	$titulo = 'Alunos que estão quase reprovando';
 }
+if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+	$titulo = 'Alunos que assitiram ou não a aula por turma e time';
+}
 echo $this->templateFormularioTopo($titulo);
 ?>
 <style type="text/css">
@@ -28,6 +31,11 @@ echo $this->templateFormularioTopo($titulo);
 			if($this->turmas){
 				foreach($this->turmas as $turma){
 					if($turma->getTurmaAulaAtiva()){
+						$dados = array();
+						$dados['time'] = 'TOTAL';
+						$dados['assitiu'] = 0;
+						$dados['naoAssitiu'] = 0;
+
 						$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
 						$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
 						$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
@@ -39,28 +47,52 @@ echo $this->templateFormularioTopo($titulo);
 							echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
 							echo '<thead>';
 							echo '<tr class="dark">';
-							echo '<th class="hidden-xs">Matrícula</th>';
-							echo '<th>Nome</th>';
-							echo '<th>Time</th>';
-							if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
-								echo '<th>F.</th>';
+							if($this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+								echo '<th class="hidden-xs">Matrícula</th>';
+								echo '<th>Nome</th>';
+								echo '<th>Time</th>';
+								if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+									echo '<th>F.</th>';
+								}
+								echo '<th class="hidden-xs">Telefone</th>';
+								echo '<td></td>';
 							}
-							echo '<th class="hidden-xs">Telefone</th>';
-							echo '<td></td>';
-						echo '</tr>';
+							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+								echo '<th>Time</th>';
+								echo '<th>Assitiu</th>';
+								echo '<th>Não Assitiu</th>';
+							}
+							echo '</tr>';
 							echo '</thead>';
 							echo '<tbody>';
 							foreach($relatorioTurma as $relatorio){
 								echo '<tr>';
-								echo '<td class="hidden-xs">'.$relatorio['matricula'].'</td>';
-								echo '<td>'.$relatorio['nome'].'</td>';
-								echo '<td>'.$relatorio['time'].'</td>';
-								if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
-									echo '<td class="text-center">'.$relatorio['faltas'].'</td>';
+								if($this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+									echo '<td class="hidden-xs">'.$relatorio['matricula'].'</td>';
+									echo '<td>'.$relatorio['nome'].'</td>';
+									echo '<td>'.$relatorio['time'].'</td>';
+									if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+										echo '<td class="text-center">'.$relatorio['faltas'].'</td>';
+									}
+									echo '<td class="hidden-xs">'.$relatorio['telefone'].'</td>';
+									echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
 								}
-								echo '<td class="hidden-xs">'.$relatorio['telefone'].'</td>';
-								echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
-							echo '</tr>';
+								if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+									$dados['assitiu'] += $relatorio['assitiu'];
+									$dados['naoAssitiu'] += $relatorio['naoAssitiu'];
+									echo '<td>'.$relatorio['time'].'</td>';
+									echo '<td>'.$relatorio['assitiu'].'</td>';
+									echo '<td>'.$relatorio['naoAssitiu'].'</td>';
+								}
+								echo '</tr>';
+							}
+
+							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+								echo '<tr class="dark">';
+								echo '<td class="text-right">'.$dados['time'].'</td>';
+								echo '<td>'.$dados['assitiu'].'</td>';
+								echo '<td>'.$dados['naoAssitiu'].'</td>';
+								echo '</tr>';
 							}
 							echo '</tbody>';
 							echo '</table>';
