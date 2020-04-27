@@ -457,6 +457,13 @@ $link = 'relatorioNovo';
 			$html .= '</li>';
 
 			$html .= '<li>';
+			$html .= '<a href="/relatorioAlunos/3" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-graduation-cap"></span>';
+			$html .= 'Alunos que assitiram ou não a aula por turma e time';
+			$html .= '</a>';
+			$html .= '</li>';
+
+			$html .= '<li>';
 			$html .= '<a href="/relatorioAlunosNaSemana" onClick="mostrarSplash();">';
 			$html .= '<span class="fa fa-graduation-cap"></span>';
 			$html .= 'Quantidade de alunos que já tem presença na aula aberta';
