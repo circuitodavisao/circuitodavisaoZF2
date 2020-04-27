@@ -28,6 +28,7 @@ echo $this->templateFormularioTopo($titulo);
 			if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 				echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
 			}
+				$total = array();
 			if($this->turmas){
 				foreach($this->turmas as $turma){
 					if($turma->getTurmaAulaAtiva()){
@@ -78,6 +79,18 @@ echo $this->templateFormularioTopo($titulo);
 									echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
 								}
 								if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+									if($total[$relatorio['time']]){
+										$item = $total[$relatorio['time']];
+									}else{
+										$item = array();
+										$item['time'] = $relatorio['time'];
+										$item['assitiu'] = 0;
+										$item['naoAssitiu'] = 0;
+									}
+									$item['assitiu'] += $relatorio['assitiu'];
+									$item['naoAssitiu'] += $relatorio['naoAssitiu'];
+									$total[$relatorio['time']] = $item;
+	
 									$dados['assitiu'] += $relatorio['assitiu'];
 									$dados['naoAssitiu'] += $relatorio['naoAssitiu'];
 									echo '<td>'.$relatorio['time'].'</td>';
@@ -96,6 +109,30 @@ echo $this->templateFormularioTopo($titulo);
 							}
 							echo '</tbody>';
 							echo '</table>';
+
+							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
+								echo '<table  class="table table-bordered table-condensed footable mt20" data-filter="#fooFilter">';
+								echo '<thead>';
+								echo '<tr class="dark">';
+								echo '<th colSpan="3">TOTAL</th>';
+								echo '</tr>';
+								echo '<tr class="dark">';
+								echo '<th>Time</th>';
+								echo '<th>Assitiu</th>';
+								echo '<th>Não Assitiu</th>';
+								echo '</tr>';
+								echo '</thead>';
+								echo '<tbody>';
+								foreach($total as $t){
+									echo '<tr>';
+									echo '<td>'.$t['time'].'</td>';
+									echo '<td>'.$t['assitiu'].'</td>';
+									echo '<td>'.$t['naoAssitiu'].'</td>';
+									echo '</tr>';
+								}
+								echo '</tbody>';
+								echo '</table>';
+							}
 						}else{
 							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
 						}
