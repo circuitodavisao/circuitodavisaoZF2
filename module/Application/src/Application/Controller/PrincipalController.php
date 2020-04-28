@@ -958,9 +958,6 @@ class PrincipalController extends CircuitoController {
 									}
 								}
 							}
-							if($contadorDeDiscipulosPorLinha === 0){
-								$html .= '<div class="row p10">';
-							}
 							$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
 							$html .= '<img src="/img/fotos/'.$pessoa->getFoto().'" style="width:75px;height:75px;" class="user-avatar" width="128px" height="128px" onClick=\''. $funcaoOnClick .'\' style="cursor: pointer; margin:auto;">';
 							$html .= '<div class="caption">';
@@ -998,11 +995,6 @@ class PrincipalController extends CircuitoController {
 							$html .= '</h5>';
 							$html .= '</div>';
 							$html .= '</div>';
-							$contadorDeDiscipulosPorLinha++;
-							if($contadorDeDiscipulosPorLinha === 2){
-								$html .= '</div>';
-								$contadorDeDiscipulosPorLinha = 0;
-							}
 						}
 					}
 				}
