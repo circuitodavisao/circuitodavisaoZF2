@@ -2472,49 +2472,49 @@ $dados = array();
 							$listaDeLinks = array();
 							if($turmaAula->getUrl1()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 1;
 								$item['dia'] = 'Segunda-Feira';
 								$item['link'] = $turmaAula->getUrl1();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl2()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 2;
 								$item['dia'] = 'Terça-Feira';
 								$item['link'] = $turmaAula->getUrl2();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl3()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 3;
 								$item['dia'] = 'Quarta-Feira';
 								$item['link'] = $turmaAula->getUrl3();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl4()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 4;
 								$item['dia'] = 'Quinta-Feira';
 								$item['link'] = $turmaAula->getUrl4();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl5()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 5;
 								$item['dia'] = 'Sexta-Feira';
 								$item['link'] = $turmaAula->getUrl5();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl6()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 6;
 								$item['dia'] = 'Sábado';
 								$item['link'] = $turmaAula->getUrl6();
 								$listaDeLinks[] = $item;
 							}
 							if($turmaAula->getUrl7()){
 								$item = array();
-								$item['id'] = $turmaAula->getId();
+								$item['id'] = $turmaAula->getId() + 7;
 								$item['dia'] = 'Domingo';
 								$item['link'] = $turmaAula->getUrl7();
 								$listaDeLinks[] = $item;
