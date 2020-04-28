@@ -845,9 +845,6 @@ class PrincipalController extends CircuitoController {
 				$dados['message'] = $exc->getMessage();
 			}
 		}
-		$response->getHeaders()
-			->addHeaderLine('Access-Control-Allow-Origin', '*')
-			->addHeaderLine('Access-Control-Allow-Methods', 'POST');
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
@@ -965,7 +962,7 @@ class PrincipalController extends CircuitoController {
 								$html .= '<div class="row p10">';
 							}
 							$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p10 text-center">';
-							$html .= '<img src="/img/fotos/'.$pessoa->getFoto().'" class="user-avatar" width="128px" height="128px" onClick=\''. $funcaoOnClick .'\' style="cursor: pointer; margin:auto;">';
+							$html .= '<img src="/img/fotos/'.$pessoa->getFoto().'" style="width:75px;height:75px;" class="user-avatar" width="128px" height="128px" onClick=\''. $funcaoOnClick .'\' style="cursor: pointer; margin:auto;">';
 							$html .= '<div class="caption">';
 							$html .= '<h5>'.$pessoa->getNomePrimeiro();
 
