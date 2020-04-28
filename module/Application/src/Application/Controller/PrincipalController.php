@@ -999,7 +999,7 @@ class PrincipalController extends CircuitoController {
 							$html .= '</div>';
 							$html .= '</div>';
 							$contadorDeDiscipulosPorLinha++;
-							if($contadorDeDiscipulosPorLinha === 3){
+							if($contadorDeDiscipulosPorLinha === 2){
 								$html .= '</div>';
 								$contadorDeDiscipulosPorLinha = 0;
 							}
