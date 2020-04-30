@@ -4674,6 +4674,21 @@ class IndexController extends CircuitoController {
 							}
 							$fatosMensal[$indiceFatoMensal]->setMes($mesAtual);
 							$fatosMensal[$indiceFatoMensal]->setAno($anoAtual);
+
+							$homens = 0;
+							$mulheres = 0;
+							if($pessoasAtivas = $grupo->getPessoasAtivas()){
+								foreach($pessoasAtivas as $pessoa){
+									if($pessoa->getSexo() === 'M'){
+										$homens++;
+									}
+									if($pessoa->getSexo() === 'F'){
+										$mulheres++;
+									}
+								}
+							}
+							$fatosMensal[$indiceFatoMensal]->setHomens($homens);
+							$fatosMensal[$indiceFatoMensal]->setMulheres($mulheres);
 							$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
 						}
 					}
@@ -4684,7 +4699,7 @@ class IndexController extends CircuitoController {
 		} catch (Exception $exc) {
 			$html .= "<br />%%%%%%%%%%%%%%%%%%%%%% desfazerTransacao ";
 			$this->getRepositorio()->desfazerTransacao();
-			echo $exc->getTraceAsString();
+			echo $exc->getMessage();
 		}
 
 		list($usec, $sec) = explode(' ', microtime());

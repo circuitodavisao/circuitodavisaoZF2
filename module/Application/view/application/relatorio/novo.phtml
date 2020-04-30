@@ -174,7 +174,11 @@ for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoF
 				<thead>
 					<tr class="dark hidden-xs">
 <?php
-echo '<th colspan="2">Periodos</th>';
+$colspan = 2;
+	if ($this->tipoRelatorio == 4){		
+$colspan = 4;
+	}
+echo '<th colspan="'.$colspan.'">Periodos</th>';
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classePeriodoAtual = '';
 	if ($indiceDeArrays == -1 || $indiceDeArrays == $this->periodoFinal) {
@@ -215,6 +219,10 @@ echo '</tr>';
 echo '<tr class="dark">';
 echo '<th></th>';
 echo '<th>TIMES</th>';
+if ($this->tipoRelatorio == 4) {
+	echo '<th>H</th>';
+	echo '<th>M</th>';
+}
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
 	if ($indiceDeArrays != -1 && $indiceDeArrays != $this->periodoFinal) {
@@ -361,6 +369,11 @@ foreach($this->relatorio as $relatorio){
 			echo ' '.$linkDeQuemEstaLogado;
 		}
 		echo '</td>';
+
+		if ($this->tipoRelatorio == 4) {
+			echo '<td>'.$relatorio->homens.'</td>';
+			echo '<td>'.$relatorio->mulheres.'</td>	';
+		}
 
 		$ranking++;
 		$contadorDePeriodos = 1;

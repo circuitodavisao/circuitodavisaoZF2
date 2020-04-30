@@ -130,3 +130,7 @@ ALTER TABLE fato_mensal ADD COLUMN somaCelula integer;
 ALTER TABLE fato_mensal ADD COLUMN somaVisitantes integer;
 ALTER TABLE fato_mensal ADD COLUMN somaParceiro integer;
 ALTER TABLE fato_mensal ADD COLUMN multiplicadorMetaSetenta integer;
+ALTER TABLE fato_mensal ADD COLUMN homens integer;
+ALTER TABLE fato_mensal ADD COLUMN mulheres integer;
+ALTER TABLE fato_mensal ADD COLUMN v1 integer;
+ALTER TABLE fato_mensal ADD COLUMN pd1 integer;

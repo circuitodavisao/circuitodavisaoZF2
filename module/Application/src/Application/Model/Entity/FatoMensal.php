@@ -18,6 +18,48 @@ class FatoMensal extends CircuitoEntity {
 	public $nao5;
 	public $nao6;
 
+	/** @ORM\Column(type="integer") */
+	protected $homens;
+
+	/** @ORM\Column(type="integer") */
+	protected $mulheres;
+
+	/** @ORM\Column(type="integer") */
+	protected $v1;
+
+	/** @ORM\Column(type="integer") */
+	protected $v2;
+
+	/** @ORM\Column(type="integer") */
+	protected $v3;
+
+	/** @ORM\Column(type="integer") */
+	protected $v4;
+
+	/** @ORM\Column(type="integer") */
+	protected $v5;
+
+	/** @ORM\Column(type="integer") */
+	protected $v6;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd1;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd2;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd3;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd4;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd5;
+
+	/** @ORM\Column(type="decimal") */
+	protected $pd6;
+
 	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
@@ -1002,6 +1044,92 @@ class FatoMensal extends CircuitoEntity {
 	}
 	function getMultiplicadormetasetenta(){
 		return $this->multiplicadormetasetenta;
+	}
+
+	function setHomens($i){
+		$this->homens = $i;
+	}
+	function setMulheres($i){
+		$this->mulheres = $i;
+	}
+	function setV1($i){
+		$this->v1 = $i;
+	}
+	function setV2($i){
+		$this->v2 = $i;
+	}
+	function setV3($i){
+		$this->v3 = $i;
+	}
+	function setV4($i){
+		$this->v4 = $i;
+	}
+	function setV5($i){
+		$this->v5 = $i;
+	}
+	function setV6($i){
+		$this->v6 = $i;
+	}
+	function setPd1($i){
+		$this->pd1 = $i;
+	}
+	function setPd2($i){
+		$this->pd2 = $i;
+	}
+	function setPd3($i){
+		$this->pd3 = $i;
+	}
+	function setPd4($i){
+		$this->pd4 = $i;
+	}
+	function setPd5($i){
+		$this->pd5 = $i;
+	}
+	function setPd6($i){
+		$this->pd6 = $i;
+	}
+
+	function getHomens(){
+		return $this->homens;
+	}
+	function getMulheres(){
+		return $this->mulheres;
+	}
+	function getV1(){
+		return $this->v1;
+	}
+	function getV2(){
+		return $this->v2;
+	}
+	function getV3(){
+		return $this->v3;
+	}
+	function getV4(){
+		return $this->v4;
+	}
+	function getV5(){
+		return $this->v5;
+	}
+	function getV6(){
+		return $this->v6;
+	}
+	function getPd1(){
+		return $this->pd1;
+	}
+	function getPd2(){
+		return $this->pd2;
+	}
+	function getPd3(){
+		return $this->pd3;
+	}
+	function getPd4(){
+		return $this->pd4;
+	}
+	function getPd5(){
+		return $this->pd5;
+	}
+	function getPd6(){
+		return $this->pd6;
 	}
 
 	public function __set($name,$value) {
