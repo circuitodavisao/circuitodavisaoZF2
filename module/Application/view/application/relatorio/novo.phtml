@@ -322,6 +322,9 @@ foreach($this->relatorio as $relatorio){
 				$class = $relatorio->mediamempclass;
 			}
 		}
+		if ($this->tipoRelatorio == 5) {
+			$class = $relatorio->mediaElitePerformanceClass;
+		}
 
 		echo '<tr class="'.$class.'">';
 		if(
@@ -505,11 +508,11 @@ foreach($this->relatorio as $relatorio){
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 					echo '<td class="' . $classeBase . '">'.$iconeRetwiter.'</td>';
 				}else{
-					$realizada = 'realizada' . $contadorDePeriodos;
-					$realizadap = 'realizadap' . $contadorDePeriodos;
+					$e = 'e' . $contadorDePeriodos;
+					$ep = 'ep' . $contadorDePeriodos;
 					echo '<td class="' . $classeBase . '">'.number_format(($relatorio->$cq+$relatorio->$cbq), 0 , ',', '.').'</td>';
-					echo '<td class="' . $classeBase . '"></td>';
-					echo '<td class="' . $classeBase . '"></td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$e, 0 , ',', '.').'</td>';
+					echo '<td class="' . $classeBase . '">'.number_format($relatorio->$ep, 0 , ',', '.').'%</td>';
 				}
 			}
 			$contadorDePeriodos++;
@@ -537,6 +540,10 @@ foreach($this->relatorio as $relatorio){
 			echo '<td>'.number_format($relatorio->mediac, 0 , ',', '.').'</td>';
 			echo '<td>'.number_format($relatorio->mediacp, 0, ',', '.').' %</td>';
 		}
+		if ($this->tipoRelatorio == 5){
+			echo '<td>'.number_format($relatorio->mediaElitePerformance, 0, ',', '.').' %</td>';
+		}
+	
 		echo '</tr>';
 	}
 }

@@ -17,12 +17,38 @@ class FatoMensal extends CircuitoEntity {
 	public $nao4;
 	public $nao5;
 	public $nao6;
+	public $ep1;
+	public $ep2;
+	public $ep3;
+	public $ep4;
+	public $ep5;
+	public $ep6;
+	public $mediaElitePerformance;
+	public $mediaElitePerformanceClass;
 
 	/** @ORM\Column(type="integer") */
 	protected $homens;
 
 	/** @ORM\Column(type="integer") */
 	protected $mulheres;
+
+	/** @ORM\Column(type="integer") */
+	protected $e1;
+
+	/** @ORM\Column(type="integer") */
+	protected $e2;
+
+	/** @ORM\Column(type="integer") */
+	protected $e3;
+
+	/** @ORM\Column(type="integer") */
+	protected $e4;
+
+	/** @ORM\Column(type="integer") */
+	protected $e5;
+
+	/** @ORM\Column(type="integer") */
+	protected $e6;
 
 	/** @ORM\Column(type="integer") */
 	protected $v1;
@@ -1052,6 +1078,25 @@ class FatoMensal extends CircuitoEntity {
 	function setMulheres($i){
 		$this->mulheres = $i;
 	}
+	function setE1($i){
+		$this->e1 = $i;
+	}
+	function setE2($i){
+		$this->e2 = $i;
+	}
+	function setE3($i){
+		$this->e3 = $i;
+	}
+	function setE4($i){
+		$this->e4 = $i;
+	}
+	function setE5($i){
+		$this->e5 = $i;
+	}
+	function setE6($i){
+		$this->e6 = $i;
+	}
+	
 	function setV1($i){
 		$this->v1 = $i;
 	}
@@ -1095,6 +1140,25 @@ class FatoMensal extends CircuitoEntity {
 	function getMulheres(){
 		return $this->mulheres;
 	}
+	function getE1(){
+		return $this->e1;
+	}
+	function getE2(){
+		return $this->e2;
+	}
+	function getE3(){
+		return $this->e3;
+	}
+	function getE4(){
+		return $this->e4;
+	}
+	function getE5(){
+		return $this->e5;
+	}
+	function getE6(){
+		return $this->e6;
+	}
+	
 	function getV1(){
 		return $this->v1;
 	}

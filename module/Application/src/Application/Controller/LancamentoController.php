@@ -673,6 +673,12 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV1($somaVisitante);
 							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC1() >= ($fatosMensal[$indiceFatoMensal]->getCq1() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV1() >= ($fatosMensal[$indiceFatoMensal]->getCq1() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE1($fatosMensal[$indiceFatoMensal]->getCq1());
+							}
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 2){
 							$soma = $fatosMensal[$indiceFatoMensal]->getC2() + $valorParaSomar;
@@ -687,6 +693,13 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV2($somaVisitante);
 							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC2() >= ($fatosMensal[$indiceFatoMensal]->getCq2() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV2() >= ($fatosMensal[$indiceFatoMensal]->getCq2() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE2($fatosMensal[$indiceFatoMensal]->getCq2());
+							}
+	
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 3){
 							$soma = $fatosMensal[$indiceFatoMensal]->getC3() + $valorParaSomar;
@@ -701,6 +714,13 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV3($somaVisitante);
 							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC3() >= ($fatosMensal[$indiceFatoMensal]->getCq3() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV3() >= ($fatosMensal[$indiceFatoMensal]->getCq3() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE3($fatosMensal[$indiceFatoMensal]->getCq3());
+							}
+	
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 4){
 							$soma = $fatosMensal[$indiceFatoMensal]->getC4() + $valorParaSomar;
@@ -715,6 +735,13 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV4($somaVisitante);
 							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC4() >= ($fatosMensal[$indiceFatoMensal]->getCq4() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV4() >= ($fatosMensal[$indiceFatoMensal]->getCq4() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE4($fatosMensal[$indiceFatoMensal]->getCq4());
+							}
+	
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 5){
 							$soma = $fatosMensal[$indiceFatoMensal]->getC5() + $valorParaSomar;
@@ -729,6 +756,13 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV5($somaVisitante);
 							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC5() >= ($fatosMensal[$indiceFatoMensal]->getCq5() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV5() >= ($fatosMensal[$indiceFatoMensal]->getCq5() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE5($fatosMensal[$indiceFatoMensal]->getCq5());
+							}
+	
 						}
 						if($contadorDePeriodo[$indiceFatoMensal] === 6){
 							$soma = $fatosMensal[$indiceFatoMensal]->getC6() + $valorParaSomar;
@@ -742,6 +776,12 @@ class LancamentoController extends CircuitoController {
 									$somaVisitante = 0;
 								}
 								$fatosMensal[$indiceFatoMensal]->setV6($somaVisitante);
+							}
+							if(
+								$fatosMensal[$indiceFatoMensal]->getC6() >= ($fatosMensal[$indiceFatoMensal]->getCq6() * 7) &&
+								$fatosMensal[$indiceFatoMensal]->getV6() >= ($fatosMensal[$indiceFatoMensal]->getCq6() * 1)
+							){
+								$fatosMensal[$indiceFatoMensal]->setE6($fatosMensal[$indiceFatoMensal]->getCq6());
 							}
 						}
 					}
