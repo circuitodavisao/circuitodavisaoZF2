@@ -317,7 +317,7 @@ $link = 'relatorioNovo';
 			case 5:
 					$label = 'C&eacute;lulas de Elite';
 					$mostrar = true;
-//$link = 'relatorioNovo';
+$link = 'relatorioNovo';
 					break;
 				case 6:
 					$label = 'Membresia das Igrejas';
