@@ -673,6 +673,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV1($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE1(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC1() >= ($fatosMensal[$indiceFatoMensal]->getCq1() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV1() >= ($fatosMensal[$indiceFatoMensal]->getCq1() * 1)
@@ -693,6 +694,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV2($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE2(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC2() >= ($fatosMensal[$indiceFatoMensal]->getCq2() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV2() >= ($fatosMensal[$indiceFatoMensal]->getCq2() * 1)
@@ -714,6 +716,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV3($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE3(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC3() >= ($fatosMensal[$indiceFatoMensal]->getCq3() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV3() >= ($fatosMensal[$indiceFatoMensal]->getCq3() * 1)
@@ -735,6 +738,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV4($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE4(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC4() >= ($fatosMensal[$indiceFatoMensal]->getCq4() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV4() >= ($fatosMensal[$indiceFatoMensal]->getCq4() * 1)
@@ -756,6 +760,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV5($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE5(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC5() >= ($fatosMensal[$indiceFatoMensal]->getCq5() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV5() >= ($fatosMensal[$indiceFatoMensal]->getCq5() * 1)
@@ -777,6 +782,7 @@ class LancamentoController extends CircuitoController {
 								}
 								$fatosMensal[$indiceFatoMensal]->setV6($somaVisitante);
 							}
+							$fatosMensal[$indiceFatoMensal]->setE6(0);
 							if(
 								$fatosMensal[$indiceFatoMensal]->getC6() >= ($fatosMensal[$indiceFatoMensal]->getCq6() * 7) &&
 								$fatosMensal[$indiceFatoMensal]->getV6() >= ($fatosMensal[$indiceFatoMensal]->getCq6() * 1)
