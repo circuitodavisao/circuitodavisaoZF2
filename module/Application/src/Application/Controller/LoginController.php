@@ -1104,7 +1104,10 @@ class LoginController extends CircuitoController {
 				$body = $request->getContent();
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
-					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
+					if(
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 || 
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 7694
+					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$html .= '<div class="panel">';
@@ -2448,7 +2451,10 @@ try{
 function dadosAluno($matricula){
 $dados = array();
 		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($matricula)){
-					if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){
+					if(
+$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 7694
+){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
 							$usuario = array();
