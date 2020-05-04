@@ -1240,7 +1240,7 @@ class LoginController extends CircuitoController {
 
 														if(!$temLink){
 															$htmlU .= '<tr>';
-															$htmlU .= '<td colspan="2">';
+															$htmlU .= '<td colspan="2" class="text-center">';
 															$htmlU .= 'Sem Links do ZOMM cadastrado';
 															$htmlU .= '</td>';
 															$htmlU .= '</tr>';
