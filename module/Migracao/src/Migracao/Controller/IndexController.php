@@ -4478,26 +4478,28 @@ class IndexController extends CircuitoController {
 							$fimFoMes = $anoAtual.'-'.$mesAtual.'-'.date('t');	
 							$limparDados = false;
 							$dataParaValidar = null;
-							if($grupo->getGrupoResponsavel()[0]){
-								$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
-							}
-							if($dataParaValidar || $dataInativacao){
-								$limparDados = true;
-								$dataInativacaoTime = strtotime($dataParaValidar);
-								$inicioDoMesTime = strtotime($inicioDoMes);
-								$fimDoMesTime = strtotime($fimFoMes);
-								if($dataInativacaoTime >= $inicioDoMesTime &&
-									$dataInativacaoTime <= $fimDoMesTime){
+
+							if(!$grupo->verificarSeEstaAtivo()){
+								if($grupo->getGrupoResponsavel()[0]){
+									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
+								}
+								if($dataParaValidar || $dataInativacao){
+									$limparDados = true;
+									$dataInativacaoTime = strtotime($dataParaValidar);
+									$inicioDoMesTime = strtotime($inicioDoMes);
+									$fimDoMesTime = strtotime($fimFoMes);
+									if($dataInativacaoTime >= $inicioDoMesTime &&
+										$dataInativacaoTime <= $fimDoMesTime){
 										$limparDados = false;
 										if($qualParte > 50){
 											$html .= "<br />false: " . $limparDados;
 										}
 									}
-								if($qualParte > 50){
-									$html .= "<br />limpar dados: " . $limparDados;
+									if($qualParte > 50){
+										$html .= "<br />limpar dados: " . $limparDados;
+									}
 								}
 							}
-
 
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
@@ -4553,14 +4555,6 @@ class IndexController extends CircuitoController {
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									if(!$limparDados){
-										if($fatosMensal[$indiceFatoMensal]->getC1() > 0 &&
-											(
-												$quantidadeCelulas > 0 ||
-												$quantidadeCelulasEstrategicas > 0
-											)
-										){
-											$fatosMensal[$indiceFatoMensal]->setRealizada1($quantidadeCelulas+ $quantidadeCelulasEstrategicas);
-										}
 										$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
@@ -4578,15 +4572,6 @@ class IndexController extends CircuitoController {
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 2){
 									if(!$limparDados){
-										if($fatosMensal[$indiceFatoMensal]->getC2() > 0 &&
-											(
-												$quantidadeCelulas > 0 ||
-												$quantidadeCelulasEstrategicas > 0
-											)
-										){
-											$fatosMensal[$indiceFatoMensal]->setRealizada2($quantidadeCelulas+ $quantidadeCelulasEstrategicas);
-										}
-	
 										$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
