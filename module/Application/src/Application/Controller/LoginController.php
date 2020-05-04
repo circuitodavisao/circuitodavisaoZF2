@@ -1171,9 +1171,11 @@ class LoginController extends CircuitoController {
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$turmaAula->getAula()->getId().')">Ver Aula</button>';
 														}
 														$htmlU = '';
+														$temLink = false;
 														$htmlU .= '<table class="table table-condesed text-left">';
 
 														if($turmaAula->getUrl1()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Segunda-Feira';
@@ -1182,6 +1184,7 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl2()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Terça-Feira';
@@ -1190,6 +1193,7 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl3()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Quarta-Feira';
@@ -1198,6 +1202,7 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl4()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Quinta-Feira';
@@ -1206,6 +1211,7 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl5()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Sexta-Feira';
@@ -1214,6 +1220,7 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl6()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Sábado';
@@ -1222,11 +1229,20 @@ class LoginController extends CircuitoController {
 															$htmlU .= '</tr>';
 														}
 														if($turmaAula->getUrl7()){
+														$temLink = true;
 															$htmlU .= '<tr>';
 															$htmlU .= '<td class="text-right">';
 															$htmlU .= 'Domingo';
 															$htmlU .= '</td>';
 															$htmlU .= '<td><a target="_blanck" class="btn btn-primary btn-xs" href="'.$turmaAula->getUrl7().'">Acessar Link do ZOOM</a></td>';
+															$htmlU .= '</tr>';
+														}
+
+														if(!$temLink){
+															$htmlU .= '<tr>';
+															$htmlU .= '<td colspan="2">';
+															$htmlU .= 'Sem Links do ZOMM cadastrado';
+															$htmlU .= '</td>';
 															$htmlU .= '</tr>';
 														}
 		
