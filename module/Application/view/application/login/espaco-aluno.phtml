@@ -96,7 +96,11 @@ function mostrarAulaAberta(){
 function verReposicao(idFalta){
 	document.getElementById('divDados').classList.add('hidden')
 	document.getElementById('divFaltas').classList.remove('hidden')
-	document.getElementById('divFalta'+idFalta).classList.remove('hidden')
+	if(document.getElementById('divFalta'+idFalta)){
+		document.getElementById('divFalta'+idFalta).classList.remove('hidden')
+	}else{
+		document.getElementById('divAulaAberta').classList.remove('hidden')
+	}
 }
 
 function mostrarSituacaoFinanceira(){
@@ -122,6 +126,9 @@ function voltarAosDados(){
 	let divFaltas = null
 	let divPagamentos = null
 	let divSituacaoFinanceira = null
+	if(divAulaAberta = document.getElementById('divAulaAberta')){
+		divAulaAberta.classList.add('hidden')
+	}
 	if(divAulaAberta = document.getElementById('divAulaAberta')){
 		divAulaAberta.classList.add('hidden')
 	}
