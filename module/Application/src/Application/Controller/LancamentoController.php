@@ -4,6 +4,7 @@ namespace Application\Controller;
 
 use Application\Controller\Helper\Constantes;
 use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
 use Application\Form\AtendimentoComentarioForm;
 use Application\Form\CadastrarPessoaForm;
 use Application\Form\ParceiroDeDeusForm;
@@ -614,24 +615,22 @@ class LancamentoController extends CircuitoController {
 				$periodos = array();
 				$periodos[1] = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesParaVerificar[1], $anoParaVerificar[1]);
 				$contador[1] = 0;
+				if(intVal($periodo) === 0){
+					$periodos[1][1] = 0;
+				}
 				for($indiceDePeriodos = $periodos[1][0]; $indiceDePeriodos <= $periodos[1][1]; $indiceDePeriodos++){
 					$contador[1]++;
 					if(intVal($indiceDePeriodos) === intVal($periodo)){
 						break;
 					}
 				}
-				if(intVal($periodo) === 0 && $periodo[1][1] === -1){
-					$contador[1]++;
-				}
 				$fatosMensal[1] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesParaVerificar[1], $anoParaVerificar[1]);
 				$contadorDePeriodo[1] = $contador[1];
 				$fimLancamento = 1;
 
 				if($periodoParaUsar[2] !== null){
-					$periodos[2] = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesParaVerificar[2], $anoParaVerificar[2]);
-					$contador[2] = 1;
 					$fatosMensal[2] = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesParaVerificar[2], $anoParaVerificar[2]);
-					$contadorDePeriodo[2] = $contador[2];
+					$contadorDePeriodo[2] = 1;
 					$fimLancamento = 2;
 				}
 				/* fim */
