@@ -1352,7 +1352,6 @@ class LoginController extends CircuitoController {
 								}
 								$html .= '</div>';
 
-								$html .= '<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
 								$html .= '</div>';
 
 								$html .= '</div>';
