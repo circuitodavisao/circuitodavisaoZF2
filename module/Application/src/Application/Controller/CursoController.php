@@ -13,6 +13,7 @@ use Application\Form\ReentradaDeAlunoForm;
 use Application\Form\SelecionarAlunosForm;
 use Application\Form\SelecionarCarterinhasForm;
 use Application\Form\TurmaForm;
+use Application\Model\Entity\TurmaProfessor;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
@@ -511,7 +512,7 @@ class CursoController extends CircuitoController {
 				$mes = $dadosPost['Mes'];
 				$ano = $dadosPost['Ano'];
 				$observacao = strtoupper($dadosPost['observacao']);				
-				
+
 				$turma->setAno((int) $ano);
 				$turma->setMes((int) $mes);
 				$turma->setObservacao($observacao);
@@ -888,13 +889,13 @@ class CursoController extends CircuitoController {
 						$url5 = $_POST['url5'];
 						$url6 = $_POST['url6'];
 						$url7 = $_POST['url7'];
-							$turmaAula->setUrl1($url1);
-							$turmaAula->setUrl2($url2);
-							$turmaAula->setUrl3($url3);
-							$turmaAula->setUrl4($url4);
-							$turmaAula->setUrl5($url5);
-							$turmaAula->setUrl6($url6);
-							$turmaAula->setUrl7($url7);
+						$turmaAula->setUrl1($url1);
+						$turmaAula->setUrl2($url2);
+						$turmaAula->setUrl3($url3);
+						$turmaAula->setUrl4($url4);
+						$turmaAula->setUrl5($url5);
+						$turmaAula->setUrl6($url6);
+						$turmaAula->setUrl7($url7);
 					}
 					$this->getRepositorio()->getTurmaAulaORM()->persistir($turmaAula);
 				}
@@ -963,12 +964,12 @@ class CursoController extends CircuitoController {
 				$entidadeParaUsar = $this->getRepositorio()->getGrupoORM()->encontrarPorId($postado['idEquipe'])->getEntidadeAtiva();
 			}			
 		}
-		
+
 		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidadeParaUsar, $turmasAtivas = false);
 		$relatorio = $resultado[2];
 		uksort($relatorio, function ($a, $b) use ($relatorio) {
-            return ($relatorio[$a]->getSituacao_id() < $relatorio[$b]->getSituacao_id()) ? -1 : 1;
-        });
+			return ($relatorio[$a]->getSituacao_id() < $relatorio[$b]->getSituacao_id()) ? -1 : 1;
+		});
 		$turmas = $resultado[1];		
 
 		$view = new ViewModel(array(
@@ -1339,7 +1340,7 @@ class CursoController extends CircuitoController {
 		}else{
 			$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
 		}
-				  		
+
 		$view = new ViewModel(array(
 			'repositorio' => $this->getRepositorio(),
 			'turmas' => $turmas,
@@ -1857,16 +1858,16 @@ class CursoController extends CircuitoController {
 				if ($turmaPessoa->verificarSeEstaAtivo() &&
 					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
 					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
-						if($idEquipe == 0){
+					if($idEquipe == 0){
+						$verificarAluno = true;
+					}else{
+						if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() &&
+							($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe
+							|| $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoSubEquipe()->getId() == $idEquipe)){
 							$verificarAluno = true;
-						}else{
-							if($turmaPessoa->getPessoa()->getGrupoPessoaAtivo() &&
-								($turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoEquipe()->getId() == $idEquipe
-								|| $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getGrupoSubEquipe()->getId() == $idEquipe)){
-								$verificarAluno = true;
-							}
 						}
 					}
+				}
 
 				if ($verificarAluno) {
 					$mostrar = false;
@@ -1905,7 +1906,7 @@ class CursoController extends CircuitoController {
 											$faltas[$turma->getId()][$turmaPessoa->getId()][] = ['Aula ' . $aula->getPosicao(), $aula->getId()];
 										}
 									}
-							}
+								}
 							}
 						}
 					}
@@ -1958,17 +1959,17 @@ class CursoController extends CircuitoController {
 		if ($grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()) {
 			if ($grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::igreja &&
 				$grupoSelecionado->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe) {
-					$grupoSelecionado = $grupoSelecionado->getGrupo();
-					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe){
+				$grupoSelecionado = $grupoSelecionado->getGrupo();
+				while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::equipe){
 
-						if($grupoSelecionado->getId() == $idGrupo){
-							$participaDaSub = true;
-							break;
-						}
-						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+					if($grupoSelecionado->getId() == $idGrupo){
+						$participaDaSub = true;
+						break;
 					}
-
+					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 				}
+
+			}
 		}
 		return $participaDaSub;
 	}
@@ -2012,51 +2013,50 @@ class CursoController extends CircuitoController {
 		$contadorDeFaltas = array();
 		$turmasValidas = array();
 		foreach ($turmas as $turma) {
-				if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
-					foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-						/* Alunos ativos */
-						if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
+			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
+				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+					/* Alunos ativos */
+					if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
-							$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-							$parar = false;
-							foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-								$mostrar = false;
-								if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-									$mostrar = true;
-								}
-								if ($mostrar) {
-									if (!$parar) {
-										/* Verificar duas aulas antes da atual aula aberta */
-										$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
-										if($numeroDaAula >= 3){
+						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
+						$parar = false;
+						foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+							$mostrar = false;
+							if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+								$mostrar = true;
+							}
+							if ($mostrar) {
+								if (!$parar) {
+									/* Verificar duas aulas antes da atual aula aberta */
+									$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
+									if($numeroDaAula >= 3){
 
-											$estaNoArray = false;
-											if(count($turmasValidas) > 0){
-												foreach($turmasValidas as $turmaValida){
-													if($turmaValida->getId() === $turma->getId()){
-														$estaNoArray = true;
-													}
+										$estaNoArray = false;
+										if(count($turmasValidas) > 0){
+											foreach($turmasValidas as $turmaValida){
+												if($turmaValida->getId() === $turma->getId()){
+													$estaNoArray = true;
 												}
 											}
-											if(!$estaNoArray){
-												$turmasValidas[] = $turma;
-											}
-											foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-												if($aula->getPosicao() <= ($numeroDaAula - 2)){
-													$naoEncontreiPresencaNaAula = true;
-													foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-														if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-															$naoEncontreiPresencaNaAula = false;
-														}
+										}
+										if(!$estaNoArray){
+											$turmasValidas[] = $turma;
+										}
+										foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+											if($aula->getPosicao() <= ($numeroDaAula - 2)){
+												$naoEncontreiPresencaNaAula = true;
+												foreach ($turmaPessoaAulas as $turmaPessoaAula) {
+													if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
+														$naoEncontreiPresencaNaAula = false;
 													}
-													if ($naoEncontreiPresencaNaAula) {
-														$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
-														$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
-													}
-													if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-														$parar = true;
-														break;
-													}
+												}
+												if ($naoEncontreiPresencaNaAula) {
+													$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
+													$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
+												}
+												if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
+													$parar = true;
+													break;
 												}
 											}
 										}
@@ -2066,6 +2066,7 @@ class CursoController extends CircuitoController {
 						}
 					}
 				}
+			}
 		}
 		$view = new ViewModel(array(
 			'contadorDeFaltas' => $contadorDeFaltas,
@@ -2114,8 +2115,8 @@ class CursoController extends CircuitoController {
 		if($pessoa->getPessoaCursoAcessoAtivo() && ($pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 			$pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
 			$pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::FACILITADOR)){
-				$possoAcessarIsso = true;
-			}
+			$possoAcessarIsso = true;
+		}
 
 		$idTurmaPessoa = $this->getEvent()->getRouteMatch()->getParam(Constantes::$ID, 0);
 		$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
@@ -2131,7 +2132,7 @@ class CursoController extends CircuitoController {
 		}
 		$situacao = $this->getRepositorio()->getSituacaoORM()->encontrarPorId($fatoCurso->getSituacao_id());
 		$situacoes = $this->getRepositorio()->getSituacaoORM()->buscarTodosRegistrosEntidade();
-		
+
 		$view = new ViewModel(array(
 			'turmaPessoa' => $turmaPessoa,
 			'situacoes' => $situacoes,
@@ -2145,7 +2146,7 @@ class CursoController extends CircuitoController {
 
 		self::registrarLog(RegistroAcao::CONSULTAR_MATRICULA, $extra = 'Id: ' . $turmaPessoa->getId());
 		return $view;
-		
+
 	}
 
 	/**
@@ -2182,7 +2183,7 @@ class CursoController extends CircuitoController {
 							}
 						}
 					}						
-					
+
 					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 					$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 					$fatoCurso = new FatoCurso();
@@ -2674,8 +2675,8 @@ class CursoController extends CircuitoController {
 		}
 
 		$turmaPessoaFinanceiroPorIgrejaMesEAno =
-		$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), $mes, $ano);			
-		
+			$repositorio->getTurmaPessoaFinanceiroORM()->turmaPessoaFinanceiroPorIgrejaMesEAno($grupoIgreja->getId(), $mes, $ano);			
+
 		$turmasComAulaAberta = array();
 		$turmas = $grupoIgreja->getTurma();
 
@@ -2704,7 +2705,7 @@ class CursoController extends CircuitoController {
 				}
 			}
 		}
-		
+
 		if ($grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal()) {
 			$filhos = $grupoIgreja->getGrupoPaiFilhoFilhosAtivosReal();
 		}
@@ -2717,7 +2718,150 @@ class CursoController extends CircuitoController {
 		$dados['filhos'] = $filhos;
 		$dados['mes'] = $mes;
 		$dados['ano'] = $ano;
-		
+
 		return new ViewModel($dados);
+	}
+
+	public function professoresAction(){
+		$dados = array();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$repositorio = $this->getRepositorio();
+		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
+		$turmas = $grupoIgreja->getTurma();
+		$dados['turmas'] = $turmas;
+		return new ViewModel($dados);
+	}
+
+	public function professorAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idTurma = $sessao->idSessao;
+		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoPaiFilhoFilhos = $entidade->getGrupo()->getGrupoIgreja()->getGrupoPaiFilhoFilhosAtivos(0);
+
+		$view = new ViewModel(array(
+			'turma' => $turma,
+			'filhos' => $grupoPaiFilhoFilhos,
+		));
+
+		return $view;
+	}
+
+	public function buscarLideresPorGrupoAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dadosFinal = array();
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$discipulos = '<option value="0">SELECIONE</option>';
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->idGrupo);
+				foreach($grupo->getPessoasAtivas() as $pessoa){
+					$informacao = $grupo->getEntidadeAtiva()->infoEntidade() . ' - ';
+					$informacao .= $pessoa->getNome();
+					$discipulos .= '<option value="' . $pessoa->getId() . '">' . $informacao . '</option>';
+				}
+				if($grupoPaiFilhoFilhos = $grupo->getGrupoPaiFilhoFilhosAtivosReal()){
+					foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+						$grupo12 = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+						if ($grupo12->verificarSeEstaAtivo()) {
+							foreach($grupo12->getPessoasAtivas() as $pessoa){
+								$informacao = $grupo12->getEntidadeAtiva()->infoEntidade() . ' - ';
+								$informacao .= $pessoa->getNome();
+								$discipulos .= '<option value="' . $pessoa->getId() . '">' . $informacao . '</option>';
+							}
+							if ($grupoPaiFilhoFilhos144 = $grupo12->getGrupoPaiFilhoFilhosAtivosReal()) {
+								foreach ($grupoPaiFilhoFilhos144 as $grupoPaiFilhoFilho144) {
+									$grupo144 = $grupoPaiFilhoFilho144->getGrupoPaiFilhoFilho();
+									if ($grupo144->verificarSeEstaAtivo()) {
+										foreach($grupo144->getPessoasAtivas() as $pessoa){
+											$informacao = $grupo144->getEntidadeAtiva()->infoEntidade() . ' - ';
+											$informacao .= $pessoa->getNome();
+											$discipulos .= '<option value="' . $pessoa->getId() . '">' . $informacao . '</option>';
+										}
+										if ($grupoPaiFilhoFilhos1728 = $grupo144->getGrupoPaiFilhoFilhosAtivosReal()) {
+											foreach ($grupoPaiFilhoFilhos1728 as $grupoPaiFilhoFilho1728) {
+												$grupo1728 = $grupoPaiFilhoFilho1728->getGrupoPaiFilhoFilho();
+												if ($grupo1728->verificarSeEstaAtivo()) {
+													foreach($grupo1728->getPessoasAtivas() as $pessoa){
+														$informacao = $grupo1728->getEntidadeAtiva()->infoEntidade() . ' - ';
+														$informacao .= $pessoa->getNome();
+														$discipulos .= '<option value="' . $pessoa->getId() . '">' . $informacao . '</option>';
+													}
+													if ($grupoPaiFilhoFilhos20736 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()) {
+														foreach ($grupoPaiFilhoFilhos20736 as $grupoPaiFilhoFilho20736) {
+															$grupo20736 = $grupoPaiFilhoFilho20736->getGrupoPaiFilhoFilho();
+															if ($grupo20736->verificarSeEstaAtivo()) {
+																foreach($grupo20736->getPessoasAtivas() as $pessoa){
+																	$informacao = $grupo20736->getEntidadeAtiva()->infoEntidade() . ' - ';
+																	$informacao .= $pessoa->getNome();
+																	$discipulos .= '<option value="' . $pessoa->getId() . '">' . $informacao . '</option>';
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$resultado['html'] = $discipulos;
+				$dadosFinal['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dadosFinal['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dadosFinal));
+		return $response;
+	}
+
+	public function professorSalvarAction() {
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post = $request->getPost();
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($post['idPessoa']);
+				$gerar = true;
+				if($turmaProfessores = $pessoa->getTurmaProfessor()){
+					if(count($turmaProfessores) > 0){
+						foreach($turmaProfessores as $turmaProfessor){
+							if($turmaProfessor->verificarSeEstaAtivo()){
+								if($turmaProfessor->getTurma()->getId() === intVal($post['idTurma'])){
+									$gerar = false;
+								}
+							}
+						}
+					}
+				}
+				if($gerar){
+					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($post['idTurma']);
+					$turmaProfessor = new TurmaProfessor();
+					$turmaProfessor->setPessoa($pessoa);
+					$turmaProfessor->setTurma($turma);
+					$turmaProfessor->setDataEHoraDeCriacao();
+					$this->getRepositorio()->getTurmaProfessorORM()->persistir($turmaProfessor);
+				}
+
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+					Constantes::$ACTION => 'Professores',
+				));
+			}catch(Exception $e){
+				$this->getRepositorio()->desfazerTransacao();
+			}
+		}
 	}
 }

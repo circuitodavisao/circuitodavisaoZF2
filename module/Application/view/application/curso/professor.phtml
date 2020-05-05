@@ -1,0 +1,92 @@
+<?php
+
+use Application\View\Helper\BotaoSimples;
+?>
+<style type="text/css">
+	table{
+		font-size: 12px;
+	}
+</style>
+<?php
+
+$html = '';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Cadastro de Professor') . '</small></blockquote>';
+$html .= '<div class="panel heading-border panel-primary">';
+$html .= '<div class="panel-body bg-light">';
+$html .= '<p class="text-center">TURMA '.$this->turma->getCurso()->getNome().' - '.str_pad($this->turma->getMes(), 2, 0, STR_PAD_LEFT).'/'.$this->turma->getAno().'</p>';
+
+$html .= '<form method="post" action="/cursoProfessorSalvar">';
+$html .= '<input type="hidden" id="idTurma" name="idTurma" value="'.$this->turma->getId().'" />';
+
+$html .= '<div class="form-group">';
+$html .= '<label for="selecionaEquipe">' . $this->translate('Selecione a Equipe') . '</label>';
+$html .= '<select class="form-control" name="idEquipe" id="idEquipe" onChange="selecionarEquipe()">';
+$html .= '<option value="0" >' . $this->translate('Selecione') . '</option>';
+foreach ($this->filhos as $grupoPaiFilhoFilho) {
+	$informacao = $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getEntidadeAtiva()->getNome();
+	$html .= '<option value="' . $grupoPaiFilhoFilho->getGrupoPaiFilhoFilho()->getId() . '" >' . $informacao . '</option>';
+}
+$html .= '</select>';
+$html .= '</div>';
+
+$html .= '<div class="form-group">';
+$html .= '<label for="selecionarSub">Líder <img src="img/loader.gif" id="loaderSub" class="hidden" /></label>';
+$html .= '<select class="form-control" name="idPessoa" id="idPessoa" >';
+$html .= '<option value="0" >' . $this->translate('Selecione') . '</option>';
+$html .= '</select>';
+$html .= '</div>';
+
+$html .= $this->botaoSimples('ADICIONAR', $this->funcaoOnClick('validar(this.form)'), BotaoSimples::botaoSucesso, BotaoSimples::larguraMaxima);
+
+$html .= '</form>';
+
+$html .= '</div>';
+$html .= '</div>';
+
+echo $html;
+
+?>
+<script type="text/javascript">
+
+function selecionarEquipe(){
+	document.getElementById('loaderSub').classList.remove('hidden')
+	const idGrupo = document.getElementById('idEquipe').value
+
+	if(parseInt(idGrupo) !== 0){
+		const url = '/cursoBuscarLideresPorGrupo'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					idGrupo
+				}),
+			},
+		)
+		.then(retorno => {
+			if(!retorno.ok){
+				alert('erro ao buscar lideres')
+			}
+			return retorno.json()
+		})
+		.then(json => {
+			document.getElementById('idPessoa').innerHTML = json.resultado.html
+		})
+		document.getElementById('loaderSub').classList.add('hidden')
+	}
+}
+
+function validar(form){
+	if(parseInt(form.idEquipe.value) === 0){
+		alert('Selecione a Equipe')
+		return false
+	}
+	if(parseInt(form.idPessoa.value) === 0){
+		alert('Selecione o Líder')
+		return false
+	}
+	mostrarSplash(); 
+	form.submit()
+}
+
+</script>

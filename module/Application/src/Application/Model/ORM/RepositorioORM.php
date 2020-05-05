@@ -79,6 +79,7 @@ class RepositorioORM {
 	private $_fatoRevisaoORM;
 	private $_perguntaORM;
 	private $_fatoPresidencialORM;
+	private $_turmaProfessorORM;
 
     /**
      * Contrutor
@@ -785,6 +786,13 @@ class RepositorioORM {
 			$this->_fatoPresidencialORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_PRESIDENCIAL);
         }
         return $this->_fatoPresidencialORM;
+    }
+
+    public function getTurmaProfessorORM() {
+        if (is_null($this->_turmaProfessorORM)) {
+			$this->_turmaProfessorORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PROFESSOR);
+        }
+        return $this->_turmaProfessorORM;
     }
 
     /**

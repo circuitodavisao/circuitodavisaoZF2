@@ -24,6 +24,11 @@ class Turma extends CircuitoEntity {
 	protected $turmaPessoa;
 
 	/**
+	 * @ORM\OneToMany(targetEntity="TurmaProfessor", mappedBy="turma", fetch="EXTRA_LAZY")
+	 */
+	protected $turmaProfessor;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="TurmaAula", mappedBy="turma", fetch="EXTRA_LAZY")
 	 */
 	protected $turmaAula;
@@ -147,6 +152,14 @@ class Turma extends CircuitoEntity {
 
 	function setTurmaAula($turmaAula) {
 		$this->turmaAula = $turmaAula;
+	}
+
+	function getTurmaProfessor() {
+		return $this->turmaProfessor;
+	}
+
+	function setTurmaProfessor($i) {
+		$this->turmaProfessor = $i;
 	}
 
 }

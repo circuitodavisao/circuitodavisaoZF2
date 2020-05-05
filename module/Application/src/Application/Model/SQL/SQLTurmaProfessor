@@ -1,0 +1,27 @@
+-- Table: public.turma_professor
+
+-- DROP TABLE public.turma_professor;
+
+CREATE TABLE public.turma_professor
+(
+  	id serial NOT NULL,
+    turma_id integer NOT NULL,
+    pessoa_id integer NOT NULL,
+    data_criacao date NOT NULL DEFAULT ('now'::text)::date,
+    hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone,
+    data_inativacao date,
+    hora_inativacao time without time zone,
+    CONSTRAINT pk_turma_professor PRIMARY KEY (id),
+    CONSTRAINT fk_turma_professor_pessoa_id FOREIGN KEY (pessoa_id)
+        REFERENCES public.pessoa (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_turma_professor_turma_id FOREIGN KEY (turma_id)
+        REFERENCES public.turma (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
