@@ -2494,6 +2494,39 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 							if($turma->getTurmaAulaAtiva()){
 								$turmaAula = $turma->getTurmaAulaAtiva();
 
+								/* dados da aula aberta */
+									$aula = $turmaAula->getAula();
+									$item = array();
+									$item['id'] = $aula->getId();
+									$item['posicao'] = $aula->getPosicao();
+	
+											$temPerguntas = false;
+									foreach($aula->getPergunta() as $pergunta){
+										if($pergunta->verificarSeEstaAtivo()){
+											$temPerguntas = true;
+										}
+									}
+									$item['perguntas'] = array();
+									if($temPerguntas){
+										foreach($aula->getPergunta() as $pergunta){
+											if($pergunta->verificarSeEstaAtivo()){
+												$perguntaItem = array();
+												$perguntaItem['id'] = $pergunta->getId();
+												$perguntaItem['pergunta'] = $pergunta->getPergunta();
+												$perguntaItem['r1'] = $pergunta->getR1();
+												$perguntaItem['r2'] = $pergunta->getR2();
+												$perguntaItem['r3'] = $pergunta->getR3();
+												$perguntaItem['r4'] = $pergunta->getR4();
+												$perguntaItem['certa'] = $pergunta->getCerta();
+												$item['perguntas'][] = $perguntaItem;
+											}
+										}
+									}else{
+										$item['pergunta'] = false;
+									}
+
+							$usuario['aula'] = $item;
+
 							/* liberacoes de questorionario */
 							if($turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao()){
 								foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
