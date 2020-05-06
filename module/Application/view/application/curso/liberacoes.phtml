@@ -39,7 +39,7 @@ foreach($this->turmas as $turma){
 	if($turmaAulaLiberacoes && count($turmaAulaLiberacoes)){
 		foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
 			$html .= '<tr>';
-			$html .= '<td colspan="5">'.$turmaAulaLiberacao->getPessoa()->getNome().' - Chave: '.$turmaAulaLiberacao->getChave().'</td>';
+			$html .= '<td colspan="5">'.$turmaAulaLiberacao->getData_criacaoStringPadraoBrasil().' '.$turmaAulaLiberacao->getHora_criacao().' - ' . $turmaAulaLiberacao->getPessoa()->getNome().' - CHAVE: <b>'.$turmaAulaLiberacao->getChave().'</b></td>';
 			$html .= '</tr>';
 		}
 	}else{

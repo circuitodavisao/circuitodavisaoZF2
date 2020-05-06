@@ -2489,10 +2489,23 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 	
 							$usuario['turma'] = $nomeTurma;
 							$usuario['situacao'] = $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome();
+							$listaDeLiberacoes = array();
 							$listaDeFaltas = array();
 							if($turma->getTurmaAulaAtiva()){
-							/* links Aula aberta */
 								$turmaAula = $turma->getTurmaAulaAtiva();
+
+							/* liberacoes de questorionario */
+							if($turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao()){
+								foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
+									$item = array();	
+									$item['id'] = $turmaAulaLiberacao->getId();
+									$item['professor'] = $turmaAulaLiberacao->getPessoa()->getNome();
+									$item['chave'] = $turmaAulaLiberacao->getChave();
+									$listaDeLiberacoes[] = $item;	
+								}
+							}
+
+							/* links Aula aberta */
 							$listaDeLinks = array();
 							if($turmaAula->getUrl1()){
 								$item = array();
@@ -2599,6 +2612,7 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 							}
 							$usuario['faltas'] = $faltas;
 							$usuario['links'] = $listaDeLinks;
+							$usuario['liberacoes'] = $liberacoes;
 							$dados['usuario'] = $usuario;
 							$ok = true;
 						}
