@@ -2683,9 +2683,13 @@ return $dados;
 			$turmaPessoaAula->setData_inativacao(null);
 			$turmaPessoaAula->setHora_inativacao(null);
 			$turmaPessoaAula->setReposicao('S');
+			/* presença */
+			if($json->tipo === 'presenca'){
+				$turmaPessoaAula->setReposicao('N');
+			}
 			$this->getRepositorio()->getTurmaPessoaAulaORM()->persistir($turmaPessoaAula);
 
-			/* reposição */
+			/* visto */
 			$turmaPessoaVisto = $turmaPessoa->getTurmaPessoaVistoPorAula($aula->getId());
 			if (!$turmaPessoaVisto) {
 				$turmaPessoaVisto = new TurmaPessoaVisto();
