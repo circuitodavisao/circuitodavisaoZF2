@@ -2874,6 +2874,19 @@ class CursoController extends CircuitoController {
 		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
 		$turmas = $grupoIgreja->getTurma();
+		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
+			$listaDeTurmas = array();
+			foreach($turmas as $turma){
+				if($turmaProfessores = $turma->getTurmaProfessor()){
+					foreach($turmaProfessores as $turmaProfessor){
+						if($turmaProfessor->getPessoa()->getId() === intVal($sessao->idPessoa)){
+							$listaDeTurmas[] = $turma;
+						}
+					}
+				}
+			}
+			$turmas = $listaDeTurmas;
+		}
 		$dados['turmas'] = $turmas;
 		return new ViewModel($dados);
 	}
