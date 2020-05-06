@@ -743,6 +743,12 @@ $link = 'relatorioNovo';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
+				$html .= '<li>';
+				$html .= '<a href="/cursoLiberacoes" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-pencil"></span>';
+				$html .= 'Liberações de Questionários';
+				$html .= '</a>';
+				$html .= '</li>';
 	
 			$html .= '</ul>';
 			$html .= '</li>';
