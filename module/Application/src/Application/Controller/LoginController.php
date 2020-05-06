@@ -2612,7 +2612,7 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 							}
 							$usuario['faltas'] = $faltas;
 							$usuario['links'] = $listaDeLinks;
-							$usuario['liberacoes'] = $liberacoes;
+							$usuario['liberacoes'] = $listaDeLiberacoes;
 							$dados['usuario'] = $usuario;
 							$ok = true;
 						}
