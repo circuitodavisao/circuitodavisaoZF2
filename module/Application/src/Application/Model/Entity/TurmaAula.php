@@ -1,6 +1,7 @@
 <?php
 
 namespace Application\Model\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Nome: TurmaAula.php
@@ -14,6 +15,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="turma_aula")
  */
 class TurmaAula extends CircuitoEntity {
+
+    /**
+     * @ORM\OneToMany(targetEntity="TurmaAulaLiberacao", mappedBy="turmaAula", fetch="EXTRA_LAZY")
+     */
+    protected $turmaAulaLiberacao;
+
+	public function __construct() {
+		$this->turmaAulaLiberacao = new ArrayCollection();
+	}
 
     /**
      * @ORM\ManyToOne(targetEntity="Aula", inversedBy="turmaAula")
@@ -147,5 +157,13 @@ class TurmaAula extends CircuitoEntity {
     function getUrl7() {
         return $this->url7;
     }
+
+	function getTurmaAulaLiberacao(){
+		return $this->turmaAulaLiberacao;
+	}
+
+	function setTurmaAulaLiberacao($i){
+		$this->turmaAulaLiberacao = $i;
+	}
 
 }

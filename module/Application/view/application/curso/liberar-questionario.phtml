@@ -11,7 +11,7 @@ use Application\View\Helper\FiltroCurso;
 <?php
 
 $html = '';
-$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Professores') . '</small></blockquote>';
+$html .= '<blockquote class="blockquote-primary"><small>' . $this->translate('Liberar Questionário da Aula Aberta') . '</small></blockquote>';
 $html .= '<div class="panel heading-border panel-primary">';
 $html .= '<div class="panel-body bg-light">';
 $html .= '<div class="table-responsive">';
@@ -21,32 +21,35 @@ $html .= '<tr>';
 $html .= '<td>Curso</td>';
 $html .= '<td>Mês/Ano</td>';
 $html .= '<td>Observação</td>';
+$html .= '<td>Aula Aberta</td>';
 $html .= '<td>Adicionar</td>';
 $html .= '</tr>';
 $html .= '</thead>';
 $html .= '<tbody>';
 foreach($this->turmas as $turma){
+	if($turmaAula = $turma->getTurmaAulaAtiva()){
 	$html .= '<tr class="dark">';
 	$html .= '<td>'.$turma->getCurso()->getNome().'</td>';
 	$html .= '<td>'.str_pad($turma->getMes(), 2, 0, STR_PAD_LEFT).'/'.$turma->getAno().'</td>';
 	$html .= '<td>'.$turma->getObservacao().'</td>';
-	$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="funcaoCircuito(\'cursoProfessor\', '.$turma->getId().')">Adicionar</button></td>';
+	$html .= '<td>Aula '.$turmaAula->getAula()->getPosicao().'</td>';
+	$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="funcaoCircuito(\'cursoLiberar\', '.$turma->getId().')">Adicionar</button></td>';
 	$html .= '</tr>';
-	$turmaProfessores = $turma->getTurmaProfessor();
-	if($turmaProfessores && count($turmaProfessores)){
-		foreach($turmaProfessores as $turmaProfessor){
+	$turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao();
+	if($turmaAulaLiberacoes && count($turmaAulaLiberacoes)){
+		foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
 			$html .= '<tr>';
-			$html .= '<td colspan="4" class="text-center">'.$turmaProfessor->getPessoa()->getNome().'</td>';
 			$html .= '</tr>';
 		}
 	}else{
 		$html .= '<tr>';
-		$html .= '<td colspan="4" class="text-center">Sem Professores Cadastrados!</td>';
+		$html .= '<td colspan="5" class="text-center">Sem Questionário Liberados!</td>';
 		$html .= '</tr>';
 	}
 	$html .= '<tr>';
-	$html .= '<td colspan="4" class="text-center"></td>';
+	$html .= '<td colspan="5" class="text-center"></td>';
 	$html .= '</tr>';
+	}
 }
 $html .= '</tbody>';
 $html .= '</table>';

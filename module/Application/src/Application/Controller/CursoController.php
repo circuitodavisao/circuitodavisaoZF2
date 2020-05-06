@@ -14,6 +14,7 @@ use Application\Form\SelecionarAlunosForm;
 use Application\Form\SelecionarCarterinhasForm;
 use Application\Form\TurmaForm;
 use Application\Model\Entity\TurmaProfessor;
+use Application\Model\Entity\TurmaAulaLiberacao;
 use Application\Model\Entity\Aula;
 use Application\Model\Entity\Curso;
 use Application\Model\Entity\Disciplina;
@@ -2858,6 +2859,75 @@ class CursoController extends CircuitoController {
 				$this->getRepositorio()->fecharTransacao();
 				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
 					Constantes::$ACTION => 'Professores',
+				));
+			}catch(Exception $e){
+				$this->getRepositorio()->desfazerTransacao();
+			}
+		}
+	}
+
+	public function liberacoesAction(){
+		$dados = array();
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$repositorio = $this->getRepositorio();
+		$entidade = $repositorio->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();	
+		$turmas = $grupoIgreja->getTurma();
+		$dados['turmas'] = $turmas;
+		return new ViewModel($dados);
+	}
+
+	public function liberarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idTurmaAula = $sessao->idSessao;
+		$turmaAula = $this->getRepositorio()->getTurmaAulaORM()->encontrarPorId($idTurmaAula);
+
+		$view = new ViewModel(array(
+			'turmaAula' => $turmaAula,
+		));
+
+		return $view;
+	}
+
+
+	public function liberarSalvarAction() {
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+	
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		if ($request->isPost()) {
+			try {
+				$this->getRepositorio()->iniciarTransacao();
+				$post = $request->getPost();
+				$idPessoaLogada = $sessao->idPessoa;
+				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($idPessoaLogada);
+				$gerar = true;
+				if($turmaAulaLiberacoes = $pessoa->getTurmaAulaLiberacao()){
+					if(count($turmaAulaLiberacoes) > 0){
+						foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
+							if($turmaAulaLiberacao->verificarSeEstaAtivo()){
+								if($turmaAulaLiberacao->getTurmaAula()->getId() === intVal($post['idTurmaAula'])){
+									$gerar = false;
+								}
+							}
+						}
+					}
+				}
+				if($gerar){
+					$turmaAula = $this->getRepositorio()->getTurmaAulaORM()->encontrarPorId($post['idTurmaAula']);
+					$turmaAulaLiberacao = new TurmaAulaLiberacao();
+					$turmaAulaLiberacao->setPessoa($pessoa);
+					$turmaAulaLiberacao->setTurmaAula($turmaAula);
+					$turmaAulaLiberacao->setChave($post['chave']);
+					$turmaAulaLiberacao->setDataEHoraDeCriacao();
+					$this->getRepositorio()->getTurmaAulaLiberacaoORM()->persistir($turmaAulaLiberacao);
+				}
+
+				$this->getRepositorio()->fecharTransacao();
+				return $this->redirect()->toRoute(Constantes::$ROUTE_CURSO, array(
+					Constantes::$ACTION => 'Liberacoes',
 				));
 			}catch(Exception $e){
 				$this->getRepositorio()->desfazerTransacao();

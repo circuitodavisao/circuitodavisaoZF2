@@ -75,6 +75,7 @@ return array(
     'Application\Model\Entity\GrupoResponsavel'                  => __DIR__ . '/src/Application/Model/Entity/GrupoResponsavel.php',
     'Application\Model\Entity\MetasOrdenacaoTipo'                => __DIR__ . '/src/Application/Model/Entity/MetasOrdenacaoTipo.php',
     'Application\Model\Entity\TurmaPessoaAvaliacao'              => __DIR__ . '/src/Application/Model/Entity/TurmaPessoaAvaliacao.php',
+    'Application\Model\Entity\TurmaAulaLiberacao'                => __DIR__ . '/src/Application/Model/Entity/TurmaAulaLiberacao.php',
     'Application\Model\Entity\FatoLider'                         => __DIR__ . '/src/Application/Model/Entity/FatoLider.php',
     'Application\Model\Entity\Evento'                            => __DIR__ . '/src/Application/Model/Entity/Evento.php',
     'Application\Model\Entity\EventoFrequencia'                  => __DIR__ . '/src/Application/Model/Entity/EventoFrequencia.php',

@@ -80,6 +80,7 @@ class RepositorioORM {
 	private $_perguntaORM;
 	private $_fatoPresidencialORM;
 	private $_turmaProfessorORM;
+	private $_turmaAulaLiberacaoORM;
 
     /**
      * Contrutor
@@ -793,6 +794,13 @@ class RepositorioORM {
 			$this->_turmaProfessorORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_PROFESSOR);
         }
         return $this->_turmaProfessorORM;
+    }
+
+    public function getTurmaAulaLiberacaoORM() {
+        if (is_null($this->_turmaAulaLiberacaoORM)) {
+			$this->_turmaAulaLiberacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_AULA_LIBERACAO);
+        }
+        return $this->_turmaAulaLiberacaoORM;
     }
 
     /**

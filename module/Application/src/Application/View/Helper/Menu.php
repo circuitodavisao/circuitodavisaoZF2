@@ -565,6 +565,7 @@ $link = 'relatorioNovo';
 			$arrayOQueMostrarDosCursos['financeiroPorData'] = false;
 			$arrayOQueMostrarDosCursos['turmasEncerradas'] = false;
 			$arrayOQueMostrarDosCursos['formatura'] = false;
+			$arrayOQueMostrarDosCursos['professores'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
@@ -574,6 +575,7 @@ $link = 'relatorioNovo';
 					$arrayOQueMostrarDosCursos['listagem'] = true;
 					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
 					$arrayOQueMostrarDosCursos['financeiroPorEquipe'] = true;
+			$arrayOQueMostrarDosCursos['professores'] = true;
 				}
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR ||
 					$this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::SUPERVISOR ||
@@ -605,6 +607,7 @@ $link = 'relatorioNovo';
 					$arrayOQueMostrarDosCursos['consultarMatricula'] = true;
 					$arrayOQueMostrarDosCursos['listagem'] = true;
 					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
+			$arrayOQueMostrarDosCursos['professores'] = true;
 				}
 			}
 			if ($arrayOQueMostrarDosCursos['listagem']) {
@@ -732,6 +735,15 @@ $link = 'relatorioNovo';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
+			if ($arrayOQueMostrarDosCursos['professores']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoProfessores" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-users"></span>';
+				$html .= 'Professores';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+	
 			$html .= '</ul>';
 			$html .= '</li>';
 
