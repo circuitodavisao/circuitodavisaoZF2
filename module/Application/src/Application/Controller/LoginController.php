@@ -2372,7 +2372,7 @@ class LoginController extends CircuitoController {
 		return $response;
 	}
 
-	public function sincronizarAction() {
+	public function sincronizarLiderAction() {
 		$response = $this->getResponse();
 		$request = $this->getRequest();
 		$dados = array();
