@@ -2398,22 +2398,19 @@ class LoginController extends CircuitoController {
 				$dados['perfils'] = array();
 				foreach($grupoResponsaveis as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
-					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
-						$resultado = RelatorioController::buscarDadosPrincipais($this->getRepositorio(), $grupo, $mes, $ano, $equipe = 2);
+					$celulas = array();
+					if($celulasNormais = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
+						foreach($celulasNormais as $grupoEvento){
+			                $evento = $grupoEvento->getEvento();
+           				    $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
+							$item = array();
+							$item['info'] = $diaDaSemanaAjustado . ' ' . $evento->getHoraFormatoHoraMinutoParaListagem();
+							$item['dia'] = $evento->getDia();
+						}
 					}
-					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
-						$fatoPresidencial = $this->getRepositorio()->getFatoPresidencialORM()->buscarTodosRegistrosEntidade($campoOrderBy = 'id', $sentidoOrderBy = 'DESC')[0];
-						$resultado['lideres'] = $fatoPresidencial->getLideres();
-						$resultado['celulas'] = $fatoPresidencial->getCelulas();
-						$resultado['discipulados'] = $fatoPresidencial->getDiscipulados();
-						$resultado['regioes'] = $fatoPresidencial->getRegioes();
-						$resultado['coordenacoes'] = $fatoPresidencial->getCoordenacoes();
-						$resultado['igrejas'] = $fatoPresidencial->getIgrejas();
-						$resultado['parceiro'] = $fatoPresidencial->getParceiro();
-						$resultado['mostrarRegioes'] = true;
-						$resultado['mostrarCoordenacoes'] = true;
-						$resultado['mostrarIgrejas'] = true;
-					}
+			
+					$celulasBeta = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
+
 					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
 					$resultado['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 					$dados['perfils'][] = $resultado;
@@ -2534,6 +2531,8 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 									$item['id'] = $turmaAulaLiberacao->getId();
 									$item['professor'] = $turmaAulaLiberacao->getPessoa()->getNome();
 									$item['chave'] = $turmaAulaLiberacao->getChave();
+									$item['data'] = $turmaAulaLiberacao->getData_criacao();
+									$item['hora'] = $turmaAulaLiberacao->getHora_criacao();
 									$listaDeLiberacoes[] = $item;	
 								}
 							}
