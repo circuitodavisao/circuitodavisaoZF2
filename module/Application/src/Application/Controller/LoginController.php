@@ -20,6 +20,7 @@ use Application\Model\Entity\Pergunta;
 use Application\Model\Entity\TurmaPessoaAula;
 use Application\Model\Entity\TurmaPessoaVisto;
 use Application\Model\Entity\TurmaPessoaFinanceiro;
+use Application\Model\Entity\EventoTipo;
 use Application\View\Helper\BotaoSimples;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2394,7 +2395,6 @@ class LoginController extends CircuitoController {
 					$dados['email'] = $json->email;
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
-
 				$dados['perfils'] = array();
 				foreach($grupoResponsaveis as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
@@ -2406,11 +2406,21 @@ class LoginController extends CircuitoController {
 							$item = array();
 							$item['info'] = $diaDaSemanaAjustado . ' ' . $evento->getHoraFormatoHoraMinutoParaListagem();
 							$item['dia'] = $evento->getDia();
+							$celulas[] = $item;
+						}
+					}
+					if($celulasNormais = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
+						foreach($celulasNormais as $grupoEvento){
+			                $evento = $grupoEvento->getEvento();
+           				    $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
+							$item = array();
+							$item['info'] = $diaDaSemanaAjustado . ' ' . $evento->getHoraFormatoHoraMinutoParaListagem();
+							$item['dia'] = $evento->getDia();
+							$celulas[] = $item;
 						}
 					}
 			
-					$celulasBeta = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica);
-
+					$resultado['celulas'] = $celulas;
 					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
 					$resultado['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 					$dados['perfils'][] = $resultado;
