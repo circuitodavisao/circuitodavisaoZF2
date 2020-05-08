@@ -4479,7 +4479,6 @@ class IndexController extends CircuitoController {
 							$limparDados = false;
 							$dataParaValidar = null;
 
-							if(!$grupo->verificarSeEstaAtivo()){
 								if($grupo->getGrupoResponsavel()[0]){
 									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 								}
@@ -4499,15 +4498,10 @@ class IndexController extends CircuitoController {
 										$html .= "<br />limpar dados: " . $limparDados;
 									}
 								}
-							}
 
 								$fatosMensal[1]->entidade = $grupo->getEntidadeAtiva()->infoEntidade();
 								$fatosMensal[1]->lideres = $grupo->getNomeLideresAtivos();
-							//if($fatosMensal[1]->nome_igreja === '' || $fatosMensal[1]->nome_igreja === null){
-								//if($grupo->getGrupoIgreja()){
-								//	$fatosMensal[1]->nome_igreja = $grupo->getGrupoIgreja()->getEntidadeAtiva()->getNome();
-								//}
-							//}
+
 							$contadorDePeriodo[1] = 1;
 							for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
 
