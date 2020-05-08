@@ -2393,6 +2393,7 @@ class LoginController extends CircuitoController {
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					$ok = true;
 					$dados['email'] = $json->email;
+					$dados['nome'] = $pessoa->getNome();
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
 				$dados['perfils'] = array();
@@ -2422,6 +2423,7 @@ class LoginController extends CircuitoController {
 			
 					$resultado['celulas'] = $celulas;
 					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+					$resultado['idGrupo'] = $grupo->getId();
 					$resultado['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 					$dados['perfils'][] = $resultado;
 				}
