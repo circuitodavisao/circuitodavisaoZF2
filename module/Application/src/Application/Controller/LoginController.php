@@ -2531,7 +2531,7 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 									$item['id'] = $turmaAulaLiberacao->getId();
 									$item['professor'] = $turmaAulaLiberacao->getPessoa()->getNome();
 									$item['chave'] = $turmaAulaLiberacao->getChave();
-									$item['data'] = $turmaAulaLiberacao->getData_criacao();
+									$item['data'] = $turmaAulaLiberacao->getData_criacaoStringPadraoBanco();
 									$item['hora'] = $turmaAulaLiberacao->getHora_criacao();
 									$listaDeLiberacoes[] = $item;	
 								}
