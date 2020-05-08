@@ -2392,11 +2392,12 @@ class LoginController extends CircuitoController {
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					$ok = true;
-					$dados['email'] = $json->email;
-					$dados['nome'] = $pessoa->getNome();
+					$usuario = array();
+					$usuario['email'] = $json->email;
+					$usuario['nome'] = $pessoa->getNome();
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
-				$dados['perfils'] = array();
+				$perfils = array();
 				foreach($grupoResponsaveis as $grupoResponsavel){
 					$grupo = $grupoResponsavel->getGrupo();
 					$celulas = array();
@@ -2421,12 +2422,15 @@ class LoginController extends CircuitoController {
 						}
 					}
 			
-					$resultado['celulas'] = $celulas;
-					$resultado['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
-					$resultado['idGrupo'] = $grupo->getId();
-					$resultado['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
-					$dados['perfils'][] = $resultado;
+					$item = array();
+					$item['celulas'] = $celulas;
+					$item['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
+					$item['idGrupo'] = $grupo->getId();
+					$item['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+					$perfils[] = $item;
 				}
+				$usuario['perfil'] = $perfils;
+				$dados['usuario'] = $usuario;
 			  }
 		   }
 		}
