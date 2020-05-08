@@ -2416,8 +2416,8 @@ class LoginController extends CircuitoController {
 			                $evento = $grupoEvento->getEvento();
            				    $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 							$item = array();
-							$item['info'] = $diaDaSemanaAjustado . ' ' . $evento->getHoraFormatoHoraMinutoParaListagem();
 							$item['dia'] = $evento->getDia();
+							$item['hora'] = $evento->getHoraFormatoHoraMinutoParaListagem();
 							$celulas[] = $item;
 						}
 					}
