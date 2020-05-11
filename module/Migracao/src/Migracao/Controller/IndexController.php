@@ -469,6 +469,7 @@ class IndexController extends CircuitoController {
 								$dataDeHojeParaComparar = strtotime(date('Y-m-d'));
 								if ($idSituacao == Situacao::ACEITO_AGENDADO && $dataDaSolicitacaoParaComparar <= $dataDeHojeParaComparar) {
 									$idSolicitacaoTipo = $solicitacao->getSolicitacaoTipo()->getId();
+									$recusada = false;
 									if ($idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 										$idSolicitacaoTipo === SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE ||
 										$idSolicitacaoTipo === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
@@ -504,7 +505,25 @@ class IndexController extends CircuitoController {
 										$html .= "<br /> {$solicitacao->getId()} - UNINDO CASAL ";
 										$grupoHomem = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupoMulher = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto2());
-										$html .= $this->unirCasal($grupoHomem, $grupoMulher);
+										if(!$grupoHomem->verificarSeEstaAtivo()){
+											$recusada = true;
+										}
+										if($grupoHomem->verificarSeEstaAtivo()){
+											if(count($grupoHomem->getPessoasAtivas()) === 0){
+												$recusada = true;
+											}
+										}
+										if(!$grupoMulher->verificarSeEstaAtivo()){
+											$recusada = true;
+										}
+										if($grupoMulher->verificarSeEstaAtivo()){
+											if(count($grupoMulher->getPessoasAtivas()) === 0){
+												$recusada = true;
+											}
+										}
+										if(!$recusada){
+											$html .= $this->unirCasal($grupoHomem, $grupoMulher);
+										}
 									}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::SEPARAR) {
 										$html .= "<br /> {$solicitacao->getId()} - SEPARANDO";
@@ -632,13 +651,18 @@ class IndexController extends CircuitoController {
 									/* Nova solicitacao situacao */
 									$solicitacaoSituacao = new SolicitacaoSituacao();
 									$solicitacaoSituacao->setSolicitacao($solicitacao);
-									$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId(Situacao::CONCLUIDO));
+									$idSituacao = Situacao::CONCLUIDO;
+									if($recusada){
+										$idSituacao = Situacao::RECUSAO;
+										$html .= '<br />Solicitação RECUSADA';
+									}
+									$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao));
 									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
 								}
 							}
 						}
 					}else{
-						$html .= '<br />Sem';
+						$html .= '<br />Sem Solicitação';
 					}
 				}
 				$this->getRepositorio()->fecharTransacao();
