@@ -718,13 +718,13 @@ class PrincipalController extends CircuitoController {
 		}
 
 		$Subject = $assunto;		
-		$ToEmail = 'support@circuitodavisao.zendesk.com';
-		$Content = 'Tipo: '.$tipo.'
-			Prioridade: '.$prioridade.'
-			Login: '.$remetente['email'].'
-			Descricao: '.$descricao.'
-			IdPessoa: '.$pessoa->getId().'
-			IdGrupo (Responsabilidade [0]): '.$pessoa->getGrupoResponsavel()[0]->getGrupo()->getId();
+		$ToEmail = 'suporte@circuitodavisaonovo.com.br';
+		$Content = '<br />Tipo: '.$tipo.'
+			<br />Prioridade: '.$prioridade.'
+			<br />Login: '.$remetente['email'].'
+			<br />Descricao: '.$descricao.'
+			<br />IdPessoa: '.$pessoa->getId().'
+			<br />IdGrupo (Responsabilidade [0]): '.$pessoa->getGrupoResponsavel()[0]->getGrupo()->getId();
 		try{
 			error_log('######## enviar email #########');
 			Funcoes::enviarEmail($ToEmail, $Subject, $Content, $remetente, $anexo);
