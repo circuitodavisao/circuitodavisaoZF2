@@ -81,6 +81,7 @@ COMMENT ON INDEX index_pessoa_documento
 ALTER TABLE pessoa ADD COLUMN evento_id INTEGER NULL;
 ALTER TABLE pessoa ADD COLUMN profissao_id INTEGER NULL;
 ALTER TABLE pessoa ADD FOREIGN KEY (profissao_id) REFERENCES profissao(id);
+ALTER TABLE pessoa ADD COLUMN token_notificacao character varying(40);
 
 -- Index: fki_pessoa_profissao_id
 

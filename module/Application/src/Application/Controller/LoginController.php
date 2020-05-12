@@ -2390,6 +2390,8 @@ class LoginController extends CircuitoController {
 				$mes = date('m');	
 				$ano = date('Y');	
 				$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($json->email);
+				$pessoa->setToken_notificacao($json->token);
+				$this->getRepositorio()->getPessoaORM()->persistir($pessoa, $mudarDataDeCriacao = false);
 				if (count($pessoa->getResponsabilidadesAtivas()) > 0) {
 					$ok = true;
 					$usuario = array();

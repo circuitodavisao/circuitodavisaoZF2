@@ -145,6 +145,9 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     /** @ORM\Column(type="string") */
     protected $nome;
 
+    /** @ORM\Column(type="string") */
+    protected $token_notificacao;
+
     /** @ORM\Column(type="integer") */
     protected $telefone;
 
@@ -1176,6 +1179,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 
 	function setTurmaAulaLiberacao($i){
 		$this->turmaAulaLiberacao = $i;
+	}
+
+	function getToken_notificacao(){
+		return $this->token_notificacao;
+	}
+
+	function setToken_notificacao($i){
+		$this->token_notificacao = $i;
 	}
 
 }
