@@ -2009,57 +2009,62 @@ class CursoController extends CircuitoController {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-		$grupo = $entidade->getGrupo();
-		$turmas = $grupo->getGrupoIgreja()->getTurma();
 		$contadorDeFaltas = array();
-		$turmasValidas = array();
-		foreach ($turmas as $turma) {
-			if ($turmaAulaAtiva = $turma->getTurmaAulaAtiva()) {
-				foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
-					/* Alunos ativos */
-					if($turmaPessoa->verificarSeEstaAtivo() && $turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO){
 
-						$turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula();
-						$parar = false;
-						foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-							$mostrar = false;
-							if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-								$mostrar = true;
-							}
-							if ($mostrar) {
-								if (!$parar) {
-									/* Verificar duas aulas antes da atual aula aberta */
-									$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
-									if($numeroDaAula >= 3){
+		$resultado = RelatorioController::relatorioAlunosETurmas($this->getRepositorio(), $entidade, $turmasAtivas = true, $pessoalOuEquipe = 2, $ordenar = false);
+		$turmasValidas = $resultado[1];
 
-										$estaNoArray = false;
-										if(count($turmasValidas) > 0){
-											foreach($turmasValidas as $turmaValida){
-												if($turmaValida->getId() === $turma->getId()){
-													$estaNoArray = true;
-												}
+		$listaDeEquipes = array();
+		foreach($resultado[2] as $relatorio){
+			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+			if(
+				$turmaPessoa->verificarSeEstaAtivo() && 
+				(
+					$relatorio->getSituacao_id() === Situacao::ATIVO ||
+					$relatorio->getSituacao_id() === Situacao::ESPECIAL
+				)
+			){
+				$turma = $turmaPessoa->getTurma();
+				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
+
+					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+					$grupo = $grupo->getGrupoEquipe();
+					if(in_array($grupo->getId(), $listaDeEquipes)){
+						$nomeEquipe = $listaDeEquipes[$grupo->getId()];
+					}else{
+						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+						if($nomeEquipe == ''){
+							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+						}
+						$listaDeEquipes[$grupo->getId()] = $nomeEquipe;
+					}
+
+					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+						$mostrar = false;
+						if ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+							$mostrar = true;
+						}
+						if ($mostrar) {
+							$numeroDaAula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+							if($numeroDaAula >= 3){
+								$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
+								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+										break;
+									}
+
+									if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 2)) {
+										$frequencia = false;
+
+										if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
+											if($turmaPessoaAula->verificarSeEstaAtivo()){
+												$frequencia = true;
 											}
 										}
-										if(!$estaNoArray){
-											$turmasValidas[] = $turma;
-										}
-										foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-											if($aula->getPosicao() <= ($numeroDaAula - 2)){
-												$naoEncontreiPresencaNaAula = true;
-												foreach ($turmaPessoaAulas as $turmaPessoaAula) {
-													if ($turmaPessoaAula->verificarSeEstaAtivo() && $turmaPessoaAula->getAula()->getId() === $aula->getId()) {
-														$naoEncontreiPresencaNaAula = false;
-													}
-												}
-												if ($naoEncontreiPresencaNaAula) {
-													$nomeEquipeDoTurmaPessoa = CursoController::getNomeDaEquipeDoTurmaPessoa($turmaPessoa);
-													$contadorDeFaltas[$nomeEquipeDoTurmaPessoa][$turma->getId()] ++;
-												}
-												if ($aula->getId() == $turmaAulaAtiva->getAula()->getId()) {
-													$parar = true;
-													break;
-												}
-											}
+
+										if (!$frequencia) {
+											$contadorDeFaltas[$nomeEquipe][$turma->getId()]++;
 										}
 									}
 								}
@@ -2067,8 +2072,10 @@ class CursoController extends CircuitoController {
 						}
 					}
 				}
+
 			}
 		}
+
 		$view = new ViewModel(array(
 			'contadorDeFaltas' => $contadorDeFaltas,
 			'turmasValidas' => $turmasValidas,
