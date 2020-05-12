@@ -2739,23 +2739,26 @@ return $dados;
 		$dados = array();
 
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId(1739);
-		$dados['token'] = $pessoa->getToken_notificacao();
+		$dados['to'] = $pessoa->getToken_notificacao();
 		$dados['title'] = 'Titulo vi aCV';
 		$dados['body'] = 'CORPO DO CV';
-
 		$url = 'https://exp.host/--/api/v2/push/send';
-		$options = array(
-			'http' => array(
-			'header'  => "Content-type: application/json\r\n",
-			'method'  => 'POST',
-			'content' => http_build_query($dados),
-			)
-		);
+		// create curl resource
+        $ch = curl_init();
 
-		$context  = stream_context_create($options);
-		$result = file_get_contents($url, false, $context);
-		var_dump($result);
+        // set url
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+ 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(''));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, Json::encode($dados));
 
+        // $output contains the output string
+        $output = curl_exec($ch);
+		var_dump($output);
+
+        // close curl resource to free up system resources
+        curl_close($ch);
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
