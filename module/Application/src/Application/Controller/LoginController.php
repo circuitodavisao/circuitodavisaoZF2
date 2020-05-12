@@ -2397,6 +2397,7 @@ class LoginController extends CircuitoController {
 					$usuario = array();
 					$usuario['email'] = $json->email;
 					$usuario['nome'] = $pessoa->getNome();
+					$usuario['id'] = $pessoa->getId();
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
 				$perfils = array();
