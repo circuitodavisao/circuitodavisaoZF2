@@ -2457,7 +2457,7 @@ class LoginController extends CircuitoController {
 					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 						$subequipe_id = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
 					}
-					$item['subequipe_id'] = $subequipe_id;
+					$item['subequipe_acima_id'] = $subequipe_id;
 					$perfils[] = $item;
 				}
 				$usuario['perfil'] = $perfils;
