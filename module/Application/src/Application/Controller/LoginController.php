@@ -2436,9 +2436,9 @@ class LoginController extends CircuitoController {
 
 					$igreja_id = null;
 					if(
-						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA
+						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja
 					){
 						$igreja_id = $grupo->getGrupoIgreja()->getId();
 					}
@@ -2446,15 +2446,15 @@ class LoginController extends CircuitoController {
 
 					$equipe_id = null;
 					if(
-						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE
+						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
 					){
 						$equipe_id = $grupo->getGrupoEquipe()->getId();					
 					}
 					$item['equipe_id'] =  $equipe_id;
 
 					$subequipe_id = null;
-					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
 						$subequipe_id = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
 					}
 					$item['subequipe_id'] = $subequipe_id;
