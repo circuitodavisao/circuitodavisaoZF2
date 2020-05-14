@@ -2397,7 +2397,8 @@ class LoginController extends CircuitoController {
 					$usuario = array();
 					$usuario['email'] = $json->email;
 					$usuario['nome'] = $pessoa->getNome();
-					$usuario['id'] = $pessoa->getId();
+					$usuario['pessoa_id'] = $pessoa->getId();
+
 
 				$grupoResponsaveis = $pessoa->getResponsabilidadesAtivas();
 				$perfils = array();
@@ -2406,8 +2407,8 @@ class LoginController extends CircuitoController {
 					$celulas = array();
 					if($celulasNormais = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula)){
 						foreach($celulasNormais as $grupoEvento){
-			                $evento = $grupoEvento->getEvento();
-           				    $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
+							$evento = $grupoEvento->getEvento();
+							$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 							$item = array();
 							$item['dia'] = $evento->getDia();
 							$item['hora'] = $evento->getHoraFormatoHoraMinutoParaListagem();
@@ -2416,20 +2417,47 @@ class LoginController extends CircuitoController {
 					}
 					if($celulasNormais = $grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)){
 						foreach($celulasNormais as $grupoEvento){
-			                $evento = $grupoEvento->getEvento();
-           				    $diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
+							$evento = $grupoEvento->getEvento();
+							$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($evento->getDia());
 							$item = array();
 							$item['dia'] = $evento->getDia();
 							$item['hora'] = $evento->getHoraFormatoHoraMinutoParaListagem();
 							$celulas[] = $item;
 						}
 					}
-			
+
 					$item = array();
 					$item['celulas'] = $celulas;
 					$item['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
 					$item['idGrupo'] = $grupo->getId();
 					$item['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
+
+					$item['regiao_id'] = $grupo->getGrupoRegiao()->getId();
+
+					$igreja_id = null;
+					if(
+						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA
+					){
+						$igreja_id = $grupo->getGrupoIgreja()->getId();
+					}
+					$item['igreja_id'] = $igreja_id;
+
+					$equipe_id = null;
+					if(
+						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE
+						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE
+					){
+						$equipe_id = $grupo->getGrupoEquipe()->getId();					
+					}
+					$item['equipe_id'] =  $equipe_id;
+
+					$subequipe_id = null;
+					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE){
+						$subequipe_id = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
+					}
+					$item['subequipe_id'] = $subequipe_id;
 					$perfils[] = $item;
 				}
 				$usuario['perfil'] = $perfils;

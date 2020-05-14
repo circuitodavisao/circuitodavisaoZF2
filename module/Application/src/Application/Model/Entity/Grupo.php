@@ -1398,13 +1398,13 @@ class Grupo extends CircuitoEntity {
         return $grupoIgreja;
     }
 
-    function getGrupoRegiao() {
-        $grupoSelecionado = $this;
-        $grupoIgreja = null;        
-        while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
-        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE ||
-        $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA ||
-		$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
+	function getGrupoRegiao() {
+		$grupoSelecionado = $this;
+		$grupoIgreja = null;        
+		while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
+			$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE ||
+			$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA ||
+			$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
 			if($grupoSelecionado->getGrupoPaiFilhoPaiAtivo()){
 				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL) {
@@ -1414,10 +1414,10 @@ class Grupo extends CircuitoEntity {
 				break;
 			}
 		}
-        $grupoIgreja = $grupoSelecionado;
-        
-        return $grupoIgreja;
-    }
+		$grupoIgreja = $grupoSelecionado;
+
+		return $grupoIgreja;
+	}
 
     function contadorDeOndeEstouNaHierarquia() {
         $grupoSelecionado = $this;
