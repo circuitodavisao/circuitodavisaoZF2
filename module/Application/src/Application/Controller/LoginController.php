@@ -1171,9 +1171,37 @@ class LoginController extends CircuitoController {
 														if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() !== 3110){
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$turmaAula->getAula()->getId().')">Ver Aula</button>';
 														}
-														$htmlU = '';
+
+													$htmlU = '';
 														$temLink = false;
 														$htmlU .= '<table class="table table-condesed text-left">';
+
+														/* liberacoes de questorionario */
+														if($turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao()){
+															$temLink = true;
+															foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
+																$mostrar = false;
+																if(date('Y-m-d') === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
+																	$horaAtual = date('H');
+																	$diferenca = date('H') - substr($turmaAulaLiberacao->getHora_criacao(), 0, 2);
+																	if($diferenca <= 4){
+																		$mostrar = true;
+																	}
+																}
+	
+																if($mostrar){
+																	$htmlU .= '<tr>';
+																	$htmlU .= '<td class="text-right">';
+																	$htmlU .= 'Questionário';
+																	$htmlU .= '<br />'.$turmaAulaLiberacao->getPessoa()->getNome();
+																	$htmlU .= '</td>';
+																	$htmlU .= '<td>';
+																	$htmlU .= '<button type="button" class="btn btn-primary btn-xs" onClick="abrirValidacaoDeQuetionario('.$turmaAulaLiberacao->getId().')">Abrir</button>';
+																	$htmlU .= '</td>';
+																	$htmlU .= '</tr>';
+																}
+															}
+														}
 
 														if($turmaAula->getUrl1()){
 														$temLink = true;
@@ -1420,6 +1448,24 @@ class LoginController extends CircuitoController {
 								$html .= '</div>';
 							}
 
+							/* div aquestionario */
+							if($turma->getTurmaAulaAtiva()){
+								$aula = $turma->getTurmaAulaAtiva()->getAula();
+								$html .= '<div id="divValidarQuestionaro" class="p5 hidden">';
+								$html .= '<div class="panel panel-primary">';
+								$html .= '<div class="panel-heading" style="padding: 0 8px;">Informe palavra chave</div>';
+								$html .= '<div class="panel-body">';
+
+								$html .= '<input type="text" id="palavraChave" class="form-control" />';
+								$html .= '<br />';
+								$html .= '<button type="button" onClick="validarPalavraPasse()" class="btn btn-sm btn-primary">Validar</button>';
+								$html .= '</div>';
+								$html .= '</div>';
+								$html .= '</div>';
+								$html .= '<button type="button" class="mt5 mb5 btn btn-sm btn-default" onClick="voltarAosDados()">Voltar</button>';
+								$html .= '</div>';
+							}
+
 							/* situacao financeira */
 							$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
 							$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
@@ -1533,6 +1579,30 @@ class LoginController extends CircuitoController {
 					}else{
 						$dados['false'] = true;
 						$dados['message'] = 'Sua igreja não tem acesso!';
+					}
+				}
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
+
+	public function validarPalavraChaveAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		$dados['ok'] = false;
+		$dados['message'] = 'Matrícula não encontrada!';
+		$resultado = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				if($turmaAulaLiberacao = $this->getRepositorio()->getTurmaAulaLiberacaoORM()->encontrarPorId($json->idQuestionario)){
+					if($turmaAulaLiberacao->getChave() === $json->palavraChave){
+						$dados['ok'] = true;
 					}
 				}
 			} catch (Exception $exc) {

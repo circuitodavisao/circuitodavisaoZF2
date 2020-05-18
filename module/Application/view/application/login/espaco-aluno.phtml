@@ -141,6 +141,9 @@ function voltarAosDados(){
 	if(divSituacaoFinanceira = document.getElementById('divSituacaoFinanceira')){
 		divSituacaoFinanceira.classList.add('hidden')
 	}
+	if(document.getElementById('divValidarQuestionaro')){
+		document.getElementById('divValidarQuestionaro').classList.add('hidden')
+	}
 	const elementosFaltas = document.getElementsByClassName('falta')
 	for(let i = 0; i < elementosFaltas.length; i++){
 		elementosFaltas[i].classList.add('hidden')
@@ -232,4 +235,42 @@ function sair(){
 	document.getElementById('divRetorno').innerHTML = ''
 	document.getElementById('matricula').value = ''
 }
+
+let idQuestionario = null
+function abrirValidacaoDeQuetionario(id){
+	idQuestionario = id
+	document.getElementById('divValidarQuestionaro').classList.remove('hidden')
+	document.getElementById('palavraChave').value = ''
+	document.getElementById('divDados').classList.add('hidden')
+	document.getElementById('divFaltas').classList.remove('hidden')
+}
+
+function validarPalavraPasse(){
+		const palavraChave = document.getElementById('palavraChave').value;
+		mostrarSplash();
+		const url = '/validarPalavraChave'
+		fetch(
+			url,
+			{
+				method: 'POST',	
+				body: JSON.stringify({
+					idQuestionario,
+					palavraChave,
+				}),
+			},
+		)
+		.then(retorno => {
+			esconderSplash()
+			return retorno.json()
+		})
+		.then(json => {
+			if(json.ok){
+				document.getElementById('divValidarQuestionaro').classList.add('hidden')
+				document.getElementById('divAulaAberta').classList.remove('hidden')
+			}else{
+				alert('Palavra chave errada!')
+			}
+		})
+}
+
 </script>
