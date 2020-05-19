@@ -2504,9 +2504,13 @@ class LoginController extends CircuitoController {
 
 					$item['grupos'] = array();
 					$grupoSelecionado = $grupo;
-					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
 						$item['grupos'][] = $grupoSelecionado->getId();
 						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+						if($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+							$item['grupos'][] = $grupoSelecionado->getId();
+							break;
+						}
 					}
 					$perfils[] = $item;
 				}
