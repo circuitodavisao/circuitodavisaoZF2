@@ -2499,7 +2499,7 @@ class LoginController extends CircuitoController {
 					$item = array();
 					$item['celulas'] = $celulas;
 					$item['entidade'] = $grupo->getEntidadeAtiva()->infoEntidade();
-					$item['idGrupo'] = $grupo->getId();
+					$item['grupo_id'] = $grupo->getId();
 					$item['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 
 					$item['grupos'] = array();
