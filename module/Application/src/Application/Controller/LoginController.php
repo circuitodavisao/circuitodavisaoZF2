@@ -2514,7 +2514,7 @@ class LoginController extends CircuitoController {
 					}
 					$perfils[] = $item;
 				}
-				$usuario['perfil'] = $perfils;
+				$usuario['perfils'] = $perfils;
 				$dados['usuario'] = $usuario;
 			  }
 		   }
