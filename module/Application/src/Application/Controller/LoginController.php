@@ -2502,32 +2502,12 @@ class LoginController extends CircuitoController {
 					$item['idGrupo'] = $grupo->getId();
 					$item['entidadeTipo'] = $grupo->getEntidadeAtiva()->getEntidadeTipo()->getNome();
 
-					$item['regiao_id'] = $grupo->getGrupoRegiao()->getId();
-
-					$igreja_id = null;
-					if(
-						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja
-					){
-						$igreja_id = $grupo->getGrupoIgreja()->getId();
+					$item['grupos'] = array();
+					$grupoSelecionado = $grupo;
+					while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+						$item['grupos'][] = $grupoSelecionado->getId();
+						$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 					}
-					$item['igreja_id'] = $igreja_id;
-
-					$equipe_id = null;
-					if(
-						$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::equipe
-						|| $grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
-					){
-						$equipe_id = $grupo->getGrupoEquipe()->getId();					
-					}
-					$item['equipe_id'] =  $equipe_id;
-
-					$subequipe_id = null;
-					if($grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
-						$subequipe_id = $grupo->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
-					}
-					$item['subequipe_id'] = $subequipe_id;
 					$perfils[] = $item;
 				}
 				$usuario['perfil'] = $perfils;
