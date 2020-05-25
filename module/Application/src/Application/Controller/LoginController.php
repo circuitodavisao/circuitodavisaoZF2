@@ -2575,6 +2575,7 @@ class LoginController extends CircuitoController {
 							$usuario = array();
 							$usuario['matricula'] = $turmaPessoa->getId();
 							$usuario['nome'] = $turmaPessoa->getPessoa()->getNome();
+							$usuario['pessoa_id'] = $turmaPessoa->getPessoa()->getId();
 							$usuario['time'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
 
 							$usuario['grupos'] = array();
