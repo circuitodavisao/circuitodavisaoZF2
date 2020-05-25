@@ -2542,14 +2542,13 @@ class LoginController extends CircuitoController {
 		if ($request->isPost()) {
 			$body = $request->getContent();
 			$json = Json::decode($body);
-try{
-			$dados = self::dadosAluno($json->matricula);
-}catch(Exception $e){
-	$dados['error'] = $e->getMessage();
-	$dados['ok'] = false;
-}
-		
-				}
+			try{
+				$dados = self::dadosAluno($json->matricula);
+			}catch(Exception $e){
+				$dados['error'] = $e->getMessage();
+				$dados['ok'] = false;
+			}
+		}
 		$response->getHeaders()
 			->addHeaderLine('Access-Control-Allow-Origin', '*')
 			->addHeaderLine('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
@@ -2564,19 +2563,30 @@ try{
 		return $response;
 	}
 
-function dadosAluno($matricula){
-$dados = array();
+		function dadosAluno($matricula){
+		$dados = array();
 		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($matricula)){
 					if(
-$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 7694
-){
+						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
 							$usuario = array();
 							$usuario['matricula'] = $turmaPessoa->getId();
 							$usuario['nome'] = $turmaPessoa->getPessoa()->getNome();
 							$usuario['time'] = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo()->getEntidadeAtiva()->infoEntidade();
+
+							$usuario['grupos'] = array();
+							$grupoSelecionado = $turmaPessoa->getPessoa()->getGrupoPessoaAtivo()->getGrupo();
+							while($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial){
+								$usuario['grupos'][] = $grupoSelecionado->getId();
+								$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
+								if($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+									$usuario['grupos'][] = $grupoSelecionado->getId();
+									break;
+								}
+							}
 
 							$turma = $turmaPessoa->getTurma();
 							$nomeDisciplina = 'PÓS REVISÃO';
@@ -2752,9 +2762,9 @@ $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
 					}else{
 						$dados['message'] = 'Sua igreja não tem acesso!';
 					}
-					}
-$dados['ok'] = $ok;
-return $dados;
+				}
+	$dados['ok'] = $ok;
+	return $dados;
 }
 
 	public function vimeoAction() {
