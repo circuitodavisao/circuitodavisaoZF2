@@ -1106,8 +1106,9 @@ class LoginController extends CircuitoController {
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 || 
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 7694
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BH
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -1168,7 +1169,10 @@ class LoginController extends CircuitoController {
 													if($turma->getTurmaAulaAtiva()){
 														$turmaAula = $turma->getTurmaAulaAtiva();
 														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
-														if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() !== 3110){
+														if(
+															$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() !== 3110
+															&& $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() !== 11158 // PALMAS
+														){
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$turmaAula->getAula()->getId().')">Ver Aula</button>';
 														}
 
@@ -2567,8 +2571,8 @@ class LoginController extends CircuitoController {
 		$dados = array();
 		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($matricula)){
 					if(
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 ||
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 7694
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';

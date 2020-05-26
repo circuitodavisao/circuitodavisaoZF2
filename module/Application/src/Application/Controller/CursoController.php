@@ -809,7 +809,10 @@ class CursoController extends CircuitoController {
 		$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($idTurma);
 
 		$mostarLinkDoZoom = false;
-		if($turma->getGrupo()->getGrupoRegiao()->getId() === 3110){
+		if(
+			$turma->getGrupo()->getGrupoRegiao()->getId() === 3110
+			|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158
+		){
 			$mostarLinkDoZoom = true;
 		}
 
