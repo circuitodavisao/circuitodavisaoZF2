@@ -4507,7 +4507,7 @@ class IndexController extends CircuitoController {
 									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 								}
 								if($dataParaValidar || $dataInativacao){
-									$limparDados = true;
+									//$limparDados = true;
 									$dataInativacaoTime = strtotime($dataParaValidar);
 									$inicioDoMesTime = strtotime($inicioDoMes);
 									$fimDoMesTime = strtotime($fimFoMes);
@@ -4558,7 +4558,7 @@ class IndexController extends CircuitoController {
 									$dataFinalPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
 									$dataFinalPeriodoTime = strtotime($dataFinalPeriodo);
 	
-									$zerarDados = true;
+									//$zerarDados = true;
 									if($dataInativacaoTime >= $dataInicialPeriodoTime &&
 										$dataInativacaoTime <= $dataFinalPeriodoTime){
 										$zerarDados = false;
