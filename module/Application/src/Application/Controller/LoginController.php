@@ -1173,7 +1173,7 @@ class LoginController extends CircuitoController {
 															$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() !== 3110
 															&& $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() !== 11158 // PALMAS
 														){
-															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="verReposicao('.$turmaAula->getAula()->getId().')">Ver Aula</button>';
+															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
 
 													$htmlU = '';
