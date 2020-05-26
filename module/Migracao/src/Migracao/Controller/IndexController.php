@@ -4577,6 +4577,8 @@ class IndexController extends CircuitoController {
 								if($qualParte > 50){
 									$html .= '<br />Data de validar: ' . $dataParaValidar;
 									$html .= '<br />Data inativacao: ' . $dataInativacao;
+									$html .= '<br />Data inicio periodo: ' . $dataInicialPeriodo;
+									$html .= '<br />Data final periodo: ' . $dataFinalPeriodo;
 									$html .= '<br />Depois de validar: ';
 									$html .= '<br />Celulas: ' . $quantidadeCelulas;
 									$html .= '<br />Celulas Beta: ' . $quantidadeCelulasEstrategicas;
