@@ -4503,17 +4503,17 @@ class IndexController extends CircuitoController {
 							$limparDados = false;
 							$dataParaValidar = null;
 
+								// falha quando removeu um responsavel
 								if($grupo->getGrupoResponsavel()[0]){
 									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 								}
 								if($dataParaValidar || $dataInativacao){
-									$limparDados = true;
 									$dataInativacaoTime = strtotime($dataParaValidar);
 									$inicioDoMesTime = strtotime($inicioDoMes);
 									$fimDoMesTime = strtotime($fimFoMes);
 									if($dataInativacaoTime >= $inicioDoMesTime &&
 										$dataInativacaoTime <= $fimDoMesTime){
-										$limparDados = false;
+										$limparDados = true;
 										if($qualParte > 50){
 											$html .= "<br />false: " . $limparDados;
 										}
