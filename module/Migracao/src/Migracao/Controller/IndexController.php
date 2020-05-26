@@ -4574,6 +4574,12 @@ class IndexController extends CircuitoController {
 									}
 								}
 
+								if($qualParte > 50){
+									$html .= '<br />Depois de validar: ';
+									$html .= '<br />Celulas: ' . $quantidadeCelulas;
+									$html .= '<br />Celulas Beta: ' . $quantidadeCelulasEstrategicas;
+								}
+
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
 									if(!$limparDados){
