@@ -4503,17 +4503,17 @@ class IndexController extends CircuitoController {
 							$limparDados = false;
 							$dataParaValidar = null;
 
-								// falha quando removeu um responsavel
 								if($grupo->getGrupoResponsavel()[0]){
 									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 								}
 								if($dataParaValidar || $dataInativacao){
+									$limparDados = true;
 									$dataInativacaoTime = strtotime($dataParaValidar);
 									$inicioDoMesTime = strtotime($inicioDoMes);
 									$fimDoMesTime = strtotime($fimFoMes);
 									if($dataInativacaoTime >= $inicioDoMesTime &&
 										$dataInativacaoTime <= $fimDoMesTime){
-										$limparDados = true;
+										$limparDados = false;
 										if($qualParte > 50){
 											$html .= "<br />false: " . $limparDados;
 										}
@@ -4555,8 +4555,12 @@ class IndexController extends CircuitoController {
 									$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
 									$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 									$dataInicialPeriodoTime = strtotime($dataInicialPeriodo);
+									$dataFinalPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
+									$dataFinalPeriodoTime = strtotime($dataFinalPeriodo);
+	
 									$zerarDados = true;
-									if($dataInativacaoTime > $dataInicialPeriodoTime){
+									if($dataInativacaoTime >= $dataInicialPeriodoTime &&
+										$dataInativacaoTime <= $dataFinalPeriodoTime){
 										$zerarDados = false;
 									}
 
