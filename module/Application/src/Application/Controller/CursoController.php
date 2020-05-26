@@ -811,7 +811,7 @@ class CursoController extends CircuitoController {
 		$mostarLinkDoZoom = false;
 		if(
 			$turma->getGrupo()->getGrupoRegiao()->getId() === 3110
-			|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158
+			|| $turma->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 		){
 			$mostarLinkDoZoom = true;
 		}
