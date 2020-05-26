@@ -2175,7 +2175,7 @@ class CursoController extends CircuitoController {
 				$idTurmaPessoa = $post_data['idTurmaPessoa'];
 				$idSituacao = (int) $post_data['idSituacao'];				
 				$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($idTurmaPessoa);
-				if ($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() != $idSituacao) {
+
 					$turmaPessoaSituacaoAtiva = $turmaPessoa->getTurmaPessoaSituacaoAtiva();
 					$turmaPessoaSituacaoAtiva->setDataEHoraDeInativacao();
 					$this->getRepositorio()->getTurmaPessoaSituacaoORM()->persistir($turmaPessoaSituacaoAtiva, $trocaDataDeCriacao = false);
@@ -2203,7 +2203,6 @@ class CursoController extends CircuitoController {
 					$fatoCurso->setTurma_id($turmaPessoa->getTurma()->getId());
 					$fatoCurso->setSituacao_id($idSituacao);
 					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso);
-				}
 
 				$qualRegistroAcao = '';
 				if($idSituacao === Situacao::ATIVO){
