@@ -4504,11 +4504,11 @@ class IndexController extends CircuitoController {
 							$dataParaValidar = null;
 
 								if($grupo->getGrupoResponsavel()[0]){
-									$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
+									//$dataParaValidar = $grupo->getGrupoResponsavel()[0]->getData_inativacaoStringPadraoBanco();
 								}
 								if($dataParaValidar || $dataInativacao){
 									$limparDados = true;
-									$dataInativacaoTime = strtotime($dataParaValidar);
+									$dataInativacaoTime = strtotime($dataInativacao);
 									$inicioDoMesTime = strtotime($inicioDoMes);
 									$fimDoMesTime = strtotime($fimFoMes);
 									if($dataInativacaoTime >= $inicioDoMesTime &&
@@ -4551,17 +4551,16 @@ class IndexController extends CircuitoController {
 
 								/* validando data de inativacao */
 								if($dataParaValidar || $dataInativacao){
-									$dataInativacaoTime = strtotime($dataParaValidar);
+									$dataInativacaoTime = strtotime($dataInativacao);
 									$arrayPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
 									$dataInicialPeriodo = $arrayPeriodo[3].'-'.$arrayPeriodo[2].'-'.$arrayPeriodo[1];
 									$dataInicialPeriodoTime = strtotime($dataInicialPeriodo);
 									$dataFinalPeriodo = $arrayPeriodo[6].'-'.$arrayPeriodo[5].'-'.$arrayPeriodo[4];
 									$dataFinalPeriodoTime = strtotime($dataFinalPeriodo);
 	
-									$zerarDados = true;
-									if($dataInativacaoTime >= $dataInicialPeriodoTime &&
-										$dataInativacaoTime <= $dataFinalPeriodoTime){
-										$zerarDados = false;
+									$zerarDados = false;
+									if($dataInativacaoTime < $dataInicialPeriodoTime){
+										$zerarDados = true;
 									}
 
 									if($zerarDados){
