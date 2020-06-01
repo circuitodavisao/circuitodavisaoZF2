@@ -3287,12 +3287,14 @@ class IndexController extends CircuitoController {
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
 
-						$somaCelula = 0;
+						if($qualParte > 50){
+							$html .= '<br />Visitantes';
+						}
+
 						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 							$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
 							if($qualParte > 50){
-								$html .= '<br /><br /><br />periodo: '.$in;
-								$html .= '<br />semana: '.$semana;
+								$html .= '<br />periodo: '.$indiceDePeriodos;
 							}
 
 							/* visitante */
@@ -3310,12 +3312,8 @@ class IndexController extends CircuitoController {
 													$diaDaSemanaDoEvento--;
 												}
 												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-												//$html .= '<br />dia: '.$diaRealDoEvento;
 
 												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													if($qualParte > 50){
-														$html .= '<br /> visitantes: ' . $somaVisitantes;
-													}
 													$somaVisitantes++;
 												}
 											}
@@ -3323,192 +3321,138 @@ class IndexController extends CircuitoController {
 									}	
 								}
 							}
+						}
+						if($qualParte > 50){
+							$html .= '<br /> visitantes: ' . $somaVisitantes;
+						}
+
+						$contadorCelulasRealizadas = 0;
+
+						$indiceDePeriodos = -1;
+						$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
+						if($qualParte > 50){
+							$html .= '<br />total de evento: '.count($grupoEventoNoPeriodo);
+						}
+
+						foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+							if($qualParte > 50){
+								$html .= '<br /><br />Evento';
+								$html .= '<br />grupoEvento: '.$grupoEvento->getId();
+							}
+
+							$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+							if ($diaDaSemanaDoEvento === 1) {
+								$diaDaSemanaDoEvento = 7; // domingo
+							} else {
+								$diaDaSemanaDoEvento--;
+							}
+							$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
 
 							if($qualParte > 50){
-								$html .= '<br />total de evento: '.count($grupoEventoNoPeriodo);
+								$html .= '<br />dia : '.$diaRealDoEvento;
 							}
-							$contadorCelulasRealizadas = 0;
-							foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+
+							if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+								|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
 								if($qualParte > 50){
-									$html .= '<br />Evento celula';
-									$html .= '<br />grupoEvento: '.$grupoEvento->getId();
+									$html .= '<br />Evento CELULA';
 								}
 
-								$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-								if ($diaDaSemanaDoEvento === 1) {
-									$diaDaSemanaDoEvento = 7; // domingo
-								} else {
-									$diaDaSemanaDoEvento--;
-								}
-								$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-
-								if($qualParte > 50){
-									$html .= '<br />dia celula: '.$diaRealDoEvento;
-								}
+								$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
 
 								if($qualParte > 50){
 									$html .= '<br />quantidade: '.$quantidade;
 								}
 
-								if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
-									|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
-
-									$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
-
-									if($quantidade > 0 ){
-										$contadorCelulasRealizadas++;
-									}
-
-									if($semana === 1){
-										$fatoMensalAnterior->setC1($quantidade);
-									}
-									if($semana === 2){
-										$fatoMensalAnterior->setC2($quantidade);
-									}
-									if($semana === 3){
-										$fatoMensalAnterior->setC3($quantidade);
-									}
-									if($semana === 4){
-										$fatoMensalAnterior->setC4($quantidade);
-									}
-									if($semana === 5){
-										$fatoMensalAnterior->setC5($quantidade);
-									}
-									if($semana === 6){
-										$fatoMensalAnterior->setC6($quantidade);
-									}
-									$somaCelula += $quantidade;
+								if($quantidade > 0 ){
+									$contadorCelulasRealizadas++;
 								}
 
-								if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto){
-									$quantidade = 0;
+								$fatoMensalAnterior->setC5($quantidade);
+							}
 
-									$diaDeSabado = 7;
-									$diaDeDomingo = 1;
-									switch ($grupoEvento->getEvento()->getDia()) {
-									case $diaDeSabado:
-										$tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
-										break;
-									case $diaDeDomingo:
-										$tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
-										break;
-									default:
-										$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
-										break;
-									};
+							if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto){
+								if($qualParte > 50){
+									$html .= '<br />Evento TIPO CULTO';
+								}
 
-									$eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
-									if ($eventoFrequencia) {
-										/* Lideres */
-										if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
-											foreach ($grupoResponsabilidades as $grupoResponsavel) {
-												if ($grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													$quantidade++;
-												}
-											}
-										}
-										/* Pessoas Volateis */
-										if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
-											foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													$quantidade++;
-												}
+
+								$quantidade = 0;
+
+								$diaDeSabado = 7;
+								$diaDeDomingo = 1;
+								switch ($grupoEvento->getEvento()->getDia()) {
+								case $diaDeSabado:
+									$tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
+									break;
+								case $diaDeDomingo:
+									$tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
+									break;
+								default:
+									$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
+									break;
+								};
+
+								$eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
+								if ($eventoFrequencia) {
+									/* Lideres */
+									if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
+										foreach ($grupoResponsabilidades as $grupoResponsavel) {
+											if ($grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+												$quantidade++;
 											}
 										}
 									}
-
-									if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
-										if($semana === 1){
-											$fatoMensalAnterior->setCu1($quantidade);
-										}
-										if($semana === 2){
-											$fatoMensalAnterior->setCu2($quantidade);
-										}
-										if($semana === 3){
-											$fatoMensalAnterior->setCu3($quantidade);
-										}
-										if($semana === 4){
-											$fatoMensalAnterior->setCu4($quantidade);
-										}
-										if($semana === 5){
-											$fatoMensalAnterior->setCu5($quantidade);
-										}
-										if($semana === 6){
-											$fatoMensalAnterior->setCu6($quantidade);
-										}
-									}
-
-									if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
-										if($semana === 1){
-											$fatoMensalAnterior->setA1($quantidade);
-										}
-										if($semana === 2){
-											$fatoMensalAnterior->setA2($quantidade);
-										}
-										if($semana === 3){
-											$fatoMensalAnterior->setA3($quantidade);
-										}
-										if($semana === 4){
-											$fatoMensalAnterior->setA4($quantidade);
-										}
-										if($semana === 5){
-											$fatoMensalAnterior->setA5($quantidade);
-										}
-										if($semana === 6){
-											$fatoMensalAnterior->setA6($quantidade);
-										}
-									}
-									if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
-										if($semana === 1){
-											$fatoMensalAnterior->setD1($quantidade);
-										}
-										if($semana === 2){
-											$fatoMensalAnterior->setD2($quantidade);
-										}
-										if($semana === 3){
-											$fatoMensalAnterior->setD3($quantidade);
-										}
-										if($semana === 4){
-											$fatoMensalAnterior->setD4($quantidade);
-										}
-										if($semana === 5){
-											$fatoMensalAnterior->setD5($quantidade);
-										}
-										if($semana === 6){
-											$fatoMensalAnterior->setD6($quantidade);
+									/* Pessoas Volateis */
+									if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+										foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+											if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+												$quantidade++;
+											}
 										}
 									}
 								}
-							}
 
-							if($semana === 1){
-								$fatoMensalAnterior->setRealizada1($contadorCelulasRealizadas);
-							}
-							if($semana === 2){
-								$fatoMensalAnterior->setRealizada2($contadorCelulasRealizadas);
-							}
-							if($semana === 3){
-								$fatoMensalAnterior->setRealizada3($contadorCelulasRealizadas);
-							}
-							if($semana === 4){
-								$fatoMensalAnterior->setRealizada4($contadorCelulasRealizadas);
-							}
-							if($semana === 5){
-								$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
-							}
-							if($semana === 6){
-								$fatoMensalAnterior->setRealizada6($contadorCelulasRealizadas);
-							}
+								if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
+									if($qualParte > 50){
+										$html .= '<br />Evento  CULTO';
+										$html .= '<br />quant' . $quantidade;
+									}
 
-							$semana++;
+
+									$fatoMensalAnterior->setCu5($quantidade);
+								}
+
+								if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
+									if($qualParte > 50){
+										$html .= '<br />Evento  ARENA';
+										$html .= '<br />quant' . $quantidade;
+									}
+
+									$fatoMensalAnterior->setA5($quantidade);
+								}
+								if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
+									if($qualParte > 50){
+										$html .= '<br />Evento  DOMINGI';
+										$html .= '<br />quant' . $quantidade;
+									}
+
+									$fatoMensalAnterior->setD5($quantidade);
+								}
+							}
 						}
 
-//						$somaParceiro = $this->getRepositorio()->getFatoFinanceiroORM()->pegarValorSomadoDoMesDeCelulas($numeroIdentificador, $mesAnterior, $anoAnterior);
-//						if(!($somaParceiro > 0)){
-//							$somaParceiro = 0.00;
-//						}
-//
-//						$fatoMensalAnterior->setSomaparceiro($somaParceiro);
+						$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
+
+						$somaCelula = 
+							$fatoMensalAnterior->getC1() +
+							$fatoMensalAnterior->getC2() +
+							$fatoMensalAnterior->getC3() +
+							$fatoMensalAnterior->getC4() +
+							$fatoMensalAnterior->getC5() +
+							$fatoMensalAnterior->getC6() ;
+						$fatoMensalAnterior->setSomacelula($somaCelula);
+
 						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
