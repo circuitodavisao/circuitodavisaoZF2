@@ -3247,7 +3247,7 @@ class IndexController extends CircuitoController {
 	function ajustarAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '120');
+		ini_set('max_execution_time', '360');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
