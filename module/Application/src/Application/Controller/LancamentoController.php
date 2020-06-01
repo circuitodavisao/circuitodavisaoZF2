@@ -430,7 +430,14 @@ class LancamentoController extends CircuitoController {
 
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[1], false);
 
-		if($contadorDePeriodo[1] === 1 || $contadorDePeriodo[1] === 2){
+		$hoje = date('d');
+		$diaDaSemana = date('N');
+		if(
+			($contadorDePeriodo[1] === 1 
+			|| $contadorDePeriodo[1] === 2)
+			&& intval($hoje) !== 1
+			&& intval($diaDaSemana) !== 1
+		){
 			$mesAtual = date('m');
 			$anoAtual = date('Y');
 			if(intVal($mesAtual) === 1){
@@ -493,6 +500,201 @@ class LancamentoController extends CircuitoController {
 					$fatoMensalAnterior->getC6() ;
 				$fatoMensalAnterior->setSomacelula($somaCelula);
 				$fatoMensalAnterior->setMultiplicadormetasetenta($numeroDeCelulas);
+				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
+			}
+		}
+
+		if(
+			($contadorDePeriodo[1] === 1 
+			|| $contadorDePeriodo[1] === 2)
+			&& intval($hoje) === 1
+			&& intval($diaDaSemana) === 1
+		){
+			$mesAtual = date('m');
+			$anoAtual = date('Y');
+			if(intVal($mesAtual) === 1){
+				$mesAnterior = 12;
+				$anoAnterior = $anoAtual -1;
+			}else{
+				$mesAnterior = $mesAtual - 1;
+				$anoAnterior = $anoAtual;
+			}
+
+			if($fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior)){
+				$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+				$contadorDePeriodos = 0;
+				for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+					$contadorDePeriodos++;
+				}
+
+				$numeroDeCelulas = 0;
+				$somaVisitantes = 0;
+				$somaPorPeriodoETipo = array();
+				$indiceDePeriodos = -1;
+
+				for($indiceMes = $arrayPeriodoDoMesAtual[0]; $indiceMes <= $arrayPeriodoDoMesAtual[1]; $indiceMes++){
+					$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceMes);
+
+					/* verificando visitante no mes */
+					foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+						if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+							|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceMes, $this->getRepositorio())) {
+								$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+								if ($diaDaSemanaDoEvento === 1) {
+									$diaDaSemanaDoEvento = 7; // domingo
+								} else {
+									$diaDaSemanaDoEvento--;
+								}
+								$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceMes);
+								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+									if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+										$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
+
+										if($tipoPessoa === GrupoPessoaTipo::VISITANTE){
+											$somaVisitantes ++;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$relatorio = array();
+				$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
+				foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+					$tipoCampo = 0;
+					if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
+						$diaDeSabado = 7;
+						$diaDeDomingo = 1;
+						switch ($grupoEvento->getEvento()->getDia()) {
+						case $diaDeSabado:
+							$tipoCampo = LancamentoController::TIPO_CAMPO_ARENA;
+							break;
+						case $diaDeDomingo:
+							$tipoCampo = LancamentoController::TIPO_CAMPO_DOMINGO;
+							break;
+						default:
+							$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
+							break;
+						};
+					}
+					if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
+						|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
+						$tipoCampo = LancamentoController::TIPO_CAMPO_CELULA;
+						if($indiceDePeriodos === $contadorDePeriodos){
+							$numeroDeCelulas++;
+						}
+					}
+
+					$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+					if ($diaDaSemanaDoEvento === 1) {
+						$diaDaSemanaDoEvento = 7; // domingo
+					} else {
+						$diaDaSemanaDoEvento--;
+					}
+					$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
+					$eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
+					if ($eventoFrequencia) {
+						/* Lideres */
+						if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
+							foreach ($grupoResponsabilidades as $grupoResponsavel) {
+								if ($grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+									$tipoPessoa = LancamentoController::TIPO_PESSOA_LIDER;
+									$relatorio[$tipoCampo][$tipoPessoa] ++;
+
+									if ($grupoEvento->verificarSeEstaAtivo() && ($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
+										$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+										$relatorio['celula'][$eventoCelulaId] ++;
+									}
+								}
+							}
+						}
+						/* Pessoas Volateis */
+						if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
+							foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
+								if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
+									$tipoPessoa = $grupoPessoa->getGrupoPessoaTipo()->getId();
+									$relatorio[$tipoCampo][$tipoPessoa] ++;
+
+									if (($grupoEvento->getEvento()->verificaSeECelula() || $grupoEvento->getEvento()->verificaSeECelulaEstrategica())) {
+										$eventoCelulaId = $grupoEvento->getEvento()->getEventoCelula()->getId();
+										$relatorio['celula'][$eventoCelulaId] ++;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$resultadoPeriodo = Funcoes::montaPeriodo($indiceDePeriodos);
+				$dataDoPeriodo = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
+				$dataDoPeriodoFormatada = DateTime::createFromFormat('Y-m-d', $dataDoPeriodo);
+
+				for($indiceDimensao = 1; $indiceDimensao <= 4; $indiceDimensao++){
+					$lider = $relatorio[$indiceDimensao][LancamentoController::TIPO_PESSOA_LIDER];
+					$membro = $relatorio[$indiceDimensao][GrupoPessoaTipo::MEMBRO];
+					$consolidacao = $relatorio[$indiceDimensao][GrupoPessoaTipo::CONSOLIDACAO];
+					$visitante = $relatorio[$indiceDimensao][GrupoPessoaTipo::VISITANTE];
+
+					$contadorCelulasRealizadas = 0;
+					if ($indiceDimensao === DimensaoTipo::CELULA) {
+						foreach($relatorio['celula'] as $k => $v){
+							if($relatorio['celula'][$k] > 0){
+								$contadorCelulasRealizadas++;
+							}
+						}
+					}
+
+					$soma = $lider + $membro + $consolidacao + $visitante;
+
+					if ($indiceDimensao === DimensaoTipo::CELULA) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setC5($soma);
+							$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setC6($soma);
+							$fatoMensalAnterior->setRealizada6($contadorCelulasRealizadas);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::CULTO) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setCu5($soma);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setCu6($soma);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::ARENA) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setA5($soma);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setA6($soma);
+						}
+					}
+					if ($indiceDimensao === DimensaoTipo::DOMINGO) {
+						if($contadorDePeriodos === 5){
+							$fatoMensalAnterior->setD5($soma);
+						}
+						if($contadorDePeriodos === 6){
+							$fatoMensalAnterior->setD6($soma);
+						}
+					}
+				}
+
+				$somaCelula = 
+					$fatoMensalAnterior->getC1() +
+					$fatoMensalAnterior->getC2() +
+					$fatoMensalAnterior->getC3() +
+					$fatoMensalAnterior->getC4() +
+					$fatoMensalAnterior->getC5() +
+					$fatoMensalAnterior->getC6() ;
+				$fatoMensalAnterior->setSomacelula($somaCelula);
+				$fatoMensalAnterior->setMultiplicadormetasetenta($numeroDeCelulas);
+				$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 				$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 			}
 		}
