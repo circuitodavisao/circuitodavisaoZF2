@@ -92,4 +92,41 @@ class GrupoORM extends CircuitoORM {
 		}
 	}
 
+	public function gruposPorParteCem($qualParte){
+		$dqlBase = "SELECT g.id "
+			. "FROM  " . Constantes::$ENTITY_GRUPO . " g "
+			. "ORDER BY g.id DESC ";
+		$totalDivisoes = 100;
+		try {
+			$totalDeGrupos = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setMaxResults(1)
+				->getResult()[0]['id'];
+			$fracaoParaMontar = $totalDeGrupos/$totalDivisoes;
+			$inicio = 1;
+			if($qualParte > 1){
+				$inicio = $fracaoParaMontar * ($qualParte - 1);
+			}
+
+			$dqlBase = "SELECT g "
+				. "FROM  " . Constantes::$ENTITY_GRUPO . " g ";
+			$grupos = $this->getEntityManager()
+				->createQuery($dqlBase)
+				->setFirstResult($inicio)
+				->setMaxResults(number_format($fracaoParaMontar))
+				->getResult();
+
+			$gruposAtivos = array();
+            foreach ($grupos as $grupo) {
+                //if (count($grupo->getResponsabilidadesAtivas()) > 0) {
+                    $gruposAtivos[] = $grupo;
+                //}
+            }
+ 
+			return $gruposAtivos;
+		} catch (Exception $exc) {
+			echo $exc->getMessage();
+		}
+	}
+
 }
