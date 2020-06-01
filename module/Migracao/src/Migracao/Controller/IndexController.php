@@ -3277,8 +3277,8 @@ class IndexController extends CircuitoController {
 				foreach ($gruposParaValidar as $grupo) {
 					if($grupo->verificarSeEstaAtivo()){
 						$somaVisitantes = 0;
-						if($qualParte > 50){
 							$html .= '<br /><br />grupo: '.$grupo->getId();
+						if($qualParte > 50){
 							$html .= '<br />lider: ' . $grupo->getNomeLideresAtivos();
 						}
 
@@ -3422,7 +3422,7 @@ class IndexController extends CircuitoController {
 							$fatoMensalAnterior->getC6() ;
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 
-						$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
+						//$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 					}
