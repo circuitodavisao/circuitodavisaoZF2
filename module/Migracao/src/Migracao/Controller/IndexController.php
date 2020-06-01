@@ -3287,45 +3287,6 @@ class IndexController extends CircuitoController {
 							$this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
 						$fatoMensalAnterior = $this->getRepositorio()->getFatoMensalORM()->encontrarPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);
 
-						if($qualParte > 50){
-							$html .= '<br />Visitantes';
-						}
-
-						for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
-							$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
-							if($qualParte > 50){
-								$html .= '<br />periodo: '.$indiceDePeriodos;
-							}
-
-							/* visitante */
-							if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasVisitantesNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
-								foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-									if($grupoPessoa->getGrupoPessoaTipo()->getId() === GrupoPessoaTipo::VISITANTE){
-										foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-											if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
-												|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
-
-												$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
-												if ($diaDaSemanaDoEvento === 1) {
-													$diaDaSemanaDoEvento = 7; // domingo
-												} else {
-													$diaDaSemanaDoEvento--;
-												}
-												$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $indiceDePeriodos);
-
-												if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-													$somaVisitantes++;
-												}
-											}
-										}
-									}	
-								}
-							}
-						}
-						if($qualParte > 50){
-							$html .= '<br /> visitantes: ' . $somaVisitantes;
-						}
-
 						$contadorCelulasRealizadas = 0;
 
 						$indiceDePeriodos = -1;
