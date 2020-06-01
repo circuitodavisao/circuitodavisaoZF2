@@ -3367,6 +3367,9 @@ class IndexController extends CircuitoController {
 								if($quantidade > 0 ){
 									$contadorCelulasRealizadas++;
 								}
+								if($qualParte > 50){
+									$html .= '<br />realizads: '.$contadorCelulasRealizadas;
+								}
 
 								$fatoMensalAnterior->setC5($quantidade);
 							}
@@ -3442,6 +3445,11 @@ class IndexController extends CircuitoController {
 							}
 						}
 
+
+						if($qualParte > 50){
+
+							$html .= '<br /><br />Total REALIZADAS: '. $contadorCelulasRealizadas;
+						}
 						$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
 
 						$somaCelula = 
