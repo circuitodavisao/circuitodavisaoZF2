@@ -2419,8 +2419,38 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
 			$contadorDePeriodos++;
 		}
-		if($contadorDePeriodos === 0){
+		$hoje = date('d');
+		$diaDaSemana = date('N');
+	
+		if(
+			$contadorDePeriodos === 0
+			&& intval($hoje) !== 1
+			&& intval($diaDaSemana) !== 1
+		){
 			$contadorDePeriodos = 1;
+		}
+
+		if(
+			$contadorDePeriodos === 0
+			&& intval($hoje) === 1
+			&& intval($diaDaSemana) === 1
+		){
+
+			$mesAtual = date('m');
+			$anoAtual = date('Y');
+			if(intVal($mesAtual) === 1){
+				$mesAnterior = 12;
+				$anoAnterior = $anoAtual -1;
+			}else{
+				$mesAnterior = $mesAtual - 1;
+				$anoAnterior = $anoAtual;
+			}
+
+			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
+			$contadorDePeriodos = 0;
+			for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
+				$contadorDePeriodos++;
+			}
 		}
 
 		$relatorioOrdenado = array();
