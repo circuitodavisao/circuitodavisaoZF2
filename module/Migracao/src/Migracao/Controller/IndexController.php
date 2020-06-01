@@ -3274,7 +3274,12 @@ class IndexController extends CircuitoController {
 
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mesAnterior, $anoAnterior);
 			if($gruposParaValidar){
+				$contador = 1;
 				foreach ($gruposParaValidar as $grupo) {
+					$contador++;
+					if($contador === 10){
+						break;
+					}
 					if($grupo->verificarSeEstaAtivo()){
 						$somaVisitantes = 0;
 							$html .= '<br /><br />grupo: '.$grupo->getId();
@@ -3421,7 +3426,6 @@ class IndexController extends CircuitoController {
 							$fatoMensalAnterior->getC5() +
 							$fatoMensalAnterior->getC6() ;
 						$fatoMensalAnterior->setSomacelula($somaCelula);
-
 						//$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
