@@ -3267,7 +3267,7 @@ class IndexController extends CircuitoController {
 			$gruposParaValidar = array();
 			$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
 			if($qualParte <= 100){
-				$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParteCem($qualParte);
+				$gruposParaValidar = $this->getRepositorio()->getGrupoORM()->gruposPorParte($qualParte);
 			}else{
 				$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId($qualParte);
 			}
