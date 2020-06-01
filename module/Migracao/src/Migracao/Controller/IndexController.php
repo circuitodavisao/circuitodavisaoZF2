@@ -3276,10 +3276,6 @@ class IndexController extends CircuitoController {
 			if($gruposParaValidar){
 				$contador = 1;
 				foreach ($gruposParaValidar as $grupo) {
-					$contador++;
-					if($contador === 10){
-						break;
-					}
 					if($grupo->verificarSeEstaAtivo()){
 						$somaVisitantes = 0;
 							$html .= '<br /><br />grupo: '.$grupo->getId();
