@@ -2451,6 +2451,14 @@ class RelatorioController extends CircuitoController {
 			for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= $arrayPeriodoDoMesAtual[1]; $indiceDePeriodos++){
 				$contadorDePeriodos++;
 			}
+
+		if($entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::igreja 
+			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::equipe
+			|| $entidadeLogada->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){
+				$grupo = $entidadeLogada->getGrupo();
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);						
+				$relatorioDesordenado = $this->getRepositorio()->getFatoMensalORM()->buscarFatosPorNumeroIdentificadorMesEAno($numeroIdentificador, $mesAnterior, $anoAnterior);			
+			}		
 		}
 
 		$relatorioOrdenado = array();
