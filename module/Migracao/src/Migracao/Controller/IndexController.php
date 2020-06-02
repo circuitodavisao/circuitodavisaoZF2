@@ -3395,14 +3395,12 @@ class IndexController extends CircuitoController {
 						$fatoMensalAnterior->setA5($somaArena);
 						$fatoMensalAnterior->setD5($somaDomingo);
 						$fatoMensalAnterior->setC5($somaCelula);
-						if($qualParte > 50){
 
 							$html .= '<br />celula'. $somaCelula;
 							$html .= '<br />culto'. $somaCulto;
 							$html .= '<br />arena'. $somaArena;
 							$html .= '<br />domingo'. $somaDomingo;
 							$html .= '<br /><br />Total REALIZADAS: '. $contadorCelulasRealizadas;
-						}
 						$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
 
 						$somaCelula = 
