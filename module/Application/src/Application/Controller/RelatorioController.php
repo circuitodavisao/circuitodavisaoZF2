@@ -2419,21 +2419,18 @@ class RelatorioController extends CircuitoController {
 		for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
 			$contadorDePeriodos++;
 		}
-		$hoje = date('d');
-		$diaDaSemana = date('N');
-	
+
+		$periodoParaTestar = Funcoes::montaPeriodo(0);
 		if(
 			$contadorDePeriodos === 0
-			&& intval($hoje) !== 1
-			&& intval($diaDaSemana) !== 1
+			&& intval($periodoParaTestar[1]) !== 1
 		){
 			$contadorDePeriodos = 1;
 		}
 
 		if(
 			$contadorDePeriodos === 0
-			&& intval($hoje) === 1
-			&& intval($diaDaSemana) === 1
+			&& intval($periodoParaTestar[1]) === 1
 		){
 
 			$mesAtual = date('m');
