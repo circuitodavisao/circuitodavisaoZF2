@@ -3314,13 +3314,14 @@ class IndexController extends CircuitoController {
 								$html .= '<br />dia : '.$diaRealDoEvento;
 							}
 
+							$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
+
 							if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
 								|| $grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica) {
 								if($qualParte > 50){
 									$html .= '<br />Evento CELULA';
 								}
 
-								$quantidade = $this->getRepositorio()->getEventoFrequenciaORM()->quantidadeFrequenciasPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento);
 
 								if($qualParte > 50){
 									$html .= '<br />quantidade: '.$quantidade;
@@ -3342,8 +3343,6 @@ class IndexController extends CircuitoController {
 								}
 
 
-								$quantidade = 0;
-
 								$diaDeSabado = 7;
 								$diaDeDomingo = 1;
 								switch ($grupoEvento->getEvento()->getDia()) {
@@ -3357,26 +3356,6 @@ class IndexController extends CircuitoController {
 									$tipoCampo = LancamentoController::TIPO_CAMPO_CULTO;
 									break;
 								};
-
-								$eventoFrequencia = $grupoEvento->getEvento()->getEventoFrequencia();
-								if ($eventoFrequencia) {
-									/* Lideres */
-									if ($grupoResponsabilidades = $grupo->getResponsabilidadesAtivas()) {
-										foreach ($grupoResponsabilidades as $grupoResponsavel) {
-											if ($grupoResponsavel->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-												$quantidade++;
-											}
-										}
-									}
-									/* Pessoas Volateis */
-									if ($grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($indiceDePeriodos, $this->getRepositorio())) {
-										foreach ($grupoPessoasNoPeriodo as $grupoPessoa) {
-											if ($grupoPessoa->getPessoa()->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->getRepositorio())) {
-												$quantidade++;
-											}
-										}
-									}
-								}
 
 								if($tipoCampo === LancamentoController::TIPO_CAMPO_CULTO){
 									if($qualParte > 50){
