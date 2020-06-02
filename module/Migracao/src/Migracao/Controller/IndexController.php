@@ -3296,6 +3296,10 @@ class IndexController extends CircuitoController {
 							$html .= '<br />total de evento: '.count($grupoEventoNoPeriodo);
 						}
 
+						$somaCelula = 0;
+						$somaCulto = 0;
+						$somaArena = 0;
+						$somaDomingo = 0;
 						foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 							if($qualParte > 50){
 								$html .= '<br /><br />Evento';
@@ -3334,7 +3338,8 @@ class IndexController extends CircuitoController {
 									$html .= '<br />realizads: '.$contadorCelulasRealizadas;
 								}
 
-								$fatoMensalAnterior->setC5($quantidade);
+								$somaCelula += $quantidade;
+
 							}
 
 							if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto){
@@ -3363,8 +3368,8 @@ class IndexController extends CircuitoController {
 										$html .= '<br />quant' . $quantidade;
 									}
 
+								$somaCulto += $quantidade;
 
-									$fatoMensalAnterior->setCu5($quantidade);
 								}
 
 								if($tipoCampo === LancamentoController::TIPO_CAMPO_ARENA){
@@ -3373,7 +3378,7 @@ class IndexController extends CircuitoController {
 										$html .= '<br />quant' . $quantidade;
 									}
 
-									$fatoMensalAnterior->setA5($quantidade);
+								$somaArena += $quantidade;
 								}
 								if($tipoCampo === LancamentoController::TIPO_CAMPO_DOMINGO){
 									if($qualParte > 50){
@@ -3381,14 +3386,21 @@ class IndexController extends CircuitoController {
 										$html .= '<br />quant' . $quantidade;
 									}
 
-									$fatoMensalAnterior->setD5($quantidade);
+								$somaDomingo += $quantidade;
 								}
 							}
 						}
 
-
+						$fatoMensalAnterior->setCu5($somaCulto);
+						$fatoMensalAnterior->setA5($somaArena);
+						$fatoMensalAnterior->setD5($somaDomingo);
+						$fatoMensalAnterior->setC5($somaCelula);
 						if($qualParte > 50){
 
+							$html .= '<br />celula'. $somaCelula;
+							$html .= '<br />culto'. $somaCulto;
+							$html .= '<br />arena'. $somaArena;
+							$html .= '<br />domingo'. $somaDomingo;
 							$html .= '<br /><br />Total REALIZADAS: '. $contadorCelulasRealizadas;
 						}
 						$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
@@ -3401,7 +3413,6 @@ class IndexController extends CircuitoController {
 							$fatoMensalAnterior->getC5() +
 							$fatoMensalAnterior->getC6() ;
 						$fatoMensalAnterior->setSomacelula($somaCelula);
-						//$fatoMensalAnterior->setSomavisitantes($somaVisitantes);
 						$fatoMensalAnterior->setSomacelula($somaCelula);
 						$this->getRepositorio()->getFatoMensalORM()->persistir($fatoMensalAnterior, false);
 					}
