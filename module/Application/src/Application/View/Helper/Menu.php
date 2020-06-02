@@ -434,7 +434,7 @@ $link = 'relatorioNovo';
 				$html .= '<li>';
 				$html .= '<a href="/relatorioCelulasNaoRealizadas" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
-				$html .= 'Células não realizadas no período (Manutenção)';
+				$html .= 'Células não realizadas no período';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
