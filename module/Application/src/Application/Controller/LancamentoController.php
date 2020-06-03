@@ -647,6 +647,10 @@ class LancamentoController extends CircuitoController {
 					$soma = $lider + $membro + $consolidacao + $visitante;
 
 					if ($indiceDimensao === DimensaoTipo::CELULA) {
+						if($contadorDePeriodos === 4){
+							$fatoMensalAnterior->setC4($soma);
+							$fatoMensalAnterior->setRealizada4($contadorCelulasRealizadas);
+						}
 						if($contadorDePeriodos === 5){
 							$fatoMensalAnterior->setC5($soma);
 							$fatoMensalAnterior->setRealizada5($contadorCelulasRealizadas);
@@ -657,6 +661,9 @@ class LancamentoController extends CircuitoController {
 						}
 					}
 					if ($indiceDimensao === DimensaoTipo::CULTO) {
+						if($contadorDePeriodos === 4){
+							$fatoMensalAnterior->setCu4($soma);
+						}
 						if($contadorDePeriodos === 5){
 							$fatoMensalAnterior->setCu5($soma);
 						}
@@ -665,6 +672,9 @@ class LancamentoController extends CircuitoController {
 						}
 					}
 					if ($indiceDimensao === DimensaoTipo::ARENA) {
+						if($contadorDePeriodos === 4){
+							$fatoMensalAnterior->setA4($soma);
+						}
 						if($contadorDePeriodos === 5){
 							$fatoMensalAnterior->setA5($soma);
 						}
@@ -673,6 +683,9 @@ class LancamentoController extends CircuitoController {
 						}
 					}
 					if ($indiceDimensao === DimensaoTipo::DOMINGO) {
+						if($contadorDePeriodos === 4){
+							$fatoMensalAnterior->setD4($soma);
+						}
 						if($contadorDePeriodos === 5){
 							$fatoMensalAnterior->setD5($soma);
 						}
