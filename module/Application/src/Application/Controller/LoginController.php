@@ -1106,9 +1106,10 @@ class LoginController extends CircuitoController {
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
+						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BH
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -1170,8 +1171,7 @@ class LoginController extends CircuitoController {
 														$turmaAula = $turma->getTurmaAulaAtiva();
 														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
 														if(
-															$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() !== 3110
-															&& $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() !== 11158 // PALMAS
+															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 														){
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
@@ -2573,6 +2573,7 @@ class LoginController extends CircuitoController {
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
