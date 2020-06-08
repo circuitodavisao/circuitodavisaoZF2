@@ -1462,6 +1462,7 @@ class LoginController extends CircuitoController {
 								$html .= '<div class="panel-body">';
 
 								$html .= '<input type="text" id="palavraChave" class="form-control" />';
+								$html .= '<small>Palavra Chave em minúsculo</small>';
 								$html .= '<br />';
 								$html .= '<button type="button" onClick="validarPalavraPasse()" class="btn btn-sm btn-primary">Validar</button>';
 								$html .= '</div>';
