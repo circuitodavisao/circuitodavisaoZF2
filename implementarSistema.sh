@@ -38,5 +38,5 @@ sudo docker run -d --name cv --link bdpg:postgres -p 443:443 -v /home/circuitoda
 
 # instalando o banco de dados
 # sudo scp root@51.89.96.128:/home/backup/dump /home/dump
-sudo tar -xzvf dump
+sudo tar -xzvf dump.tar.gz
 sudo docker exec -i bdpg psql -U postgres < /home/dump.sql
