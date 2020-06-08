@@ -431,6 +431,7 @@ class LancamentoController extends CircuitoController {
 		$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[1], false);
 
 		$periodoParaTestar = Funcoes::montaPeriodo(0);
+		$periodoEnviado = Funcoes::montaPeriodo($periodo);
 		if(
 			($contadorDePeriodo[1] === 1 
 			|| $contadorDePeriodo[1] === 2)
@@ -502,10 +503,15 @@ class LancamentoController extends CircuitoController {
 			}
 		}
 
+		$periodoEnviado = Funcoes::montaPeriodo($periodo);
 		if(
 			($contadorDePeriodo[1] === 1 
 			|| $contadorDePeriodo[1] === 2)
-			&& intval($periodoParaTestar[1]) === 1
+			&& 
+			(
+				intval($periodoParaTestar[1]) === 1
+				|| (intVal($periodoEnviado[2]) !== intVal(date('m')) && intVal($periodoEnviado[5]) !== intVal(date('m')))
+			)
 		){
 			$mesAtual = date('m');
 			$anoAtual = date('Y');
