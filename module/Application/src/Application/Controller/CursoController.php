@@ -810,8 +810,9 @@ class CursoController extends CircuitoController {
 
 		$mostarLinkDoZoom = false;
 		if(
-			$turma->getGrupo()->getGrupoRegiao()->getId() === 3110
+			$turma->getGrupo()->getGrupoRegiao()->getId() === 3110 // DF
 			|| $turma->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+			|| $turma->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 		){
 			$mostarLinkDoZoom = true;
 		}
