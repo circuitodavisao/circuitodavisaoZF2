@@ -1171,7 +1171,7 @@ class LoginController extends CircuitoController {
 														$turmaAula = $turma->getTurmaAulaAtiva();
 														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
 														if(
-															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // PALMAS
 														){
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
