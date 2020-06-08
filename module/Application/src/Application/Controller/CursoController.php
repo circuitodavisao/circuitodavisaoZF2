@@ -2943,7 +2943,7 @@ class CursoController extends CircuitoController {
 					$turmaAulaLiberacao = new TurmaAulaLiberacao();
 					$turmaAulaLiberacao->setPessoa($pessoa);
 					$turmaAulaLiberacao->setTurmaAula($turmaAula);
-					$turmaAulaLiberacao->setChave($post['chave']);
+					$turmaAulaLiberacao->setChave(strtolower($post['chave']));
 					$turmaAulaLiberacao->setDataEHoraDeCriacao();
 					$this->getRepositorio()->getTurmaAulaLiberacaoORM()->persistir($turmaAulaLiberacao);
 				}
