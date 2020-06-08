@@ -533,7 +533,7 @@ class LancamentoController extends CircuitoController {
 				$numeroDeCelulas = 0;
 				$somaVisitantes = 0;
 				$somaPorPeriodoETipo = array();
-				$indiceDePeriodos = -1;
+				$indiceDePeriodos = $periodo;
 
 				for($indiceMes = $arrayPeriodoDoMesAtual[0]; $indiceMes <= $arrayPeriodoDoMesAtual[1]; $indiceMes++){
 					$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceMes);
