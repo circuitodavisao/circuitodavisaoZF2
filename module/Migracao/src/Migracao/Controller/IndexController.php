@@ -4460,6 +4460,8 @@ class IndexController extends CircuitoController {
 									$lideresBeta = count($grupo->getResponsabilidadesAtivas());
 								}
 
+								$foiReativadoOuTrocaDeResponsabilidade = false;
+
 								/* validando data de inativacao */
 								if($dataParaValidar || $dataInativacao){
 									$dataInativacaoTime = strtotime($dataParaValidar);
@@ -4475,7 +4477,14 @@ class IndexController extends CircuitoController {
 										$zerarDados = false;
 									}
 
-									if($zerarDados){
+									/* validando troca de responsabilidade ou volta de desistente */
+									foreach($grupo->getGrupoResponsavel() as $grupoResponsabilidade){
+										if($grupoResponsabilidade->verificarSeEstaAtivo()){
+											$foiReativadoOuTrocaDeResponsabilidade = true;
+										}
+									}
+
+									if($zerarDados && !$foiReativadoOuTrocaDeResponsabilidade){
 										$quantidadeCelulas = 0;
 										$quantidadeCelulasEstrategicas = 0;
 										$membresiaMeta = 0;
@@ -4486,8 +4495,9 @@ class IndexController extends CircuitoController {
 								}
 
 								if($qualParte > 50){
-									$html .= '<br />Data de validar: ' . $dataParaValidar;
-									$html .= '<br />Data inativacao: ' . $dataInativacao;
+									$html .= '<br />limparDados: ' . $limparDados;
+									$html .= '<br />zerarDados: ' . $zerarDados;
+									$html .= '<br />foiReativadoOuTrocaDeResponsabilidade: ' . $foiReativadoOuTrocaDeResponsabilidade;
 									$html .= '<br />Data inicio periodo: ' . $dataInicialPeriodo;
 									$html .= '<br />Data final periodo: ' . $dataFinalPeriodo;
 									$html .= '<br />Depois de validar: ';
@@ -4498,7 +4508,7 @@ class IndexController extends CircuitoController {
 
 								$indiceFatoMensal = 1;// mes atual
 								if($contadorDePeriodo[$indiceFatoMensal] === 1){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq1($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta1($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq1($quantidadeCelulasEstrategicas);
@@ -4515,7 +4525,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 2){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq2($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta2($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq2($quantidadeCelulasEstrategicas);
@@ -4532,7 +4542,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 3){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq3($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta3($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq3($quantidadeCelulasEstrategicas);
@@ -4549,7 +4559,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 4){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq4($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta4($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq4($quantidadeCelulasEstrategicas);
@@ -4566,7 +4576,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 5){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq5($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta5($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq5($quantidadeCelulasEstrategicas);
@@ -4583,7 +4593,7 @@ class IndexController extends CircuitoController {
 									}
 								}
 								if($contadorDePeriodo[$indiceFatoMensal] === 6){
-									if(!$limparDados){
+									if(!$limparDados || $foiReativadoOuTrocaDeResponsabilidade){
 										$fatosMensal[$indiceFatoMensal]->setCq6($quantidadeCelulas);
 										$fatosMensal[$indiceFatoMensal]->setCqmeta6($membresiaMeta);
 										$fatosMensal[$indiceFatoMensal]->setCbq6($quantidadeCelulasEstrategicas);
