@@ -19,6 +19,7 @@ if(count($this->listas[1]) > 0){
 	$html = '';
 	$html .= '<div class="panel-body bg-light">';
 	$html .= '<input id="fooFilter" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<div class="table-responsive">';
 	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter">';
 	$html .= '<thead>';
 	$html .= '<tr class="dark">';
@@ -45,6 +46,7 @@ if(count($this->listas[1]) > 0){
 	$html .= '</tbody>';
 	$html .= '</table>';
 	$html .= '</div>';
+	$html .= '</div>';
 	echo $html;
 }else{
 	echo '<div class="alert alert-warning">Sem Revisionistas</div>';
@@ -55,6 +57,7 @@ if(count($this->listas[2]) > 0){
 	$html = '';
 	$html .= '<div class="panel-body bg-light">';
 	$html .= '<input id="fooFilter2" type="text" class="form-control" placeholder="Filtro">';
+	$html .= '<div class="table-responsive">';
 	$html .= '<table class="table table-condensed table-hover bg-light mt15 footable" data-filter="#fooFilter2">';
 	$html .= '<thead>';
 	$html .= '<tr class="dark">';
@@ -78,6 +81,7 @@ if(count($this->listas[2]) > 0){
 	}
 	$html .= '</tbody>';
 	$html .= '</table>';
+	$html .= '</div>';
 	$html .= '</div>';
 	echo $html;
 }else{
