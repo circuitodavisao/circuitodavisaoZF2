@@ -1471,112 +1471,114 @@ class LoginController extends CircuitoController {
 								$html .= '</div>';
 							}
 
-							/* situacao financeira */
-							$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
-							$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
-							$html .= '<div class="panel-body">';
-
-							$html .= '<div class="table-responsive">';
-							$html .= '<table class="table table-condensed">';
-							$html .= '<thead>';
-
-							$html .= '<tr>';
-							$html .= '<th colspan="3">Legenda'
-								. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Pagamento</span>'
-								. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Pago</span></th>';
-							$html .= '</tr>';
-
-							$html .= '<tr>';
-							$html .= '<th>Diciplinas</th>';
-							$html .= '<th colspan="3" class="text-center">Mensalidade</th>';
-							$html .= '</tr>';
-							$html .= '</thead>';
-							$html .= '<tbody>';
-							$pontosFinanceiro = Array();		
-							$validacaoFinanceiro = 1;		
-							foreach ($turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
-								if ($disciplina->getId() !== Disciplina::POS_REVISAO) {				
-									$html .= '<tr>';	
-									$html .= '<td>' . $disciplina->getNome() . '</td>';			
-									if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
-										$mensalidadeFinanceiro = Array();
-										foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
-											if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {							
-												$mensalidadeFinanceiro['valor1'] = $turmaPessoaFinanceiro->getValor1();
-												$mensalidadeFinanceiro['valor2'] = $turmaPessoaFinanceiro->getValor2();
-												$mensalidadeFinanceiro['valor3'] = $turmaPessoaFinanceiro->getValor3();
-											}
-										}
-									}
-
-
-									for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
-										$extra = '';
-										$icone = 'fa-times';
-										$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;				
-
-										if($mensalidadeFinanceiro['valor'.$indiceMensalidade] == 'S'){
-											$pontosFinanceiro[$disciplina->getNome()] += 1;
-											$icone = 'fa-check';
-											$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
-										}
-										$iconeBotao = '<i class="fa ' . $icone . '"></i>';
-										$idBotao = 'botao_' . $turmaPessoa->getId() . '_' . $disciplina->getId() . '_3' . '_' . $indiceMensalidade;
-
-										$html .= '<td>';
-										$mostrarRecibo = 'hidden';
-										if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
-											$corDoSpan = 'success';
-										}
-										if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
-											$corDoSpan = 'danger';
-										}						
-										$html .= '<span class="btn-xs btn-'.$corDoSpan.'">';
-										$html .= $iconeBotao;
-										$html .= '</span>';				
-
-										$html .= '</td>';
-									}
-
-									$html .= '</tr>';
-								}
-							}
-							$html .= '</tbody>';
-							$html .= '</table>';
-							$html .= '</div>';
-							$html .= '<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
-							$html .= '&nbsp;&nbsp;<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
-							$html .= '</div>';
-							$html .= '</div>';
-							/* fim div situacao financeira */
-
-							/* div pagamentos */
-							$html .= '<div id="divPagamentos" class="p5 hidden">';
-							$email = $turmaPessoa->getPessoa()->getEmail();
-							if($email === 'atualize' || $email === null || $email === ''){
-								$html .= '<div id="divEmail" class="panel panel-primary">';
-								$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
+							if( $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){ // REGIAO DF
+								/* situacao financeira */
+								$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
+								$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
 								$html .= '<div class="panel-body">';
 
-								$html .= '<p>Para realizar um pagamento você precisa ter o email cadastrado</p>';
-								$html .= '<p>Sem Email cadastrado</p>';
-								$html .= '<p><button type="button" class="btn btn-xs btn-primary" onClick="mostrarCadastrarEmail()">Cadastrar email</button></p>';
-								$html .= '<div id="divCadastrarEmail" class="p5 hidden">';
-								$html .= '<p>Informe o email</p>';
-								$html .= '<input type="email" id="email" class="form-control" />';
-								$html .= '<br />';
-								$html .= '<button type="button" onClick="salvarEmail()" class="btn btn-sm btn-primary">Salvar</button>';
-								$html .= '</div>';
+								$html .= '<div class="table-responsive">';
+								$html .= '<table class="table table-condensed">';
+								$html .= '<thead>';
 
-								$html .= '</div>';
+								$html .= '<tr>';
+								$html .= '<th colspan="3">Legenda'
+									. ' - <span class="label label-xs label-danger"><i class="fa fa-times"></i> Sem Pagamento</span>'
+									. ' - <span class="label label-xs label-success"><i class="fa fa-check"></i> Pago</span></th>';
+								$html .= '</tr>';
 
-								$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="mostrarSituacaoFinanceira()">Voltar</button>';
+								$html .= '<tr>';
+								$html .= '<th>Diciplinas</th>';
+								$html .= '<th colspan="3" class="text-center">Mensalidade</th>';
+								$html .= '</tr>';
+								$html .= '</thead>';
+								$html .= '<tbody>';
+								$pontosFinanceiro = Array();		
+								$validacaoFinanceiro = 1;		
+								foreach ($turmaPessoa->getTurma()->getCurso()->getDisciplina() as $disciplina) {
+									if ($disciplina->getId() !== Disciplina::POS_REVISAO) {				
+										$html .= '<tr>';	
+										$html .= '<td>' . $disciplina->getNome() . '</td>';			
+										if (count($turmaPessoa->getTurmaPessoaFinanceiro()) > 0) {
+											$mensalidadeFinanceiro = Array();
+											foreach ($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro) {
+												if ($turmaPessoaFinanceiro->getDisciplina()->getId() === $disciplina->getId() && $turmaPessoaFinanceiro->verificarSeEstaAtivo()) {							
+													$mensalidadeFinanceiro['valor1'] = $turmaPessoaFinanceiro->getValor1();
+													$mensalidadeFinanceiro['valor2'] = $turmaPessoaFinanceiro->getValor2();
+													$mensalidadeFinanceiro['valor3'] = $turmaPessoaFinanceiro->getValor3();
+												}
+											}
+										}
+
+
+										for ($indiceMensalidade=1; $indiceMensalidade <= 3 ; $indiceMensalidade++) { 
+											$extra = '';
+											$icone = 'fa-times';
+											$corDoBotao = BotaoSimples::botaoMuitoPequenoPerigoso;				
+
+											if($mensalidadeFinanceiro['valor'.$indiceMensalidade] == 'S'){
+												$pontosFinanceiro[$disciplina->getNome()] += 1;
+												$icone = 'fa-check';
+												$corDoBotao = BotaoSimples::botaoMuitoPequenoSucesso;
+											}
+											$iconeBotao = '<i class="fa ' . $icone . '"></i>';
+											$idBotao = 'botao_' . $turmaPessoa->getId() . '_' . $disciplina->getId() . '_3' . '_' . $indiceMensalidade;
+
+											$html .= '<td>';
+											$mostrarRecibo = 'hidden';
+											if($corDoBotao == BotaoSimples::botaoMuitoPequenoSucesso){
+												$corDoSpan = 'success';
+											}
+											if($corDoBotao == BotaoSimples::botaoMuitoPequenoPerigoso){
+												$corDoSpan = 'danger';
+											}						
+											$html .= '<span class="btn-xs btn-'.$corDoSpan.'">';
+											$html .= $iconeBotao;
+											$html .= '</span>';				
+
+											$html .= '</td>';
+										}
+
+										$html .= '</tr>';
+									}
+								}
+								$html .= '</tbody>';
+								$html .= '</table>';
 								$html .= '</div>';
-							}else{
-								$html .= self::pagamentos($turmaPessoa);
+								$html .= '<button type="button" class="btn btn-xs btn-primary" onClick="mostrarPagamentos()">Pagar Mensalidade</button>';
+								$html .= '&nbsp;&nbsp;<button type="button" class="mt5 btn btn-xs btn-default" onClick="voltarAosDados()">Voltar</button>';
+								$html .= '</div>';
+								$html .= '</div>';
+								/* fim div situacao financeira */
+
+								/* div pagamentos */
+								$html .= '<div id="divPagamentos" class="p5 hidden">';
+								$email = $turmaPessoa->getPessoa()->getEmail();
+								if($email === 'atualize' || $email === null || $email === ''){
+									$html .= '<div id="divEmail" class="panel panel-primary">';
+									$html .= '<div class="panel-heading" style="padding: 0 8px;">Pagamentos</div>';
+									$html .= '<div class="panel-body">';
+
+									$html .= '<p>Para realizar um pagamento você precisa ter o email cadastrado</p>';
+									$html .= '<p>Sem Email cadastrado</p>';
+									$html .= '<p><button type="button" class="btn btn-xs btn-primary" onClick="mostrarCadastrarEmail()">Cadastrar email</button></p>';
+									$html .= '<div id="divCadastrarEmail" class="p5 hidden">';
+									$html .= '<p>Informe o email</p>';
+									$html .= '<input type="email" id="email" class="form-control" />';
+									$html .= '<br />';
+									$html .= '<button type="button" onClick="salvarEmail()" class="btn btn-sm btn-primary">Salvar</button>';
+									$html .= '</div>';
+
+									$html .= '</div>';
+
+									$html .= '<button type="button" class="mt5 btn btn-sm btn-default" onClick="mostrarSituacaoFinanceira()">Voltar</button>';
+									$html .= '</div>';
+								}else{
+									$html .= self::pagamentos($turmaPessoa);
+								}
+								/* fim div pagamentos */
+								$html .= '</div>';
 							}
-							/* fim div pagamentos */
-							$html .= '</div>';
 
 						}
 						$dados['html'] = $html;
