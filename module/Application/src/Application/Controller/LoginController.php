@@ -1155,11 +1155,14 @@ class LoginController extends CircuitoController {
 							$html .= '<td><span class="label label-'.$corSituacao.'">'.$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getNome().'</span></td>';
 							$html .= '</tr>';
 
-							/* financeiro */
-							$html .= '<tr>';
-							$html .= '<td class="text-right">Financeiro</td>';
-							$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
-							$html .= '</tr>';
+
+							if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){ // REGIAO DF
+								/* financeiro */
+								$html .= '<tr>';
+								$html .= '<td class="text-right">Financeiro</td>';
+								$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
+								$html .= '</tr>';
+							}
 
 							$html .= '</table>';
 
@@ -1471,7 +1474,7 @@ class LoginController extends CircuitoController {
 								$html .= '</div>';
 							}
 
-							if( $turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){ // REGIAO DF
+							if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){ // REGIAO DF
 								/* situacao financeira */
 								$html .= '<div id="divSituacaoFinanceira" class="panel panel-primary m5 hidden">';
 								$html .= '<div class="panel-heading" style="padding: 0px 8px;">Financeiro</div>';
