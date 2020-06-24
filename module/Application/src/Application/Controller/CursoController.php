@@ -2035,17 +2035,21 @@ class CursoController extends CircuitoController {
 				$turma = $turmaPessoa->getTurma();
 				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
 
-					$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
-					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-					$grupo = $grupo->getGrupoEquipe();
-					if(in_array($grupo->getId(), $listaDeEquipes)){
-						$nomeEquipe = $listaDeEquipes[$grupo->getId()];
+					$idGrupoEquipe = null;
+					if(count($relatorio->getNumero_identificador()) > 8){
+						$idGrupoEquipe = substr($relatorio->getNumero_identificador(), 8, 8);
 					}else{
+						$idGrupoEquipe = $relatorio->getNumero_identificador();
+					}
+					if(in_array($idGrupoEquipe, $listaDeEquipes)){
+						$nomeEquipe = $listaDeEquipes[$idGrupoEquipe];
+					}else{
+						$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoEquipe);
 						$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
 						if($nomeEquipe == ''){
 							$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
 						}
-						$listaDeEquipes[$grupo->getId()] = $nomeEquipe;
+						$listaDeEquipes[$idGrupoEquipe] = $nomeEquipe;
 					}
 
 					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
