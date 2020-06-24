@@ -2993,8 +2993,7 @@ class CursoController extends CircuitoController {
 		}
 
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
-        //$fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
-        //$fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM();
+        $fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
 
 		$dados = array(
 			'mes' => $mes,
