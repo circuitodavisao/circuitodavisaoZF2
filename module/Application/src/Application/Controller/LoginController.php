@@ -2461,7 +2461,7 @@ class LoginController extends CircuitoController {
 							$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro, $alterarDataDeCriacaoFinanceiro);
 						}
 						$fatoFinanceiroInstituto = new FatoFinanceiroInstituto();
-						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getGrupoPessoaAtivo()->getGrupo());
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getGrupoPessoaAtivo()->getGrupo());
 						$fatoFinanceiroInstituto->setNumero_identificador($numeroIdentificador);
 						$fatoFinanceiroInstituto->setTurma_pessoa_id($turmaPessoa->getId());
 						$fatoFinanceiroInstituto->setValor($valor);
