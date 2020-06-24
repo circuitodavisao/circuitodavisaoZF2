@@ -804,7 +804,7 @@ class RepositorioORM {
         return $this->_turmaAulaLiberacaoORM;
     }
 
-    public function getFatoFinanceiroInstituto() {
+    public function getFatoFinanceiroInstitutoORM() {
         if (is_null($this->_fatoFinanceiroInstituto)) {
 			$this->_fatoFinanceiroInstituto = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO);
         }
