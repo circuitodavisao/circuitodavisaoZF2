@@ -805,10 +805,10 @@ class RepositorioORM {
     }
 
     public function getFatoFinanceiroInstitutoORM() {
-        if (is_null($this->_fatoFinanceiroInstituto)) {
-			$this->_fatoFinanceiroInstituto = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO);
+        if (is_null($this->_fatoFinanceiroInstitutoORM)) {
+			$this->_fatoFinanceiroInstitutoORM = new FatoFinanceiroInstitutoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO);
         }
-        return $this->_fatoFinanceiroInstituto;
+        return $this->_fatoFinanceiroInstitutoORM;
     }
 
     /**

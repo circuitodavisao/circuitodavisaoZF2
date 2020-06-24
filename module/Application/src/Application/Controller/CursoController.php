@@ -2922,7 +2922,6 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
-
 	public function liberarSalvarAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 	
@@ -2964,5 +2963,44 @@ class CursoController extends CircuitoController {
 				$this->getRepositorio()->desfazerTransacao();
 			}
 		}
+	}
+
+	public function pagamentosAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$grupo = $entidade->getGrupo();
+
+		$request = $this->getRequest();
+		$post_data = $request->getPost();
+		$mes = $post_data['mes'];
+		$ano = $post_data['ano'];
+		if (empty($mes)) {
+			$mes = (int) $this->params()->fromRoute('mes', 0);
+			if ($mes == 0) {
+				$mes = date('m');
+			}
+		}
+		if (empty($ano)) {
+			$ano = (int) $this->params()->fromRoute('ano', 0);
+			if ($ano == 0) {
+				$ano = date('Y');
+			}
+		}
+
+        $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
+        //$fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
+        //$fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM();
+
+		$dados = array(
+			'mes' => $mes,
+			'ano' => $ano,
+			'fatos' => $fatos,
+		);
+		return new ViewModel($dados);
 	}
 }

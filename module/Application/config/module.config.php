@@ -99,10 +99,12 @@ return array(
             'curso' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/curso[:action][/:id]',
+                    'route' => '/curso[:action][/:id][/:mes/:ano]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[-0-9_]+',
+                        'mes' => '[0-9]+',
+                        'ano' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Application\Controller\Curso',

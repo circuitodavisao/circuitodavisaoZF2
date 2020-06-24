@@ -1,0 +1,75 @@
+<?php
+
+use Application\Controller\Helper\Funcoes;
+use Application\Controller\RelatorioController;
+use Application\Model\Entity\EntidadeTipo;
+use Application\View\Helper\BotaoSimples;
+
+echo $this->templateFormularioTopo('Pagamentos feitos pelos alunos');
+?>
+	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
+<?php
+$url = $this->mes . '/' . $this->ano;
+echo '<form action="/cursoPagamentos/' . $url . '" method="post">';
+$mesInicial = 1;
+$mesFinal = 12;
+$anoInicial = 2020;
+$anoFinal = date('Y');
+
+?>
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Mês</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="mes" id="mes" class="form-control">
+<?php 
+for ($indice = $mesInicial; $indice <= $mesFinal; $indice++) {
+	$selected = '';
+	if ($this->mes == $indice) {
+		$selected = 'selected';
+	}
+
+	echo '<option value="' . $indice . '" ' . $selected . '>' . Funcoes::mesPorExtenso($indice, 1) . '</option>';
+}
+?>
+			</select>
+		</div>
+		<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Ano</div>
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<select name="ano" id="ano" class="form-control">
+<?php 					
+for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
+	$selected = '';
+	if ($this->ano == $indice) {
+		$selected = 'selected';
+	}
+	echo '<option value="' . $indice . '" ' . $selected . '>' . $indice . '</option>';
+}
+?>
+			</select>
+		</div>
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+	<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+	<span class="ladda-label">Filtrar</span>
+	<span class="ladda-spinner"></span>
+	</button>
+	</div>
+	</div>
+<?php
+echo '</form>';
+
+?>
+<div class="p5">
+<table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
+<thead>
+<tr class="dark hidden-xs">
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+</div>
+</div>
+<?php
+echo $this->templateFormularioRodape();
+?>

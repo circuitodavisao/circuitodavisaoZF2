@@ -42,6 +42,7 @@ return array(
     'Application\Model\ORM\GrupoPessoaTipoORM'                   => __DIR__ . '/src/Application/Model/ORM/GrupoPessoaTipoORM.php',
     'Application\Model\ORM\PessoaORM'                            => __DIR__ . '/src/Application/Model/ORM/PessoaORM.php',
     'Application\Model\ORM\FatoLiderORM'                         => __DIR__ . '/src/Application/Model/ORM/FatoLiderORM.php',
+    'Application\Model\ORM\FatoFinanceiroInstitutoORM'           => __DIR__ . '/src/Application/Model/ORM/FatoFinanceiroInstitutoORM.php',
     'Application\Model\Entity\FatoFinanceiroTipo'                => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiroTipo.php',
     'Application\Model\Entity\PessoaCursoAcesso'                 => __DIR__ . '/src/Application/Model/Entity/PessoaCursoAcesso.php',
     'Application\Model\Entity\SolicitacaoTipo'                   => __DIR__ . '/src/Application/Model/Entity/SolicitacaoTipo.php',

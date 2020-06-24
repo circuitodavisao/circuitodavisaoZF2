@@ -19,6 +19,12 @@ class FatoFinanceiroInstituto extends CircuitoEntity {
 	/** @ORM\Column(type="decimal") */
 	protected $valor;
 
+	/** @ORM\Column(type="integer") */
+	protected $mes;
+
+	/** @ORM\Column(type="integer") */
+	protected $ano;
+
 	function getNumero_identificador() {
 		return $this->numero_identificador;
 	}
@@ -43,4 +49,17 @@ class FatoFinanceiroInstituto extends CircuitoEntity {
 		return $this->turma_pessoa_id;
 	}
 
+	function setMes($i){
+		$this->mes = $i;
+	}
+	function setAno($i){
+		$this->ano = $i;
+	}
+
+	function getMes(){
+		return $this->mes;
+	}
+	function getAno(){
+		return $this->ano;
+	}
 }

@@ -150,6 +150,7 @@ return array(
     'application/curso/disciplina-listar'                     => __DIR__ . '/view/application/curso/disciplina-listar.phtml',
     'application/curso/turma-selecionar-alunos'               => __DIR__ . '/view/application/curso/turma-selecionar-alunos.phtml',
     'application/curso/turma-form-edit'                       => __DIR__ . '/view/application/curso/turma-form-edit.phtml',
+    'application/curso/pagamentos'                       => __DIR__ . '/view/application/curso/pagamentos.phtml',
     'layout/layout-js-nova-senha-validacao'                   => __DIR__ . '/view/layout/layout-js-nova-senha-validacao.phtml',
     'layout/layout-js-evento'                                 => __DIR__ . '/view/layout/layout-js-evento.phtml',
     'layout/layout-js-lancamento-discipulado'                 => __DIR__ . '/view/layout/layout-js-lancamento-discipulado.phtml',
