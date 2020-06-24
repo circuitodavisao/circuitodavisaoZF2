@@ -105,6 +105,7 @@ return array(
     'Application\Model\Entity\Profissao'                         => __DIR__ . '/src/Application/Model/Entity/Profissao.php',
     'Application\Model\Entity\GrupoAtendimento'                  => __DIR__ . '/src/Application/Model/Entity/GrupoAtendimento.php',
     'Application\Model\Entity\FatoFinanceiro'                    => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiro.php',
+    'Application\Model\Entity\FatoFinanceiroInstituto'                    => __DIR__ . '/src/Application/Model/Entity/FatoFinanceiroInstituto.php',
     'Application\Model\Entity\TurmaPessoa'                       => __DIR__ . '/src/Application/Model/Entity/TurmaPessoa.php',
     'Application\Model\Entity\CursoAcesso'                       => __DIR__ . '/src/Application/Model/Entity/CursoAcesso.php',
     'Application\Model\Entity\FatoRevisao'                       => __DIR__ . '/src/Application/Model/Entity/FatoRevisao.php',

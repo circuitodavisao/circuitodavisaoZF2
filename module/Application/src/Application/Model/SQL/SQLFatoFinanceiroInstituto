@@ -1,0 +1,21 @@
+-- Table: fato_financeiro_instituto
+
+-- DROP TABLE fato_financeiro_instituto;
+
+CREATE TABLE fato_financeiro_instituto
+(
+  id serial NOT NULL, -- Identificação do acesso de fato financeiro
+  numero_identificador character varying(64) NOT NULL, -- Número identificador do grupo
+  turma_pessoa_id integer NOT NULL DEFAULT 0, -- Identificação da matricula do aluno
+  valor real NOT NULL, 
+  data_criacao date NOT NULL DEFAULT ('now'::text)::date, -- Data de criação 
+  hora_criacao time without time zone NOT NULL DEFAULT ('now'::text)::time with time zone, -- Hora de criação
+  data_inativacao date, -- Data de inativação
+  hora_inativacao time without time zone, -- Hora inativação
+  CONSTRAINT pk_fato_financeiro_instituto PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE fato_financeiro_instituto
+  OWNER TO postgres;

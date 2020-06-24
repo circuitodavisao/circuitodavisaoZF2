@@ -21,6 +21,7 @@ use Application\Model\Entity\TurmaPessoaAula;
 use Application\Model\Entity\TurmaPessoaVisto;
 use Application\Model\Entity\TurmaPessoaFinanceiro;
 use Application\Model\Entity\EventoTipo;
+use Application\Model\Entity\FatoFinanceiroInstituto;
 use Application\View\Helper\BotaoSimples;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -2298,6 +2299,7 @@ class LoginController extends CircuitoController {
 			){
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)){
 					if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
+						$valor = 0.0;
 						/* validar qual produto e alterar o financeiro */
 						$alterarDataDeCriacaoFinanceiro = false;
 						$indiceInicialModulos = 0;
@@ -2313,66 +2315,79 @@ class LoginController extends CircuitoController {
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
+							$valor = 100.0;
 						}
 						if($produto_id === self::$PRODUTO_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$todasParcelas = true;
+							$valor = 45;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela1 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela2 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela3 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$todasParcelas = true;
+							$valor = 45;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela1 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela2 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela3 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
+							$valor = 45;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela1 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela2 = true;
+							$valor = 15;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela3 = true;
+							$valor = 15;
 						}
 						for($indiceModulo = $indiceInicialModulos; $indiceModulo <= $indiceFinalModulos; $indiceModulo++){
 							$cadastroNovo = false;				
@@ -2443,6 +2458,12 @@ class LoginController extends CircuitoController {
 							}					
 							$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro, $alterarDataDeCriacaoFinanceiro);
 						}
+						$fatoFinanceiroInstituto = new FatoFinanceiroInstituto();
+						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getGrupoPessoaAtivo()->getGrupo());
+						$fatoFinanceiroInstituto->setNumero_identificador($numeroIdentificador);
+						$fatoFinanceiroInstituto->setTurma_pessoa_id($turmaPessoa->getId());
+						$fatoFinanceiroInstituto->setValor($valor);
+						$this->getRepositorio()->getFatoFinanceiroInstitutoORM()->persistir($fatoFinanceiroInstituto);
 					}
 				}
 			}

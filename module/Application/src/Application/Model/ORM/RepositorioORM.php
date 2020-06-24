@@ -81,6 +81,7 @@ class RepositorioORM {
 	private $_fatoPresidencialORM;
 	private $_turmaProfessorORM;
 	private $_turmaAulaLiberacaoORM;
+	private $_fatoFinanceiroInstitutoORM;
 
     /**
      * Contrutor
@@ -801,6 +802,13 @@ class RepositorioORM {
 			$this->_turmaAulaLiberacaoORM = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_TURMA_AULA_LIBERACAO);
         }
         return $this->_turmaAulaLiberacaoORM;
+    }
+
+    public function getFatoFinanceiroInstituto() {
+        if (is_null($this->_fatoFinanceiroInstituto)) {
+			$this->_fatoFinanceiroInstituto = new CircuitoORM($this->getDoctrineORMEntityManager(), Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO);
+        }
+        return $this->_fatoFinanceiroInstituto;
     }
 
     /**
