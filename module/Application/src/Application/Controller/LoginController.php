@@ -2460,11 +2460,11 @@ class LoginController extends CircuitoController {
 							}					
 							$this->getRepositorio()->getTurmaPessoaFinanceiroORM()->persistir($turmaPessoaFinanceiro, $alterarDataDeCriacaoFinanceiro);
 						}
-						//$fatoFinanceiroInstituto = new FatoFinanceiroInstituto();
-						//$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getGrupoPessoaAtivo()->getGrupo());
-						//$fatoFinanceiroInstituto->setNumero_identificador($numeroIdentificador);
-						//$fatoFinanceiroInstituto->setTurma_pessoa_id($turmaPessoa->getId());
-						//$fatoFinanceiroInstituto->setValor($valor);
+						$fatoFinanceiroInstituto = new FatoFinanceiroInstituto();
+						$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $turmaPessoa->getGrupoPessoaAtivo()->getGrupo());
+						$fatoFinanceiroInstituto->setNumero_identificador($numeroIdentificador);
+						$fatoFinanceiroInstituto->setTurma_pessoa_id($turmaPessoa->getId());
+						$fatoFinanceiroInstituto->setValor($valor);
 						//$this->getRepositorio()->getFatoFinanceiroInstitutoORM()->persistir($fatoFinanceiroInstituto);
 					}
 				}
