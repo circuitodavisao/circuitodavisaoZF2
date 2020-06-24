@@ -2036,7 +2036,7 @@ class CursoController extends CircuitoController {
 				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
 
 					$idGrupoEquipe = null;
-					if(count($relatorio->getNumero_identificador()) > 8){
+					if(strlen($relatorio->getNumero_identificador()) > 8){
 						$idGrupoEquipe = substr($relatorio->getNumero_identificador(), 8, 8);
 					}else{
 						$idGrupoEquipe = $relatorio->getNumero_identificador();
