@@ -2285,6 +2285,7 @@ class LoginController extends CircuitoController {
 	static $PRODUTO_PARCELA_3_MODULO_3 = '9b3e2cc9-ea13-47dd-9351-3ef360625e52';
 
 	public function checkoutAction() {
+		$dados = array();	
 		$response = $this->getResponse();
 		$request = $this->getRequest();
 
@@ -2298,6 +2299,7 @@ class LoginController extends CircuitoController {
 				intVal($estado_pagamento) === self::$ESTADO_AUTORIZADO_CARTAO_CREDITO
 			){
 				if($pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorEmail($email)){
+					$dados['pessoa'] = $pessoa->getNome();
 					if($turmaPessoa = $pessoa->getTurmaPessoaAtivo()){
 						$valor = 0.0;
 						/* validar qual produto e alterar o financeiro */
@@ -2469,7 +2471,6 @@ class LoginController extends CircuitoController {
 			}
 		}
 
-		$dados = array();	
 		$response->setContent(Json::encode($dados));
 		return $response;
 	}
