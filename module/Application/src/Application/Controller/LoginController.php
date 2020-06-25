@@ -1159,10 +1159,10 @@ class LoginController extends CircuitoController {
 
 							if($turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110){ // REGIAO DF
 								/* financeiro */
-								//$html .= '<tr>';
-								//$html .= '<td class="text-right">Financeiro</td>';
-								//$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
-								//$html .= '</tr>';
+								$html .= '<tr>';
+								$html .= '<td class="text-right">Financeiro</td>';
+								$html .= '<td><button type="button" class="btn btn-primary btn-xs" onClick="mostrarSituacaoFinanceira()">Ver Situação  Financeira</button></td>';
+								$html .= '</tr>';
 							}
 
 							$html .= '</table>';
