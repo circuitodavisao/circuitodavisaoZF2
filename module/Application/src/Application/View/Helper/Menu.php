@@ -566,6 +566,7 @@ $link = 'relatorioNovo';
 			$arrayOQueMostrarDosCursos['turmasEncerradas'] = false;
 			$arrayOQueMostrarDosCursos['formatura'] = false;
 			$arrayOQueMostrarDosCursos['professores'] = false;
+			$arrayOQueMostrarDosCursos['pagamentos'] = false;
 			if ($this->view->pessoa->getPessoaCursoAcessoAtivo()) {
 				if ($this->view->pessoa->getPessoaCursoAcessoAtivo()->getCursoAcesso()->getId() === CursoAcesso::COORDENADOR) {
 					$arrayOQueMostrarDosCursos['turmasEncerradas'] = true;
@@ -608,6 +609,7 @@ $link = 'relatorioNovo';
 					$arrayOQueMostrarDosCursos['listagem'] = true;
 					$arrayOQueMostrarDosCursos['financeiroPorData'] = true;
 			$arrayOQueMostrarDosCursos['professores'] = true;
+			$arrayOQueMostrarDosCursos['pagamentos'] = true;
 				}
 			}
 			if ($arrayOQueMostrarDosCursos['listagem']) {
@@ -740,6 +742,15 @@ $link = 'relatorioNovo';
 				$html .= '<a href="/cursoProfessores" onClick="mostrarSplash();">';
 				$html .= '<span class="fa fa-users"></span>';
 				$html .= 'Professores';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+
+			if ($arrayOQueMostrarDosCursos['pagamentos']) {
+				$html .= '<li>';
+				$html .= '<a href="/cursoPagamentos" onClick="mostrarSplash();">';
+				$html .= '<span class="fa fa-money"></span>';
+				$html .= 'Pagamentos';
 				$html .= '</a>';
 				$html .= '</li>';
 			}
