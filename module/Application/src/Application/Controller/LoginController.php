@@ -2323,25 +2323,25 @@ class LoginController extends CircuitoController {
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$todasParcelas = true;
-							$valor = 45;
+							$valor = 30;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela1 = true;
-							$valor = 15;
+							$valor = 10;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela2 = true;
-							$valor = 15;
+							$valor = 10;
 						}
 						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela3 = true;
-							$valor = 15;
+							$valor = 10;
 						}
 						if($produto_id === self::$PRODUTO_MODULO_2){
 							$indiceInicialModulos = 2;

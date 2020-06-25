@@ -11,11 +11,11 @@ class FinanceiroInstitutoORM extends CircuitoORM {
 	public function encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano) {
 		$fatos = null;
 		try {
-			$dql = "SELECT ff "
-				. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO . " ff "
+			$dql = "SELECT ffi "
+				. "FROM  " . Constantes::$ENTITY_FATO_FINANCEIRO_INSTITUTO . " ffi "
 				. "WHERE "
-				. "ff.numero_identificador LIKE ?1 "
-				. "AND ff.mes = ?2 AND ff.ano = ?3 order by ff.id asc";
+				. "ffi.numero_identificador LIKE ?1 "
+				. "AND ffi.mes = ?2 AND ffi.ano = ?3 order by ffi.id asc";
 
 			$numeroAjustado = $numeroIdentificador . '%';
 			$fatos = $this->getEntityManager()->createQuery($dql)

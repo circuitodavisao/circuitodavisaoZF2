@@ -1,9 +1,6 @@
 <?php
 
 use Application\Controller\Helper\Funcoes;
-use Application\Controller\RelatorioController;
-use Application\Model\Entity\EntidadeTipo;
-use Application\View\Helper\BotaoSimples;
 
 echo $this->templateFormularioTopo('Pagamentos feitos pelos alunos');
 ?>
@@ -57,16 +54,38 @@ for ($indice = $anoFinal; $indice >= $anoInicial; $indice--) {
 <?php
 echo '</form>';
 
+if(count($this->contadorDePagamentos) > 0){
 ?>
 <div class="p5">
 <table class="text-center table table-condensed table-hover bg-light" style="font-size:8px;">
 <thead>
-<tr class="dark hidden-xs">
+<tr class="dark">
+<th>TIME</th>
+<th>VALOR</th>
 </tr>
 </thead>
 <tbody>
+<?php 
+$html = '';
+$soma = 0;
+foreach ($this->contadorDePagamentos as $key => $value) {
+	$html .= '<tr>';
+	$html .= '<td>' . $key . '</td>';
+	$html .= '<td>' . number_format($value, 2, ',', '.') . '</td>';
+	$html .= '</tr>';
+	$soma += $value;
+}
+$html .= '<tr class="dark">';
+$html .= '<td class="text-right">TOTAL</td>';
+$html .= '<td>' . number_format($soma, 2, ',', '.') . '</td>';
+$html .= '</tr>';
+echo $html;
+?>
 </tbody>
 </table>
+<?php }else{
+echo '<div class="alert alert-warning m5">Sem pagamento para o periíodo</div>';
+} ?>
 
 </div>
 </div>

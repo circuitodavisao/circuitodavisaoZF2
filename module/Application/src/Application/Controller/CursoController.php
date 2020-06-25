@@ -2995,10 +2995,34 @@ class CursoController extends CircuitoController {
         $numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupo);
         $fatos = $this->getRepositorio()->getFatoFinanceiroInstitutoORM()->encontrarFatosPorNumeroIdentificadorPorMesEAno($numeroIdentificador, $mes, $ano);
 
+		$contadorDePagamentos = array();
+		if(count($fatos) > 0 ){
+			foreach($fatos as $relatorio){
+				$idGrupoEquipe = null;
+				if(strlen($relatorio->getNumero_identificador()) > 8){
+					$idGrupoEquipe = substr($relatorio->getNumero_identificador(), 8, 8);
+				}else{
+					$idGrupoEquipe = $relatorio->getNumero_identificador();
+				}
+				if(in_array($idGrupoEquipe, $listaDeEquipes)){
+					$nomeEquipe = $listaDeEquipes[$idGrupoEquipe];
+				}else{
+					$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupoEquipe);
+					$nomeEquipe = $grupo->getEntidadeAtiva()->infoEntidade();
+					if($nomeEquipe == ''){
+						$nomeEquipe = $grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+					}
+					$listaDeEquipes[$idGrupoEquipe] = $nomeEquipe;
+				}
+
+				$contadorDePagamentos[$nomeEquipe]+= $relatorio->getValor();
+			}
+		}
+
 		$dados = array(
+			'contadorDePagamentos' => $contadorDePagamentos,
 			'mes' => $mes,
 			'ano' => $ano,
-			'fatos' => $fatos,
 		);
 		return new ViewModel($dados);
 	}
