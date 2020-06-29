@@ -139,7 +139,17 @@ echo '</form>';
 
 for ($indiceDeArrays = $this->periodoInicial; $indiceDeArrays <= $this->periodoFinal; $indiceDeArrays++) {
 	$classeBase = 'periodo' . $indiceDeArrays . ' ';
-	if ($indiceDeArrays != -1 && $indiceDeArrays != $this->periodoFinal) {
+	if (
+		(
+			$indiceDeArrays != -1 && 
+			$indiceDeArrays != $this->periodoFinal
+		)
+		|| 
+		(
+			$indiceDeArrays == -1 && 
+			$this->periodoFinal == 0
+		)
+	) {
 		$classeBase .= 'hidden-xs';
 	}
 	$mostrarBotaoEsquerdo = true;
