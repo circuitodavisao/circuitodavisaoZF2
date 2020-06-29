@@ -45,7 +45,11 @@ if($this->turmas){
 			$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
 			if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior){
 				$aulaAnterior = $this->listaDeAulasAnterior[$turma->getId()];
-				$aula = $aulaAnterior->getPosicao();
+				if($aulaAnterior){
+					$aula = $aulaAnterior->getPosicao();
+				}else{
+					$aula = 0;
+				}
 			}
 			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
 			echo '<div class="panel">';
