@@ -2551,15 +2551,15 @@ public function alunosAction(){
 			foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
 				$mostrar = false;
 				if (
-					(
-						$turma->getTurmaAulaAtiva() && 
-						$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId() &&
-						$pegarDisciplinaAnterior === false
-					) ||
-					(
-						$pegarDisciplinaAnterior === true &&
-						$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getPosicao() === $posicaoDaDisciplina
-					)
+					$turma->getTurmaAulaAtiva() && 
+					$turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId() &&
+					$pegarDisciplinaAnterior === false
+				){
+					$mostrar = true;
+				}
+				if (
+					$pegarDisciplinaAnterior === true &&
+					$disciplina->getPosicao() === $posicaoDaDisciplina
 				) {
 					$mostrar = true;
 				}
@@ -2570,7 +2570,6 @@ public function alunosAction(){
 						}
 						$listaDeAulasAnterior[$turma->getId()] = $aula;
 					}
-
 				}
 			}
 
