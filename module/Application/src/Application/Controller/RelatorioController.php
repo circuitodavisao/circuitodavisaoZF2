@@ -2507,6 +2507,7 @@ class RelatorioController extends CircuitoController {
 const relatorioAlunosQueNaoForamAAula = 1;
 const relatorioAlunosComFaltas = 2;
 const relatorioAlunosQuemFoiOuNaoProTurma = 3;
+const relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior = 4;
 public function alunosAction(){
 	$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2534,6 +2535,29 @@ public function alunosAction(){
 		}
 	}
 
+	$listaDeAulasAnterior = array();
+	foreach($turmas as $turma){
+		if($turma->getTurmaAulaAtiva()){						
+			foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+				$mostrar = false;
+				if ($turma->getTurmaAulaAtiva() && $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+					$mostrar = true;
+				}
+				if ($mostrar) {
+					foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+						if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
+							break;
+						}
+						$listaDeAulasAnterior[$turma->getId()] = $aula;
+					}
+				}
+			}
+
+		}else{
+			$listaDeAulasAnterior[$turma->getId()] = null;
+		}
+	}
+
 	$listaDeEquipes = array();
 	foreach($relatorioInicial as $relatorio){
 		if(
@@ -2544,7 +2568,10 @@ public function alunosAction(){
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 			if($turmaPessoa->verificarSeEstaAtivo()){
 
-				if($tipoRelatorio !== self::relatorioAlunosQuemFoiOuNaoProTurma){
+				if(
+					$tipoRelatorio !== self::relatorioAlunosQuemFoiOuNaoProTurma &&
+					$tipoRelatorio !== self::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+				){
 					$linkWhatsapp = '<i class="btn btn-xs btn-default btn-disabled fa fa-ban"></i>';
 					$telefone = 'SEM TELEFONE';
 					if($turmaPessoa->getPessoa()->getTelefone()){
@@ -2627,13 +2654,26 @@ public function alunosAction(){
 					}
 				}
 
-				if($tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoProTurma){
+				if(
+					$tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoProTurma ||
+					$tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+				){
 					$assistiuAAula = false;
 					if($turmaPessoaAulas = $turmaPessoa->getTurmaPessoaAula()){
 						$aulaAtiva = $listaDeAulasAtivas[$relatorio->getTurma_id()];
+						if($tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior){
+							$aulaAtiva = $listaDeAulasAnterior[$relatorio->getTurma_id()];
+						}
 						if($aulaAtiva){
+							$idAula = null;
+							if($tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoProTurma){
+								$idAula = $aulaAtiva->getAula()->getId();
+							}
+							if($tipoRelatorio === self::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior){
+								$idAula = $aulaAtiva->getId();
+							}
 							foreach($turmaPessoaAulas as $turmaPessoaAula){
-								if($turmaPessoaAula->getAula()->getId() === $aulaAtiva->getAula()->getId()){
+								if($turmaPessoaAula->getAula()->getId() === $idAula){
 									if($turmaPessoaAula->verificarSeEstaAtivo()){
 										$assistiuAAula = true;
 										break;
@@ -2681,6 +2721,7 @@ public function alunosAction(){
 			'turmas' => $turmas,
 			'relatorio' => $relatorioAjustado,
 			'tipoRelatorio' => $tipoRelatorio,
+			'listaDeAulasAnterior' => $listaDeAulasAnterior,
 		));
 }
 

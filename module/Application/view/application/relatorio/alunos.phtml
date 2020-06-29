@@ -11,6 +11,9 @@ if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
 if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
 	$titulo = 'Alunos que assitiram ou não a aula por turma e time';
 }
+if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior){
+	$titulo = 'Alunos que assitiram ou não a aula por turma e time no ciclo anterior';
+}
 echo $this->templateFormularioTopo($titulo);
 ?>
 <style type="text/css">
@@ -24,144 +27,167 @@ echo $this->templateFormularioTopo($titulo);
 <div class="center-block">
 	<div class="panel-body bg-light" style="padding: 15px 5px 5px 5px;">
 
-			<?php
-			if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
-				echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
+<?php
+if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+	echo '<div class="alert alert-info alert-xs">Legenda: F. - Faltas</div>';
+}
+$total = array();
+if($this->turmas){
+	foreach($this->turmas as $turma){
+		if($turma->getTurmaAulaAtiva()){
+			$dados = array();
+			$dados['time'] = 'TOTAL';
+			$dados['assitiu'] = 0;
+			$dados['naoAssitiu'] = 0;
+
+			$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
+
+			$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+			if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior){
+				$aulaAnterior = $this->listaDeAulasAnterior[$turma->getId()];
+				$aula = $aulaAnterior->getPosicao();
 			}
-				$total = array();
-			if($this->turmas){
-				foreach($this->turmas as $turma){
-					if($turma->getTurmaAulaAtiva()){
-						$dados = array();
-						$dados['time'] = 'TOTAL';
-						$dados['assitiu'] = 0;
-						$dados['naoAssitiu'] = 0;
+			$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
+			echo '<div class="panel">';
+			echo '<div class="panel-heading text-center" style="padding:0px;">'.$label.'</div>';
+			echo '<div class="panel-body pn">';
 
-						$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
-						$aula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
-						$label = $modulo.' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . ' - AULA '.$aula;
-						echo '<div class="panel">';
-						echo '<div class="panel-heading text-center" style="padding:0px;">'.$label.'</div>';
-						echo '<div class="panel-body pn">';
-
-						if($relatorioTurma = $this->relatorio[$turma->getId()]){
-							echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
-							echo '<thead>';
-							echo '<tr class="dark">';
-							if($this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-								echo '<th class="hidden-xs">Matrícula</th>';
-								echo '<th>Nome</th>';
-								echo '<th>Time</th>';
-								if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
-									echo '<th>F.</th>';
-								}
-								echo '<th class="hidden-xs">Telefone</th>';
-								echo '<td></td>';
-							}
-							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-								echo '<th>Time</th>';
-								echo '<th>Total</th>';
-								echo '<th>Assitiu</th>';
-								echo '<th>Não Assitiu</th>';
-							}
-							echo '</tr>';
-							echo '</thead>';
-							echo '<tbody>';
-							foreach($relatorioTurma as $relatorio){
-								echo '<tr>';
-								if($this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-									echo '<td class="hidden-xs">'.$relatorio['matricula'].'</td>';
-									echo '<td>'.$relatorio['nome'].'</td>';
-									echo '<td>'.$relatorio['time'].'</td>';
-									if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
-										echo '<td class="text-center">'.$relatorio['faltas'].'</td>';
-									}
-									echo '<td class="hidden-xs">'.$relatorio['telefone'].'</td>';
-									echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
-								}
-								if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-									if($total[$relatorio['time']]){
-										$item = $total[$relatorio['time']];
-									}else{
-										$item = array();
-										$item['time'] = $relatorio['time'];
-										$item['assitiu'] = 0;
-										$item['naoAssitiu'] = 0;
-									}
-									$item['assitiu'] += $relatorio['assitiu'];
-									$item['naoAssitiu'] += $relatorio['naoAssitiu'];
-									$total[$relatorio['time']] = $item;
-	
-									$dados['assitiu'] += $relatorio['assitiu'];
-									$dados['naoAssitiu'] += $relatorio['naoAssitiu'];
-									echo '<td>'.$relatorio['time'].'</td>';
-									echo '<td>'.($relatorio['assitiu'] + $relatorio['naoAssitiu']).'</td>';
-									echo '<td>'.$relatorio['assitiu'].'</td>';
-									echo '<td>'.$relatorio['naoAssitiu'].'</td>';
-								}
-								echo '</tr>';
-							}
-
-							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-								echo '<tr class="dark">';
-								echo '<td class="text-right">'.$dados['time'].'</td>';
-								echo '<td>'.(intVal($dados['assitiu']) + intVal($dados['naoAssitiu'])).'</td>';
-								echo '<td>'.$dados['assitiu'].'</td>';
-								echo '<td>'.$dados['naoAssitiu'].'</td>';
-								echo '</tr>';
-							}
-							echo '</tbody>';
-							echo '</table>';
-
-
-						}else{
-							echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
-						}
-						echo '</div>';
-						echo '</div>';
+			if($relatorioTurma = $this->relatorio[$turma->getId()]){
+				echo '<table  class="table table-bordered table-condensed footable" data-filter="#fooFilter">';
+				echo '<thead>';
+				echo '<tr class="dark">';
+				if(
+					$this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma &&
+					$this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+				){
+					echo '<th class="hidden-xs">Matrícula</th>';
+					echo '<th>Nome</th>';
+					echo '<th>Time</th>';
+					if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+						echo '<th>F.</th>';
 					}
+					echo '<th class="hidden-xs">Telefone</th>';
+					echo '<td></td>';
 				}
-							if($this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma){
-								echo '<table  class="table table-bordered table-condensed footable mt20" data-filter="#fooFilter">';
-								echo '<thead>';
-								echo '<tr class="dark">';
-								echo '<th colSpan="4">TOTAL</th>';
-								echo '</tr>';
-								echo '<tr class="dark">';
-								echo '<th>Time</th>';
-								echo '<th>Total</th>';
-								echo '<th>Assitiu</th>';
-								echo '<th>Não Assitiu</th>';
-								echo '</tr>';
-								echo '</thead>';
-								echo '<tbody>';
-								$soma = array();
-								$soma['total'] = 0;
-								$soma['assitiu'] = 0;
-								$soma['naoAssitiu'] = 0;
-								foreach($total as $t){
-								$soma['total'] += (intVal($t['assitiu']) + intVal($t['naoAssitiu']));
-								$soma['assitiu'] += $t['assitiu'];
-								$soma['naoAssitiu'] += $t['naoAssitiu'];
-									echo '<tr>';
-									echo '<td>'.$t['time'].'</td>';
-									echo '<td>'.(intVal($t['assitiu']) + intVal($t['naoAssitiu'])).'</td>';
-									echo '<td>'.$t['assitiu'].'</td>';
-									echo '<td>'.$t['naoAssitiu'].'</td>';
-									echo '</tr>';
-								}
-								echo '<tr class="dark">';
-								echo '<td class="text-right">'.$dados['time'].'</td>';
-								echo '<td>'.$soma['total'].'</td>';
-								echo '<td>'.$soma['assitiu'].'</td>';
-								echo '<td>'.$soma['naoAssitiu'].'</td>';
-								echo '</tr>';
-	
-								echo '</tbody>';
-								echo '</table>';
-							}
+				if(
+					$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma ||
+					$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+				){
+					echo '<th>Time</th>';
+					echo '<th>Total</th>';
+					echo '<th>Assitiu</th>';
+					echo '<th>Não Assitiu</th>';
+				}
+				echo '</tr>';
+				echo '</thead>';
+				echo '<tbody>';
+				foreach($relatorioTurma as $relatorio){
+					echo '<tr>';
+					if(
+						$this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma && 
+						$this->tipoRelatorio !== RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+					){
+						echo '<td class="hidden-xs">'.$relatorio['matricula'].'</td>';
+						echo '<td>'.$relatorio['nome'].'</td>';
+						echo '<td>'.$relatorio['time'].'</td>';
+						if($this->tipoRelatorio === RelatorioController::relatorioAlunosComFaltas){
+							echo '<td class="text-center">'.$relatorio['faltas'].'</td>';
+						}
+						echo '<td class="hidden-xs">'.$relatorio['telefone'].'</td>';
+						echo '<td class="text-center">'.$relatorio['mensagem'].'</td>';
+					}
+					if(
+						$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma ||
+						$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+					){
+						if($total[$relatorio['time']]){
+							$item = $total[$relatorio['time']];
+						}else{
+							$item = array();
+							$item['time'] = $relatorio['time'];
+							$item['assitiu'] = 0;
+							$item['naoAssitiu'] = 0;
+						}
+						$item['assitiu'] += $relatorio['assitiu'];
+						$item['naoAssitiu'] += $relatorio['naoAssitiu'];
+						$total[$relatorio['time']] = $item;
+
+						$dados['assitiu'] += $relatorio['assitiu'];
+						$dados['naoAssitiu'] += $relatorio['naoAssitiu'];
+						echo '<td>'.$relatorio['time'].'</td>';
+						echo '<td>'.($relatorio['assitiu'] + $relatorio['naoAssitiu']).'</td>';
+						echo '<td>'.$relatorio['assitiu'].'</td>';
+						echo '<td>'.$relatorio['naoAssitiu'].'</td>';
+					}
+					echo '</tr>';
+				}
+
+				if(
+					$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma ||
+					$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+				){
+					echo '<tr class="dark">';
+					echo '<td class="text-right">'.$dados['time'].'</td>';
+					echo '<td>'.(intVal($dados['assitiu']) + intVal($dados['naoAssitiu'])).'</td>';
+					echo '<td>'.$dados['assitiu'].'</td>';
+					echo '<td>'.$dados['naoAssitiu'].'</td>';
+					echo '</tr>';
+				}
+				echo '</tbody>';
+				echo '</table>';
+
+
+			}else{
+				echo '<div class="alert alert-warning">Sem alunos para mostrar</div>';
 			}
-			?>
+			echo '</div>';
+			echo '</div>';
+		}
+	}
+	if(
+		$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoProTurma ||
+		$this->tipoRelatorio === RelatorioController::relatorioAlunosQuemFoiOuNaoPorTurmaCicloAnterior
+	){
+		echo '<table  class="table table-bordered table-condensed footable mt20" data-filter="#fooFilter">';
+		echo '<thead>';
+		echo '<tr class="dark">';
+		echo '<th colSpan="4">TOTAL</th>';
+		echo '</tr>';
+		echo '<tr class="dark">';
+		echo '<th>Time</th>';
+		echo '<th>Total</th>';
+		echo '<th>Assitiu</th>';
+		echo '<th>Não Assitiu</th>';
+		echo '</tr>';
+		echo '</thead>';
+		echo '<tbody>';
+		$soma = array();
+		$soma['total'] = 0;
+		$soma['assitiu'] = 0;
+		$soma['naoAssitiu'] = 0;
+		foreach($total as $t){
+			$soma['total'] += (intVal($t['assitiu']) + intVal($t['naoAssitiu']));
+			$soma['assitiu'] += $t['assitiu'];
+			$soma['naoAssitiu'] += $t['naoAssitiu'];
+			echo '<tr>';
+			echo '<td>'.$t['time'].'</td>';
+			echo '<td>'.(intVal($t['assitiu']) + intVal($t['naoAssitiu'])).'</td>';
+			echo '<td>'.$t['assitiu'].'</td>';
+			echo '<td>'.$t['naoAssitiu'].'</td>';
+			echo '</tr>';
+		}
+		echo '<tr class="dark">';
+		echo '<td class="text-right">'.$dados['time'].'</td>';
+		echo '<td>'.$soma['total'].'</td>';
+		echo '<td>'.$soma['assitiu'].'</td>';
+		echo '<td>'.$soma['naoAssitiu'].'</td>';
+		echo '</tr>';
+
+		echo '</tbody>';
+		echo '</table>';
+	}
+}
+?>
 
 	</div>
 </div>
