@@ -2684,7 +2684,7 @@ class LoginController extends CircuitoController {
 							/* liberacoes de questorionario */
 							if($turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao()){
 								foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
-									$dataAtual = new date('Y-m-d');
+									$dataAtual = date('Y-m-d');
 									if($dataAtual === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
 									$item = array();	
 									$item['id'] = $turmaAulaLiberacao->getId();
