@@ -2684,6 +2684,8 @@ class LoginController extends CircuitoController {
 							/* liberacoes de questorionario */
 							if($turmaAulaLiberacoes = $turmaAula->getTurmaAulaLiberacao()){
 								foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
+									$dataAtual = new date('Y-m-d');
+									if($dataAtual === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
 									$item = array();	
 									$item['id'] = $turmaAulaLiberacao->getId();
 									$item['professor'] = $turmaAulaLiberacao->getPessoa()->getNome();
@@ -2691,6 +2693,7 @@ class LoginController extends CircuitoController {
 									$item['data'] = $turmaAulaLiberacao->getData_criacaoStringPadraoBanco();
 									$item['hora'] = $turmaAulaLiberacao->getHora_criacao();
 									$listaDeLiberacoes[] = $item;	
+									}
 								}
 							}
 
