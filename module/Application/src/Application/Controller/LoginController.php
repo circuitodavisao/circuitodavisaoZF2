@@ -1194,7 +1194,7 @@ class LoginController extends CircuitoController {
 																if(date('Y-m-d') === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
 																	$horaAtual = date('H');
 																	$diferenca = date('H') - substr($turmaAulaLiberacao->getHora_criacao(), 0, 2);
-																	if($diferenca <= 4){
+																	if($diferenca <= 6){
 																		$mostrar = true;
 																	}
 																}
@@ -1204,6 +1204,9 @@ class LoginController extends CircuitoController {
 																	$htmlU .= '<td class="text-right">';
 																	$htmlU .= 'Questionário';
 																	$htmlU .= '<br />'.$turmaAulaLiberacao->getPessoa()->getNome();
+																	if($responsabilidades = $turmaAulaLiberacao->getPessoa()->getResponsabilidadesAtivas()){
+																		$htmlU .= '<br />TIME ' . $responsabilidades[0]->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();
+																	}
 																	$htmlU .= '</td>';
 																	$htmlU .= '<td>';
 																	$htmlU .= '<button type="button" class="btn btn-primary btn-xs" onClick="abrirValidacaoDeQuetionario('.$turmaAulaLiberacao->getId().')">Abrir</button>';
