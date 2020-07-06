@@ -1158,7 +1158,7 @@ class LoginController extends CircuitoController {
 
 							if(
 								$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1 // CEILANDIA 
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1125 // SEDE
+								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1225 // SEDE
 							){
 								/* financeiro */
 								$html .= '<tr>';
