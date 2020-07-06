@@ -1650,7 +1650,12 @@ class LoginController extends CircuitoController {
 		$html .= '<div class="table-responsive">';
 		$html .= '<table class="table table-condensed text-left">';
 		$html .= '<tr>';
+
+				if(!$novoLink){
 		$html .= '<td>Tudo à vista - R$100,00</td>';
+				}else{
+		$html .= '<td>Tudo à vista - R$90,00</td>';
+				}
 		$id = self::$PRODUTO_TUDO;
 		if($novoLink){
 		$id = self::$P2RODUTO_TUDO;
@@ -1658,7 +1663,11 @@ class LoginController extends CircuitoController {
 		$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
+		if(!$novoLink){
 		$html .= '<td>Tudo parcelado em 3 vezes - R$120,00</td>';
+		}else{
+		$html .= '<td>Tudo parcelado em 3 vezes - R$90,00</td>';
+		}
 		$id = self::$PRODUTO_TUDO_PARCELADO;
 		if($novoLink){
 		$id = self::$P2RODUTO_TUDO_PARCELADO;
@@ -1669,6 +1678,9 @@ class LoginController extends CircuitoController {
 		for($indiceModulo = 1; $indiceModulo <= 3; $indiceModulo++){
 			$valorModulor = 45;
 			if($indiceModulo === 1){
+				$valorModulor = 30;
+			}
+			if($novoLink){
 				$valorModulor = 30;
 			}
 			$html .= '<tr>';
@@ -1696,6 +1708,9 @@ class LoginController extends CircuitoController {
 			for($indiceParcela = 1; $indiceParcela <= 3; $indiceParcela++){
 				$valorParcela = 15;
 				if($indiceModulo === 1){
+					$valorParcela = 10;
+				}
+				if($novoLink){
 					$valorParcela = 10;
 				}
 				$html .= '<tr>';
