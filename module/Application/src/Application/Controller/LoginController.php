@@ -1630,6 +1630,16 @@ class LoginController extends CircuitoController {
 	}
 
 	function pagamentos($turmaPessoa){
+		$novoLink = false;
+		if(intVal($turmaPessoa->getTurma()->getAno()) > 2020){
+			$novoLink = true;
+		}
+		if(intVal($turmaPessoa->getTurma()->getAno()) === 2020){
+			if(intVal($turmaPessoa->getTurma()->getMes()) >= 6){
+				$novoLink = true;
+			}
+		}
+	
 		$html = '';
 		$url = 'https://cieloecommerce.cielo.com.br/transactionalvnext/order/buynow/';
 		$email = $turmaPessoa->getPessoa()->getEmail();
@@ -1642,14 +1652,20 @@ class LoginController extends CircuitoController {
 		$html .= '<tr>';
 		$html .= '<td>Tudo à vista - R$100,00</td>';
 		$id = self::$PRODUTO_TUDO;
+		if($novoLink){
+		$id = self::$P2RODUTO_TUDO;
+		}
 		$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td>Tudo parcelado em 3 vezes - R$120,00</td>';
 		$id = self::$PRODUTO_TUDO_PARCELADO;
+		if($novoLink){
+		$id = self::$P2RODUTO_TUDO_PARCELADO;
+		}
 		$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 		$html .= '</tr>';
-	
+
 		for($indiceModulo = 1; $indiceModulo <= 3; $indiceModulo++){
 			$valorModulor = 45;
 			if($indiceModulo === 1){
@@ -1659,12 +1675,21 @@ class LoginController extends CircuitoController {
 			$html .= '<td>'.$indiceModulo.'º Módulo Completo - R$'.$valorModulor.',00</td>';
 			if($indiceModulo === 1){
 				$id = self::$PRODUTO_MODULO_1;
+				if($novoLink){
+				$id = self::$P2RODUTO_MODULO_1;
+				}
 			}
 			if($indiceModulo === 2){
 				$id = self::$PRODUTO_MODULO_2;
+				if($novoLink){
+				$id = self::$P2RODUTO_MODULO_2;
+				}
 			}
 			if($indiceModulo === 3){
 				$id = self::$PRODUTO_MODULO_3;
+				if($novoLink){
+				$id = self::$P2RODUTO_MODULO_3;
+				}
 			}
 			$html .= '<td><a target="_blanck" onClick="location.href=\''.$url.$id.'\';" class="btn btn-xs btn-primary">Pagar</a></td>';
 			$html .= '</tr>';
@@ -1678,34 +1703,61 @@ class LoginController extends CircuitoController {
 				if($indiceModulo === 1){
 					if($indiceParcela === 1){
 						$id = self::$PRODUTO_PARCELA_1_MODULO_1;
+						if($novoLink){
+							$id = self::$P2RODUTO_PARCELA_1_MODULO_1;
+						}
 					}
 					if($indiceParcela === 2){
 						$id = self::$PRODUTO_PARCELA_2_MODULO_1;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_2_MODULO_1;
+						}
 					}
 					if($indiceParcela === 3){
 						$id = self::$PRODUTO_PARCELA_3_MODULO_1;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_3_MODULO_1;
+						}
 					}
 				}
 				if($indiceModulo === 2){
 					if($indiceParcela === 1){
 						$id = self::$PRODUTO_PARCELA_1_MODULO_2;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_1_MODULO_2;
+						}
 					}
 					if($indiceParcela === 2){
 						$id = self::$PRODUTO_PARCELA_2_MODULO_2;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_2_MODULO_2;
+						}
 					}
 					if($indiceParcela === 3){
 						$id = self::$PRODUTO_PARCELA_3_MODULO_2;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_3_MODULO_2;
+						}
 					}
 				}
 				if($indiceModulo === 3){
 					if($indiceParcela === 1){
 						$id = self::$PRODUTO_PARCELA_1_MODULO_3;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_1_MODULO_3;
+						}
 					}
 					if($indiceParcela === 2){
 						$id = self::$PRODUTO_PARCELA_2_MODULO_3;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_2_MODULO_3;
+						}
 					}
 					if($indiceParcela === 3){
 						$id = self::$PRODUTO_PARCELA_3_MODULO_3;
+						if($novoLink){
+						$id = self::$P2RODUTO_PARCELA_3_MODULO_3;
+						}
 					}
 				}
 	
@@ -1715,7 +1767,6 @@ class LoginController extends CircuitoController {
 		}
 		$html .= '</table>';
 		$html .= '</div>';
-
 
 		$html .= '</div>';
 
@@ -2289,6 +2340,21 @@ class LoginController extends CircuitoController {
 	static $PRODUTO_PARCELA_2_MODULO_3 = 'ce981f85-12ca-4132-9880-29b2de6322dd';
 	static $PRODUTO_PARCELA_3_MODULO_3 = '9b3e2cc9-ea13-47dd-9351-3ef360625e52';
 
+	static $P2RODUTO_TUDO = '780e29b6-d06f-4014-b6c0-e630a411a35f';
+	static $P2RODUTO_TUDO_PARCELADO = 'f134a28a-3942-45f2-a851-46ad7c8ea865';
+	static $P2RODUTO_MODULO_1 = '3a8cdac5-7bbc-4492-9465-85cb8560d85a';
+	static $P2RODUTO_PARCELA_1_MODULO_1 = '37456826-3c06-4997-bb75-18369d1003f9';
+	static $P2RODUTO_PARCELA_2_MODULO_1 = 'bb567596-396b-4d51-b37f-26c67240bbea';
+	static $P2RODUTO_PARCELA_3_MODULO_1 = '0ce2821a-7e8e-48c1-8c0a-89989b832bbd';
+	static $P2RODUTO_MODULO_2 = '00ef2593-8e6e-453c-8ee7-c46537675182';
+	static $P2RODUTO_PARCELA_1_MODULO_2 = '02810709-1a90-45d9-b256-41cdc09872b5';
+	static $P2RODUTO_PARCELA_2_MODULO_2 = 'eceb5d6e-66e4-4a8c-a1ec-0856e73beff1';
+	static $P2RODUTO_PARCELA_3_MODULO_2 = 'a03724a5-9bd1-43bc-827f-73dc953242b2';
+	static $P2RODUTO_MODULO_3 = 'c3afa8f7-db0d-446e-bf45-082cf093faae';
+	static $P2RODUTO_PARCELA_1_MODULO_3 = 'f5a50b28-b47f-46f6-980b-6ac045f89c6c';
+	static $P2RODUTO_PARCELA_2_MODULO_3 = '774f7a30-d1c4-46b0-bad6-20d8884faa5e';
+	static $P2RODUTO_PARCELA_3_MODULO_3 = '00863d19-4675-4f78-8af2-6c9443fc63d2';
+
 	public function checkoutAction() {
 		$dados = array();	
 		$response = $this->getResponse();
@@ -2317,80 +2383,94 @@ class LoginController extends CircuitoController {
 						$parcela3 = false;
 						if(
 							$produto_id === self::$PRODUTO_TUDO ||
-							$produto_id === self::$PRODUTO_TUDO_PARCELADO
+							$produto_id === self::$PRODUTO_TUDO_PARCELADO ||
+							$produto_id === self::$P2RODUTO_TUDO ||
+							$produto_id === self::$P2RODUTO_TUDO_PARCELADO
 						){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
 							$valor = 100.0;
 						}
-						if($produto_id === self::$PRODUTO_MODULO_1){
+						if($produto_id === self::$PRODUTO_MODULO_1
+						|| $produto_id === self::$P2RODUTO_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$todasParcelas = true;
 							$valor = 30;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_1
+						|| $produto_id === self::$P2RODUTO_PARCELA_1_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela1 = true;
 							$valor = 10;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_1
+						 || $produto_id === self::$P2RODUTO_PARCELA_2_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela2 = true;
 							$valor = 10;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_1){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_1
+						|| $produto_id === self::$P2RODUTO_PARCELA_3_MODULO_1){
 							$indiceInicialModulos = 1;
 							$indiceFinalModulos = 1;
 							$parcela3 = true;
 							$valor = 10;
 						}
-						if($produto_id === self::$PRODUTO_MODULO_2){
+						if($produto_id === self::$PRODUTO_MODULO_2
+						|| $produto_id === self::$P2RODUTO_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$todasParcelas = true;
 							$valor = 45;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_2
+						|| $produto_id === self::$P2RODUTO_PARCELA_1_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela1 = true;
 							$valor = 15;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_2
+						|| $produto_id === self::$P2RODUTO_PARCELA_2_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela2 = true;
 							$valor = 15;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_2){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_2
+						|| $produto_id === self::$P2RODUTO_PARCELA_3_MODULO_2){
 							$indiceInicialModulos = 2;
 							$indiceFinalModulos = 2;
 							$parcela3 = true;
 							$valor = 15;
 						}
-						if($produto_id === self::$PRODUTO_MODULO_3){
+						if($produto_id === self::$PRODUTO_MODULO_3
+						|| $produto_id === self::$P2RODUTO_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$todasParcelas = true;
 							$valor = 45;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_1_MODULO_3
+						|| $produto_id === self::$P2RODUTO_PARCELA_1_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela1 = true;
 							$valor = 15;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_2_MODULO_3
+						|| $produto_id === self::$P2RODUTO_PARCELA_2_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela2 = true;
 							$valor = 15;
 						}
-						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_3){
+						if($produto_id === self::$PRODUTO_PARCELA_3_MODULO_3
+						|| $produto_id === self::$P2RODUTO_PARCELA_3_MODULO_3){
 							$indiceInicialModulos = 3;
 							$indiceFinalModulos = 3;
 							$parcela3 = true;
