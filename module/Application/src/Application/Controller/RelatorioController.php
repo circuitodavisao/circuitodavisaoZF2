@@ -3349,7 +3349,7 @@ public function alunosNaSemanaAction(){
 
 			$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$contadorDePeriodos = 0;
-			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= -1; $indiceDeArrays++) {
+			for ($indiceDeArrays = $arrayPeriodoDoMes[0]; $indiceDeArrays <= $arrayPeriodoDoMes[1]; $indiceDeArrays++) {
 				$contadorDePeriodos++;
 			}
 			$periodo = $arrayPeriodoDoMes[1]; 
