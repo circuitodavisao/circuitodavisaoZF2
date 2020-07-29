@@ -2066,7 +2066,10 @@ class CursoController extends CircuitoController {
 										break;
 									}
 
-									if ($aula->getPosicao() <= ($aulaAtiva->getPosicao() - 2)) {
+									if (
+										($disciplina->getId() !== 8 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 2)) ||
+										($disciplina->getId() === 8 && $aula->getPosicao() === 3 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1))
+									) {
 										$frequencia = false;
 
 										if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
