@@ -2431,7 +2431,7 @@ class LoginController extends CircuitoController {
 				<pre>Ordem: '.$dataPost['checkout_cielo_order_number'].'</pre>
 				<pre>Data: '.$dataPost['created_date'].'</pre>
 				<pre>Produto: '.$nomeProduto.'</pre>
-				<pre>Valor: '. number_format((intVal($dataPost['amount']) / 100), 2, '.',',').'</pre>
+				<pre>Valor: '. number_format((intVal($dataPost['amount']) / 100), 2, ',','.').'</pre>
 				<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
 			';
 
