@@ -2429,6 +2429,7 @@ class LoginController extends CircuitoController {
 			$ToEmail = $email;
 			$conteudo = '
 				<pre>Ordem: '.$dataPost['checkout_cielo_order_number'].'</pre>
+				<pre>Data: '.$dataPost['created_date'].'</pre>
 				<pre>Produto: '.$nomeProduto.'</pre>
 				<pre>Valor: '.$dataPost['amount'] / 100.'</pre>
 				<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
