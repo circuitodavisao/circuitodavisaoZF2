@@ -2430,7 +2430,7 @@ class LoginController extends CircuitoController {
 			$conteudo = '
 				<pre>Ordem: '.$dataPost['checkout_cielo_order_number'].'</pre>
 				<pre>Produto: '.$nomeProduto.'</pre>
-				<pre>Valor: '.$dataPost['amount'].'</pre>
+				<pre>Valor: '.$dataPost['amount'] / 100.'</pre>
 				<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
 			';
 
