@@ -2380,6 +2380,57 @@ class LoginController extends CircuitoController {
 			$email = $dataPost['customer_email'];
 			$produto_id = $dataPost['product_id'];
 			$estado_pagamento = $dataPost['payment_status'];
+			$dataDeCriacao = $dataPost['created_date'];
+
+			// enviar email com estado
+			$estadoEscrito = '';
+			switch(intVal($estado_pagamento)){
+				case 1: $estadoEscrito = 'Pendente'; break;
+				case 2: $estadoEscrito = 'Pago'; break;
+				case 3: $estadoEscrito = 'Negado'; break;
+				case 4: $estadoEscrito = 'Expirado'; break;
+				case 5: $estadoEscrito = 'Cancelado'; break;
+				case 6: $estadoEscrito = 'Não Finalizado'; break;
+				case 7: $estadoEscrito = 'Autorizado'; break;
+				case 8: $estadoEscrito = 'Chargeback'; break;
+			}
+			$nomeProduto = '';
+			switch($produto_id){
+	case $PRODUTO_TUDO: $nomeProduto = 'Instituto de Vencedores Completo'; break;
+	case $PRODUTO_TUDO_PARCELADO: $nomeProduto = 'Instituto de Vencedores Completo'; break;
+	case $PRODUTO_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1'; break;
+	case $PRODUTO_PARCELA_1_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 1'; break;
+	case $PRODUTO_PARCELA_2_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 2'; break;
+	case $PRODUTO_PARCELA_3_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 3'; break;
+	case $PRODUTO_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2'; break;
+	case $PRODUTO_PARCELA_1_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 1'; break;
+	case $PRODUTO_PARCELA_2_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 2'; break;
+	case $PRODUTO_PARCELA_3_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 3'; break;
+	case $PRODUTO_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3'; break;
+	case $PRODUTO_PARCELA_1_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 1'; break;
+	case $PRODUTO_PARCELA_2_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 2'; break;
+	case $PRODUTO_PARCELA_3_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 3'; break;
+	case $P2RODUTO_TUDO: $nomeProduto = 'Instituto de Vencedores Completo'; break;
+	case $P2RODUTO_TUDO_PARCELADO: $nomeProduto = 'Instituto de Vencedores Completo'; break;
+	case $P2RODUTO_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1'; break;
+	case $P2RODUTO_PARCELA_1_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 1'; break;
+	case $P2RODUTO_PARCELA_2_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 2'; break;
+	case $P2RODUTO_PARCELA_3_MODULO_1: $nomeProduto = 'Instituto de Vencedores Módulo 1 Parcela 3'; break;
+	case $P2RODUTO_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2'; break;
+	case $P2RODUTO_PARCELA_1_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 1'; break;
+	case $P2RODUTO_PARCELA_2_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 2'; break;
+	case $P2RODUTO_PARCELA_3_MODULO_2: $nomeProduto = 'Instituto de Vencedores Módulo 2 Parcela 3'; break;
+	case $P2RODUTO_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3'; break;
+	case $P2RODUTO_PARCELA_1_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 1'; break;
+	case $P2RODUTO_PARCELA_2_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 2'; break;
+	case $P2RODUTO_PARCELA_3_MODULO_3: $nomeProduto = 'Instituto de Vencedores Módulo 3 Parcela 3'; break;
+			}	
+			$Subject = 'Seu pedido do circuitodavisaonovo.com.br';
+			$ToEmail = $email;
+			$conteudo = '<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
+				<pre>Produto: '.$nomeProduto.'</pre>';
+			Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
+
 			if(
 				intVal($estado_pagamento) === self::$ESTADO_PAGO ||
 				intVal($estado_pagamento) === self::$ESTADO_AUTORIZADO_CARTAO_CREDITO
