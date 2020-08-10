@@ -2428,7 +2428,8 @@ class LoginController extends CircuitoController {
 			$Subject = 'Seu pedido do circuitodavisaonovo.com.br';
 			$ToEmail = $email;
 			$conteudo = '<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
-				<pre>Produto: '.$nomeProduto.'</pre>';
+				<pre>Produto: '.$nomeProduto.'</pre>
+				<pre>Ordem: '.$dataPost['checkout_cielo_order_number'].'</pre>';
 			Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
 			error_log('############################ Enviar Email #####################');
 
