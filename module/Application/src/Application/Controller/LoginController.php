@@ -2430,6 +2430,7 @@ class LoginController extends CircuitoController {
 			$conteudo = '<pre>Seu Pedido se encontra: '.$estadoEscrito.'</pre>
 				<pre>Produto: '.$nomeProduto.'</pre>';
 			Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
+			error_log('############################ Enviar Email #####################');
 
 			if(
 				intVal($estado_pagamento) === self::$ESTADO_PAGO ||
