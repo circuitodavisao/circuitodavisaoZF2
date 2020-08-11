@@ -5891,4 +5891,22 @@ public function alunosNaSemanaAction(){
 		$view = new ViewModel($dados);
 		return $view;
 	}
+
+	public function eleitoresAction() {
+		$dados = array();
+
+		$localidades = $this->getRepositorio()->getPessoaORM()->localidadeUF();
+		$dados['localidades'] = $localidades;
+
+		$request = $this->getRequest();
+		if($request->isPost()){
+			$postDados = $request->getPost();
+			$dados['localidade'] = $postDados['localidade'];
+
+			$pessoas = $this->getRepositorio()->getPessoaORM()->eleitoresPorLocalidade($postDados['localidade']);
+			$dados['pessoas'] = $pessoas;
+		}
+
+		return new ViewModel($dados);
+	}
 }

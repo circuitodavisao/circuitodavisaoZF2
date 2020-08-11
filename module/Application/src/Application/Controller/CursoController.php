@@ -2658,11 +2658,11 @@ class CursoController extends CircuitoController {
 			}
 			$dados['turmaPessoaFinanceiros'] = $turmaPessoaFinanceirosFiltrados;
 		}else{
-			$dia1 = date('d');
+			$dia1 = 1;
 			$mes1 = date('m');
 			$ano1 = date('Y');
 
-			$dia2 = date('d');
+			$dia2 = date("t", mktime(0,0,0,$mes1,'01',$ano1)); 
 			$mes2 = date('m');
 			$ano2 = date('Y');
 		}

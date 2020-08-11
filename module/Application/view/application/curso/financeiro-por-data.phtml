@@ -92,6 +92,9 @@ if($this->filtrado){
 		$html .= '<th>Data de Criação</th>';
 		$html .= '<th>Aluno</th>';
 		$html .= '<th>Turma</th>';
+		$html .= '<th>Time</th>';
+		$html .= '<th>Origem</th>';
+		$html .= '<th>Valor</th>';
 		$html .= '</tr>';
 		$html .= '</thead>';
 
@@ -105,6 +108,9 @@ if($this->filtrado){
 			$html .= '<td>' .$turmaPessoaFinanceiro->getData_criacaoStringPadraoBrasil(). '</td>';
 			$html .= '<td>' . $pessoa->getNome() . '</td>';
 			$html .= '<td>' . $turma->getCurso()->getNome() . ' - ' . Funcoes::mesPorExtenso($turma->getMes()) . '/' . $turma->getAno() . '</td>';
+			$html .= '<td></td>';
+			$html .= '<td></td>';
+			$html .= '<td></td>';
 			$html .= '</tr>';
 		}
 		$html .= '</tbody>';

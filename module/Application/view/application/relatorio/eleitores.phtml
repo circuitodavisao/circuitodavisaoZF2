@@ -1,0 +1,71 @@
+<div class="center-block mw1000">
+<div class="panel">
+<div class="panel-heading text-center">Eleitores - Total <?php echo count($this->pessoas); ?></div>
+<div class="panel-body pn">
+
+<div class="p5">
+
+<form action="/relatorioEleitores" method="post">
+<div class="row p5">
+	<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12 pb10 pt10">Cidade/UF</div>
+		<div class="col-lg-6 col-md-5 col-sm-5 col-xs-12">
+			<select name="localidade" id="localidade" class="form-control">
+	<option value="0">SELECIONE</option>';
+<?php 
+forEach ($this->localidades as $localidade) {
+	$valor = $localidade['localidade_uf'];
+	$selected = '';
+	if ($this->localidade == $valor) {
+		$selected = 'selected';
+	}
+
+	echo '<option value="' . $valor . '" ' . $selected . '>' . $valor . '</option>';
+}
+?>
+			</select>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<button type="button" onclick="this.form.submit();" class="btn ladda-button btn-primary btn-block " data-style="zoom-in">
+				<span class="ladda-label">Filtrar</span>
+				<span class="ladda-spinner"></span>
+			</button>
+		</div>
+	</div>
+</form>
+
+<?php
+echo '<table class="text-center table table-condensed table-hover bg-light mt15 footable">';
+echo '<thead>';
+echo '<tr class="dark">';
+echo '<th>Nome</th>';
+echo '<th>Telefone</th>';
+echo '<th>Email</th>';
+echo '<th>Idade</th>';
+echo '<th>Sexo</th>';
+echo '</tr>';
+echo '</thead>';
+echo '<tbody>';
+if($this->pessoas){
+	forEach($this->pessoas as $pessoa){
+		$dataNascimento = $pessoa['data_nascimento'];
+		$ano = substr($dataNascimento, 0, 4);
+		$idade = intVal(date('Y')) - intVal($ano);
+		if($idade > 15){
+			echo '<tr class="text-left">';
+			echo '<td>'.$pessoa['nome'].'</td>';
+			echo '<td>'.$pessoa['telefone'].'</td>';
+			echo '<td>'.$pessoa['email'].'</td>';
+			echo '<td>'.$idade.'</td>';
+			echo '<td>'.$pessoa['sexo'].'</td>';
+			echo '</tr>';
+		}
+	}
+}
+echo '</tbody>';
+echo '</table>';
+?>
+</div>
+
+</div>
+</div>
+</div>

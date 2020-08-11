@@ -284,4 +284,42 @@ class PessoaORM extends CircuitoORM {
         }
     }
 
+	public function eleitoresPorLocalidade($localidade){
+		try {
+			$dqlBase = "SELECT "
+				. "p.nome, p.telefone, p.email, p.data_nascimento, p.sexo  "
+				. "FROM  " . Constantes::$ENTITY_PESSOA . " p "
+				. "WHERE "
+				. "p.localidade_uf = ?1 AND "
+				. "p.email IS NOT NULL AND p.email != 'atualize' AND p.email != '' AND "
+				. "p.documento IS NOT NULL AND "
+				. "p.telefone IS NOT NULL AND p.telefone > 999999999 AND p.telefone != 999999999 AND "
+				. "p.data_nascimento IS NOT NULL "
+				. "ORDER BY p.nome ASC";
+
+			$resultado = $this->getEntityManager()
+					 ->createQuery($dqlBase)
+					 ->setParameter(1, $localidade)
+					 ->getResult();
+
+			return $resultado;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
+	public function localidadeUF(){
+		try {
+			$dqlBase = "SELECT "
+				. " p.localidade_uf  "
+				. "FROM  " . Constantes::$ENTITY_PESSOA . " p WHERE p.localidade_uf != '' AND p.localidade_uf != '/' GROUP BY p.localidade_uf";
+
+			$resultado = $this->getEntityManager()->createQuery($dqlBase) ->getResult();
+
+			return $resultado;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
 }
