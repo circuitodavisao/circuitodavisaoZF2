@@ -45,6 +45,16 @@ class CadastrarPessoaRevisaoForm extends Form {
                         ])
         );
 
+        $this->add(
+                (new Text())
+                        ->setName('email_revisao')
+                        ->setAttributes([
+                            Constantes::$FORM_STRING_CLASS => Constantes::$FORM_STRING_CLASS_GUI_INPUT,
+                            Constantes::$FORM_STRING_ID => 'email_revisao',
+                            Constantes::$FORM_STRING_PLACEHOLDER => 'Email',
+                        ])
+        );
+
         /**
          * Nome
          * Elemento do tipo text

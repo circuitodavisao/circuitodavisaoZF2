@@ -143,6 +143,17 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     }
 
     /** @ORM\Column(type="string") */
+    protected $email_revisao;
+
+	function getEmail_revisao(){
+		return $this->email_revisao;
+	}
+
+	function setEmail_revisao($i){
+		$this->email_revisao = $i;
+	}
+
+    /** @ORM\Column(type="string") */
     protected $nome;
 
     /** @ORM\Column(type="string") */

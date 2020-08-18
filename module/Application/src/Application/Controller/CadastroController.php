@@ -1880,6 +1880,7 @@ class CadastroController extends CircuitoController {
 			$pessoa->setData_nascimento($post_data[Constantes::$FORM_INPUT_ANO] . "-" . $post_data[Constantes::$FORM_INPUT_MES] . "-" .
 				$post_data[Constantes::$FORM_INPUT_DIA]);
 			$pessoa->setSexo($post_data[Constantes::$INPUT_NUCLEO_PERFEITO]);
+			$pessoa->setEmail_revisao($post_data['email_revisao']);
 
 			/* Salvar a pessoa e o grupo pessoa correspondente */
 			$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
@@ -1917,6 +1918,7 @@ class CadastroController extends CircuitoController {
 			$fatoRevisao->sexo = $pessoa->getSexo();;
 			$fatoRevisao->evento_id = $idRevisao;
 			$fatoRevisao->nome = $pessoa->getNome();
+			$fatoRevisao->email_revisao = $pessoa->getEmail_revisao();
 			$fatoRevisao->nome_equipe = $equipe->getEntidadeAtiva()->getNome();
 			$fatoRevisao->entidade = $entidade->infoEntidade();
 			$fatoRevisao->nome_igreja = $igreja->getEntidadeAtiva()->getNome();

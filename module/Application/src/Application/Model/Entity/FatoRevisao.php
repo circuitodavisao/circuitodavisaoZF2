@@ -17,6 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 class FatoRevisao extends CircuitoEntity {
 
 	/** @ORM\Column(type="string") */
+	protected $email_revisao;
+
+	/** @ORM\Column(type="string") */
 	protected $numero_identificador;
 
 	/** @ORM\Column(type="integer") */
@@ -179,6 +182,14 @@ class FatoRevisao extends CircuitoEntity {
 
 	function getHierarquia() {
 		return $this->hierarquia;
+	}
+
+	function setEmail_revisao($i) {
+		$this->email_revisao = $i;
+	}
+
+	function getEmail_revisao() {
+		return $this->email_revisao;
 	}
 
 	public function __set($name,$value) {

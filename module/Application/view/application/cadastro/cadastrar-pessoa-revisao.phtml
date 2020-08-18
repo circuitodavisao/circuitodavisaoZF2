@@ -27,6 +27,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             echo $this->divMensagens();
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_PRIMEIRO_NOME, $form->get(Constantes::$INPUT_PRIMEIRO_NOME), 6);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_ULTIMO_NOME, $form->get(Constantes::$INPUT_ULTIMO_NOME), 6);
+                            echo $this->inputFormularioSimples('Email', $form->get('email_revisao'), 12);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DDD, $form->get(Constantes::$INPUT_DDD), 3);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_TELEFONE, $form->get(Constantes::$INPUT_TELEFONE), 9);
                             echo $this->inputFormularioSimples(Constantes::$TRADUCAO_DATA_NASCIMENTO, $form->get(Constantes::$FORM_INPUT_DIA), 4, 2);

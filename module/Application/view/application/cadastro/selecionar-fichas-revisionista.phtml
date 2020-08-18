@@ -24,6 +24,7 @@ if(count($this->listas[1]) > 0){
 	$html .= '<tr class="dark">';
 	$html .= '<th>Inscrição</th>';
 	$html .= '<th>Revisionista</th>';
+	$html .= '<th>Email</th>';
 	$html .= '<th>Sexo</th>';
 	$html .= '<th>Idade</th>';
 	$html .= '<th>Igreja</th>';
@@ -37,6 +38,7 @@ if(count($this->listas[1]) > 0){
 		$html .= '<tr>';
 		$html .= '<td>' . $fatoRevisao->matricula . '</td>';
 		$html .= '<td>' . $fatoRevisao->nome . '</td>';
+		$html .= '<td>' . $fatoRevisao->email_revisao . '</td>';
 		$html .= '<td>' . $fatoRevisao->sexo . '</td>';
 		$html .= '<td>' . $fatoRevisao->idade . '</td>';
 		$html .= '<td>' . $fatoRevisao->nome_igreja. '</td>';

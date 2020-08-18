@@ -2,6 +2,7 @@
 function validarLancamentoCadastrarPessoaRevisao(form) {
     var primeiroNome = $('#primeiro-nome').val();
     var ultimoNome = $('#ultimo-nome').val();
+    var email = $('#email_revisao').val();
     var ddd = $('#ddd').val();
     var telefone = $('#telefone').val();
     var Dia = $('#Dia').val();
@@ -62,6 +63,30 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
         }
     }
 
+    if (email.length === 0) {
+        temErro = true;
+        if (mensagem !== '') {
+            mensagem += ', ';
+        }
+        mensagem += 'Email';
+    } else {
+        var reg = /^[\w+\d+._]+\@[\w+\d+_+]+\.[\w+\d+._]{2,8}$/;
+        if (!reg.exec(email)) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Email Inválido';
+        }
+        if (ultimoNome.length > 80) {
+            temErro = true;
+            if (mensagem !== '') {
+                mensagem += ', ';
+            }
+            mensagem += 'Email pode ter no máximo 15 caracteres';
+        }
+    }
+
     if (ddd.length === 0) {
         temErro = true;
         if (mensagem !== '') {
@@ -92,7 +117,6 @@ function validarLancamentoCadastrarPessoaRevisao(form) {
             mensagem += 'Telefone Inválido';
         }
     }
-
 
     if (Dia === '0') {
 
