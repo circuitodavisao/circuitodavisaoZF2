@@ -42,6 +42,7 @@ $form->setAttribute(Constantes::$ACTION, $this->url(Constantes::$ROUTE_CADASTRO,
                             $funcaoFichasAtivas = $this->funcaoOnClick('mostrarSplash(); funcaoCircuito("cadastroFichasAtivas",' . $this->evento->getId() . ')');
                             echo $this->botaoSimples('Fichas Ativas', $funcaoFichasAtivas, BotaoSimples::botaoImportante, BotaoSimples::posicaoAEsquerda);
                             ?>
+
                             <span id='botaoLimparCampos' class='hidden'>
                                 <?php
                                 $stringNomeDaFuncaoOnClickLimparCampos = 'limparCampos()';
