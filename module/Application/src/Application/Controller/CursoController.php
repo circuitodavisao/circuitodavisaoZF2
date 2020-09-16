@@ -2035,6 +2035,7 @@ class CursoController extends CircuitoController {
 			){
 				$turma = $turmaPessoa->getTurma();
 				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
+					$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
 
 					$idGrupoEquipe = null;
 					if(strlen($relatorio->getNumero_identificador()) > 8){
@@ -2055,12 +2056,15 @@ class CursoController extends CircuitoController {
 
 					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
 						$mostrar = false;
-						if ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+						if ($turmaAulaAtiva->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
 							$mostrar = true;
 						}
 						if ($mostrar) {
-							$numeroDaAula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
+							$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
+							if($numeroDaAula >= 3){
+								$aulaAtiva = $turmaAulaAtiva->getAula();
 
+							}
 						}
 					}
 				}
