@@ -2053,40 +2053,7 @@ class CursoController extends CircuitoController {
 						$listaDeEquipes[$idGrupoEquipe] = $nomeEquipe;
 					}
 
-					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
-						$mostrar = false;
-						if ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
-							$mostrar = true;
-						}
-						if ($mostrar) {
-							$numeroDaAula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
-							if($numeroDaAula >= 3){
-								$aulaAtiva = $turma->getTurmaAulaAtiva()->getAula();
-								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
-									if($turma->getTurmaAulaAtiva()->getAula()->getId() === $aula->getId()){
-										break;
-									}
 
-									if (
-										($disciplina->getId() !== 8 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 2)) ||
-										($disciplina->getId() === 8 && $aula->getPosicao() === 3 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1))
-									) {
-										$frequencia = false;
-
-										if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
-											if($turmaPessoaAula->verificarSeEstaAtivo()){
-												$frequencia = true;
-											}
-										}
-
-										if (!$frequencia) {
-											$contadorDeFaltas[$nomeEquipe][$turma->getId()]++;
-										}
-									}
-								}
-							}
-						}
-					}
 				}
 
 			}
