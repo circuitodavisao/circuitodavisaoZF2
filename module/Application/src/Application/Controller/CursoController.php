@@ -2026,10 +2026,6 @@ class CursoController extends CircuitoController {
 		$listaDeEquipes = array();
 		$contador = 0;
 		foreach($resultado[2] as $relatorio){
-			$contador++;
-			if($contador === 100){
-				 break;
-			}
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 			if(
 				$turmaPessoa->verificarSeEstaAtivo() && 
@@ -2038,6 +2034,11 @@ class CursoController extends CircuitoController {
 					$relatorio->getSituacao_id() === Situacao::ESPECIAL
 				)
 			){
+			$contador++;
+			if($contador === 100){
+				 break;
+			}
+	
 				$turma = $turmaPessoa->getTurma();
 				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
 					$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
