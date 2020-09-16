@@ -2079,6 +2079,7 @@ class CursoController extends CircuitoController {
 												if($turmaPessoaAula->verificarSeEstaAtivo()){
 													$frequencia = true;
 												}
+												break;
 											}
 										}
 
