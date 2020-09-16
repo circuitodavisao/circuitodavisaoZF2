@@ -1214,6 +1214,7 @@ class CursoController extends CircuitoController {
 		}
 		return $response;
 	}
+
 	public function buscarSubsCompletoAction(){
 		$response = $this->getResponse();
 		try {
@@ -2012,7 +2013,7 @@ class CursoController extends CircuitoController {
 	public function gerarFaltasAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '120');
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
