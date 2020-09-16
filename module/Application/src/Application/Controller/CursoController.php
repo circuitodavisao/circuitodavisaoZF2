@@ -2075,9 +2075,7 @@ class CursoController extends CircuitoController {
 										$frequencia = false;
 
 										if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
-											if($turmaPessoaAula->verificarSeEstaAtivo()){
-												$frequencia = true;
-											}
+
 										}
 
 										if (!$frequencia) {
