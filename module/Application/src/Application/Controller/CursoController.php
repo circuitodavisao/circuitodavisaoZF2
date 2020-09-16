@@ -2063,7 +2063,24 @@ class CursoController extends CircuitoController {
 							$numeroDaAula = $turmaAulaAtiva->getAula()->getPosicao();
 							if($numeroDaAula >= 3){
 								$aulaAtiva = $turmaAulaAtiva->getAula();
+								foreach ($disciplina->getAulaOrdenadasPorPosicao() as $aula) {
+									if($aulaAtiva->getId() === $aula->getId()){
+										break;
+									}
 
+									if (
+										($disciplina->getId() !== 8 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 2)) ||
+										($disciplina->getId() === 8 && $aula->getPosicao() === 3 && $aula->getPosicao() <= ($aulaAtiva->getPosicao() - 1))
+									) {
+										$frequencia = false;
+
+
+
+										if (!$frequencia) {
+											$contadorDeFaltas[$nomeEquipe][$turma->getId()]++;
+										}
+									}
+								}
 							}
 						}
 					}
