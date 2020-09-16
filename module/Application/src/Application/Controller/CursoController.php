@@ -2024,7 +2024,6 @@ class CursoController extends CircuitoController {
 		$turmasValidas = $resultado[1];
 
 		$listaDeEquipes = array();
-		$contador = 0;
 		foreach($resultado[2] as $relatorio){
 			$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 			if(
@@ -2034,11 +2033,6 @@ class CursoController extends CircuitoController {
 					$relatorio->getSituacao_id() === Situacao::ESPECIAL
 				)
 			){
-			$contador++;
-			if($contador === 4000){
-				 break;
-			}
-	
 				$turma = $turmaPessoa->getTurma();
 				if($turma->verificarSeEstaAtivo() && $turma->getTurmaAulaAtiva()){
 					$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
@@ -2080,9 +2074,11 @@ class CursoController extends CircuitoController {
 									) {
 										$frequencia = false;
 
-										if($turmaPessoaAula = $this->getRepositorio()->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($turmaPessoa->getId(), $aula->getId())){
-											if($turmaPessoaAula->verificarSeEstaAtivo()){
-												$frequencia = true;
+										foreach($turmaPessoa->getTurmaPessoaAula() as $turmaPessoaAula){
+											if($turmaPessoaAula->getAula()->getId() === $aula->getId()){
+												if($turmaPessoaAula->verificarSeEstaAtivo()){
+													$frequencia = true;
+												}
 											}
 										}
 
