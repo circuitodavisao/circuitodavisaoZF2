@@ -2035,7 +2035,7 @@ class CursoController extends CircuitoController {
 				)
 			){
 			$contador++;
-			if($contador === 1000){
+			if($contador === 4000){
 				 break;
 			}
 	
