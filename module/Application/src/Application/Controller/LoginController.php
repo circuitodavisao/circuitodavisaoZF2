@@ -1159,6 +1159,7 @@ class LoginController extends CircuitoController {
 							if(
 								$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1 // CEILANDIA 
 								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1225 // SEDE
+								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
 							){
 								/* financeiro */
 								$html .= '<tr>';
@@ -1179,7 +1180,7 @@ class LoginController extends CircuitoController {
 														if(
 															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HOORIZONTE
 														){
-															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
+															//$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
 
 													$htmlU = '';
@@ -2772,6 +2773,7 @@ class LoginController extends CircuitoController {
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
+								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
