@@ -2053,7 +2053,16 @@ class CursoController extends CircuitoController {
 						$listaDeEquipes[$idGrupoEquipe] = $nomeEquipe;
 					}
 
+					foreach ($turma->getCurso()->getDisciplina() as $disciplina) {
+						$mostrar = false;
+						if ($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId() === $disciplina->getId()) {
+							$mostrar = true;
+						}
+						if ($mostrar) {
+							$numeroDaAula = $turma->getTurmaAulaAtiva()->getAula()->getPosicao();
 
+						}
+					}
 				}
 
 			}
