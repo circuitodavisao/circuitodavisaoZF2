@@ -1488,7 +1488,7 @@ class CadastroController extends CircuitoController {
 				$urlBuscaCPFSerpro = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer ' . $sessao->token . '" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/' . $cpf . '"';
 				exec($urlBuscaCPFSerpro, $respostaSerpro);
 				$objetoJson = (array) json_decode($respostaSerpro[0]);
-				error_log(print_r($objetoJson, true));
+				error_log(print_r($respostaSerpro, true));
 
 				$codigo = $objetoJson['situacao']->codigo;
 				$nome = $objetoJson['nome'];
