@@ -1,0 +1,161 @@
+<div style="width: 100%;">
+<div style="width: 100%; position: relative; left: 0; top: 0: color: #222; background-color: #890b0b; padding: 5px">
+<div style="width: 750px; padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto;">
+<div style="margin-top: 20px; padding-bottom: 0; margin-bottom: 15px;">
+<h1>
+<span style="font-weight: 600; color: #FFFFFF">
+Questionário - Vida Sexual
+</span>
+</h1>
+</div>
+</div>
+</div>
+
+<div id='questionario' style="padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto; padding: 5px">
+<p style="font-weight: 700">CORPO - Você sente vergonha do seu corpo na hora do sexo?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('corpo1').selected = true">
+<input type="radio" id="corpo1" name="corpo" value="1">
+Sim
+</label><br />
+<label style="cursor: pointer;" onClick="document.getElementById('corpo2').selected = true">
+<input type="radio" id="corpo2" name="corpo" value="0">
+Não
+</label><br />
+
+<br />
+<p style="font-weight: 700">ORGASMO - Você sente orgasmo durante as relações?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo1').selected = true">
+<input type="radio" id="orgasmo1" name="orgasmo" value="0">
+Sim, sempre
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo2').selected = true">
+<input type="radio" id="orgasmo2" name="orgasmo" value="1">
+Sim, mas não acontece com a frequência que eu gostaria
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo3').selected = true">
+<input type="radio" id="orgasmo3" name="orgasmo" value="1">
+Quase nunca</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo4').selected = true">
+<input type="radio" id="orgasmo4" name="orgasmo" value="1">
+Nunca, o que é isso, nem vi
+</label><br>
+
+<br />
+<p style="font-weight: 700">FREQUÊNCIA - Sobre a sua frequência sexual?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia1').selected = true">
+<input type="radio" id="frequencia1" name="frequencia" value="1">
+1 vez no mês
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia2').selected = true">
+<input type="radio" id="frequencia2" name="frequencia" value="1">
+1 vez na semana
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia3').selected = true">
+<input type="radio" id="frequencia3" name="frequencia" value="1">
+2 vezes por semana
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia4').selected = true">
+<input type="radio" id="frequencia4" name="frequencia" value="0">
+3 vezes ou mais na semana
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia5').selected = true">
+<input type="radio" id="frequencia5" name="frequencia" value="1">
+3 vezes ou mais na semana, mas faço por que ele quer
+</label><br>
+
+<br />
+<p style="font-weight: 700">PRAZER - Depois do sexo, qual o seu pensamento?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer1').selected = true">
+<input type="radio" id="prazer1" name="prazer" value="1">
+Ufa, ainda bem que acabou
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer2').selected = true">
+<input type="radio" id="prazer2" name="prazer" value="1">
+Missão cumprida, estou livre por mais um tempo
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer3').selected = true">
+<input type="radio" id="prazer3" name="prazer" value="0">
+Ai que delícia, que sensação boa
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer4').selected = true">
+<input type="radio" id="prazer4" name="prazer" value="1">
+Que bom acabou, já posso olhar o WhatsApp
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer5').selected = true">
+<input type="radio" id="prazer5" name="prazer" value="0">
+Que coisa boa, quero mais uma vez
+</label><br>
+
+<br />
+<p style="font-weight: 700">DISPOSIÇÃO - Como é sua disposição e desejo para o sexo?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('disposicao1').selected = true">
+<input type="radio" id="disposicao1" name="disposicao" value="0">
+Estou sempre disposta, adoroooo!
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('disposicao2').selected = true">
+<input type="radio" id="disposicao2" name="disposicao" value="1">
+Que preguiça, lá vamos nós de novo
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('disposicao3').selected = true">
+<input type="radio" id="disposicao3" name="disposicao" value="1">
+Invento desculpa sempre que posso
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('disposicao4').selected = true">
+<input type="radio" id="disposicao4" name="disposicao" value="1">
+Na maioria das vezes normalmente me sinto cansada
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('disposicao5').selected = true">
+<input type="radio" id="disposicao5" name="disposicao" value="1">
+Faço sempre que ele pede, mas é só pra agradá-lo
+</label><br>
+
+<br />
+<button class="btn btn-sm btn-primary" onClick="validar()">
+Enviar
+</button>
+</div>
+
+<div id='resposta' style="padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto; padding: 5px" class="hidden">
+<h2>Pontuação</h2>
+<p id='pontuacao'></p>
+<h2>Resposta</h2>
+<p id='mensagem'></p>
+<br />
+<button class="btn btn-sm btn-primary" onClick="refazer()">
+Refazer
+</button>
+
+</div>
+
+</div>
+<script type="text/javascript">
+function validar(){
+const corpo = Array.from(document.getElementsByName('corpo')).find(r => r.checked).value
+const orgasmo = Array.from(document.getElementsByName('orgasmo')).find(r => r.checked).value
+const frequencia = Array.from(document.getElementsByName('frequencia')).find(r => r.checked).value
+const prazer = Array.from(document.getElementsByName('prazer')).find(r => r.checked).value
+const disposicao = Array.from(document.getElementsByName('disposicao')).find(r => r.checked).value
+
+const soma = parseInt(corpo) + parseInt(orgasmo) + parseInt(frequencia) + parseInt(prazer) + parseInt(disposicao)
+let mensagem = ''
+switch(parseInt(soma)){
+case 0: mensagem = 'Muito bom, continue assim, sua vida sexual é top, segue o baile!'; break;
+case 1: mensagem = 'Bom, sua vida sexual é boa!'; break;
+case 2: mensagem = 'Regular, sua vida sexual pode melhorar!'; break;
+case 3: mensagem = 'Ruim, sua vida sexual não está bem, você precisa de ajuda.'; break;
+case 4: mensagem = 'Péssimo, mulher sua vida sexual não está nada bem, você precisa de ajuda urgente'; break;
+case 5: mensagem = 'Péssimo, mulher sua vida sexual não está nada bem, você precisa de ajuda urgente'; break;
+}
+
+document.getElementById('pontuacao').innerHTML = soma + '/5' 
+document.getElementById('mensagem').innerHTML = mensagem
+document.getElementById('questionario').classList.add('hidden')
+document.getElementById('resposta').classList.remove('hidden')
+
+}
+
+function refazer(){
+document.getElementById('questionario').classList.remove('hidden')
+document.getElementById('resposta').classList.add('hidden')
+}
+</script>

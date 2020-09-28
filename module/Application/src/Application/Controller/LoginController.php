@@ -3067,4 +3067,12 @@ class LoginController extends CircuitoController {
 		return $response;
 	}
 
+	public function questionarioSexoAction() {
+		return new ViewModel();	
+	}
+
+	public function questionarioComunicacaoAction() {
+		return new ViewModel();	
+	}
+
 }
