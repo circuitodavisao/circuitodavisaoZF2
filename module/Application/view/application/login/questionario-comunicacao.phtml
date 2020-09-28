@@ -1,0 +1,142 @@
+<div style="width: 100%;">
+<div style="width: 100%; position: relative; left: 0; top: 0: color: #222; background-color: #890b0b; padding: 5px">
+<div style="width: 750px; padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto;">
+<div style="margin-top: 20px; padding-bottom: 0; margin-bottom: 15px;">
+<h1>
+<span style="font-weight: 600; color: #FFFFFF">
+Questionário - Comunicação 
+</span>
+</h1>
+</div>
+</div>
+</div>
+
+<div id='questionario' style="padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto; padding: 5px">
+<p style="font-weight: 700">Você fala o que sente para o seu marido?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('corpo1').selected = true">
+<input type="radio" id="corpo1" name="corpo" value="0">
+Falo tudo e não escondo nada
+</label><br />
+<label style="cursor: pointer;" onClick="document.getElementById('corpo2').selected = true">
+<input type="radio" id="corpo2" name="corpo" value="1">
+Falo tudo, mas ele não se importa
+</label><br />
+<label style="cursor: pointer;" onClick="document.getElementById('corpo3').selected = true">
+<input type="radio" id="corpo3" name="corpo" value="1">
+Tento falar, mas sempre acaba em briga
+</label><br />
+<label style="cursor: pointer;" onClick="document.getElementById('corpo4').selected = true">
+<input type="radio" id="corpo4" name="corpo" value="1">
+Não falo, não adianta
+</label><br />
+
+<br />
+<p style="font-weight: 700">O seu marido escuta o que você fala?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo1').selected = true">
+<input type="radio" id="orgasmo1" name="orgasmo" value="0">
+Quase sempre
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo2').selected = true">
+<input type="radio" id="orgasmo2" name="orgasmo" value="1">
+Às vezes
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo3').selected = true">
+<input type="radio" id="orgasmo3" name="orgasmo" value="1">
+Não como eu gostaria
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo4').selected = true">
+<input type="radio" id="orgasmo4" name="orgasmo" value="1">
+Quase Nunca
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('orgasmo5').selected = true">
+<input type="radio" id="orgasmo5" name="orgasmo" value="1">
+Nunca, o que é isso?
+</label><br>
+
+<br />
+<p style="font-weight: 700">Vocês falam abertamente sobre o que gostam de fazer na hora do sexo?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia1').selected = true">
+<input type="radio" id="frequencia1" name="frequencia" value="1">
+Não, nunca falamos sobre isso
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia2').selected = true">
+<input type="radio" id="frequencia2" name="frequencia" value="0">
+Sim, conversamos sempre
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia3').selected = true">
+<input type="radio" id="frequencia3" name="frequencia" value="1">
+Tentei algumas vezes mas não encontrei espaço
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('frequencia4').selected = true">
+<input type="radio" id="frequencia4" name="frequencia" value="1">
+Não, tenho vergonha
+</label><br>
+
+<br />
+<p style="font-weight: 700">Quando tento resolver alguma coisa no casamento, o que acontece?</p>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer1').selected = true">
+<input type="radio" id="prazer1" name="prazer" value="1">
+Sempre sai briga
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer2').selected = true">
+<input type="radio" id="prazer2" name="prazer" value="0">
+Escutamos um ao outro com atenção e maturidade e fazemos acordos para melhorar
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer3').selected = true">
+<input type="radio" id="prazer3" name="prazer" value="1">
+Eu falo, e é a mesma coisa que nada
+</label><br>
+<label style="cursor: pointer;" onClick="document.getElementById('prazer4').selected = true">
+<input type="radio" id="prazer4" name="prazer" value="1">
+Já não falo mais, não adianta, desisti
+</label><br>
+
+<br />
+<button class="btn btn-sm btn-primary" onClick="validar()">
+Enviar
+</button>
+</div>
+
+<div id='resposta' style="padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto; padding: 5px" class="hidden">
+<h2>Pontuação</h2>
+<p id='pontuacao'></p>
+<h2>Resposta</h2>
+<p id='mensagem'></p>
+<br />
+<button class="btn btn-sm btn-primary" onClick="refazer()">
+Refazer
+</button>
+
+</div>
+
+</div>
+<script type="text/javascript">
+function validar(){
+const corpo = Array.from(document.getElementsByName('corpo')).find(r => r.checked).value
+const orgasmo = Array.from(document.getElementsByName('orgasmo')).find(r => r.checked).value
+const frequencia = Array.from(document.getElementsByName('frequencia')).find(r => r.checked).value
+const prazer = Array.from(document.getElementsByName('prazer')).find(r => r.checked).value
+
+const soma = parseInt(corpo) + parseInt(orgasmo) + parseInt(frequencia) + parseInt(prazer)
+let mensagem = ''
+switch(parseInt(soma)){
+case 0: mensagem = 'Muito bom, o problema do seu casamento não é comunicação.'; break;
+case 1: mensagem = 'Bom, sua comunicação está indo bem.'; break;
+case 2: mensagem = 'Regular, a comunicação do seu casamento tem alguns ruídos que devem ser aprimorados, pois podem gerar problemas futuros.'; break;
+case 3: mensagem = 'Ruim, a comunicação do seu casamento não vai nada bem. Isso é um grande problema, você precisa de ajuda.'; break;
+case 4: mensagem = 'Péssimo, a comunicação no seu casamento é inexistente, você precisa de ajuda urgente!'; break;
+case 5: mensagem = 'Péssimo, a comunicação no seu casamento é inexistente, você precisa de ajuda urgente!'; break;
+}
+
+document.getElementById('pontuacao').innerHTML = soma + '/5' 
+document.getElementById('mensagem').innerHTML = mensagem
+document.getElementById('questionario').classList.add('hidden')
+document.getElementById('resposta').classList.remove('hidden')
+
+}
+
+function refazer(){
+document.getElementById('questionario').classList.remove('hidden')
+document.getElementById('resposta').classList.add('hidden')
+}
+</script>
