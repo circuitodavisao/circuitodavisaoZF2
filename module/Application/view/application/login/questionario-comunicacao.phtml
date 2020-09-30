@@ -32,20 +32,20 @@ Não falo, não adianta
 
 <br />
 <p style="font-weight: 700">O seu marido escuta o que você fala?</p>
-<label style="cursor: pointer;" onClick="document.getElementById('orgasmo1').selected = true">
-<input type="radio" id="orgasmo1" name="orgasmo" value="0">
+<label style="cursor: pointer;" onClick="document.getElementById('periodo1').selected = true">
+<input type="radio" id="orgasmo1" name="periodo" value="0">
 Quase sempre
 </label><br>
-<label style="cursor: pointer;" onClick="document.getElementById('orgasmo2').selected = true">
-<input type="radio" id="orgasmo2" name="orgasmo" value="1">
+<label style="cursor: pointer;" onClick="document.getElementById('periodo2').selected = true">
+<input type="radio" id="orgasmo2" name="periodo" value="1">
 Às vezes
 </label><br>
-<label style="cursor: pointer;" onClick="document.getElementById('orgasmo3').selected = true">
-<input type="radio" id="orgasmo3" name="orgasmo" value="1">
+<label style="cursor: pointer;" onClick="document.getElementById('periodo3').selected = true">
+<input type="radio" id="orgasmo3" name="periodo" value="1">
 Nunca
 </label><br>
-<label style="cursor: pointer;" onClick="document.getElementById('orgasmo4').selected = true">
-<input type="radio" id="orgasmo4" name="orgasmo" value="1">
+<label style="cursor: pointer;" onClick="document.getElementById('periodo4').selected = true">
+<input type="radio" id="orgasmo4" name="periodo" value="1">
 Já tentei algumas vezes, mas ele não presta atenção
 </label><br>
 
@@ -128,10 +128,11 @@ Enviar
 function validar(){
 const corpo = Array.from(document.getElementsByName('corpo')).find(r => r.checked).value
 const orgasmo = Array.from(document.getElementsByName('orgasmo')).find(r => r.checked).value
+const periodo = Array.from(document.getElementsByName('periodo')).find(r => r.checked).value
 const frequencia = Array.from(document.getElementsByName('frequencia')).find(r => r.checked).value
 const prazer = Array.from(document.getElementsByName('prazer')).find(r => r.checked).value
 
-const soma = parseInt(corpo) + parseInt(orgasmo) + parseInt(frequencia) + parseInt(prazer)
+const soma = parseInt(corpo) + parseInt(orgasmo) + parseInt(frequencia) + parseInt(prazer) + parseInt(periodo)
 let mensagem = ''
 switch(parseInt(soma)){
 case 0: mensagem = 'Muito bom, o problema do seu casamento não é comunicação.'; break;
