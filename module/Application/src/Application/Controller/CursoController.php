@@ -732,7 +732,6 @@ class CursoController extends CircuitoController {
 										$adicionar = true;
 									}
 								}
-
 							}
 							if ($adicionar) {
 								$pessoas[] = $frequencia->getPessoa();
@@ -740,7 +739,10 @@ class CursoController extends CircuitoController {
 						}
 					}
 					$turma = $this->getRepositorio()->getTurmaORM()->encontrarPorId($sessao->idTurma);
+					error_log('#######################');
+					error_log('pessoas ');
 					foreach ($pessoas as $pessoa) {
+					error_log('##' . $pessoa->getNome());
 						if(!$pessoa->getTurmaPessoaAtivo()){
 							$turmaPessoa = new TurmaPessoa();
 							$turmaPessoa->setPessoa($pessoa);
