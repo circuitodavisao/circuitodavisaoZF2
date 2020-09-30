@@ -718,12 +718,15 @@ class CursoController extends CircuitoController {
 			try {
 				$this->getRepositorio()->iniciarTransacao();
 				$idEvento = $post['idEvento'];
+				error_log('%%%%%%%%%%%%%%%%%%');
 				$evento = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEvento);
 				$frequencias = $evento->getEventoFrequencia();
 				$pessoas = array();
+				error_log('frequencias');
 				if ($frequencias) {
 					foreach ($frequencias as $frequencia) {
 						if ($frequencia->getFrequencia() == 'S') {
+							error_log('frequencia sim');
 							$adicionar = false;
 							foreach ($post as $key => $value) {
 								$comecoDaString = substr($key, 0, 5);
