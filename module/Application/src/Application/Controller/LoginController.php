@@ -1160,7 +1160,7 @@ class LoginController extends CircuitoController {
 							if(
 								$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1 // CEILANDIA 
 								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 1225 // SEDE
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
+								//|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
 							){
 								/* financeiro */
 								$html .= '<tr>';
@@ -1180,9 +1180,8 @@ class LoginController extends CircuitoController {
 														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
 														if(
 															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HOORIZONTE
-															 || $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 // cascavel
 														){
-															//$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
+															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
 
 													$htmlU = '';
