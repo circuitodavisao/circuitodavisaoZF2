@@ -4637,6 +4637,8 @@ class IndexController extends CircuitoController {
 									}
 								}
 							}
+							$html .= '<br />Homens Lideres: ' . $homens;
+							$html .= '<br />Mulheres Lideres: ' . $mulheres;
 							$fatosMensal[$indiceFatoMensal]->setHomens($homens);
 							$fatosMensal[$indiceFatoMensal]->setMulheres($mulheres);
 							$this->getRepositorio()->getFatoMensalORM()->persistir($fatosMensal[$indiceFatoMensal], false);
