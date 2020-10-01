@@ -4616,13 +4616,24 @@ class IndexController extends CircuitoController {
 
 							$homens = 0;
 							$mulheres = 0;
-							if($pessoasAtivas = $grupo->getPessoasAtivas()){
-								foreach($pessoasAtivas as $pessoa){
-									if($pessoa->getSexo() === 'M'){
-										$homens++;
-									}
-									if($pessoa->getSexo() === 'F'){
-										$mulheres++;
+							if(
+								$grupo->verificarSeEstaAtivo() && 
+								(
+									($quantidadeCelulas > 0 || $quantidadeCelulasEstrategicas > 0) ||
+									(
+										$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::subEquipe &&
+										$grupo->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::secretario
+									)
+								)
+							){
+								if($pessoasAtivas = $grupo->getPessoasAtivas()){
+									foreach($pessoasAtivas as $pessoa){
+										if($pessoa->getSexo() === 'M'){
+											$homens++;
+										}
+										if($pessoa->getSexo() === 'F'){
+											$mulheres++;
+										}
 									}
 								}
 							}
