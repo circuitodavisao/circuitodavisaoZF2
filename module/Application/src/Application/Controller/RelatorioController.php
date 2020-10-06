@@ -5560,7 +5560,7 @@ public function alunosNaSemanaAction(){
 		return $relatorio;
 	}
 
-	function fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos, $grupo = null){
+	static function fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos, $grupo = null){
 		if($grupo === null){
 			$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 		}else{
