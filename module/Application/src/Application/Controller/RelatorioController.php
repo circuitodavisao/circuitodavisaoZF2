@@ -5230,7 +5230,7 @@ public function alunosNaSemanaAction(){
 															$entidade3 = $grupoFilho3->getEntidadeAtiva();
 															$idEntidadeTipo3 = $entidade3->getEntidadeTipo()->getId();
 															if($idEntidadeTipo3 === EntidadeTipo::igreja){
-																$fatoFilho3 = self::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+																$fatoFilho3 = RelatorioController::fatoMensalSomado($filho3, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 																if((int) $tipoRelatorio !== 6){
 																	$arrayFatoMensal3 = (array)$fatoFilho3;
 																	foreach($arrayFatoMensal3 as $k => $v){
@@ -5263,7 +5263,7 @@ public function alunosNaSemanaAction(){
 													}
 												}
 												if($idEntidadeTipo2 === EntidadeTipo::igreja){
-													$fatoFilho2 = self::fatoMensalSomado($filho2, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+													$fatoFilho2 = RelatorioController::fatoMensalSomado($filho2, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 													if((int) $tipoRelatorio !== 6){
 														$arrayFatoMensal2 = (array)$fatoFilho2;
 														foreach($arrayFatoMensal2 as $k => $v){
@@ -5296,7 +5296,7 @@ public function alunosNaSemanaAction(){
 										}
 									}
 									if($idEntidadeTipo1 === EntidadeTipo::igreja){
-										$fatoFilho1 = self::fatoMensalSomado($filho1, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+										$fatoFilho1 = RelatorioController::fatoMensalSomado($filho1, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 										if((int) $tipoRelatorio !== 6){
 											$arrayFatoMensal1 = (array)$fatoFilho1;
 											foreach($arrayFatoMensal1 as $k => $v){
@@ -5329,7 +5329,7 @@ public function alunosNaSemanaAction(){
 							}
 						}
 						if($idEntidadeTipo === EntidadeTipo::igreja){
-							$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+							$fatoFilho = RelatorioController::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 							$grupoFilho = $filho->getGrupoPaiFilhoFilho();
 							$fatosDiscipulos[$grupoFilho->getId()] = $fatoFilho;
 							if((int) $tipoRelatorio !== 6){
@@ -5804,7 +5804,7 @@ public function alunosNaSemanaAction(){
 
 											$idGrupo = substr($fatoMensal12->getNumero_identificador(), (strlen($fatoMensal12->getNumero_identificador())-8));
 											$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-											$fatoFilho = self::fatoMensalSomado(null, $mes, $ano, $equipe = 2, $this->getRepositorio(), $diferencaDePeriodos, $grupo);
+											$fatoFilho = RelatorioController::fatoMensalSomado(null, $mes, $ano, $equipe = 2, $this->getRepositorio(), $diferencaDePeriodos, $grupo);
 
 											$arrayFatoMensal1 = (array)$fatoFilho;
 											foreach($arrayFatoMensal1 as $k => $v){
