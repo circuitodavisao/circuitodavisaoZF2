@@ -881,8 +881,8 @@ class LoginController extends CircuitoController {
 						$total = count($relatorios);
 						foreach($relatorios as $relatorio){
 							if($contador === $total){
-								//$mediaMembresia = $relatorio->mediaMembresia;
-								//$mediaPessoasFrequentes = $relatorio->mediaCelula;				
+								$mediaMembresia = $relatorio->mediamem;
+								$mediaPessoasFrequentes = $relatorio->mediac;				
 							}
 							$contador++;
 						}
