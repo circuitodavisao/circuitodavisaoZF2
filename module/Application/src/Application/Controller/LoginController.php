@@ -878,11 +878,12 @@ class LoginController extends CircuitoController {
 						// Media de Membresia e Média de Pessoas em Célula
 						$relatorio = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $true = true, $pessoalOuEquipe);
 						$indiceParaVer = 0;	
-						$tamanhoDoArray = count($relatorio);
-
-						$mediaMembresia = $relatorio[$tamanhoDoArray-1]->mediaMembresia;
-						$mediaPessoasFrequentes = $relatorio[$tamanhoDoArray-1]['mediaCelula'];				
-
+						foreach($this->relatorio as $relatorio){
+							if($relatorio->mediamempclass === 'dark'){
+								$mediaMembresia = $relatorio->mediaMembresia;
+								$mediaPessoasFrequentes = $relatorio->mediaCelula;				
+							}
+						}
 						// Líderes
 						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 						if($mes == date('m') && $ano == date('Y')){
