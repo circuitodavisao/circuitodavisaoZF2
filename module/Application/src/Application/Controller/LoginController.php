@@ -893,7 +893,7 @@ class LoginController extends CircuitoController {
 						}
 						$periodoParaUsar = $arrayPeriodoDoMes[1];				
 						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
-						$fatoLider = $repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, RelatorioController::relatorioMembresiaECelula, $periodoParaUsar, $inativo = false);
+						$fatoLider = $repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe, $periodoParaUsar, $inativo = false);
 						$lideres = $fatoLider[0]['lideres'];
 						/* Parceiro de Deus */
 						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
