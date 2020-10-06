@@ -5002,7 +5002,7 @@ public function alunosNaSemanaAction(){
 				$fatosDiscipulos = array();
 				if(count($todosFilhos)){
 					foreach($todosFilhos as $filho){
-						$fatoFilho = self::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
+						$fatoFilho = RelatorioController::fatoMensalSomado($filho, $mes, $ano, $pessoalOuEquipe, $repositorio, $diferencaDePeriodos);
 
 						if((int) $tipoRelatorio === 4){
 							$fatoFilho->setMediamempclass('white');
