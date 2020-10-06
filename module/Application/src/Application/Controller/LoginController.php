@@ -876,7 +876,7 @@ class LoginController extends CircuitoController {
 						$tipoRelatorio = 2; // Somado							
 
 						// Media de Membresia e Média de Pessoas em Célula
-						$relatorio = RelatorioController::relatorioCompleto($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
+						$relatorio = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $tudo = true, $tipoRelatorio, 'atual');
 						$indiceParaVer = 0;	
 						$tamanhoDoArray = count($relatorio);
 						$mediaMembresia = $relatorio[$tamanhoDoArray-1]['mediaMembresia'];
