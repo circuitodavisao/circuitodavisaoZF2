@@ -880,6 +880,7 @@ class LoginController extends CircuitoController {
 						$indiceParaVer = 0;	
 						foreach($relatorios as $relatorio){
 							if($relatorio->mediamempclass === 'dark'){
+								Funcoes::var_dump($relatorio);
 								$mediaMembresia = $relatorio->mediaMembresia;
 								$mediaPessoasFrequentes = $relatorio->mediaCelula;				
 							}
