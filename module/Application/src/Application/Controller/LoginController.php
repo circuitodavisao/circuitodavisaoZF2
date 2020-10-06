@@ -879,9 +879,9 @@ class LoginController extends CircuitoController {
 						$relatorio = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $true = true, $pessoalOuEquipe);
 						$indiceParaVer = 0;	
 						$tamanhoDoArray = count($relatorio);
-						Funcoes::var_dump($relatorio);
-					//	$mediaMembresia = $relatorio[$tamanhoDoArray-1]['mediaMembresia'];
-					//	$mediaPessoasFrequentes = $relatorio[$tamanhoDoArray-1]['mediaCelula'];				
+
+						$mediaMembresia = $relatorio[$tamanhoDoArray-1]->mediaMembresia;
+						$mediaPessoasFrequentes = $relatorio[$tamanhoDoArray-1]['mediaCelula'];				
 
 						// Líderes
 						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
