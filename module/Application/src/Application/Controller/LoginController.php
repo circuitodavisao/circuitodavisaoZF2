@@ -873,7 +873,7 @@ class LoginController extends CircuitoController {
                             }
                         }																					
                         
-						$tipoRelatorio = 2; // Somado							
+						$pessoalOuEquipe = 2; // Somado							
 
 						// Media de Membresia e Média de Pessoas em Célula
 						$relatorio = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $true = true, $pessoalOuEquipe);
