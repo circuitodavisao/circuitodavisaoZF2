@@ -4299,6 +4299,7 @@ public function alunosNaSemanaAction(){
 		$dados['mostrarRegioes'] = $mostrarRegioes;
 		$dados['mostrarCoordenacoes'] = $mostrarCoordenacoes;
 		$dados['mostrarIgrejas'] = $mostrarIgrejas;
+		$dados['numero_identificador'] = $numeroIdentificador;
 		return $dados;
 	}
 
