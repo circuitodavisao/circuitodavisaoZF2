@@ -1112,6 +1112,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 // cascavel
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2776,6 +2778,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 //  cascavel
 								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
+								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
+								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
