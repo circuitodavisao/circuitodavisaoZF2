@@ -18,11 +18,11 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
 	}
 
-	public function __invoke() {
-		return $this->renderHtml();
+	public function __invoke($todos = null) {
+		return $this->renderHtml($todos);
 	}
 
-	public function renderHtml() {
+	public function renderHtml($todos) {
 		$html = '';
 		$mesSelecionado = date("m");
 		$anoSelecionado = date("Y");
@@ -30,6 +30,9 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 		$pessoasGrupo = array();
 		$grupo = $this->view->entidade->getGrupo();
 		$quantidade = 5;
+		if($this->todos){
+			$quantidade = null;
+		}
 		if($grupoPessoasAtivasDoMes = $grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado, $quantidade)) {
 			foreach ($grupoPessoasAtivasDoMes as $gp) {
 				$pessoasGrupo[] = $gp->getPessoa();
@@ -77,7 +80,18 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
 			$html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
 			$html .= '<div class="panel-body bg-light">';
-			$html .= '<div class="alert alert-info">Últimos 5 cadastrados</div>';
+			$html .= '<div class="alert alert-info alert-sm">';
+
+			if($todos === null){	
+				$html .= 'Últimos 5 cadastrados - ' ;
+				$html .= $this->view->botaoLink('Ver Todos', '/cadastroSelecionarRevisionistaTodos', 4);
+			}
+			if($todos){	
+				$html .= 'Todos cadastrados - ' ;
+				$html .= $this->view->botaoLink('Ver Últimos 5', '/cadastroSelecionarRevisionista', 4);
+			}
+
+			$html .= '</div>';
 
 			$html .= '<table class="table">';
 			$html .= '<thead>';

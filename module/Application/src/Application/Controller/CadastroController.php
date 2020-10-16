@@ -205,6 +205,12 @@ class CadastroController extends CircuitoController {
 				Constantes::$ACTION => Constantes::$PAGINA_SELECIONAR_REVISIONISTA,
 			));
 		}
+		if ($pagina == 'SelecionarRevisionistaTodos') {
+			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
+				Constantes::$ACTION => 'SelecionarRevisionistaTodos',
+			));
+		}
+	
 		/* Páginas Metas */
 		if ($pagina == Constantes::$PAGINA_METAS) {
 			return $this->forward()->dispatch(Constantes::$CONTROLLER_CADASTRO, array(
@@ -1801,11 +1807,39 @@ class CadastroController extends CircuitoController {
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
-		$idRevisao = $sessao->idSessao;
-		unset($sessao->idSessao);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$idRevisao = $sessao->idSessao;
 		$sessao->idRevisao = $idRevisao;
+		unset($sessao->idSessao);
+
+		$view = new ViewModel(array(
+			Constantes::$ENTIDADE => $entidade,
+			'repositorioORM' => $this->getRepositorio(),
+		));
+
+		/* Javascript */
+		$layoutJS = new ViewModel();
+		$layoutJS->setTemplate(Constantes::$LAYOUT_JS_EVENTOS);
+		$view->addChild($layoutJS, Constantes::$LAYOUT_STRING_JS_EVENTOS);
+
+		$layoutJSValidacao = new ViewModel();
+		$layoutJSValidacao->setTemplate(Constantes::$LAYOUT_JS_EVENTOS_VALIDACAO);
+		$view->addChild($layoutJSValidacao, Constantes::$LAYOUT_STRING_JS_EVENTOS_VALIDACAO);
+
+		return $view;
+	}
+
+	public function selecionarRevisionistaTodosAction() {
+
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		$idRevisao = $sessao->idSessao;
+		$sessao->idRevisao = $idRevisao;
+		unset($sessao->idSessao);
+
 		$view = new ViewModel(array(
 			Constantes::$ENTIDADE => $entidade,
 			'repositorioORM' => $this->getRepositorio(),
