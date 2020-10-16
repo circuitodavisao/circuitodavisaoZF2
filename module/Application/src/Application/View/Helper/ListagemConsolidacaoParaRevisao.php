@@ -62,7 +62,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 				$pA[2] = $pessoasGrupo[$j];
 				$res[1] = $valores[$pA[1]->getId()];
 				$res[2] = $valores[$pA[2]->getId()];
-				if ($res[1] > $res[2]) {
+				if ($res[1] < $res[2]) {
 					$pessoasGrupo[$i] = $pA[2];
 					$pessoasGrupo[$j] = $pA[1];
 				}
