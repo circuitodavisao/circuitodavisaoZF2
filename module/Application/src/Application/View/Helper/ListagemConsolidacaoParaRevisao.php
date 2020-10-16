@@ -30,7 +30,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 		$pessoasGrupo = array();
 		$grupo = $this->view->entidade->getGrupo();
 		$quantidade = 5;
-		if($this->todos){
+		if($todos){
 			$quantidade = null;
 		}
 		if($grupoPessoasAtivasDoMes = $grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado, $quantidade)) {
