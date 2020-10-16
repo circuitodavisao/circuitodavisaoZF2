@@ -77,6 +77,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
 			$html .= $this->view->templateFormularioTopo('Selecionar pessoa para o revisão');
 			$html .= '<div class="panel-body bg-light">';
+			$html .= '<div class="alert alert-info">Últimos 5 cadastrados</div>';
 
 			$html .= '<table class="table">';
 			$html .= '<thead>';
