@@ -29,21 +29,10 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 		$pessoas = array();
 		$pessoasGrupo = array();
 		$grupo = $this->view->entidade->getGrupo();
-		if (count($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado)) > 0) {
-			foreach ($grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado) as $gp) {
-
-				$p = $gp->getPessoa();
-				if (empty($gp->getNucleo_perfeito())) {
-					$p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
-				} else {
-					$adicionar = false;
-				}
-				$adicionar = true;
-				if (($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $gp->verificarSeEstaAtivo()) {
-					if ($adicionar && !$p->verificaSeParticipouDoRevisao()) {
-						$pessoasGrupo[] = $p;
-					}
-				}
+		$quantidade = 5;
+		if($grupoPessoasAtivasDoMes = $grupo->getGrupoPessoaAtivasEDoMes($mesSelecionado, $anoSelecionado, $quantidade)) {
+			foreach ($grupoPessoasAtivasDoMes as $gp) {
+				$pessoasGrupo[] = $gp->getPessoa();
 			}
 		}
 
@@ -55,18 +44,13 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 			case 'CO':
 				$valor = 4;
 				break;
-			case 'LT':
-				$valor = 3;
-				break;
-			case 'AL':
-				$valor = 2;
-				break;
 			case 'VI':
 				$valor = 1;
 				break;
 			}
 			$valores[$pg->getId()] = $valor;
 		}
+
 		$pA = array();
 		$res = array();
 		for ($i = 0; $i < count($pessoasGrupo); $i++) {
@@ -85,8 +69,6 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 			$pessoas[] = $pgA;
 		}
 		/* FIM Ordenacao de pessoas */
-
-
 
 		/* Sem pessoas cadastrados */
 		if (count($pessoas) == 0) {
@@ -111,7 +93,6 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 			$html .= '<tbody>';
 
 			foreach ($pessoas as $pessoa) {
-
 				$html .= '<tr>';
 				$html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
 
@@ -125,6 +106,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 				$html .= '</td>';
 				$html .= '</tr>';
 			}
+
 			$html .= '</tbody>';
 			$html .= '</table>';
 

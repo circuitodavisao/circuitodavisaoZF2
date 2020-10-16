@@ -1272,32 +1272,66 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo pessoa ativas no mes infomado
      * @return GrupoPessoa
      */
-    function getGrupoPessoaAtivasEDoMes($mes, $ano, $ciclo = 1) {
-        $pessoas = null;
-        if (!empty($this->getGrupoPessoa())) {
-            foreach ($this->getGrupoPessoa() as $gp) {
-                /* Condição para data de cadastro */
-                $verificacaoData = false;
-                if ($gp->getData_criacaoAno() <= $ano) {
-                    if ($gp->getData_criacaoAno() == $ano) {
-                        if ($gp->getData_criacaoMes() <= $mes) {
-                            $verificacaoData = true;
-                        }
-                    } else {
-                        $verificacaoData = true;
-                    }
-                }
-                $condicao[1] = ($gp->verificarSeEstaAtivo() && $verificacaoData);
-                $condicao[2] = (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano));
-//                $condicao[3] = (!$gp->verificarSeEstaAtivo() && $verificacaoData);
-                if ($condicao[1] || $condicao[2]) {
-                    $pessoas[] = $gp;
-                }
-            }
-        }
-        $this->setGrupoPessoa($pessoas);
-        return $this->getGrupoPessoa();
-    }
+	function getGrupoPessoaAtivasEDoMes($mes, $ano, $quantidade = null) {
+		$pessoas = null;
+		if ($grupoPessoas = $this->getGrupoPessoa()){
+
+			$listaAjustada = array();
+			foreach($grupoPessoas as $grupoPessoa){
+				$listaAjustada[] = $grupoPessoa;
+			}
+			for ($i = 0; $i < count($listaAjustada); $i++) {
+				for ($j = 0; $j < count($listaAjustada); $j++) {
+					$p1 = $listaAjustada[$i];
+					$p2 = $listaAjustada[$j];
+					if ($p1->getId() > $p2->getId()) {
+						$listaAjustada[$i] = $p2;
+						$listaAjustada[$j] = $p1;
+					}
+				}
+			}
+
+			$contador = 1;
+			foreach ($listaAjustada as $gp) {
+				/* Condição para data de cadastro */
+				$verificacaoData = false;
+				if ($gp->getData_criacaoAno() <= $ano) {
+					if ($gp->getData_criacaoAno() == $ano) {
+						if ($gp->getData_criacaoMes() <= $mes) {
+							$verificacaoData = true;
+						}
+					} else {
+						$verificacaoData = true;
+					}
+				}
+				$condicao[1] = ($gp->verificarSeEstaAtivo() && $verificacaoData);
+				$condicao[2] = (!$gp->verificarSeEstaAtivo() && $gp->verificarSeInativacaoFoiNoMesInformado($mes, $ano));
+				if ($condicao[1] || $condicao[2]) {
+					$adicionar = true;
+					$p = $gp->getPessoa();
+					if (empty($gp->getNucleo_perfeito())) {
+						$p->setTipo($gp->getGrupoPessoaTipo()->getNomeSimplificado());
+					} else {
+						$adicionar = false;
+					}
+					if (($p->getTipo() == 'CO' || $p->getTipo() == 'VI') && $gp->verificarSeEstaAtivo()) {
+						if ($adicionar && !$p->verificaSeParticipouDoRevisao()) {
+							$pessoas[] = $gp;
+
+							if($quantidade !== null){
+								if($contador === $quantidade){
+									break;
+								}
+							}
+							$contador++;
+						}
+					}
+				}
+			}
+		}
+		$this->setGrupoPessoa($pessoas);
+		return $this->getGrupoPessoa();
+	}
 
     function setGrupoPessoa($grupoPessoa) {
         $this->grupoPessoa = $grupoPessoa;
