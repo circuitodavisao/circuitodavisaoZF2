@@ -1120,6 +1120,7 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2788,6 +2789,7 @@ class LoginController extends CircuitoController {
 								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
 								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
