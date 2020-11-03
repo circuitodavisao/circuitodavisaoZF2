@@ -858,9 +858,11 @@ class LoginController extends CircuitoController {
 				foreach($responsabilidades as $grupoResponsavel){
 					if($grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::secretario){
 						$grupo = $grupoResponsavel->getGrupo();
+						error_log('################# grupo ' . $grupo->getId());
 						$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
 						$nomeOndeEstou = null;
-						if($situacaoPessoa == 'ativa' && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+						if($situacaoPessoa == 'ativa' && $metas 
+							&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
 							&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 
 							if(!$nomeOndeEstou){
