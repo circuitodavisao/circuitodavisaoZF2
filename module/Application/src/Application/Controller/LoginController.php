@@ -835,100 +835,102 @@ class LoginController extends CircuitoController {
 			$postDados = $request->getPost();
 			$repositorio = $this->getRepositorio();
 			$cpf = $postDados['cpf'];
-            $pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);				
-            if($pessoa){
-                $nome = $pessoa->getNomePrimeiroUltimo(); 
-                $situacaoPessoa = 'inativada';				
-            }
+			$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);				
+			if($pessoa){
+				$nome = $pessoa->getNomePrimeiroUltimo(); 
+				$situacaoPessoa = 'inativada';				
+			}
 			$nivelDeDificuldade = $postDados['nivelDeDificuldade'];	
 			$metas = $grupoLogado->getGrupoMetasOrdenacaoAtivas();
 			if($pessoa && $pessoa->verificarSeTemAlgumaResponsabilidadeAtiva()){				                
 				$situacaoPessoa = 'ativa';
 
 				if(date('m') == 1){
-                    $mes = 12;
-                    $ano = date('Y') - 1;
-                }else{
-                    $mesAtual = date('m');
-                    $mes = $mesAtual -1;
-                    $ano = date('Y');
-                }		
-				
+					$mes = 12;
+					$ano = date('Y') - 1;
+				}else{
+					$mesAtual = date('m');
+					$mes = $mesAtual -1;
+					$ano = date('Y');
+				}		
+
 				$responsabilidades = $pessoa->getResponsabilidadesAtivas();
 				foreach($responsabilidades as $grupoResponsavel){
-					$grupo = $grupoResponsavel->getGrupo();
-					$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
-                    $nomeOndeEstou = null;
-					if($situacaoPessoa == 'ativa' && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
-					&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
+					if($grupoResponsavel->getGrupo()->getEntidadeAtiva()->getEntidadeTipo()->getId() !== EntidadeTipo::secretario){
+						$grupo = $grupoResponsavel->getGrupo();
+						$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
+						$nomeOndeEstou = null;
+						if($situacaoPessoa == 'ativa' && $metas && $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+							&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 
-                        if(!$nomeOndeEstou){
-                            if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-                                $nomeOndeEstou = $entidadeDaPessoa->getNome();
-                            }
-                            if($entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
-                                $nomeOndeEstou = $entidadeDaPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();   
-                                $nomeOndeEstou .= ' - ';                         
-                                $nomeOndeEstou .= $entidadeDaPessoa->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome();   
-                            }
-                        }																					
-                        
-						$pessoalOuEquipe = 2; // Somado							
+							if(!$nomeOndeEstou){
+								if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+									$nomeOndeEstou = $entidadeDaPessoa->getNome();
+								}
+								if($entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::igreja){
+									$nomeOndeEstou = $entidadeDaPessoa->getGrupo()->getGrupoEquipe()->getEntidadeAtiva()->getNome();   
+									$nomeOndeEstou .= ' - ';                         
+									$nomeOndeEstou .= $entidadeDaPessoa->getGrupo()->getGrupoIgreja()->getEntidadeAtiva()->getNome();   
+								}
+							}																					
 
-						// Media de Membresia e Média de Pessoas em Célula
-						$relatorios = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $true = true, $pessoalOuEquipe);
-						$contador = 1;
-						$total = count($relatorios);
-						foreach($relatorios as $relatorio){
-							if($contador === $total){
-								$mediaMembresia = $relatorio->mediamem;
-								$mediaPessoasFrequentes = $relatorio->mediac;				
+							$pessoalOuEquipe = 2; // Somado							
+
+							// Media de Membresia e Média de Pessoas em Célula
+							$relatorios = RelatorioController::relatorioCompletoNovo($repositorio, $grupo, RelatorioController::relatorioMembresiaECelula, $mes, $ano, $true = true, $pessoalOuEquipe);
+							$contador = 1;
+							$total = count($relatorios);
+							foreach($relatorios as $relatorio){
+								if($contador === $total){
+									$mediaMembresia = $relatorio->mediamem;
+									$mediaPessoasFrequentes = $relatorio->mediac;				
+								}
+								$contador++;
 							}
-							$contador++;
+							// Líderes
+							$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
+							if($mes == date('m') && $ano == date('Y')){
+								$arrayPeriodoDoMes[1] = 0;
+							}
+							$periodoParaUsar = $arrayPeriodoDoMes[1];				
+							$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
+							$fatoLider = $repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe, $periodoParaUsar, $inativo = false);
+							$lideres = $fatoLider[0]['lideres'];
+							/* Parceiro de Deus */
+							$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
+							$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
+							$dados['mediaPessoasFrequentes'] = number_format($mediaPessoasFrequentes);
+							$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
+							$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
+							if(!$dados['parceiroDeDeus']){
+								$dados['parceiroDeDeus'] = $parceiro;				
+							}						
+							$dados['membresia'] = number_format($mediaMembresia);
+							$dados['lideres'] = $lideres;																					
 						}
-						// Líderes
-						$arrayPeriodoDoMes = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
-						if($mes == date('m') && $ano == date('Y')){
-							$arrayPeriodoDoMes[1] = 0;
+						if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
+							|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
+							if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+								$nomeOndeEstou = 'REGIÃO: ' . $entidadeDaPessoa->getNome();
+							}
+							if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){                               
+								$nomeOndeEstou = 'COORDENAÇÃO: ';                         
+								$nomeOndeEstou .= $entidadeDaPessoa->getNumero(); 
+								$entidadeDoPai = $entidadeDaPessoa->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+								if($entidadeDoPai->getEntidadeTipo()->getId() === EntidadeTipo::regiao){                               
+									$nomeOndeEstou .= ' - ' . $entidadeDoPai->getNome();
+								}                            
+							}
+							$relatorioDadosPrincipais = RelatorioController::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
+							$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
+							$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
+							$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
+							$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
 						}
-						$periodoParaUsar = $arrayPeriodoDoMes[1];				
-						$numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $grupo);								
-						$fatoLider = $repositorio->getFatoLiderORM()->encontrarPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe, $periodoParaUsar, $inativo = false);
-						$lideres = $fatoLider[0]['lideres'];
-						/* Parceiro de Deus */
-						$parceiro = $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador, $mes, $ano)['valor'];																	
-						$tiposDeMetasOrdenacao = $repositorio->getMetasOrdenacaoTipoORM()->buscarTodosRegistrosEntidade();
-						$dados['mediaPessoasFrequentes'] = number_format($mediaPessoasFrequentes);
-						$dados['tiposDeMetasOrdenacao'] = $tiposDeMetasOrdenacao;				
-						$dados['nivelDeDificuldade'] = $nivelDeDificuldade;	
-						if(!$dados['parceiroDeDeus']){
-							$dados['parceiroDeDeus'] = $parceiro;				
-						}						
-						$dados['membresia'] = number_format($mediaMembresia);
-						$dados['lideres'] = $lideres;																					
 					}
-					if($situacaoPessoa == 'ativa' && $metas && ($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao 
-					|| $entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao)){
-                        if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-                            $nomeOndeEstou = 'REGIÃO: ' . $entidadeDaPessoa->getNome();
-                        }
-                        if($entidadeDaPessoa->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){                               
-                            $nomeOndeEstou = 'COORDENAÇÃO: ';                         
-                            $nomeOndeEstou .= $entidadeDaPessoa->getNumero(); 
-                            $entidadeDoPai = $entidadeDaPessoa->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-                            if($entidadeDoPai->getEntidadeTipo()->getId() === EntidadeTipo::regiao){                               
-                                $nomeOndeEstou .= ' - ' . $entidadeDoPai->getNome();
-                            }                            
-                        }
-						$relatorioDadosPrincipais = RelatorioController::buscarDadosPrincipais($repositorio, $grupo, $mes, $ano);
-						$parceiroDadosPrincipais = $relatorioDadosPrincipais['parceiro'];
-						$igrejasDadosPrincipais = $relatorioDadosPrincipais['igrejas'];
-						$dados['parceiroDeDeus'] = $parceiroDadosPrincipais;
-						$dados['quantidadeDeIgrejas'] = $igrejasDadosPrincipais;	
-					}
-				}
-			}	
-        }	
+				}	
+			}
+		}	
         if($nome){
             $nome .= ' - ' . $nomeOndeEstou;
         }
