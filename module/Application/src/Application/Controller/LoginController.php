@@ -860,6 +860,7 @@ class LoginController extends CircuitoController {
 						$grupo = $grupoResponsavel->getGrupo();
 						error_log('################# grupo ' . $grupo->getId());
 						$entidadeDaPessoa = $grupo->getEntidadeAtiva();					
+						error_log('################# entidade ' . $entidadeDaPessoa->getNome());
 						$nomeOndeEstou = null;
 						if($situacaoPessoa == 'ativa' && $metas 
 							&& $entidadeDaPessoa->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
