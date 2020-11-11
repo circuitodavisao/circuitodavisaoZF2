@@ -1127,7 +1127,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -1196,6 +1197,7 @@ class LoginController extends CircuitoController {
 														$html .= 'Aula '.$turmaAula->getAula()->getPosicao();
 														if(
 															$turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HOORIZONTE
+															|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
 														){
 															$html.= '&nbsp;<button type="button" class="btn btn-primary btn-xs" onClick="mostrarAulaAberta()">Ver Aula</button>';
 														}
@@ -2798,6 +2800,7 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
