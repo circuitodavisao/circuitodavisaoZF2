@@ -4378,6 +4378,8 @@ class IndexController extends CircuitoController {
 			$gruposParaValidar[] = $this->getRepositorio()->getGrupoORM()->encontrarPorId($qualParte);
 		}
 
+		$html .= "<br />###### gruposParaValidas " . count($gruposParaValidar);
+
 		$mesAtual = date('m');
 		$anoAtual = date('Y');
 
