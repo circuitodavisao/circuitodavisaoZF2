@@ -75,7 +75,7 @@ class GrupoORM extends CircuitoORM {
 				. "FROM  " . Constantes::$ENTITY_GRUPO . " g ";
 			$grupos = $this->getEntityManager()
 				->createQuery($dqlBase)
-				->setFirstResult($inicio)
+				->setFirstResult(number_format($inicio))
 				->setMaxResults(number_format($fracaoParaMontar))
 				->getResult();
 
