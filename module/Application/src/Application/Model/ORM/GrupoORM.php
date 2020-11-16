@@ -75,16 +75,14 @@ class GrupoORM extends CircuitoORM {
 				. "FROM  " . Constantes::$ENTITY_GRUPO . " g ";
 			$grupos = $this->getEntityManager()
 				->createQuery($dqlBase)
-				->setFirstResult(number_format($inicio))
-				->setMaxResults(number_format($fracaoParaMontar))
+				->setFirstResult(intval($inicio))
+				->setMaxResults(intval($fracaoParaMontar))
 				->getResult();
 
 			$gruposAtivos = array();
-            foreach ($grupos as $grupo) {
-                //if (count($grupo->getResponsabilidadesAtivas()) > 0) {
-                    $gruposAtivos[] = $grupo;
-                //}
-            }
+			foreach ($grupos as $grupo) {
+				$gruposAtivos[] = $grupo;
+			}
  
 			return $gruposAtivos;
 		} catch (Exception $exc) {
