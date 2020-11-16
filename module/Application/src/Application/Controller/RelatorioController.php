@@ -4288,6 +4288,7 @@ public function alunosNaSemanaAction(){
 		}
 
 		$dados = array();
+		$dados['contadorDePeriodos'] = $contadorDePeriodos;
 		$dados['celulas'] = $celulas;
 		$dados['lideres'] = $lideres;
 		$dados['discipulados'] = $discipulados;
