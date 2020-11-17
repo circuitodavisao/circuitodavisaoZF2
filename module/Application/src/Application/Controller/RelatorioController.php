@@ -5963,17 +5963,20 @@ public function alunosNaSemanaAction(){
 								if($situacao->getId() === Situacao::ATIVO || $situacao->getId() === Situacao::ESPECIAL){
 									if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
 										$turmaPessoa = $repositorio->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+										$inadiplente = true;
+										$contagem = 0;
 										if($turmaPessoaFinanceiros = $turmaPessoa->getTurmaPessoaFinanceiro()){
-											$contagem = 0;
 											foreach($turmaPessoaFinanceiros as $turmaPessoaFinanceiro){
 												if($turmaPessoaFinanceiro->verificarSeEstaAtivo()){
 													$contagem++;
 												}
 											}
-											$inadiplente = true;
-											if($contagem === 9){
-												$inadiplente = false;
-											}
+										}
+										if($turmaPessoa->getId() === 82917){
+											Funcoes::Var_dump($contagem);
+										}
+										if($contagem === 9){
+											$inadiplente = false;
 										}
 										if($inadiplente){
 											$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['inadimplentes']++;
