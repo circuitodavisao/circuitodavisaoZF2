@@ -394,6 +394,15 @@ $link = 'relatorioNovo';
 			$html .= 'Aproveitamento Instituto de Vencedores - Por Turmas';
 			$html .= '</a>';
 			$html .= '</li>';	
+
+			if($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+			$html .= '<li>';
+			$html .= '<a href="/relatorioInadimplentes" onClick="mostrarSplash();">';
+			$html .= '<span class="fa fa-users"></span>';
+			$html .= 'Inadimplentes Instituto de Vencedores - Por Turmas';
+			$html .= '</a>';
+			$html .= '</li>';	
+			}
 			
 			}
 
