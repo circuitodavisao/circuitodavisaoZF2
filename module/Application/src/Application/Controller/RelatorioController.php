@@ -5911,4 +5911,88 @@ public function alunosNaSemanaAction(){
 
 		return new ViewModel($dados);
 	}
+
+	public function inadimplentesAction(){
+		$sessao = new Container(Constantes::$NOME_APLICACAO);
+
+		$idEntidadeAtual = $sessao->idEntidadeAtual;
+		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+
+		$resultado = self::relatorioAlunosInadimplentesETurmas($this->getRepositorio(), $entidade);
+		$relatorioAjustado = $resultado[0];
+		$turmasComAulaAberta = $resultado[1];
+
+		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
+		return new ViewModel(array(
+			'relatorio'=> $relatorioAjustado,
+			'turmas' => $turmasComAulaAberta,
+		));
+	}
+
+	static public function relatorioAlunosInadimplentesETurmas($repositorio, $entidade, $turmasAtivas = true, $pessoalOuEquipe = 2, $ordernar = true){		
+		$relatorioAjustado = array();
+		if($numeroIdentificador = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $entidade->getGrupo())){
+			if($relatorioInicial = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorNumeroIdentificador($numeroIdentificador, $pessoalOuEquipe)){
+				$turmasComAulaAberta = array();
+				if($turmasAtivas){				
+					$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurma();
+				}
+
+				if(!$turmasAtivas){
+					$turmas = $entidade->getGrupo()->getGrupoIgreja()->getTurmasInativas();
+				}
+
+				foreach($turmas as $turma){
+					if($turmasAtivas && $turma->getTurmaAulaAtiva()){
+						$turmasComAulaAberta[] = $turma;
+					}
+
+					if(!$turmasAtivas && !$turma->verificarSeEstaAtivo()){
+						$turmasComAulaAberta[] = $turma;
+					}
+				}
+
+				$relatorioAjustado = array();
+				if($ordernar){
+					foreach($relatorioInicial as $relatorio){
+						foreach($turmasComAulaAberta as $turma){
+							if($relatorio->getTurma_id() === $turma->getId()){
+								$idGrupo = substr($relatorio->getNumero_identificador(), (count($relatorio->getNumero_identificador())-8));
+								$grupo = $repositorio->getGrupoORM()->encontrarPorId($idGrupo);
+								$situacao = $repositorio->getSituacaoORM()->encontrarPorId($relatorio->getSituacao_id());
+								if($situacao->getId() === Situacao::ATIVO || $situacao->getId() === Situacao::ESPECIAL){
+									if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+										$turmaPessoa = $repositorio->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
+										if($turmaPessoaFinanceiros = $turmaPessoa->getTurmaPessoaFinanceiro()){
+											$contagem = 0;
+											foreach($turmaPessoaFinanceiros as $turmaPessoaFinanceiro){
+												if($turmaPessoaFinanceiro->verificarSeEstaAtivo()){
+													$contagem++;
+												}
+											}
+											$inadiplente = true;
+											if($contagem === 9){
+												$inadiplente = false;
+											}
+										}
+										if($inadiplente){
+											$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['indimplentes']++;
+										}
+										$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['total']++;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$resultado = array();
+		$resultado[0] = $relatorioAjustado;
+		$resultado[1] = $turmasComAulaAberta;
+		$resultado[2] = $relatorioInicial;
+
+		return $resultado;
+	}
 }
