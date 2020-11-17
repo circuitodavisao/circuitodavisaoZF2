@@ -156,6 +156,7 @@ if($this->relatorio){
 	foreach($chaves as $chave){
 		$relatorioTime = $relatorioPronto[$chave];
 		$corPerformanceGeral = RelatorioController::corDaLinhaPelaPerformance($relatorioTime['performanceFinal']);
+		$corPerformanceGeral = '';
 		$htmlTime .= '<tr>';
 		$htmlTime .= '<td class="'.$corPerformanceGeral.'">' . $chave . '</td>';
 		$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
@@ -192,7 +193,7 @@ if($this->relatorio){
 		case 8: $meta = 30; break;
 		}
 		$metaCalculada = number_format(($meta / 100 * $relatorioFinal[$turma->getId()]['total']), 1);
-		$performance = $relatorioFinal[$turma->getId()]['ativos'] / $metaCalculada * 100;
+		$performance = $relatorioFinal[$turma->getId()]['inadimplentes'] / $metaCalculada * 100;
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['total'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['inadimplentes'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';

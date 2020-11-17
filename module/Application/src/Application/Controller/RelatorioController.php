@@ -5923,7 +5923,6 @@ public function alunosNaSemanaAction(){
 		$turmasComAulaAberta = $resultado[1];
 
 		self::registrarLog(RegistroAcao::VER_RELATORIO_APROVEITAMENTO_DO_IV, $extra = '');
-		Funcoes::var_dump($relatorioAjustado);
 		return new ViewModel(array(
 			'relatorio'=> $relatorioAjustado,
 			'turmas' => $turmasComAulaAberta,
