@@ -5977,7 +5977,7 @@ public function alunosNaSemanaAction(){
 											}
 										}
 										if($inadiplente){
-											$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['indimplentes']++;
+											$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['inadimplentes']++;
 										}
 										$relatorioAjustado[$grupo->getGrupoEquipe()->getEntidadeAtiva()->getNome()][$turma->getId()]['total']++;
 									}
