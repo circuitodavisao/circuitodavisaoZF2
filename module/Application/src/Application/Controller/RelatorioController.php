@@ -5968,7 +5968,15 @@ public function alunosNaSemanaAction(){
 										if($turmaPessoaFinanceiros = $turmaPessoa->getTurmaPessoaFinanceiro()){
 											foreach($turmaPessoaFinanceiros as $turmaPessoaFinanceiro){
 												if($turmaPessoaFinanceiro->verificarSeEstaAtivo()){
-													$contagem++;
+													if($turmaPessoaFinanceiro->getValor1() === 'S'){
+														$contagem++;
+													}
+													if($turmaPessoaFinanceiro->getValor2() === 'S'){
+														$contagem++;
+													}
+													if($turmaPessoaFinanceiro->getValor3() === 'S'){
+														$contagem++;
+													}
 												}
 											}
 										}
