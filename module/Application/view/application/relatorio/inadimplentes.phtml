@@ -69,11 +69,11 @@ foreach($this->turmas as $turma){
 	if($turma->getTurmaAulaAtiva()){
 		$modulo = $turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getNome();
 	}
-	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'" colspan="5">'.$modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
+	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'" colspan="3">'.$modulo . ' - ' . Funcoes::mesPorExtenso($turma->getMes(), 1).'/'.$turma->getAno() . '</th>';
 	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 	$contadorDeTurmas++;
 }
-echo '<th colspan="4" class="turma'.$contadorDeTurmas.'">TOTAL</th>';
+echo '<th colspan="3" class="turma'.$contadorDeTurmas.'">TOTAL</th>';
 ?>
 						</tr>
 						<tr>
@@ -83,13 +83,13 @@ echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 $contadorDeTurmas = 0;
 foreach($this->turmas as $turma){
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">TOTAL</th>';
-	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">INADIMPLENTES</th>';
+	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">INADI.</th>';
 	echo '<th class="hidden-xs turma'.$contadorDeTurmas.'">%</th>';
 	echo '<th class="hidden-xs colunaEspacamento">&nbsp;</th>';
 	$contadorDeTurmas++;
 }
 echo '<th class="turma'.$contadorDeTurmas.'">TOTAL</th>';
-echo '<th class="turma'.$contadorDeTurmas.'">INADIMPLENTES</th>';
+echo '<th class="turma'.$contadorDeTurmas.'">INADI.</th>';
 echo '<th class="turma'.$contadorDeTurmas.'">%</th>';
 ?>
 						</tr>
