@@ -5973,7 +5973,7 @@ public function alunosNaSemanaAction(){
 											}
 										}
 										if($turmaPessoa->getId() === 82917){
-											Funcoes::Var_dump($contagem);
+											Funcoes::var_dump($contagem);
 										}
 										if($contagem === 9){
 											$inadiplente = false;
