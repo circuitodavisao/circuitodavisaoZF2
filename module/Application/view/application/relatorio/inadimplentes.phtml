@@ -115,11 +115,9 @@ if($this->relatorio){
 
 				$soma['total'] += $total;
 				$soma['inadimplentes'] += $inadimplentes;
-				$soma['performances'] += $performance;
 
 				$relatorioTime[$turma->getId()]['total'] = $total;
 				$relatorioTime[$turma->getId()]['inadimplentes'] = $inadimplentes;
-				$relatorioTime[$turma->getId()]['performance'] = $performance;
 
 				$relatorioFinal[$turma->getId()]['total'] += $total;
 				$relatorioFinal[$turma->getId()]['inadimplentes'] += $inadimplentes;
@@ -128,27 +126,10 @@ if($this->relatorio){
 			$performanceFinal = $soma['performances'] / count($this->turmas);
 			$relatorioTime['total'] = $soma['total'];
 			$relatorioTime['inadimplentes'] = $soma['inadimplentes'];
-			$relatorioTime['performanceFinal'] = $performanceFinal;
 			$relatorioPronto[$chave] = $relatorioTime;
 
 			$relatorioFinal['total'] += $soma['total'];
 			$relatorioFinal['inadimplentes'] += $soma['inadimplentes'];
-		}
-	}
-
-	$tamanhoArray = count($chaves);
-
-	for ($i = 0; $i < $tamanhoArray; $i++) {
-		for ($j = 0; $j < $tamanhoArray; $j++) {
-
-			$chave1 = $chaves[$i];
-			$chave2 = $chaves[$j];
-
-			if ($relatorioPronto[$chave1]['performanceFinal'] > $relatorioPronto[$chave2]['performanceFinal']){
-				$aux = $chave1;
-				$chaves[$i] = $chave2;
-				$chaves[$j] = $aux;
-			}
 		}
 	}
 
@@ -163,17 +144,18 @@ if($this->relatorio){
 
 		$contadorDeTurmas = 0;
 		foreach($this->turmas as $turma){
-			$corPerformance = RelatorioController::corDaLinhaPelaPerformance($relatorioTime[$turma->getId()]['performance']);
+			$performance = $relatorioTime[$turma->getId()]['inadimplentes'] / $relatorioTime[$turma->getId()]['total'] * 100;
 			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['total'] . '</td>';
 			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . $relatorioTime[$turma->getId()]['inadimplentes'] . '</td>';
-			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime[$turma->getId()]['performance']) . '%</td>';
+			$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.' '.$corPerformance.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
 			$htmlTime .= '<td class="hidden-xs colunaEspacamento">&nbsp;</td>';
 			$contadorDeTurmas++;
 		}
 
+		$performance = $relatorioTime['inadimplentes'] / $relatorioTime['total'] * 100;
 		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['total'] . '</td>';
 		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . $relatorioTime['inadimplentes'] . '</td>';
-		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($relatorioTime['performanceFinal']) . '%</td>';
+		$htmlTime .= '<td class="'.$corPerformanceGeral.' turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
 		$htmlTime .= '</tr>';
 
 	}
@@ -185,15 +167,7 @@ if($this->relatorio){
 	$somaPerformancesFinal = 0;
 	$contadorDeTurmas = 0;
 	foreach($this->turmas as $turma){
-		$meta = 0;
-		switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
-		case 5: $meta = 70; break;
-		case 6: $meta = 70; break;
-		case 7: $meta = 50; break;
-		case 8: $meta = 30; break;
-		}
-		$metaCalculada = number_format(($meta / 100 * $relatorioFinal[$turma->getId()]['total']), 1);
-		$performance = $relatorioFinal[$turma->getId()]['inadimplentes'] / $metaCalculada * 100;
+		$performance = $relatorioFinal[$turma->getId()]['inadimplentes'] / $relatorioFinal[$turma->getId()]['total'] * 100;
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['total'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . $relatorioFinal[$turma->getId()]['inadimplentes'] . '</td>';
 		$htmlTime .= '<td class="hidden-xs turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
@@ -203,9 +177,10 @@ if($this->relatorio){
 		$contadorDeTurmas++;
 	}
 
+	$performance = $relatorioFinal['inadimplentes'] / $relatorioFinal['total'] * 100;
 	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['total'] . '</td>';
 	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . $relatorioFinal['inadimplentes'] . '</td>';
-	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($somaPerformancesFinal / count($this->turmas)) . '%</td>';
+	$htmlTime .= '<td class="turma'.$contadorDeTurmas.'">' . RelatorioController::formataNumeroRelatorio($performance) . '%</td>';
 	$htmlTime .= '</tr>';
 
 	echo $htmlTime;
