@@ -1811,7 +1811,7 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$idRevisao = $sessao->idSessao;
 		$sessao->idRevisao = $idRevisao;
-		unset($sessao->idSessao);
+		//unset($sessao->idSessao);
 
 		$view = new ViewModel(array(
 			Constantes::$ENTIDADE => $entidade,
@@ -1838,7 +1838,7 @@ class CadastroController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$idRevisao = $sessao->idSessao;
 		$sessao->idRevisao = $idRevisao;
-		unset($sessao->idSessao);
+		//unset($sessao->idSessao);
 
 		$view = new ViewModel(array(
 			Constantes::$ENTIDADE => $entidade,
