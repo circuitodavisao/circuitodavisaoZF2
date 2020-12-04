@@ -18,6 +18,7 @@ echo $this->form()->openTag($form);
 </style>
     <div class="panel-body bg-light p5">
         <?php
+ $htmlBotaoGerar .= '<div class="text-center m20">';
         $funcao = $this->funcaoOnClick('this.form.submit()');
         $htmlBotaoGerar .= $this->botaoSimples('Gerar crachá 1 por página', $funcao, '', BotaoSimples::posicaoAoCentro);
 		$htmlBotaoGerar .= '&nbsp;';
