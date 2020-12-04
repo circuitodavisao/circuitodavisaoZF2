@@ -1400,6 +1400,9 @@ class LoginController extends CircuitoController {
 									$idVideo = $aula->getUrl();
 									$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
 									$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+									if($aula->getId() === 43){
+										$html .= '<p><a heref="https://forms.gle/CG3xQuT6VXiiUUE96">Clique Aqui</a></p>';
+									}
 								}else{
 									$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
 								}
@@ -1447,6 +1450,10 @@ class LoginController extends CircuitoController {
 										$idVideo = $falta->getUrl();
 										$url = 'https://player.vimeo.com/video/'.$idVideo.'?byline=0&portrait=0';
 										$html .= '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="'.$url.'" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>';
+										if($falta->getId() === 43){
+											$html .= '<p><a heref="https://forms.gle/CG3xQuT6VXiiUUE96">Clique Aqui</a></p>';
+										}
+	
 									}else{
 										$html .= '<div class="alert alert-danger">URL da Aula não cadastrada entre em contato com seu líder para resolver</div>';
 									}
