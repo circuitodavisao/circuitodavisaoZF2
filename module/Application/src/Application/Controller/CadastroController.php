@@ -3231,10 +3231,28 @@ class CadastroController extends CircuitoController {
 		}
 
 		$listas = array();
+		$homensRevisionistas = 0;
+		$mulheresRevisionistas = 0;
+		$homensLideres = 0;
+		$mulheresLideres = 0;
 		if(count($fatosRevisao) > 0) {
 				foreach ($fatosRevisao as $fatoRevisao) {
 				if($fatoRevisao->ativo === 'S'){
 					$listas[$fatoRevisao->tipo][] = $fatoRevisao;
+					if($fatoRevisao->tipo === 1){
+						if($fatoRevisao->sexo === 'M'){
+							$homensRevisionistas++;
+						}else{
+							$mulheresRevisionistas++;
+						}
+					}
+					if($fatoRevisao->tipo === 2){
+						if($fatoRevisao->sexo === 'M'){
+							$homensLideres++;
+						}else{
+							$mulheresLideres++;
+						}
+					}
 				}
 			}
 		}
@@ -3243,6 +3261,10 @@ class CadastroController extends CircuitoController {
 		$view = new ViewModel(array(
 			'formulario' => $formulario,
 			'listas' => $listas,
+			'homensRevisionistas' => $homensRevisionistas,
+			'mulheresRevisionistas' => $mulheresRevisionistas,
+			'homensLideres' => $homensLideres,
+			'mulheresLideres' => $mulheresLideres,
 		));
 
 		return $view;

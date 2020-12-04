@@ -27,6 +27,8 @@ echo $this->form()->openTag($form);
         $htmlBotaoGerar .= '</div>';
         echo $htmlBotaoGerar;
  
+echo '<div class="alert alert-success">Revisionistas - Homens: '.$this->homensRevisionistas.' - Mulheres: '.$this->mulheresRevisionistas.'</div>';
+echo '<div class="alert alert-success">Lideres - Homens: '.$this->homensLideres.' - Mulheres: '.$this->mulheresLideres.'</div>';
 echo '<div class="alert alert-info">Revisionistas</div>';
 if(count($this->listas[1]) > 0){
 	$html = '';

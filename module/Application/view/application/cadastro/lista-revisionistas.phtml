@@ -16,6 +16,7 @@ use Application\View\Helper\BotaoSimples;
 					</blockquote>
 <?php
 echo '<div class="alert alert-info">Homens: '.count($this->listas['M']).'</div>';
+echo '<div class="alert alert-info">Mulheres: '.count($this->listas['F']).'</div>';
 if(count($this->listas['M']) > 0){
 	$html = '';
 	$html .= '<div class="panel-body bg-light">';
