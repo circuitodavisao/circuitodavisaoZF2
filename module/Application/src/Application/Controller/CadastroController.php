@@ -1136,12 +1136,12 @@ class CadastroController extends CircuitoController {
 	 */
 	public function grupoAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
-		unset($sessao->token);
-		while (!$sessao->token) {
-			$comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
-			$arrayToken = system($comandoPegaToken);
-			$sessao->token = explode('"', $arrayToken)[13];
-		}
+//		unset($sessao->token);
+//		while (!$sessao->token) {
+//			$comandoPegaToken = 'curl -k -d "grant_type=client_credentials" -H "Authorization: Basic RU93V3VrcTh3X29yblV5MGVYc1lrZkRnbUhJYTplSEFJam5aclliYjdLNXl1TTc5Nm5RUmhXZzRh" https://apigateway.serpro.gov.br/token';
+//			$arrayToken = system($comandoPegaToken);
+//			$sessao->token = explode('"', $arrayToken)[13];
+//		}
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);		
 		$grupo = $entidade->getGrupo();
@@ -1487,93 +1487,70 @@ class CadastroController extends CircuitoController {
 				$idPessoa = 0;
 				$post_data = $request->getPost();
 				$cpf = $post_data[Constantes::$FORM_CPF];
-
-				$nomeDaPesquisa = '';
-				$dataDeNascimentoDaPesquisa = '';
-
-				$urlBuscaCPFSerpro = 'curl -X GET --header "Accept: application/json" --header "Authorization: Bearer ' . $sessao->token . '" "https://apigateway.serpro.gov.br/consulta-cpf/v1/cpf/' . $cpf . '"';
-				exec($urlBuscaCPFSerpro, $respostaSerpro);
-				$objetoJson = (array) json_decode($respostaSerpro[0]);
-				error_log(print_r($respostaSerpro, true));
-
-				$codigo = $objetoJson['situacao']->codigo;
-				$nome = $objetoJson['nome'];
-				$dataDeNascimento = $objetoJson['nascimento'];
+				$dataDeNascimento = $post_data['dataNascimento'];
 
 				$dados = array();
-				/* Sucesso */
-				if ($codigo === '0') {
-					$nomeDaPesquisa = $nome;
-					$dataDeNascimentoDaPesquisa = substr($dataDeNascimento, 0, 2) . '/' . substr($dataDeNascimento, 2, 2) . '/' . substr($dataDeNascimento, 4);
-					$resposta = $respostaSucesso;
-
-					/* CPF encontrado na receita verificando se tem cadastro no sistema */
-					if ($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
-						$responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
-						if ($responsabilidadesAtivas === 0) {
-							$resposta = $respostaTemCadastroInativo;
-							$idPessoa = $pessoaEncotrada->getId();
-							$dados['idHierarquia'] = $pessoaEncotrada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
-						}
-						if ($responsabilidadesAtivas > 0) {							
-							$entidadeDaPessoaEncontrada = $pessoaEncotrada->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva();
-							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-								$resposta = $respostaSucesso;
-							}
-							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao && $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
-								$stringOndeEstaCadastrado = '';
-								$entidadeDaIgreja = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
-								$entidadeAcimaDaIgreja =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
-								if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){									
-									$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoEquipe()->getGrupoResponsavelAtivo()->getPessoa();									
-									$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();
-									$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
-								}
-
-								if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
-									$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getGrupoResponsavelAtivo()->getPessoa();																	
-									$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();			
-									$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
-								}	
-
-								if($minhaEntidade){
-									$stringOndeEstaCadastrado .= $minhaEntidade;
-								}
-
-								if($entidadeDaIgreja || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-									$stringOndeEstaCadastrado .= 'IGREJA: ' .  $entidadeDaIgreja->getNome() . ', ';
-								}	
-								if($entidadeAcimaDaIgreja){
-									if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
-										$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcimaDaIgreja->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcimaDaIgreja->getGrupo()->getNomeLideresAtivos();                    
-									}  
-									if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
-										$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
-									}
-								}			
-
-								if($nomeEntidadeAcimaArrumado){
-									$stringOndeEstaCadastrado .= ' NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
-								}
-
-								$resposta = $respostaTemCadastroAtivo;								
-								if($nomeDoResponsavel){
-									$dados['responsavel']['nome'] = $nomeDoResponsavel;
-								}										
-
-								$dados['ondeEsta'] = $stringOndeEstaCadastrado;
-							}							
-						}
+				if ($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
+					$responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
+					if ($responsabilidadesAtivas === 0) {
+						$resposta = $respostaTemCadastroInativo;
+						$idPessoa = $pessoaEncotrada->getId();
+						$dados['idHierarquia'] = $pessoaEncotrada->getPessoaHierarquiaAtivo()->getHierarquia()->getId();
 					}
-				}
-				if ($resposta === 0) {
-					$resposta = $respostaNaoEncotrado;
+					if ($responsabilidadesAtivas > 0) {							
+						$entidadeDaPessoaEncontrada = $pessoaEncotrada->getResponsabilidadesAtivas()[0]->getGrupo()->getEntidadeAtiva();
+						if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+							$resposta = $respostaSucesso;
+						}
+						if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao && $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() !== EntidadeTipo::regiao){
+							$stringOndeEstaCadastrado = '';
+							$entidadeDaIgreja = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getEntidadeAtiva();
+							$entidadeAcimaDaIgreja =  $entidadeDaIgreja->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getEntidadeAtiva();
+							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe){									
+								$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoEquipe()->getGrupoResponsavelAtivo()->getPessoa();									
+								$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();
+								$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
+							}
+
+							if($entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::equipe){	
+								$responsavel = $entidadeDaPessoaEncontrada->getGrupo()->getGrupoIgreja()->getGrupoResponsavelAtivo()->getPessoa();																	
+								$nomeDoResponsavel =  $responsavel->getNomePrimeiroUltimo();			
+								$minhaEntidade = $entidadeDaPessoaEncontrada->infoEntidade() . ', ';
+							}	
+
+							if($minhaEntidade){
+								$stringOndeEstaCadastrado .= $minhaEntidade;
+							}
+
+							if($entidadeDaIgreja || $entidadeDaPessoaEncontrada->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+								$stringOndeEstaCadastrado .= 'IGREJA: ' .  $entidadeDaIgreja->getNome() . ', ';
+							}	
+							if($entidadeAcimaDaIgreja){
+								if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::COORDENACAO){                                  
+									$nomeEntidadeAcimaArrumado = ' COORDENAÇÃO: ' . $entidadeAcimaDaIgreja->getNumero() . ' RESPONSÁVEIS: ' .$entidadeAcimaDaIgreja->getGrupo()->getNomeLideresAtivos();                    
+								}  
+								if($entidadeAcimaDaIgreja->getEntidadeTipo()->getId() === Entidade::REGIONAL){                                  
+									$nomeEntidadeAcimaArrumado = ' REGIÃO: ' . $entidadeAcimaDaIgreja->getNome();                    
+								}
+							}			
+
+							if($nomeEntidadeAcimaArrumado){
+								$stringOndeEstaCadastrado .= ' NÍVEL ACIMA: ' . $nomeEntidadeAcimaArrumado;
+							}
+
+							$resposta = $respostaTemCadastroAtivo;								
+							if($nomeDoResponsavel){
+								$dados['responsavel']['nome'] = $nomeDoResponsavel;
+							}										
+
+							$dados['ondeEsta'] = $stringOndeEstaCadastrado;
+						}							
+					}
 				}
 
 				$dados['resposta'] = $resposta;
 				$dados['cpf'] = $cpf;
-				$dados['nome'] = $nomeDaPesquisa;
-				$dados['dataNascimento'] = $dataDeNascimentoDaPesquisa;
+				$dados['dataNascimento'] = $dataDeNascimento;
 				$dados['idPessoa'] = $idPessoa;
 				$response->setContent(Json::encode($dados));
 			} catch (Exception $exc) {

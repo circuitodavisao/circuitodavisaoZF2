@@ -288,6 +288,17 @@ class GrupoForm extends Form {
 		$inputSelectAnoDataNascimento->setValueOptions($arrayAnoDataNascimento);
 		$this->add($inputSelectAnoDataNascimento);
 
+		/* NOME */
+		$this->add(
+			(new Text())
+			->setName('nome')
+			->setAttributes([
+				Constantes::$FORM_CLASS => Constantes::$FORM_CLASS_FORM_CONTROL,
+				Constantes::$FORM_ID => 'nome',
+				Constantes::$FORM_PLACEHOLDER => 'Nome',
+			])
+		);
+
 		/* Email */
 		$this->add(
 			(new Email())

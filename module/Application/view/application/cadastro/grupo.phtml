@@ -124,6 +124,9 @@ $labelBotaoContinuar = $this->translate(Constantes::$TRADUCAO_CONTINUAR);
             <div id="divEmail" class="hidden">
                 <?php
                 echo '<div class = "col-xs-12">';
+                echo $this->formInput($form->get('nome'));
+                echo '</div>';
+                echo '<div class = "col-xs-12 mt10 mb10">';
                 echo $this->formInput($form->get(Constantes::$FORM_EMAIL));
                 echo '</div>';
                 echo '<div class = "col-xs-12 mt10 mb10">';

@@ -66,7 +66,7 @@ class PassoAPasso extends AbstractHelper {
                             $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_DADOS_PESSOAIS);
                             break;
                         case 2:
-                            $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_EMAIL);
+                            $nomePonto = 'Nome e Email';
                             break;
                         case 3:
                             $nomePonto = $this->view->translate(Constantes::$TRADUCAO_PASSO_A_PASSO_HIERARQUIA);

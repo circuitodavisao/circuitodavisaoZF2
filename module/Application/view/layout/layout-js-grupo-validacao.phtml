@@ -266,16 +266,13 @@ default:
 
 			$.post(
 				"/cadastroBuscarCPF",
-		{
-			cpf: cpf,
-				dataNascimento: dataNascimento
-					},
+		{ cpf: cpf, dataNascimento: dataNascimento },
 					function (data) {
 						var resposta = parseInt(data.resposta);
 						if (resposta === 1 || resposta === 4) {
-							var nomeDoAlunoSelecionado = $('#nomeAluno').val();
-							var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
-							var splitNomeEncontradoNaBusca = data.nome.split(" ");
+							//var nomeDoAlunoSelecionado = $('#nomeAluno').val();
+							//var splitNomeDoAluno = nomeDoAlunoSelecionado.split(" ");
+							//var splitNomeEncontradoNaBusca = data.nome.split(" ");
 							var dadosValidados = true;
 							if (dadosValidados) {
 								/* desabilitando campos para edicao*/
@@ -283,7 +280,7 @@ default:
 								inputDia.attr('disabled', 'disabled');
 								inputMes.attr('disabled', 'disabled');
 								inputAno.attr('disabled', 'disabled');
-								$('#divDadosSelecionados').removeClass(hidden);
+								//$('#divDadosSelecionados').removeClass(hidden);
 								/* Mensagem de sucesso */
 								spanMensagens
 									.text('<?php echo $this->translate(Constantes::$TRADUCAO_DADOS_LIBERADOS); ?>')
@@ -294,7 +291,7 @@ default:
 								if (data.idPessoa !== 0) {
 									$('#spanResponsavelMatricula').html(data.idPessoa);
 								}
-								$('#spanResponsavelNome').html(data.nome);
+								//$('#spanResponsavelNome').html(data.nome);
 								$('#spanResponsavelCPF').html(data.cpf);
 								$('#divSpanResponsavelCPF').removeClass(hidden);
 								$('#spanResponsavelDataNascimento').html(data.dataNascimento);
@@ -608,19 +605,19 @@ default:
 		}
 
 		var spanResponsavelMatricula = $('#spanResponsavelMatricula');
-		var spanResponsavelNome = $('#spanResponsavelNome');
 		var spanResponsavelDataNascimento = $('#spanResponsavelDataNascimento');
 		var spanResponsavelCPF = $('#spanResponsavelCPF');
 		var spanResponsavelEmail = $('#spanResponsavelEmail');
 		var hierarquiaSelecioanada = $('#hierarquia option:selected');
-		inputHiddenNome.val(spanResponsavelNome.html());
+		const nome = document.getElementById('nome').value
+		inputHiddenNome.val(nome);
 		inputHiddenCPF.val(spanResponsavelCPF.html());
 		inputHiddenDataNascimento.val(spanResponsavelDataNascimento.html());
-		spanMatricula.html(iconeResponavelMatricula + spanResponsavelMatricula.html());
+		//spanMatricula.html(iconeResponavelMatricula + spanResponsavelMatricula.html());
 		spanCPF.html(iconeResponavelCPF + spanResponsavelCPF.html());
-		spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena(spanResponsavelNome.html()) + iconeResponavelNomeFinal);
+		spanNomexs.html(iconeResponavelNomeInicial + ajustaStringTelaPequena(nome));
 		spanEmailxs.html(iconeResponavelEmail + ajustaStringTelaPequena(spanResponsavelEmail.html()));
-		spanNome.html(iconeResponavelNomeInicial + spanResponsavelNome.html() + iconeResponavelNomeFinal);
+		spanNome.html(iconeResponavelNomeInicial + nome);
 		spanEmail.html(iconeResponavelEmail + spanResponsavelEmail.html());
 		spanHierarquia.html(iconeResponavelHierarquia + hierarquiaSelecioanada.text());
 		divCheckDadosResponsavelInseridos.removeClass(hidden);
