@@ -3450,6 +3450,8 @@ class IndexController extends CircuitoController {
 		$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacaoEParte(Situacao::ATIVO, $qualParte);
 		$html .= '<br /><br />Fatos: '.count($fatosCurso);
 		foreach($fatosCurso as $fatoCurso){
+			$reprovar = false;
+			$tipo = null;
 			$turmaAulaAtiva = null;
 			if(in_array($fatoCurso->getTurma_id(), $listaDeAulaAberta)){
 				$turmaAulaAtiva = $listaDeAulaAberta[$fatoCurso->getTurma_id()];
@@ -3488,10 +3490,18 @@ class IndexController extends CircuitoController {
 				}
 
 				if($cotagemDeFaltas === 4){
-					$html .= '<br /><br />Matricula PAra Reprovar: '.$fatoCurso->getTurma_pessoa_id();;
-					$fatoCurso->setSituacao_id(SITUACAO::REPROVADO_POR_FALTA);
-					$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $alterarDataDeCriacao = false);
+					$reprovar = true;
+					$tipo = SITUACAO::REPROVADO_POR_FALTA
 				}
+			}
+
+
+
+
+			if($reprovar){
+				$html .= '<br /><br />Matricula Para Reprovar: '.$fatoCurso->getTurma_pessoa_id();;
+				$fatoCurso->setSituacao_id($tipo);
+				$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $alterarDataDeCriacao = false);
 			}
 		}
 		return new ViewModel(array('html' => $html));

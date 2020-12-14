@@ -1473,7 +1473,7 @@ class CadastroController extends CircuitoController {
 	 * @return Json
 	 */
 	public function buscarCPFAction() {
-		$resposta = 0;
+		$resposta = 1;
 		$respostaSucesso = 1;
 		$respostaNaoEncotrado = 2;
 		$respostaTemCadastroAtivo = 3;
@@ -1490,7 +1490,7 @@ class CadastroController extends CircuitoController {
 				$dataDeNascimento = $post_data['dataNascimento'];
 
 				$dados = array();
-				if ($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
+				if($pessoaEncotrada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf)) {
 					$responsabilidadesAtivas = count($pessoaEncotrada->getResponsabilidadesAtivas());
 					if ($responsabilidadesAtivas === 0) {
 						$resposta = $respostaTemCadastroInativo;
