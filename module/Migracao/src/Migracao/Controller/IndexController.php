@@ -3491,12 +3491,9 @@ class IndexController extends CircuitoController {
 
 				if($cotagemDeFaltas === 4){
 					$reprovar = true;
-					$tipo = SITUACAO::REPROVADO_POR_FALTA
+					$tipo = SITUACAO::REPROVADO_POR_FALTA;
 				}
 			}
-
-
-
 
 			if($reprovar){
 				$html .= '<br /><br />Matricula Para Reprovar: '.$fatoCurso->getTurma_pessoa_id();;
@@ -4192,6 +4189,8 @@ class IndexController extends CircuitoController {
 	}
 
 	public function transformarCelulaBetaAction(){
+		set_time_limit(0);
+		ini_set('memory_limit', '1024M');
 		$dados = array();
 		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = 0, $tipoComparacao = 2, $estrategica = true);
 		$listaDeCelulas = array();
