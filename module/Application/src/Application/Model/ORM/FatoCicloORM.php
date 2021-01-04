@@ -180,7 +180,7 @@ class FatoCicloORM extends CircuitoORM {
 			. "WHERE "
 			. "fc.numero_identificador #tipoComparacao ?1 "
 			. "AND fc.data_inativacao is null "
-			. "AND fc.data_criacao = ?2 "
+			//. "AND fc.data_criacao = ?2 "
 			. "AND c.estrategica = ?3 ";
 		try {
 			if ($tipoComparacao == 1) {
@@ -200,7 +200,7 @@ class FatoCicloORM extends CircuitoORM {
 			}
 			$result = $this->getEntityManager()->createQuery($dqlAjustadaTipoComparacao)
 				->setParameter(1, $numeroIdentificador)
-				->setParameter(2, $dataDoPeriodoFormatada)
+			//	->setParameter(2, $dataDoPeriodoFormatada)
 				->setParameter(3, $estrategica)
 				->getResult();
 

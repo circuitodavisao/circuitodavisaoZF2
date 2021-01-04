@@ -3462,8 +3462,9 @@ class IndexController extends CircuitoController {
 				}
 			}
 
-			$cotagemDeFaltas = 0;
 			if($turmaAulaAtiva){
+
+				$cotagemDeFaltas = 0;
 				if($turmaAulaAtiva->getAula()->getId() !== 43){
 					foreach($turmaAulaAtiva->getAula()->getDisciplina()->getAulaOrdenadasPorPosicao() as $aula){
 						if($turmaAulaAtiva->getAula()->getId() === $aula->getId()){
@@ -3492,6 +3493,48 @@ class IndexController extends CircuitoController {
 				if($cotagemDeFaltas === 4){
 					$reprovar = true;
 					$tipo = SITUACAO::REPROVADO_POR_FALTA;
+				}
+
+				if(
+					$turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS ||
+					$turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES
+				){
+					$turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($fatoCurso->getTurma_pessoa_id());
+					$inadimpleteModulo1 = true;
+					$inadimpleteModulo2 = true;
+
+					foreach($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro){
+						if($turmaPessoaFinanceiro->getDisciplina_id() === Disciplina::MODULO_UM){
+							if(
+								$turmaPessoaFinanceiro->getValor1() === 'S' && 
+								$turmaPessoaFinanceiro->getValor2() === 'S' && 
+								$turmaPessoaFinanceiro->getValor3() === 'S'
+							){
+								$inadimpleteModulo1 = false;
+							}
+						}
+						if($turmaPessoaFinanceiro->getDisciplina_id() === Disciplina::MODULO_DOIS){
+							if(
+								$turmaPessoaFinanceiro->getValor1() === 'S' && 
+								$turmaPessoaFinanceiro->getValor2() === 'S' && 
+								$turmaPessoaFinanceiro->getValor3() === 'S'
+							){
+								$inadimpleteModulo2 = false;
+							}
+						}
+					}
+
+					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS && $inadimpleteModulo1){
+						$reprovar = true;
+						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+					}
+					if(
+						$turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES &&
+					   	$inadimpleteModulo1 || $inadimpleteModulo2
+					){
+						$reprovar = true;
+						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+					}
 				}
 			}
 
