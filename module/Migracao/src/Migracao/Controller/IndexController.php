@@ -4266,7 +4266,7 @@ class IndexController extends CircuitoController {
 			$contador = 0;
 			foreach($listaDeCelulas as $item){				
 				if($contador === 1000){
-					break;
+					//break;
 				}
 				if($item['diferenca'] >= 180){	
 					$itensAcimaDe180Dias[] = $item;				
