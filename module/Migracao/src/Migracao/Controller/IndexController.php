@@ -4236,29 +4236,30 @@ class IndexController extends CircuitoController {
 		ini_set('memory_limit', '1024M');
 		$dados = array();
 		$fatoCelulasBeta = $this->getRepositorio()->getFatoCicloORM()->fatoCelulaPorNumeoIdentificador($numeroIdentificador = '', $periodo = 0, $tipoComparacao = 2, $estrategica = true);
+		
 		$listaDeCelulas = array();
-		foreach($fatoCelulasBeta as $valor){
-			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($valor['evento_celula_id']);
-			$eventoSelecionado = $eventoCelula->getEvento();
-			if($idEventoAnterior = $eventoCelula->getEvento()->getEvento_id()){
-				while($idEventoAnterior){
-					$eventoSelecionado = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEventoAnterior);
-					$idEventoAnterior = null;
-					if($eventoSelecionado->getEvento_id()){
-						$idEventoAnterior = $eventoSelecionado->getEvento_id();
-					}
-				}
-			}
-			$dadosCelula = array();
-			$dadosCelula['eventoId'] = $eventoCelula->getEvento_id();
-			$dadosCelula['idFatoCelula'] = $valor['id'];
-			$dadosCelula['data_criacao'] = $eventoSelecionado->getData_criacaoStringPadraoBrasil();
-			$date1 = date_create($eventoSelecionado->getData_criacaoStringPadraoBanco());
-			$date2 = date_create(date('Y-m-d'));
-			$diff = date_diff($date1,$date2)->format('%a');
-			$dadosCelula['diferenca'] = intVal($diff);
-			$listaDeCelulas[] = $dadosCelula; 
-		}
+//		foreach($fatoCelulasBeta as $valor){
+//			$eventoCelula = $this->getRepositorio()->getEventoCelulaORM()->encontrarPorId($valor['evento_celula_id']);
+//			$eventoSelecionado = $eventoCelula->getEvento();
+//			if($idEventoAnterior = $eventoCelula->getEvento()->getEvento_id()){
+//				while($idEventoAnterior){
+//					$eventoSelecionado = $this->getRepositorio()->getEventoORM()->encontrarPorId($idEventoAnterior);
+//					$idEventoAnterior = null;
+//					if($eventoSelecionado->getEvento_id()){
+//						$idEventoAnterior = $eventoSelecionado->getEvento_id();
+//					}
+//				}
+//			}
+//			$dadosCelula = array();
+//			$dadosCelula['eventoId'] = $eventoCelula->getEvento_id();
+//			$dadosCelula['idFatoCelula'] = $valor['id'];
+//			$dadosCelula['data_criacao'] = $eventoSelecionado->getData_criacaoStringPadraoBrasil();
+//			$date1 = date_create($eventoSelecionado->getData_criacaoStringPadraoBanco());
+//			$date2 = date_create(date('Y-m-d'));
+//			$diff = date_diff($date1,$date2)->format('%a');
+//			$dadosCelula['diferenca'] = intVal($diff);
+//			$listaDeCelulas[] = $dadosCelula; 
+//		}
 		$this->getRepositorio()->iniciarTransacao();		
 		try{
 			$itensAcimaDe180Dias = array();
@@ -4279,6 +4280,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->desfazerTransacao();
 		}
 		$dados['listaDeCelulas'] = $itensAcimaDe180Dias;
+		$dados['total'] = count($fatoCelulasBeta);
 		return new ViewModel($dados);
 	}
 	
