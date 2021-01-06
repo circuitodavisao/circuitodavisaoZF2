@@ -339,10 +339,12 @@ class Grupo extends CircuitoEntity {
             foreach ($grupoPaiFilhoFilhos as $gpf) {
                 if ($gpf->verificarSeEstaAtivo()) {
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringFimDoPeriodo);
-                    $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
-                    if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-                        $grupoPaiFilhoFilhosAtivos[] = $gpf;
-                    }
+					if($gpf->getData_criacao()){
+						//$dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($gpf->getData_criacaoStringPadraoBanco());
+						if ($dataDoGrupoPaiFilhoCriacaoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+							$grupoPaiFilhoFilhosAtivos[] = $gpf;
+						}
+					}
                 } else {
                     /* Inativo */
                     $dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
