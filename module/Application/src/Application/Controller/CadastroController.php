@@ -1187,6 +1187,36 @@ class CadastroController extends CircuitoController {
 		return $view;
 	}
 
+	public static function gerar_senha($tamanho, $maiusculas, $minusculas, $numeros, $simbolos){
+		$ma = "ABCDEFGHIJKLMNOPQRSTUVYXWZ"; // $ma contem as letras maiúsculas
+		$mi = "abcdefghijklmnopqrstuvyxwz"; // $mi contem as letras minusculas
+		$nu = "0123456789"; // $nu contem os números
+		$si = "!@#$%¨&*()_+="; // $si contem os símbolos
+
+		if ($maiusculas){
+			// se $maiusculas for "true", a variável $ma é embaralhada e adicionada para a variável $senha
+			$senha .= str_shuffle($ma);
+		}
+
+		if ($minusculas){
+			// se $minusculas for "true", a variável $mi é embaralhada e adicionada para a variável $senha
+			$senha .= str_shuffle($mi);
+		}
+
+		if ($numeros){
+			// se $numeros for "true", a variável $nu é embaralhada e adicionada para a variável $senha
+			$senha .= str_shuffle($nu);
+		}
+
+		if ($simbolos){
+			// se $simbolos for "true", a variável $si é embaralhada e adicionada para a variável $senha
+			$senha .= str_shuffle($si);
+		}
+
+		// retorna a senha embaralhada com "str_shuffle" com o tamanho definido pela variável $tamanho
+		return substr(str_shuffle($senha),0,$tamanho);
+	}
+
 	/**
 	 * Tela com confrmação de cadastro de grupo
 	 * POST /cadastroGrupoFinalizar
@@ -1286,13 +1316,14 @@ class CadastroController extends CircuitoController {
 					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
 					if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {
 						$pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
-						$pessoaSelecionada->setSenha(null, false);
+						$senha = self::gerar_senha(6,false,true,false,false);
+						$pessoaSelecionada->setSenha($senha, true);
+						$pessoaSelecionada->setSenhaLimpa($senha);
 						$pessoaSelecionada->setPrecisaAtualizarDados();
 						$mudarDataDeCriacao = false;
 						foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
 							if($grupoResponsavel->verificarSeEstaAtivo()){
-								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId()
-								== $entidadeLogada->getGrupo()->getId()){
+								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId() == $entidadeLogada->getGrupo()->getId()){
 									$grupoJaCadastrado = true;
 								}
 							}
@@ -1304,8 +1335,6 @@ class CadastroController extends CircuitoController {
 					$pessoaSelecionada->setEmail($post_data[Constantes::$FORM_EMAIL . $indicePessoas]);
 					$pessoaSelecionada->setDocumento($cpf);
 					$pessoaSelecionada->setData_nascimento(Funcoes::mudarPadraoData($post_data[Constantes::$FORM_DATA_NASCIMENTO . $indicePessoas], 0));
-					$tokenDeAgora = $pessoaSelecionada->gerarToken($indicePessoas);
-					$pessoaSelecionada->setToken($tokenDeAgora);
 					$pessoaSelecionada->setDataEHoraDeCriacao($dataParaCriacao);
 					$this->getRepositorio()->getPessoaORM()->persistir($pessoaSelecionada, $mudarDataDeCriacao);
 
@@ -1343,7 +1372,7 @@ class CadastroController extends CircuitoController {
 					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
 					$pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
 					/* Enviar Email */
-					$this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $tokenDeAgora, $pessoaSelecionada);
+					$this->enviarEmailParaCompletarOsDados($this->getRepositorio(), $sessao->idPessoa, $pessoaSelecionada);
 				}
 
 				self::registrarLog(RegistroAcao::CADASTROU_UM_LIDER, $extra = 'Id: '.$grupoNovo->getId());
@@ -1657,17 +1686,20 @@ class CadastroController extends CircuitoController {
 	 * @param string $tokenDeAgora
 	 * @param Pessoa $pessoa
 	 */
-	public static function enviarEmailParaCompletarOsDados($repositorio, $idPessoaLogada, $tokenDeAgora, $pessoa) {
+	public static function enviarEmailParaCompletarOsDados($repositorio, $idPessoaLogada, $pessoa) {
 		$pessoaLogada = $repositorio->getPessoaORM()->encontrarPorId($idPessoaLogada);
 
 		$Subject = 'Cadastro Circuito da Visão';
 		$ToEmail = $pessoa->getEmail();
 		$nomeLider = str_replace(' ', '', $pessoaLogada->getNomePrimeiro());
 		$nomePessoaEmail = str_replace(' ', '', $pessoa->getNomePrimeiro());
-		$token = $pessoa->gerarToken();
+		$email = $pessoa->getEmail();
+		$senha = $pessoa->getSenhaLimpa();
 		$conteudo = '<pre>Você foi cadastrado no Circuito da Visão pelo seu líder</pre>
 			<pre>Clique no link abaixo ou cole o link no seu navegador</pre>
-			<pre><a href="www.circuitodavisaonovo.com.br/novaSenha/'.$token.'">www.circuitodavisaonovo.com.br/novaSenha/'.$token.'</a>';
+			<pre>Email: '.$email.'</pre>
+			<pre>Senha: '.$senha.'</pre>
+			<pre><a href="www.circuitodavisaonovo.com.br">www.circuitodavisaonovo.com.br</a>';
 		Funcoes::enviarEmail($ToEmail, $Subject, $conteudo);
 	}
 

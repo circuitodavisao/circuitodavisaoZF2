@@ -229,6 +229,7 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     protected $matriculaAtual;
     protected $entidade;
     protected $noRevisao;
+    protected $senhaLimpa;
 
 	function setPergunta($i){
 		$this->pergunta = $i;
@@ -253,6 +254,14 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setProfissao_id($profissao_id) {
         $this->profissao_id = $profissao_id;
     }
+
+	function getSenhaLimpa() {
+		return $this->senhaLimpa;
+	}
+
+	function setSenhaLimpa($i){
+		$this->senhaLimpa = $i;
+	}
 
     function getNoRevisao() {
         return $this->noRevisao;
