@@ -1476,7 +1476,8 @@ class CadastroController extends CircuitoController {
 						$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 						if(
 							$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial &&
-							$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao
+							$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+							$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
 						){
 
 							$resposta = 1;
