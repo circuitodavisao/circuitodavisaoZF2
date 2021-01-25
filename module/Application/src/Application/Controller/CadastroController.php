@@ -1248,22 +1248,30 @@ class CadastroController extends CircuitoController {
 				}
 
 				$grupoJaCadastrado = false;
-				for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {					
-					$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
-					if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {					
-						$pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
-						foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
-							if($grupoResponsavel->verificarSeEstaAtivo()){
-								if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
-									$idPai = $grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
-									if($idPai == $entidadeLogada->getGrupo()->getId()){
-										$grupoJaCadastrado = true;
-									}																	
+
+						if(
+							$entidadeLogada->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial &&
+							$entidadeLogada->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+							$entidadeLogada->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao
+						){
+
+							for ($indicePessoas = $indicePessoasInicio; $indicePessoas <= $indicePessoasFim; $indicePessoas++) {
+								$cpf = $post_data[Constantes::$FORM_CPF . $indicePessoas];
+								if ($this->getRepositorio()->getPessoaORM()->verificarSeTemCPFCadastrado($cpf)) {					
+									$pessoaSelecionada = $this->getRepositorio()->getPessoaORM()->encontrarPorCPF($cpf);
+									foreach($pessoaSelecionada->getGrupoResponsavel() as $grupoResponsavel){
+										if($grupoResponsavel->verificarSeEstaAtivo()){
+											if($grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()){
+												$idPai = $grupoResponsavel->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()->getId();
+												if($idPai == $entidadeLogada->getGrupo()->getId()){
+													$grupoJaCadastrado = true;
+												}																	
+											}
+										}
+									}
 								}
 							}
 						}
-					}
-				}
 
 				if($grupoJaCadastrado){
 					$sessao->mensagemSemAcesso = '<i class = "fa fa-warning text-danger"></i>';
