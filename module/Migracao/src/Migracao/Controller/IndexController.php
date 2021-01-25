@@ -17,6 +17,7 @@ use Application\Model\Entity\EventoTipo;
 use Application\Model\Entity\FatoLider;
 use Application\Model\Entity\FatoRanking;
 use Application\Model\Entity\Grupo;
+use Application\Model\Entity\Disciplina;
 use Application\Model\Entity\GrupoCv;
 use Application\Model\Entity\GrupoEvento;
 use Application\Model\Entity\GrupoPaiFilho;
@@ -3447,7 +3448,12 @@ class IndexController extends CircuitoController {
 		$html = 'Reprovando';
 		$listaDeAulaAberta = array();
 		$qualParte = $this->params()->fromRoute(Constantes::$ID, 1);
-		$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacaoEParte(Situacao::ATIVO, $qualParte);
+		$fatosCurso = array();
+		if(intVal($qualParte) <= 100){
+			$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorSituacaoEParte(Situacao::ATIVO, $qualParte);
+		}else{
+			$fatosCurso = $this->getRepositorio()->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa(intVal($qualParte));
+		}
 		$html .= '<br /><br />Fatos: '.count($fatosCurso);
 		foreach($fatosCurso as $fatoCurso){
 			$reprovar = false;
@@ -3523,24 +3529,57 @@ class IndexController extends CircuitoController {
 							}
 						}
 					}
+					$frequencia = false;
+						$disciplinaModulo1 = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(Disciplina::MODULO_UM);
+						foreach($disciplinaModulo1->getAulaOrdenadasPorPosicao() as $aula){
+							$frequencia = false;
+							if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($fatoCurso->getTurma_pessoa_id(), $aula->getId())){
+								if($turmaPessoaAula->verificarSeEstaAtivo()){
+									$frequencia = true;
+									break;
+								}
+							}
+						}
 
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS && $inadimpleteModulo1){
-						$reprovar = true;
-						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+						if($frequencia){
+							$reprovar = true;
+							$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+						}
 					}
+
+						$frequencia2 = false;
 					if(
 						$turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES &&
 					   	$inadimpleteModulo1 || $inadimpleteModulo2
 					){
-						$reprovar = true;
-						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+
+						if($frequencia === false){
+							$disciplinaModulo2 = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(Disciplina::MODULO_DOIS);
+							foreach($disciplinaModulo2->getAulaOrdenadasPorPosicao() as $aula){
+								$frequencia = false;
+								if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($fatoCurso->getTurma_pessoa_id(), $aula->getId())){
+									if($turmaPessoaAula->verificarSeEstaAtivo()){
+										$frequencia2 = true;
+										break;
+									}
+								}
+							}
+						}
+
+						if($frequencia || $frequencia2){
+							$reprovar = true;
+							$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
+						}
 					}
 				}
 			}
 
 			if($reprovar){
-				$html .= '<br /><br />Matricula Para Reprovar: '.$fatoCurso->getTurma_pessoa_id();;
+				$html .= '<br /><br />Matricula Para Reprovar: '.$fatoCurso->getTurma_pessoa_id();
+				$html .= '<br />Tipo: '.$tipo;
 				$fatoCurso->setSituacao_id($tipo);
+
 				$this->getRepositorio()->getFatoCursoORM()->persistir($fatoCurso, $alterarDataDeCriacao = false);
 			}
 		}
