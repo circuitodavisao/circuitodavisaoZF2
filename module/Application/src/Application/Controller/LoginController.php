@@ -1129,6 +1129,10 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2808,6 +2812,10 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
