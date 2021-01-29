@@ -4279,42 +4279,42 @@ public function alunosNaSemanaAction(){
 															}
 														}
 
-													if($buscarAbaixo248832){
-														$grupoPaiFilhoFilhos248832 = $filho20736->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
-														foreach($grupoPaiFilhoFilhos248832 as $grupoFilho248832){
-															$filho248832 = $grupoFilho248832->getGrupoPaiFilhoFilho();								
+														if($buscarAbaixo248832){
+															$grupoPaiFilhoFilhos248832 = $filho20736->getGrupoPaiFilhoFilhosAtivos($periodoParaUsar);
+															foreach($grupoPaiFilhoFilhos248832 as $grupoFilho248832){
+																$filho248832 = $grupoFilho248832->getGrupoPaiFilhoFilho();								
 
-															if($filho248832->getEntidadeAtiva()){
-																$buscarAbaixo2985984 = false;
-																if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
-																	$regioes++;
-																	$buscarAbaixo2985984 = true;
-																}
-																if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
-																	$coordenacoes++;
-																	$buscarAbaixo2985984 = true;
-																}
-																if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
-																	$igrejas++;
-																	$numeroIdentificador248832 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho248832);
-																	$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador248832, date('m'), date('Y'), $somado = 2);			
-																	/* Somando líderes */
-																	$l = 'l'.$contadorDePeriodos;
-																	$lideres += $fatoMensalSomado[$l];
-																	/* Somando Células */
-																	$cq = 'cq'.$contadorDePeriodos;
-																	$cbq = 'cbq'.$contadorDePeriodos;
-																	$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
-																	/* Somando discipulados */
-																	$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador248832);
-																	/* Somando alunos */
-																	$alunos += RelatorioController::totalDeAlunos($repositorio, $filho20736);
-																	/* Somado parceiro de Deus */
-																	$parceiro += $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador248832, $mes, $ano)['valor'];					
+																if($filho248832->getEntidadeAtiva()){
+																	$buscarAbaixo2985984 = false;
+																	if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::regiao){
+																		$regioes++;
+																		$buscarAbaixo2985984 = true;
+																	}
+																	if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
+																		$coordenacoes++;
+																		$buscarAbaixo2985984 = true;
+																	}
+																	if($filho248832->getEntidadeAtiva()->getEntidadeTipo()->getId() === EntidadeTipo::igreja){
+																		$igrejas++;
+																		$numeroIdentificador248832 = $repositorio->getFatoCicloORM()->montarNumeroIdentificador($repositorio, $filho248832);
+																		$fatoMensalSomado = $repositorio->getFatoMensalORM()->buscarFatosSomadosPorNumeroIdentificadorMesEAno($numeroIdentificador248832, date('m'), date('Y'), $somado = 2);			
+																		/* Somando líderes */
+																		$l = 'l'.$contadorDePeriodos;
+																		$lideres += $fatoMensalSomado[$l];
+																		/* Somando Células */
+																		$cq = 'cq'.$contadorDePeriodos;
+																		$cbq = 'cbq'.$contadorDePeriodos;
+																		$celulas += $fatoMensalSomado[$cq] + $fatoMensalSomado[$cbq];
+																		/* Somando discipulados */
+																		$discipulados += $repositorio->getFatoCelulaDiscipuladoORM()->totalAtivosPorNumeroIdentificador($numeroIdentificador248832);
+																		/* Somando alunos */
+																		$alunos += RelatorioController::totalDeAlunos($repositorio, $filho248832);
+																		/* Somado parceiro de Deus */
+																		$parceiro += $repositorio->getFatoFinanceiroORM()->fatosValorPorNumeroIdentificadorMesEAno($numeroIdentificador248832, $mes, $ano)['valor'];					
+																	}
 																}
 															}
 														}
-													}
 													}
 												}
 											}
