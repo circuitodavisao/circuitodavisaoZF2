@@ -106,8 +106,16 @@ if($this->relatorio){
 			$soma = array();
 			$relatorioTime = array();
 			foreach($this->disciplinas as $disciplina){
-				$total = $relatorio[$disciplina->getPosicao()]['ATIVO'] + $relatorio[$disciplina->getPosicao()]['DESISTENTE'] + $relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'] + $relatorio[$disciplina->getPosicao()]['ESPECIAL'];
-				$outros = $relatorio[$disciplina->getPosicao()]['DESISTENTE'] + $relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'];
+				$total = 
+					$relatorio[$disciplina->getPosicao()]['ATIVO'] + 
+					$relatorio[$disciplina->getPosicao()]['DESISTENTE'] + 
+					$relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'] + 
+					$relatorio[$disciplina->getPosicao()]['REPROVADO POR FINANCEIRO'] + 
+					$relatorio[$disciplina->getPosicao()]['ESPECIAL'];
+				$outros = 
+					$relatorio[$disciplina->getPosicao()]['DESISTENTE'] + 
+					$relatorio[$disciplina->getPosicao()]['REPROVADO POR FINANCEIRO'] + 
+					$relatorio[$disciplina->getPosicao()]['REPROVADO POR FALTAS'];
 				$meta = 0;
 				switch($disciplina->getId()){
 				case 5: $meta = 70; break;
