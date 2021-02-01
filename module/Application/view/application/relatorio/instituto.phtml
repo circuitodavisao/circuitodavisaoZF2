@@ -112,8 +112,17 @@ if($this->relatorio){
 			$soma = array();
 			$relatorioTime = array();
 			foreach($this->turmas as $turma){
-				$total = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + $relatorio[$turma->getId()]['ESPECIAL'];
-				$outros = $relatorio[$turma->getId()]['DESISTENTE'] + $relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
+				$total = 
+					$relatorio[$turma->getId()]['ATIVO'] + 
+					$relatorio[$turma->getId()]['DESISTENTE'] + 
+					$relatorio[$turma->getId()]['REPROVADO POR FALTAS'] + 
+					$relatorio[$turma->getId()]['REPROVADO POR FINANCEIRO'] + 
+					$relatorio[$turma->getId()]['ESPECIAL'];
+
+				$outros = 
+					$relatorio[$turma->getId()]['DESISTENTE'] +
+					$relatorio[$turma->getId()]['REPROVADO POR FINANCEIRO'] + 
+				   	$relatorio[$turma->getId()]['REPROVADO POR FALTAS'];
 				$meta = 0;
 				switch($turma->getTurmaAulaAtiva()->getAula()->getDisciplina()->getId()){
 				case 5: $meta = 70; break;
@@ -122,7 +131,9 @@ if($this->relatorio){
 				case 8: $meta = 30; break;
 				}
 				$metaCalculada = number_format(($meta / 100 * $total), 1);
-				$ativos = $relatorio[$turma->getId()]['ATIVO'] + $relatorio[$turma->getId()]['ESPECIAL'];
+				$ativos = 
+					$relatorio[$turma->getId()]['ATIVO'] + 
+					$relatorio[$turma->getId()]['ESPECIAL'];
 				$performance = $ativos / $metaCalculada * 100;
 
 				$soma['total'] += $total;
