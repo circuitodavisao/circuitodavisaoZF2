@@ -1133,6 +1133,7 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2804,10 +2805,10 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 //  cascavel
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
-								|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 
@@ -2816,6 +2817,7 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
