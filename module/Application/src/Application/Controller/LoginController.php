@@ -1135,6 +1135,9 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374 // alagoas sede - maceio 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2820,6 +2823,9 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374 // alagoas sede - maceio 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
