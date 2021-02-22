@@ -1138,6 +1138,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2826,6 +2828,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
