@@ -1140,6 +1140,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2830,6 +2832,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
