@@ -68,8 +68,10 @@ use Application\Controller\Helper\Constantes;
 								$mostrar = false;
 							}
 							if($mostrar){
-								$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
-								echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
+								if($grupo->getGrupoPaiFilhoPai()){
+									$grupoPai = $grupo->getGrupoPaiFilhoPai()[0]->getGrupoPaiFilhoPai();
+									echo $this->perfilIcone($entidadeSelecionada, count($this->responsabilidades), $ativo = false, $grupoPai);
+								}
 							}							
 						}
                     }
