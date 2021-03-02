@@ -3064,15 +3064,20 @@ class CadastroController extends CircuitoController {
 
 				$idEntidadeAtual = $sessao->idEntidadeAtual;
 				$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
-				if ($entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
-					($solicitacaoTipo->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO ||
+				if (
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja ||
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
+					$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_IGREJA ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_IGREJA ||
+					$solicitacaoTipo->getId() === SolicitacaoTipo::ADICIONAR_RESPONSABILIDADE_SECRETARIO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::REMOVER_RESPONSABILIDADE_SECRETARIO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_LIDER_NA_PROPRIA_EQUIPE ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::UNIR_CASAL ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::SEPARAR ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::TRANSFERIR_ALUNO ||
 					$solicitacaoTipo->getId() === SolicitacaoTipo::ABRIR_IGREJA_COM_EQUIPE_COMPLETA ||
-					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES)
+					$solicitacaoTipo->getId() === SolicitacaoTipo::TROCAR_RESPONSABILIDADES
 				) {
 						$solicitacaoSituacao->setDataEHoraDeInativacao();
 						$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao, false);
