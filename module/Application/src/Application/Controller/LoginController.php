@@ -1143,6 +1143,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  13764 // limeira
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  15835 // sao jose do rio preto
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2836,6 +2838,9 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  13764 // limeira
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  15835 // sao jose do rio preto
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
+	
 						){
 						if($turmaPessoa->verificarSeEstaAtivo()){
 							$dados['message'] = '';
