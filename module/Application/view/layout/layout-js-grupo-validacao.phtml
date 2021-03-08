@@ -56,21 +56,21 @@ function validarEstadoCivil() {
 		$('#botaoInserirResponsavel2').addClass(hidden);
 		$('.alunoM').addClass(hidden);
 		$('.alunoF').addClass(hidden);
-		//        switch (tipo) {
+		        switch (tipo) {
 		//            case 0:
 		//                $('.alunoM').removeClass(hidden);
 		//                $('.alunoF').removeClass(hidden);
 		//                $('#botaoInserirResponsavel0').removeClass(hidden);
 		//                break;
-		//            case 1:
+		            case 1:
 		//                $('.alunoM').removeClass(hidden);
-		//                $('#botaoInserirResponsavel1').removeClass(hidden);
-		//                break;
-		//            case 2:
-		//                $('.alunoF').removeClass(hidden);
-		//                $('#botaoInserirResponsavel2').removeClass(hidden);
-		//                break;
-		//        }
+		                $('#botaoInserirResponsavel1').removeClass(hidden);
+		                break;
+		            case 2:
+		//               $('.alunoF').removeClass(hidden);
+		                $('#botaoInserirResponsavel2').removeClass(hidden);
+		                break;
+		        }
 		$('#divConfirmacao').addClass(hidden);
 		$('#divSelecionarAluno').removeClass(hidden);
 		$('#divIncluirResponsavel').removeClass(hidden);
@@ -107,6 +107,7 @@ function validarEstadoCivil() {
 		inputDia.removeAttr('disabled');
 		inputMes.removeAttr('disabled');
 		inputAno.removeAttr('disabled');
+		document.getElementById('nome').value = ''
 
 		var inputDivBotoesBuscaCPF = $("#botaoBuscarCPF");
 		inputDivBotoesBuscaCPF.removeClass(hidden);
@@ -147,10 +148,10 @@ function validarEstadoCivil() {
 				break;
 			default:
 				break;
-				}
-				break;
-default:
-	break;
+			}
+			break;
+		default:
+			break;
 		}
 
 		inputIdAlunoSelecionado.val(matricula);
