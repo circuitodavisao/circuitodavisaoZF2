@@ -7,6 +7,7 @@ foreach ($grupoPaiFilhoFilhos1 as $gpFilho1) {
 	$grupo1 = $gpFilho1->getGrupoPaiFilhoFilho();
 	echo '<br />';
 	echo '<br />';
+	echo 'GRUPO: ' . $grupo1->getId();
 	echo 'ENTIDADE: ' . $grupo1->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo1->getEntidadeAtiva()->infoEntidade();
 	foreach($grupo1->getResponsabilidadesAtivas() as $grupoResponsavel){
 		echo '<br />';
@@ -20,6 +21,7 @@ foreach ($grupoPaiFilhoFilhos1 as $gpFilho1) {
 		$grupo2 = $gpFilho2->getGrupoPaiFilhoFilho();
 		echo '<br />';
 		echo '<br />';
+		echo ' ----- GRUPO: ' . $grupo2->getId();
 		echo ' ----- ENTIDADE: ' . $grupo2->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo2->getEntidadeAtiva()->infoEntidade();
 		foreach($grupo2->getResponsabilidadesAtivas() as $grupoResponsavel){
 			echo '<br />';
@@ -33,6 +35,7 @@ foreach ($grupoPaiFilhoFilhos1 as $gpFilho1) {
 			$grupo3 = $gpFilho3->getGrupoPaiFilhoFilho();
 			echo '<br />';
 			echo '<br />';
+			echo ' ----- ----- GRUPO: ' . $grupo3->getId();
 			echo ' ----- ----- ENTIDADE: ' . $grupo3->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo3->getEntidadeAtiva()->infoEntidade();
 			foreach($grupo3->getResponsabilidadesAtivas() as $grupoResponsavel){
 				echo '<br />';
