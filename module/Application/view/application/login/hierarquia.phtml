@@ -1,0 +1,73 @@
+hierarquia
+<?php
+
+$grupo0 = $this->repositorio->getGrupoORM()->encontrarPorId(7696);
+$grupoPaiFilhoFilhos1 = $grupo0->getGrupoPaiFilhoFilhosAtivos();
+foreach ($grupoPaiFilhoFilhos1 as $gpFilho1) {
+	$grupo1 = $gpFilho1->getGrupoPaiFilhoFilho();
+	echo '<br />';
+	echo '<br />';
+	echo 'ENTIDADE: ' . $grupo1->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo1->getEntidadeAtiva()->infoEntidade();
+	foreach($grupo1->getResponsabilidadesAtivas() as $grupoResponsavel){
+		echo '<br />';
+		echo 'NOME: ' . $grupoResponsavel->getPessoa()->getNome();
+		echo '<br />';
+		echo 'CPF: ' . $grupoResponsavel->getPessoa()->getDocumento();
+	}
+
+	$grupoPaiFilhoFilhos2 = $grupo1->getGrupoPaiFilhoFilhosAtivos();
+	foreach ($grupoPaiFilhoFilhos2 as $gpFilho2) {
+		$grupo2 = $gpFilho2->getGrupoPaiFilhoFilho();
+		echo '<br />';
+		echo '<br />';
+		echo ' ----- ENTIDADE: ' . $grupo2->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo2->getEntidadeAtiva()->infoEntidade();
+		foreach($grupo2->getResponsabilidadesAtivas() as $grupoResponsavel){
+			echo '<br />';
+			echo ' ----- NOME: ' . $grupoResponsavel->getPessoa()->getNome();
+			echo '<br />';
+			echo ' ----- CPF: ' . $grupoResponsavel->getPessoa()->getDocumento();
+		}
+
+		$grupoPaiFilhoFilhos3 = $grupo2->getGrupoPaiFilhoFilhosAtivos();
+		foreach ($grupoPaiFilhoFilhos3 as $gpFilho3) {
+			$grupo3 = $gpFilho3->getGrupoPaiFilhoFilho();
+			echo '<br />';
+			echo '<br />';
+			echo ' ----- ----- ENTIDADE: ' . $grupo3->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo3->getEntidadeAtiva()->infoEntidade();
+			foreach($grupo3->getResponsabilidadesAtivas() as $grupoResponsavel){
+				echo '<br />';
+				echo ' ----- ----- NOME: ' . $grupoResponsavel->getPessoa()->getNome();
+				echo '<br />';
+				echo ' ----- ----- CPF: ' . $grupoResponsavel->getPessoa()->getDocumento();
+			}
+
+			$grupoPaiFilhoFilhos4 = $grupo3->getGrupoPaiFilhoFilhosAtivos();
+			foreach ($grupoPaiFilhoFilhos4 as $gpFilho4) {
+				$grupo4 = $gpFilho4->getGrupoPaiFilhoFilho();
+				echo '<br />';
+				echo '<br />';
+				echo ' ----- ----- ----- ENTIDADE: ' . $grupo4->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo4->getEntidadeAtiva()->infoEntidade();
+				foreach($grupo4->getResponsabilidadesAtivas() as $grupoResponsavel){
+					echo '<br />';
+					echo ' ----- ----- ----- NOME: ' . $grupoResponsavel->getPessoa()->getNome();
+					echo '<br />';
+					echo ' ----- ----- ----- CPF: ' . $grupoResponsavel->getPessoa()->getDocumento();
+				}
+
+				$grupoPaiFilhoFilhos5 = $grupo4->getGrupoPaiFilhoFilhosAtivos();
+				foreach ($grupoPaiFilhoFilhos5 as $gpFilho5) {
+					$grupo5 = $gpFilho5->getGrupoPaiFilhoFilho();
+					echo '<br />';
+					echo '<br />';
+					echo ' ----- ----- ----- ------ ENTIDADE: ' . $grupo5->getEntidadeAtiva()->getEntidadeTipo()->getNome() . ' - ' . $grupo5->getEntidadeAtiva()->infoEntidade();
+					foreach($grupo5->getResponsabilidadesAtivas() as $grupoResponsavel){
+						echo '<br />';
+						echo ' ----- ----- ----- ----- NOME: ' . $grupoResponsavel->getPessoa()->getNome();
+						echo '<br />';
+						echo ' ----- ----- ----- ----- CPF: ' . $grupoResponsavel->getPessoa()->getDocumento();
+					}
+				}
+			}
+		}
+	}
+}
