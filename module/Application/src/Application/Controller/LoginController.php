@@ -1232,7 +1232,7 @@ class LoginController extends CircuitoController {
 																if(date('Y-m-d') === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
 																	$horaAtual = date('H');
 																	$diferenca = date('H') - substr($turmaAulaLiberacao->getHora_criacao(), 0, 2);
-																	if($diferenca <= 6){
+																	if($diferenca <= 168){
 																		$mostrar = true;
 																	}
 																}
