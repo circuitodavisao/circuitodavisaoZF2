@@ -1831,7 +1831,7 @@ class CursoController extends CircuitoController {
 			if($postado['idSub'] != 0){
 				$grupoParaVerificar = $postado['idSub'];
 			}
-			$relatorio = CursoController::pegarAlunosComFaltas($grupo->getGrupoIgreja(), $turmasFiltradas, $grupoParaVerificar, $postado['somenteUltimaAula']);
+			$relatorio = CursoController::pegarAlunosComFaltas($this->getRepositorio(), $grupo->getGrupoIgreja(), $turmasFiltradas, $grupoParaVerificar, $postado['somenteUltimaAula']);
 			$alunosComReposicoes = $relatorio[0];
 			$faltas = $relatorio[1];
 		}else{
@@ -1856,7 +1856,7 @@ class CursoController extends CircuitoController {
 		return $view;
 	}
 
-	public static function pegarAlunosComFaltas($grupo, $turmas = null, $idEquipe, $somenteUltimaAula = 0) {
+	public static function pegarAlunosComFaltas($repositorio, $grupo, $turmas = null, $idEquipe, $somenteUltimaAula = 0) {
 		if (!$turmas) {
 			$turmas = $grupo->getGrupoIgreja()->getTurma();
 		}
@@ -1865,10 +1865,14 @@ class CursoController extends CircuitoController {
 		foreach ($turmas as $turma) {
 			$turmaAulaAtiva = $turma->getTurmaAulaAtiva();
 			foreach ($turma->getTurmaPessoa() as $turmaPessoa) {
+				$fatoCurso = $repositorio->getFatoCursoORM()->encontrarFatoCursoPorTurmaPessoa($turmaPessoa->getId());
+
 				$verificarAluno = false;
 				if ($turmaPessoa->verificarSeEstaAtivo() &&
-					($turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ATIVO ||
-					$turmaPessoa->getTurmaPessoaSituacaoAtiva()->getSituacao()->getId() === Situacao::ESPECIAL)){
+					(
+						$fatoCurso['situacao_id'] === Situacao::ATIVO ||
+						$fatoCurso['situacao_id'] === Situacao::ESPECIAL
+					)){
 					if($idEquipe == 0){
 						$verificarAluno = true;
 					}else{

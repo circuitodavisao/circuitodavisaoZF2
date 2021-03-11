@@ -78,10 +78,13 @@ class FiltroCursos extends AbstractHelper {
 				$html .= '<div class="form-group">';
 				$html .= '<label for="selecionaSituacao">' . $this->view->translate('Situa&ccedil;&atilde;o') . '</label>';
 				$html .= '<select class="form-control" name="idSituacao" id="selecionaSituacao" >';
-				$html .= '<option value="0" >ATIVO, ESPECIAL E REPROVADO POR FINANCEIRO</option>';
+				$html .= '<option value="0" >ATIVO E ESPECIAL</option>';
 				foreach ($this->view->situacoes as $situacao) {
-					if ($situacao->getId() === Situacao::DESISTENTE ||
-						$situacao->getId() === Situacao::REPROVADO_POR_FALTA) {
+					if (
+						$situacao->getId() === Situacao::DESISTENTE ||
+						$situacao->getId() === Situacao::REPROVADO_POR_FALTA ||
+						$situacao->getId() === Situacao::REPROVADO_POR_FINANCEIRO
+					) {
 							$selected = '';
 							if($this->view->postado['idSituacao'] == $situacao->getId()){
 								$selected = 'selected';

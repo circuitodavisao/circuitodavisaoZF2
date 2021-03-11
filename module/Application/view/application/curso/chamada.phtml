@@ -107,15 +107,16 @@ if($this->filtrado){
 							$turmaPessoa = $this->repositorio->getTurmaPessoaORM()->encontrarPorId($relatorio->getTurma_pessoa_id());
 
 							$mostrarSituacao = false;
-							if($this->postado['idSituacao'] == 0 && ($relatorio->getSituacao_id() === Situacao::ATIVO ||
-								$relatorio->getSituacao_id() === Situacao::ESPECIAL ||
-								$relatorio->getSituacao_id() === Situacao::REPROVADO_POR_FINANCEIRO)){
+							if($this->postado['idSituacao'] == 0 && (
+								$relatorio->getSituacao_id() === Situacao::ATIVO ||
+								$relatorio->getSituacao_id() === Situacao::ESPECIAL
+							)){
+								$mostrarSituacao = true;
+							}else{
+								if($relatorio->getSituacao_id() == $this->postado['idSituacao']){
 									$mostrarSituacao = true;
-								}else{
-									if($relatorio->getSituacao_id() == $this->postado['idSituacao']){
-										$mostrarSituacao = true;
-									}
 								}
+							}
 							if($mostrarSituacao && $turmaPessoa->verificarSeEstaAtivo()){
 								$mostrarFinanceiro = false;
 								if($this->postado['mostrarFinanceiro'] == 0){
