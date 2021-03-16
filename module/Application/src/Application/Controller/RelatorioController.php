@@ -2987,6 +2987,9 @@ public function alunosNaSemanaAction(){
 			$arrayPeriodoDoMesAtual = Funcoes::encontrarPeriodoDeUmMesPorMesEAno($mes, $ano);
 			$diferenca = $arrayPeriodoDoMesAtual[1] - $arrayPeriodoDoMesAtual[0];
 			$diferenca += 1;
+			if(intVal($mes) === 2){
+				$diferenca -= 1;
+			}
 			$campoCelula = 'cq'.$diferenca;
 			$campoCelulaBeta = 'cbq'.$diferenca;
 
