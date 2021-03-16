@@ -1147,6 +1147,7 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  15835 // sao jose do rio preto
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2816,6 +2817,7 @@ class LoginController extends CircuitoController {
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 //  cascavel
