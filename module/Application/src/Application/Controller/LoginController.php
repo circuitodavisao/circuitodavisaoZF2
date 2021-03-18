@@ -1231,14 +1231,13 @@ class LoginController extends CircuitoController {
 															$temLink = true;
 															foreach($turmaAulaLiberacoes as $turmaAulaLiberacao){
 																$mostrar = false;
-																if(date('Y-m-d') === $turmaAulaLiberacao->getData_criacaoStringPadraoBanco()){
-																	$horaAtual = date('H');
-																	$diferenca = date('H') - substr($turmaAulaLiberacao->getHora_criacao(), 0, 2);
-																	if($diferenca <= 168){
-																		$mostrar = true;
-																	}
-																}
-	
+																$datetime1 = date_create(date('Y-m-d'));
+																$datetime2 = date_create($turmaAulaLiberacao->getData_criacaoStringPadraoBanco());
+																$interval = date_diff($datetime1, $datetime2);
+																if(intVal($interval->d) <= 7){
+																	$mostrar = true;
+																}	
+
 																if($mostrar){
 																	$htmlU .= '<tr>';
 																	$htmlU .= '<td class="text-right">';
