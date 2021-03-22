@@ -1149,6 +1149,8 @@ class LoginController extends CircuitoController {
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28859  // palotina
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374  // alagoas
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
@@ -2817,6 +2819,8 @@ class LoginController extends CircuitoController {
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28859  // palotina
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374  // alagoas
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21418 // caxias do sul
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
