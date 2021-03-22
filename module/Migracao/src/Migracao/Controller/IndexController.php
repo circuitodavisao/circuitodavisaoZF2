@@ -574,7 +574,9 @@ class IndexController extends CircuitoController {
 										$html .= "<br /> {$solicitacao->getId()} - REMOVENDO CELULA";
 										$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($solicitacao->getObjeto1());
 										$grupoEvento = $this->getRepositorio()->getGrupoEventoORM()->encontrarPorId($solicitacao->getObjeto2());
-										$html .= $this->removerCelula($grupo, $grupoEvento);
+										if($grupoEvento){
+											$html .= $this->removerCelula($grupo, $grupoEvento);
+										}
 									}
 									if ($idSolicitacaoTipo == SolicitacaoTipo::TRANSFERIR_ALUNO) {
 										$html .= "<br /> {$solicitacao->getId()} - TRANSFERIR ALUNO";
