@@ -170,7 +170,9 @@ foreach($this->solicitacoesTipo as $solicitacaoTipo){
 				case SolicitacaoTipo::REMOVER_CELULA:
 					$objeto = $solicitacao->getObjeto2();
 					$grupoEvento = $this->repositorio->getGrupoEventoORM()->encontrarPorId($objeto);
-					$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+					if($grupoEvento){
+						$htmlCelula = $this->translate(Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia())).' - ' . substr($grupoEvento->getEvento()->getHora(),0,5);
+					}
 					$htmlTbody .= '<td>'.$htmlCelula.'</td>';
 					break;
 				case SolicitacaoTipo::TRANSFERIR_LIDER_PARA_OUTRA_EQUIPE:
