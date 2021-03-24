@@ -56,7 +56,7 @@ class FatoCurso extends CircuitoEntity {
 		$this->situacao_id = $situacao_id;
 	}
 	
-	function getSituacao_id(){
+	public function getSituacao_id(){
 		return $this->situacao_id;
 	}
 }
