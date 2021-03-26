@@ -1118,11 +1118,16 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21668 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24049
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 29982
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24023
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24095
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24078
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21558 // manaus
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21627 // boa vista
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21613 // zona oeste
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21597 // amajari
-	
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21418 // caxias do sul
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  21445 // titas 
@@ -2823,6 +2828,13 @@ class LoginController extends CircuitoController {
 		if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($matricula)){
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21668 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24049
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 29982
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24023
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24095
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24078
+	
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21558 // manaus
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21627 // boa vista
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21613 // zona oeste
