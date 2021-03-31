@@ -153,6 +153,7 @@ return array(
     'application/login/selecionar-perfil'                     => __DIR__ . '/view/application/login/selecionar-perfil.phtml',
     'application/login/perfil'                                => __DIR__ . '/view/application/login/perfil.phtml',
     'application/login/aniversariantes'                       => __DIR__ . '/view/application/login/aniversariantes.phtml',
+    'application/login/questionario-sintomas'                       => __DIR__ . '/view/application/login/questionario-sintomas.phtml',
     'application/relatorio/discipulado'                       => __DIR__ . '/view/application/relatorio/discipulado.phtml',
     'application/relatorio/consultar-ordenacao'               => __DIR__ . '/view/application/relatorio/consultar-ordenacao.phtml',
     'application/relatorio/alunos'                            => __DIR__ . '/view/application/relatorio/alunos.phtml',

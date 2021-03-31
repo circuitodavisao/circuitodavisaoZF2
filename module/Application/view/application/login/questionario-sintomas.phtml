@@ -1,0 +1,210 @@
+<form id='form' action='/questionarioSintomasResposta' method='POST'>
+<div style="width: 100%;">
+<div style="width: 100%; position: relative; left: 0; top: 0: color: #222; background-color: #890b0b; padding: 5px">
+<div style="width: 750px; padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto;">
+<div style="margin-top: 20px; padding-bottom: 0; margin-bottom: 15px;">
+<h1>
+<span style="font-weight: 600; color: #FFFFFF">
+Questionário - Comunicação 
+</span>
+</h1>
+</div>
+</div>
+</div>
+
+<div id='html' style='padding: 5px;'></div>
+
+<script type="text/javascript">
+const respostas = [
+	"0 - Nunca ou quase nunca tem o sintoma.",
+	"1 - Tem ocasionalmente, o efeito não é severo.",
+	"2 - Tem ocasionalmente, o efeito é severo.",
+	"3 - Tem frequentemente, o efeito não é severo.",
+	"4 - Tem frequentemente, o efeito é severo.",
+]
+const secoes = [
+{
+	titulo: 'Cabeça',
+	perguntas: [
+		'Dores',
+		'Desmaio',
+		'Tontura',
+		'Insônia',
+	],
+},
+{
+	titulo: 'Olhos',
+	perguntas: [
+		'Lacrimosos ou com coceira',
+		'Inchados, vermelhos, ou pálpebras grudentas',
+		'Bolsas ou olheiras',
+		'Visão borrada ou em túnel {não inclui miopia ou hipermetropia}',
+	]
+},
+{
+	titulo: 'Ouvidos',
+	perguntas: [
+		'Coceira',
+		'Dores e infecções',
+		'Supuração',
+		'Zumbido, perda de audição',
+	]
+},
+{
+	titulo: 'Pulmões',
+	perguntas: [
+		'Congestão no peito',
+		'Asa, bronquite',
+		'Respiração curta',
+		'Dificuldade em respirar',
+	]
+},
+{
+	titulo: 'Nariz',
+	perguntas: [
+		'Nariz entupido',
+		'Sinusite',
+		'Febre do feno',
+		'Ataques de espirro',
+		'Formação excessiva de muco',
+	]
+},
+{
+	titulo: 'Trato Digestivo',
+	perguntas: [
+		'Náusea e vômitos',
+		'Diarreia',
+		'Prisão de ventre',
+		'Distensão abdominal',
+		'Arrotos, passagem de gás',
+		'Azia',
+		'Dor intestinal/ Estomacal',
+	]
+},
+{
+	titulo: 'Boca/Garganta',
+	perguntas: [
+		'Tosse crônica',
+		'Engasgo, necessidade frequente de limpar a garganta',
+		'Garganta inflamada, rouquidão, perda de voz',
+		'Língua, gengivas e lábios inchados ou esbranquiçados',
+		'Aftas',
+	]
+},
+{
+	titulo: 'Juntas/ Músculos',
+	perguntas: [
+		'Dor ou sensibilidade nas juntas',
+		'Artrite',
+		'Rigidez ou limitação de movimentos',
+		'Dor ou sensibilidade nos músculos',
+		'Sensação de fraqueza ou cansaço',
+	]
+},
+{
+	titulo: 'Pele',
+	perguntas: [
+		'Acne',
+		'Urticária, pele seca',
+		'Perda de cabelo',
+		'Rubores, ondas de calor',
+		'Suor excessivo',
+	]
+},
+{
+	titulo: 'Peso',
+	perguntas: [
+		'Comer e beber em excesso',
+		'Desejo por certos alimentos',
+		'Excesso de peso',
+		'Compulsão por comer',
+		'Retenção de líquido',
+		'Peso baixo',
+	]
+},
+{
+	titulo: 'Coração',
+	perguntas: [
+		'Batimento irregular ou falho',
+		'Batimento rápido ou forte',
+		'Dor no peito',
+	]
+},
+{
+	titulo: 'Energia',
+	perguntas: [
+		'Fadiga/ lentidão',
+		'Apatia/ letargia',
+		'Hiperatividade',
+		'Inquietação',
+	]
+},
+{
+	titulo: 'Emoções',
+	perguntas: [
+		'Variações de humor',
+		'Ansiedade, medo, nervosismo',
+		'Raiva, irritabilidade, agressividade',
+		'Depressão',
+	]
+},
+{
+	titulo: 'Mente',
+	perguntas: [
+		'Memória fraca',
+		'Dificuldade de compreensão', 
+		'Pouca coordenação física',
+		'Dificuldade em tomar decisões',
+		'Gagueira ou bloqueio de fala',
+		'Fala arrastada',
+		'Dificuldades de aprendizado',
+	]
+},
+{
+	titulo: 'Outros',
+	perguntas: [
+		'Doenças frequentes',
+		'Micção frequente ou urgente',
+		'Coceira ou secreção genital',
+	]
+},
+]
+
+let html = ''
+let contaSecao = 1
+for(const secao of secoes){
+	html = html.concat(`<p>${secao.titulo}</p>`)
+	let contaPergunta = 1
+	for(const pergunta of secao.perguntas){
+		html = html.concat(`<p>${pergunta}</p>`)
+		html = html.concat(`<select id='${contaSecao}-${contaPergunta}' style='display: inline; width: 100%;'>`)
+		html = html.concat(`<option value='9'>Selecione</option>`)
+		let contador = 1
+		for(const resposta of respostas){
+			html = html.concat(`<option value='${contador}'>${resposta}</option>`)
+			contador++
+		}
+		html = html.concat(`</select>`)
+		contaPergunta++
+		html = html.concat(`<br />`)
+		html = html.concat(`<br />`)
+	}
+	contaSecao++
+	html = html.concat(`<br />`)
+	html = html.concat(`<br />`)
+}
+
+document.getElementById('html').innerHTML = html
+
+const validar = () => {
+	document.getElementById('form').submit()
+}
+
+</script>
+
+<br />
+<button class="btn btn-sm btn-primary" onClick="validar()">
+Enviar
+</button>
+</div>
+</form>

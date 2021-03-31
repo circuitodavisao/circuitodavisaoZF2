@@ -3172,6 +3172,14 @@ class LoginController extends CircuitoController {
 		return new ViewModel();	
 	}
 
+	public function questionarioSintomasAction() {
+		return new ViewModel();	
+	}
+
+	public function questionarioSintomasRespostaAction() {
+		return new ViewModel();	
+	}
+
 	public function hierarquiaAction(){
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
