@@ -1,15 +1,11 @@
-<form id='form' action='/questionarioSintomasResposta' method='POST'>
-<div style="width: 100%;">
-<div style="width: 100%; position: relative; left: 0; top: 0: color: #222; background-color: #890b0b; padding: 5px">
-<div style="width: 750px; padding-rigth: 15px; padding-left: 15px; margin-left: auto; margin-right: auto;">
-<div style="margin-top: 20px; padding-bottom: 0; margin-bottom: 15px;">
+<form id='form'>
+<div style="max-width: 600px; margin: auto;">
+<div style="width: 100%; color: #222; background-color: #890b0b; padding: 5px; text-align: center;">
 <h1>
 <span style="font-weight: 600; color: #FFFFFF">
-Questionário - Comunicação 
+Teste de Sintomas
 </span>
 </h1>
-</div>
-</div>
 </div>
 
 <div id='html' style='padding: 5px;'></div>
@@ -171,6 +167,9 @@ const secoes = [
 ]
 
 let html = ''
+html = html.concat(`<br />`)
+html = html.concat(`<p>Avalie cada um dos sintomas seguintes baseado em como você se sente na maioria dos dias.</p>`)
+html = html.concat(`<br />`)
 let contaSecao = 1
 for(const secao of secoes){
 	html = html.concat(`<p>${secao.titulo}</p>`)
@@ -179,7 +178,7 @@ for(const secao of secoes){
 		html = html.concat(`<p>${pergunta}</p>`)
 		html = html.concat(`<select id='${contaSecao}-${contaPergunta}' style='display: inline; width: 100%;'>`)
 		html = html.concat(`<option value='9'>Selecione</option>`)
-		let contador = 1
+		let contador = 0
 		for(const resposta of respostas){
 			html = html.concat(`<option value='${contador}'>${resposta}</option>`)
 			contador++
@@ -197,13 +196,58 @@ for(const secao of secoes){
 document.getElementById('html').innerHTML = html
 
 const validar = () => {
-	document.getElementById('form').submit()
+	const form = document.getElementById('form')
+
+let soma = 0
+let temErro = false
+let contaSecao = 1
+for(const secao of secoes){
+	let contaPergunta = 1
+	for(const pergunta of secao.perguntas){
+		const value = parseInt(document.getElementById(`${contaSecao}-${contaPergunta}`).value)
+		if(value === 9){
+			temErro = true
+		}else{
+			soma += value
+		}
+		contaPergunta++
+	}
+	contaSecao++
+}
+
+if(temErro){
+	alert('faltou selecionar algum')
+}else{
+	let resposta = ''
+	let cor = ''
+	if(soma <= 10){
+		resposta = 'Você está bem!'
+		cor = 'green'
+	}
+	if(soma > 10 && soma <= 40){
+		resposta = 'Seu corpo está inflamado!'
+		cor = 'red'
+	}
+	if(soma > 40){
+		resposta = 'Seu corpo está muito inflamado!'
+		cor = 'red'
+	}
+
+	let html = '<div align="center">'
+	html += `<h1 style="color: ${cor}">${resposta}</h1>`
+	html += `<h3>Total de Pontos: ${soma}</h3>`
+	html += `</div>`
+
+	document.getElementById('html').innerHTML = html
+	document.getElementById('button').classList.add('hidden')
+}
+
 }
 
 </script>
 
 <br />
-<button class="btn btn-sm btn-primary" onClick="validar()">
+<button class="btn btn-sm btn-primary" onClick="validar()" type='button' id='button'>
 Enviar
 </button>
 </div>
