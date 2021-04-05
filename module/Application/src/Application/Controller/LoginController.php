@@ -1118,6 +1118,15 @@ class LoginController extends CircuitoController {
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
+
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30371
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23801 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23775 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23740 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30373  
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 27989  
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21668 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24049
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 29982
