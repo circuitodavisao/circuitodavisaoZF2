@@ -3518,6 +3518,7 @@ class IndexController extends CircuitoController {
 								$turmaPessoaFinanceiro->getValor2() === 'S' && 
 								$turmaPessoaFinanceiro->getValor3() === 'S'
 							){
+								$html .= '<br />AdimpleteModulo1';
 								$inadimpleteModulo1 = false;
 							}
 						}
