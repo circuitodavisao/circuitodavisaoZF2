@@ -3511,8 +3511,6 @@ class IndexController extends CircuitoController {
 					$inadimpleteModulo1 = true;
 					$inadimpleteModulo2 = true;
 
-								$html .= '<br />modulo:' . $turmaAulaAtiva->getAula()->getDisciplina()->getId();
-
 					foreach($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro){
 						if($turmaPessoaFinanceiro->getDisciplina_id() === Disciplina::MODULO_UM){
 							if(
@@ -3520,7 +3518,6 @@ class IndexController extends CircuitoController {
 								$turmaPessoaFinanceiro->getValor2() === 'S' && 
 								$turmaPessoaFinanceiro->getValor3() === 'S'
 							){
-								$html .= '<br />AdimpleteModulo1';
 								$inadimpleteModulo1 = false;
 							}
 						}
@@ -3535,13 +3532,11 @@ class IndexController extends CircuitoController {
 						}
 					}
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS && $inadimpleteModulo1){
-								$html .= '<br />Reprovado 2';
 						$reprovar = true;
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
 
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES && ($inadimpleteModulo1 || $inadimpleteModulo2)){
-								$html .= '<br />Reprovado 3';
 						$reprovar = true;
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
