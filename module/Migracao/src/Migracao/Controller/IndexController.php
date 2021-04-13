@@ -3511,6 +3511,8 @@ class IndexController extends CircuitoController {
 					$inadimpleteModulo1 = true;
 					$inadimpleteModulo2 = true;
 
+								$html .= '<br />modulo:' . $turmaAulaAtiva->getAula()->getDisciplina()->getId();
+
 					foreach($turmaPessoa->getTurmaPessoaFinanceiro() as $turmaPessoaFinanceiro){
 						if($turmaPessoaFinanceiro->getDisciplina_id() === Disciplina::MODULO_UM){
 							if(
