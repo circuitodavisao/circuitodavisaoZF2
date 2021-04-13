@@ -3533,11 +3533,13 @@ class IndexController extends CircuitoController {
 						}
 					}
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS && $inadimpleteModulo1){
+								$html .= '<br />Reprovado 2';
 						$reprovar = true;
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
 
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES && $inadimpleteModulo1 || $inadimpleteModulo2){
+								$html .= '<br />Reprovado 3';
 						$reprovar = true;
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
