@@ -3540,7 +3540,7 @@ class IndexController extends CircuitoController {
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
 
-					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES && $inadimpleteModulo1 || $inadimpleteModulo2){
+					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES && ($inadimpleteModulo1 || $inadimpleteModulo2)){
 								$html .= '<br />Reprovado 3';
 						$reprovar = true;
 						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
