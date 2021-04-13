@@ -3531,48 +3531,14 @@ class IndexController extends CircuitoController {
 							}
 						}
 					}
-					$frequencia = false;
-						$disciplinaModulo1 = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(Disciplina::MODULO_UM);
-						foreach($disciplinaModulo1->getAulaOrdenadasPorPosicao() as $aula){
-							$frequencia = false;
-							if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($fatoCurso->getTurma_pessoa_id(), $aula->getId())){
-								if($turmaPessoaAula->verificarSeEstaAtivo()){
-									$frequencia = true;
-									break;
-								}
-							}
-						}
-
 					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_DOIS && $inadimpleteModulo1){
-						if($frequencia){
-							$reprovar = true;
-							$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
-						}
+						$reprovar = true;
+						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
 
-						$frequencia2 = false;
-					if(
-						$turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES &&
-					   	$inadimpleteModulo1 || $inadimpleteModulo2
-					){
-
-						if($frequencia === false){
-							$disciplinaModulo2 = $this->getRepositorio()->getDisciplinaORM()->encontrarPorId(Disciplina::MODULO_DOIS);
-							foreach($disciplinaModulo2->getAulaOrdenadasPorPosicao() as $aula){
-								$frequencia = false;
-								if($turmaPessoaAula = $this->repositorio->getTurmaPessoaAulaORM()->encontrarPorTurmaPessoaEAula($fatoCurso->getTurma_pessoa_id(), $aula->getId())){
-									if($turmaPessoaAula->verificarSeEstaAtivo()){
-										$frequencia2 = true;
-										break;
-									}
-								}
-							}
-						}
-
-						if($frequencia || $frequencia2){
-							$reprovar = true;
-							$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
-						}
+					if($turmaAulaAtiva->getAula()->getDisciplina()->getId() === Disciplina::MODULO_TRES && $inadimpleteModulo1 || $inadimpleteModulo2){
+						$reprovar = true;
+						$tipo = SITUACAO::REPROVADO_POR_FINANCEIRO;
 					}
 				}
 			}
