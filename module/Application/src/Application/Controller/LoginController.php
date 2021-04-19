@@ -1119,6 +1119,8 @@ class LoginController extends CircuitoController {
 					if(
 						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8923 
+						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9620 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4161 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9496 
 						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 3262  
