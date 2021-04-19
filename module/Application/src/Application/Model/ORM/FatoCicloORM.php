@@ -265,6 +265,7 @@ class FatoCicloORM extends CircuitoORM {
 				$entidadeSelecionada = $grupoSelecionado->getEntidadeInativaPorDataInativacao($dataInativacao);
 			}
 			if($entidadeSelecionada && $entidadeSelecionada->getEntidadeTipo()){
+
 				$tipoEntidade = $entidadeSelecionada->getEntidadeTipo()->getId();
 				while ($tipoEntidade === Entidade::SUBEQUIPE) {
 					$numeroIdentificador = str_pad($grupoSelecionado->getId(), $tamanho, 0, STR_PAD_LEFT) . $numeroIdentificador;
