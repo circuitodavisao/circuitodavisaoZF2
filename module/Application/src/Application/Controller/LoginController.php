@@ -1117,77 +1117,78 @@ class LoginController extends CircuitoController {
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
-						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
-
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23793
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 13617
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17995
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9420
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 27989
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 5125
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8923
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4385
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9274
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 5125
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16069
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4385
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9274
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8923 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9620 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4161 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9496 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 3262  
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30371
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23801 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23775 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23740 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30373  
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 27989  
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21668 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24049
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 29982
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24023
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24095
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24078
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21558 // manaus
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21627 // boa vista
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21613 // zona oeste
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21597 // amajari
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21418 // caxias do sul
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  21445 // titas 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 // cascavel
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374 // alagoas sede - maceio 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  13764 // limeira
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  15835 // sao jose do rio preto
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28859  // palotina
-						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374  // alagoas
+						true
+//						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
+//
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23793
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 13617
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17995
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9420
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 27989
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 5125
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8923
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4385
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9274
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 5125
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16069
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4385
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9274
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8923 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9620 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4161 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9496 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 3262  
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30371
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23765 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23801 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23775 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23740 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 30373  
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 27989  
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21668 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24049
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 29982
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24023
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24095
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24078
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21558 // manaus
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21627 // boa vista
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21613 // zona oeste
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21597 // amajari
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 11158 // PALMAS
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21418 // caxias do sul
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  21445 // titas 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 22027 // BELO HORIZONTE
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4508 // SALVADOR
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28836 // cascavel
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 7707 // barba
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // freguesia
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 15855 // ribeirao preto
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 20680 // agusta 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 8206 // barra tijuca
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4186 // samambaia
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 9758 // criciuma
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23969 // taquaral bosque
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16011 // araraquara
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 21068 // cuiaba sede
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 24192 // outra cascavel 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374 // alagoas sede - maceio 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 16084 // Snt Browdoski
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4619 // Snt Aruanã
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23603 // Snt pontaporã
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 31482 // arena moema
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 25635 // paraupeba 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17358 // sulacap 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  23969 // TAQUARAL BOSQUE
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  13764 // limeira
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  15835 // sao jose do rio preto
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  20482 // sede sp eu acho 
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() ===  28836 // sara faculdade
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 4672  // recife
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 28859  // palotina
+//						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 26374  // alagoas
 					){
 						$html = '';
 						if($turmaPessoa->verificarSeEstaAtivo()){
