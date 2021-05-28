@@ -82,37 +82,37 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}
 
 		/* Ordenacao de pessoas */
-		$valores = array();
-		foreach ($pessoasGrupo as $pg) {
-			$valor = 0;
-			switch ($pg->getTipo()) {
-			case 'VI':
-				$valor = 1;
-				break;
-			case 'CO':
-				$valor = 2;
-				break;
-			case 'ME':
-				$valor = 3;
-				break;
-			}
-			if (!$pg->getAtivo()) {
-				$valor = -2;
-			}
-			$valores[$pg->getId()] = $valor;
-		}
-		$pA = array();
-		$res = array();
-		for ($i = 0; $i < count($pessoasGrupo); $i++) {
-			for ($j = 0; $j < count($pessoasGrupo); $j++) {
-				$pA[1] = $pessoasGrupo[$i];
-				$pA[2] = $pessoasGrupo[$j];
-				if ($pA[1]->getNome() < $pA[2]->getNome()) {
-					$pessoasGrupo[$i] = $pA[2];
-					$pessoasGrupo[$j] = $pA[1];
-				}
-			}
-		}
+//		$valores = array();
+//		foreach ($pessoasGrupo as $pg) {
+//			$valor = 0;
+//			switch ($pg->getTipo()) {
+//			case 'VI':
+//				$valor = 1;
+//				break;
+//			case 'CO':
+//				$valor = 2;
+//				break;
+//			case 'ME':
+//				$valor = 3;
+//				break;
+//			}
+//			if (!$pg->getAtivo()) {
+//				$valor = -2;
+//			}
+//			$valores[$pg->getId()] = $valor;
+//		}
+//		$pA = array();
+//		$res = array();
+//		for ($i = 0; $i < count($pessoasGrupo); $i++) {
+//			for ($j = 0; $j < count($pessoasGrupo); $j++) {
+//				$pA[1] = $pessoasGrupo[$i];
+//				$pA[2] = $pessoasGrupo[$j];
+//				if ($pA[1]->getNome() < $pA[2]->getNome()) {
+//					$pessoasGrupo[$i] = $pA[2];
+//					$pessoasGrupo[$j] = $pA[1];
+//				}
+//			}
+//		}
 		foreach ($pessoasGrupo as $pgA) {
 			$pessoas[] = $pgA;
 		}
@@ -152,54 +152,54 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row btn-default p5">';
 
-		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+		$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px">';
 
 		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 		$iconeDaPessoa = '';
-		if($pessoa->getTipo() != 'LP'){
-			if($pessoa->verificarSeEhAluno()){
-				$iconeDaPessoa = '<span class="label label-dark"><i class="fa fa-graduation-cap"></i></span> ';
-			}
-		}
+//		if($pessoa->getTipo() != 'LP'){
+//			if($pessoa->verificarSeEhAluno()){
+//				$iconeDaPessoa = '<span class="label label-dark"><i class="fa fa-graduation-cap"></i></span> ';
+//			}
+//		}
 		$html .= $iconeDaPessoa;
-		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
-		$html .= $pessoa->getNomeListaDeLancamento(5);
-		$html .= '</span>';
-		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
+//		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
+//		$html .= $pessoa->getNomeListaDeLancamento(5);
+//		$html .= '</span>';
+//		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
 		$html .= $pessoa->getNome();
-		$html .= '</span>';
+//		$html .= '</span>';
 		$html .= '</div>';
 		/* Col 6 */
-		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
-
-
-		if($pessoa->getTelefone()){
-			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-		}else{
-			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
-		}
-		$html .= $telefone;
-
-		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
-			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
-			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
-			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
-			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
-		}		
-
-		$html .= '</div>';
+//		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+//
+//
+//		if($pessoa->getTelefone()){
+//			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+//		}else{
+//			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
+//		}
+//		$html .= $telefone;
+//
+//		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
+//			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
+//			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
+//			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
+//			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
+//		}		
+//
+//		$html .= '</div>';
 		/* Col 6 */
 
 		$html .= '</div>';
 		/* Row */
 
-		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo() && !$pessoa->getGrupoPessoaAtivo() && $inativado) {
-			$corDaLabel = 'label-danger';
-			$statusDoInativado = 'FOI INATIVADO NESTE PERIODO';			
-			$html .= '<div class="row btn-default p5 text-center">';
-			$html .= '<span class="label label-rounded '. $corDaLabel .' ">'. $statusDoInativado .'</span>';
-			$html .= '</div>';
-		}
+//		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo() && !$pessoa->getGrupoPessoaAtivo() && $inativado) {
+//			$corDaLabel = 'label-danger';
+//			$statusDoInativado = 'FOI INATIVADO NESTE PERIODO';			
+//			$html .= '<div class="row btn-default p5 text-center">';
+//			$html .= '<span class="label label-rounded '. $corDaLabel .' ">'. $statusDoInativado .'</span>';
+//			$html .= '</div>';
+//		}
 
 		$html .= '</div>';
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
@@ -207,7 +207,6 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		$numeroDeEvento = count($grupoEventoNoPeriodo);
 		foreach ($grupoEventoNoPeriodo as $grupoEvento) {
-
 			$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
 			if ($diaDaSemanaDoEvento === 1) {
 				$diaDaSemanaDoEvento = 7; // domingo
@@ -215,27 +214,28 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$diaDaSemanaDoEvento--;
 		}
 		/* Validação Evento mostrar ou não */
-		$mostrarParaLancar = false;
-		if ($this->view->periodo < 0) {
-			$arrayPeriodo = $this->arrayPeriodo;
-			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-			$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-			$dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
-
-			if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
-				$mostrarParaLancar = true;
-			}
-		}
-
-		if ($this->view->periodo == 0) {
-			/* Verificar se o dia do evento é igual ou menor que o dia atual */
-			if ($diaDaSemanaDoEvento <= $this->getDiaDeSemanaHoje()) {
-				$mostrarParaLancar = true;
-			}
-		}
-		if ($this->view->periodo < 0) {
-			$mostrarParaLancar = true;
-		}
+		$mostrarParaLancar = true;
+//		$mostrarParaLancar = false;
+//		if ($this->view->periodo < 0) {
+//			$arrayPeriodo = $this->arrayPeriodo;
+//			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
+//			$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
+//			$dataDoGrupoEventoParaComparar = strtotime($grupoEvento->getData_criacaoStringPadraoBanco());
+//
+//			if ($dataDoGrupoEventoParaComparar <= $dataDoInicioDoPeriodoParaComparar) {
+//				$mostrarParaLancar = true;
+//			}
+//		}
+//
+//		if ($this->view->periodo == 0) {
+//			/* Verificar se o dia do evento é igual ou menor que o dia atual */
+//			if ($diaDaSemanaDoEvento <= $this->getDiaDeSemanaHoje()) {
+//				$mostrarParaLancar = true;
+//			}
+//		}
+//		if ($this->view->periodo < 0) {
+//			$mostrarParaLancar = true;
+//		}
 		$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
 		$tamanhoBotao = BotaoSimples::larguraMaxima;
 		$tamanhoBotaoInativo = 'btn-block';
@@ -250,12 +250,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}
 		$html .= '<div class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
 		$html .= '<p>';
-		$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
-		if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
-			$eventoNome = 'Cél. Beta';
-		}
+//		$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
+//		if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
+//			$eventoNome = 'Cél. Beta';
+//		}
 		$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
-		$html .= $this->view->translate($eventoNome). '<br />';
+//		$html .= $this->view->translate($eventoNome). '<br />';
 		$html .= $this->view->translate($diaDaSemanaAjustado);
 		$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
 		$html .= '</p>';

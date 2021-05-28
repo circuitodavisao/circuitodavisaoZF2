@@ -97,7 +97,7 @@ class GrupoPessoaORM extends CircuitoORM {
                 . " gp.grupo_id = ?1 "
                 . " AND gp.data_inativacao IS NULL "
 				. " #visitante "
-                . " AND gp.data_criacao <= ?2 ";
+                . " AND gp.data_criacao <= ?2 ORDER BY gp.id DESC";
 		try {
 			if(!$visitante){
 				$dql = str_replace('#visitante', '', $dql);
@@ -128,7 +128,7 @@ class GrupoPessoaORM extends CircuitoORM {
                 . " AND gp.data_inativacao IS NOT NULL "
                 . " AND gp.data_criacao <= ?2 "
 				. " #visitante "
-                . " AND gp.data_inativacao >= ?3 ";
+                . " AND gp.data_inativacao >= ?3 ORDER BY gp.id DESC";
 		try {
 			if(!$visitante){
 				$dql = str_replace('#visitante', '', $dql);
