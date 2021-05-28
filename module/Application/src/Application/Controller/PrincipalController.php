@@ -56,11 +56,11 @@ class PrincipalController extends CircuitoController {
 			$mesAnterior = date('m') - 1;
 			$anoAnterior = date('Y');
 		}
-		if($entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo() && $grupoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()){
-			if($grupoPai->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) && !$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorGrupoPessoaMesAno($grupoPai->getId(), $sessao->idPessoa, $mesAnterior, $anoAnterior)){
-				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
-			}
-		}
+//		if($entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo() && $grupoPai = $entidade->getGrupo()->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai()){
+//			if($grupoPai->getGrupoEventoAtivosPorTipo(EventoTipo::tipoDiscipulado) && !$this->getRepositorio()->getFatoDiscipuladoORM()->encontrarPorGrupoPessoaMesAno($grupoPai->getId(), $sessao->idPessoa, $mesAnterior, $anoAnterior)){
+//				return $this->redirect()->toRoute(Constantes::$ROUTE_LANCAMENTO, array(Constantes::$ACTION => 'Discipulado'));
+//			}
+//		}
 		if(!$pessoa->getData_nascimento() || !$pessoa->getSexo() || !$pessoa->getProfissao() || $pessoa->getEmail() == 'atualize' ){			
 			return $this->redirect()->toRoute(Constantes::$ROUTE_LOGIN, array(Constantes::$ACTION => 'perfil'));			
 		}
@@ -117,7 +117,7 @@ class PrincipalController extends CircuitoController {
 			$pessoalOuEquipe = 2; // Trazer os dados da equipe
 		}
 
-		$registros = $this->getRepositorio()->getRegistroORM()->encontrarUltimosRegistroPorIdGrupoELimite($grupo->getId(), 3);
+		//$registros = $this->getRepositorio()->getRegistroORM()->encontrarUltimosRegistroPorIdGrupoELimite($grupo->getId(), 3);
 
 		$dados = array(
 			'grupoIdPessoaVerificada' => $grupoIdPessoaVerificada,
@@ -134,12 +134,12 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'selectedAtual' => $selectedAtual,
 			'selectedAnterior' => $selectedAnterior,
-			'registros' => $registros,
+			//'registros' => $registros,
 		);
 
-		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
-			$dados['discipulado'] = $relatorioDiscipulado;
-		}
+//		if($relatorioDiscipulado = RelatorioController::relatorioDiscipulado($this->getRepositorio(), $entidade->getGrupo(), $mesAnterior, $anoAnterior)){
+//			$dados['discipulado'] = $relatorioDiscipulado;
+//		}
 
 		$view = new ViewModel($dados);
 		/* Javascript */

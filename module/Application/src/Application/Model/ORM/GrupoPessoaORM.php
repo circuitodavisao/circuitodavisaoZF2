@@ -87,7 +87,7 @@ class GrupoPessoaORM extends CircuitoORM {
 		}
 	}
 
-	public function grupoPessoasAtivosNoPEriodo($idGrupo, $periodo, $visitante = false) {
+	public function grupoPessoasAtivosNoPeriodo($idGrupo, $periodo, $visitante = false) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
 		$dql = "SELECT "
@@ -108,6 +108,7 @@ class GrupoPessoaORM extends CircuitoORM {
 			$result = $this->getEntityManager()->createQuery($dql)
 				->setParameter(1, (int) $idGrupo)
 				->setParameter(2, $dataFinalFormatada)
+				->setMaxResults(12)
 				->getResult();
 			return $result;
 		} catch (Exception $exc) {
@@ -115,7 +116,7 @@ class GrupoPessoaORM extends CircuitoORM {
         }
     }
 
-	public function grupoPessoasInativosNoPEriodo($idGrupo, $periodo, $visitante = false) {
+	public function grupoPessoasInativosNoPeriodo($idGrupo, $periodo, $visitante = false) {
         $resultadoPeriodo = Funcoes::montaPeriodo($periodo);
         $dataDoPeriodoFinal = $resultadoPeriodo[6] . '-' . $resultadoPeriodo[5] . '-' . $resultadoPeriodo[4];
         $dataDoPeriodoInicial = $resultadoPeriodo[3] . '-' . $resultadoPeriodo[2] . '-' . $resultadoPeriodo[1];
@@ -141,6 +142,7 @@ class GrupoPessoaORM extends CircuitoORM {
 				->setParameter(1, (int) $idGrupo)
 				->setParameter(2, $dataFinalFormatada)
 				->setParameter(3, $dataInicialFormatada)
+				->setMaxResults(12)
 				->getResult();
 			return $result;
 		} catch (Exception $exc) {

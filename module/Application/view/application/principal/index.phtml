@@ -75,46 +75,46 @@ echo '<div class="row mb10">';
 
 ?>
 <?php
-$totalDeIndices = 3;
-for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
-	$idValor = '';
-	$label = '';
-	$idDiv = '';
-	$hidden = '';
-
-	switch($indiceNumeroGrandes){
-	case 1: 
-		$idValor = 'idValorDiscipulado';
-		$label = 'Meu Discipulado';
-		$idDiv = 'divDiscipulado';
-		$hidden = 'hidden';
-		break;
-	case 2: 
-		$idValor = 'idValorDiscipuladoHomens';
-		$label = 'Time de Homens';
-		$idDiv = 'divDiscipuladoHomens';
-		$hidden = 'hidden';
-		break;
-	case 3: 
-		$idValor = 'idValorDiscipuladoMulheres';
-		$label = 'Time de Mulheres';
-		$idDiv = 'divDiscipuladoMulheres';
-		$hidden = 'hidden';
-		break;
-	}
-	echo '<div id="'.$idDiv.'" class="col-lg-4 col-md-4 col-sm-4 col-xs-6 pt10 '.$hidden.'">';
-	echo '<div class="panel text-center br-a br-grey">';
-	echo '<div class="panel-body">';
-	echo '<h1 id="'.$idValor.'" class="fs16 mt5 mbn"><img src="/img/loader.gif" /></h1>';
-	echo '<h6 class="text-info">'.$label.'</h6>';
-	echo '</div>';
-	echo '</div>';
-	echo '</div>';
-}
+//$totalDeIndices = 3;
+//for($indiceNumeroGrandes = 1; $indiceNumeroGrandes <= $totalDeIndices; $indiceNumeroGrandes++){
+//	$idValor = '';
+//	$label = '';
+//	$idDiv = '';
+//	$hidden = '';
+//
+//	switch($indiceNumeroGrandes){
+//	case 1: 
+//		$idValor = 'idValorDiscipulado';
+//		$label = 'Meu Discipulado';
+//		$idDiv = 'divDiscipulado';
+//		$hidden = 'hidden';
+//		break;
+//	case 2: 
+//		$idValor = 'idValorDiscipuladoHomens';
+//		$label = 'Time de Homens';
+//		$idDiv = 'divDiscipuladoHomens';
+//		$hidden = 'hidden';
+//		break;
+//	case 3: 
+//		$idValor = 'idValorDiscipuladoMulheres';
+//		$label = 'Time de Mulheres';
+//		$idDiv = 'divDiscipuladoMulheres';
+//		$hidden = 'hidden';
+//		break;
+//	}
+//	echo '<div id="'.$idDiv.'" class="col-lg-4 col-md-4 col-sm-4 col-xs-6 pt10 '.$hidden.'">';
+//	echo '<div class="panel text-center br-a br-grey">';
+//	echo '<div class="panel-body">';
+//	echo '<h1 id="'.$idValor.'" class="fs16 mt5 mbn"><img src="/img/loader.gif" /></h1>';
+//	echo '<h6 class="text-info">'.$label.'</h6>';
+//	echo '</div>';
+//	echo '</div>';
+//	echo '</div>';
+//}
 
 echo '</div>';
 ?>
-<!-- ultimos registros -->
+<!-- ultimos registros 
 <div class="row mb5">
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 admin-grid">
 <div class="panel">
@@ -123,13 +123,13 @@ echo '</div>';
 <table class="table table-condensed" style="font-size: 10px">
 <tbody>
 <?php
-	foreach($this->registros as $registro){
-		echo '<tr>';
-		echo '<td>'.substr($registro->getData_criacaoStringPadraoBrasil(), 0, 5).' - '.substr($registro->getHora_criacao(), 0, 5).'</td>';
-		echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
-		echo '<td class="text-left">'.$registro->getExtra().'</td>';
-		echo '</tr>';
-	}
+//	foreach($this->registros as $registro){
+//		echo '<tr>';
+//		echo '<td>'.substr($registro->getData_criacaoStringPadraoBrasil(), 0, 5).' - '.substr($registro->getHora_criacao(), 0, 5).'</td>';
+//		echo '<td class="text-left">'.$registro->getRegistroAcao()->getNome().'</td>';
+//		echo '<td class="text-left">'.$registro->getExtra().'</td>';
+//		echo '</tr>';
+//	}
 ?>
 </tbody>
 </table>
@@ -139,7 +139,7 @@ echo '</div>';
 </div>
 </div>
 </div>
-</div>
+</div> -->
 
 
 
