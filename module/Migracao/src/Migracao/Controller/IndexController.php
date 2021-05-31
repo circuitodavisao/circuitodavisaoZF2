@@ -4230,7 +4230,8 @@ class IndexController extends CircuitoController {
 						$responsabilidadesDaPessoa++;
 					}
 				}
-				if($responsabilidadesDaPessoa == 1){
+				if($responsabilidadesDaPessoa >= 1){
+					$pessoa->setEmail_antigo($pessoa->getEmail());
 					$pessoa->setEmail(null);
 					$this->getRepositorio()->getPessoaORM()->persistir($pessoa, false);
 				}				

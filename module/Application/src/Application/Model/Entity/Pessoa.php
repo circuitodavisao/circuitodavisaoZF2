@@ -154,6 +154,12 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
 	}
 
     /** @ORM\Column(type="string") */
+    protected $email_antigo;
+
+    /** @ORM\Column(type="string") */
+    protected $origem;
+
+    /** @ORM\Column(type="string") */
     protected $nome;
 
     /** @ORM\Column(type="string") */
@@ -270,6 +276,22 @@ class Pessoa extends CircuitoEntity implements InputFilterAwareInterface {
     function setNoRevisao($noRevisao) {
         $this->noRevisao = $noRevisao;
     }
+
+	function getEmail_antigo(){
+		return $this->email_antigo;
+	}
+
+	function getOrigem(){
+		return $this->origem;
+	}
+
+	function setEmail_antigo($i){
+		$this->email_antigo = $i;	
+	}
+
+	function setOrigem($i){
+		$this->origem = $i;
+	}
 
     function getEntidade() {
         return $this->entidade;
