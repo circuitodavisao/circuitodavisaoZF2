@@ -43,3 +43,53 @@ use Doctrine\Common\Collections\Criteria;
 <?php
 echo $this->modalMuitosCadastros();
 echo $this->layoutJSLancamento;
+?>
+
+<script type='text/javascript'>
+const mostrarLancar = async (idPessoa) => {
+	const idDiv = `divEventos${idPessoa}`
+	document.getElementById(idDiv).classList.remove('hidden')
+
+	const url = '/lancamentoBuscarGrupoEventos'
+	const resultado = await fetch(
+		url,
+		{
+			method: 'POST',	
+			body: JSON.stringify({
+				"token": "<?php echo $this->grupo->getId(); ?>",
+				"periodo": "<?php echo $this->periodo; ?>",
+				idPessoa,
+			}),
+		},
+	)
+
+	const json = await resultado.json()
+	if(json.resultado.grupoEventos && json.resultado.grupoEventos.length > 0){
+		let html = ''
+		for(const grupoEvento of json.resultado.grupoEventos){
+			const diaRealSplit = grupoEvento.diaReal.split('-')
+			const dia = diaRealSplit[2] + '/' + diaRealSplit[1]
+			let icone = 'fa-thumbs-down'
+			let color = 'default'
+			if(grupoEvento.temFrequencia){
+				icone = 'fa-thumbs-up'
+				color = 'primary'
+			}
+
+			const idEventoFrequencia =  `${idPessoa}_${grupoEvento.idEvento}`
+			const iconeBotao = `<i id="icone_${idEventoFrequencia}" class="fa ${icone}"></i>`
+			const funcaoMudarFrequencia = `mudarFrequencia(${idPessoa}, ${grupoEvento.idEvento}, '${grupoEvento.diaReal}', ${json.resultado.idGrupo}, ${json.resultado.periodo})`
+	
+			html += '<div class="text-center col-lg-4 col-md-4 col-sm-4 col-xs-4 mb5" style="padding-top: 0px">'
+			html += `<p>${grupoEvento.diaDaSemana}<br />${dia}<br />${grupoEvento.hora}</p>`
+			html += `<button id="botao_${idEventoFrequencia}" type="button" class="btn btn-sm btn-block btn-${color}" onClick="${funcaoMudarFrequencia}">`;
+			html += iconeBotao
+			html += '</button>';
+			html += '</div>'
+
+		}
+
+		document.getElementById(idDiv).innerHTML = html
+	}
+}
+</script>

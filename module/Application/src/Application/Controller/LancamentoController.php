@@ -82,39 +82,11 @@ class LancamentoController extends CircuitoController {
 			$ativo = false;
 		}
 
-		if ($grupo->getGrupoPaiFilhoPaiAtivo()) {
-			/* Verificando se posso recuar no periodo */
-			$mostrarBotaoPeriodoAnterior = false;
-			$mostrarBotaoPeriodoAfrente = false;
-			$arrayPeriodo = Funcoes::montaPeriodo($periodo);
-			$stringComecoDoPeriodo = $arrayPeriodo[3] . '-' . $arrayPeriodo[2] . '-' . $arrayPeriodo[1];
-			$dataDoInicioDoPeriodoParaComparar = strtotime($stringComecoDoPeriodo);
-
-            $dataDoGrupoPaiFilhoCriacaoParaComparar = strtotime($grupo->getGrupoPaiFilhoPaiAtivo()->getData_criacaoStringPadraoBanco());
-
-            $validarCadastroAntesDoPeriodo = false;
-            if ($dataDoGrupoPaiFilhoCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
-                $validarCadastroAntesDoPeriodo = true;
-            }
-            $validarCadastroDaEntidade = false;
-            $dataDaEntidadeCriacaoParaComparar = strtotime($grupo->getEntidadeAtiva()->getData_criacaoStringPadraoBanco());
-            if ($dataDaEntidadeCriacaoParaComparar < $dataDoInicioDoPeriodoParaComparar) {
-                $validarCadastroDaEntidade = true;
-            }
-            if ($validarCadastroAntesDoPeriodo) {
-                $mostrarBotaoPeriodoAnterior = true;
-            }
-
-            if($dataDoGrupoPaiFilhoCriacaoParaComparar > $dataDoInicioDoPeriodoParaComparar){
-                $periodo = 0;
-            }
-        }
-
         if ($periodo < 0 && $entidade->verificarSeEstaAtivo()) {
             $mostrarBotaoPeriodoAfrente = true;
         }
 
-		$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo);
+		//$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, false, $this->getRepositorio());
         $grupoPessoasNoPeriodo = $grupo->getGrupoPessoasNoPeriodo($periodo, $this->getRepositorio());       
 		$validacaoPessoasCadastradas = 1;
         $view = new ViewModel(
@@ -129,6 +101,7 @@ class LancamentoController extends CircuitoController {
 			'grupoEventos' => $grupoEventoNoPeriodo,
 			'grupoPessoas' => $grupoPessoasNoPeriodo,
 			'ativo' => $ativo,
+			'grupo' => $grupo,
                 )
         );
 
@@ -147,6 +120,57 @@ class LancamentoController extends CircuitoController {
 		self::registrarLog(RegistroAcao::LANCAR_ARREGIMENTACAO, $extra = '');
         return $view;
     }
+
+	public function buscarGrupoEventosAction(){
+		$request = $this->getRequest();
+		$response = $this->getResponse();
+		$dados = array();
+		if ($request->isPost()) {
+			try {
+				$body = $request->getContent();
+				$json = Json::decode($body);
+				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($json->token);
+				$periodo = $json->periodo;
+				$idPessoa = $json->idPessoa;
+				$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($periodo, false, $this->getRepositorio());
+				$html = '';
+				foreach ($grupoEventoNoPeriodo as $grupoEvento) {
+					$data = array();
+					$idEvento = $grupoEvento->getEvento()->getId();
+					$data['idEvento'] = $idEvento;
+					$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
+					$data['diaDaSemana'] = Funcoes::diaDaSemanaPorDia($diaDaSemanaDoEvento, 2);
+					if ($diaDaSemanaDoEvento === 1) {
+						$diaDaSemanaDoEvento = 7; // domingo
+					} else {
+						$diaDaSemanaDoEvento--;
+					}
+					
+					$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $periodo);
+					$data['diaReal'] = $diaRealDoEvento;
+
+					$horaEvento = $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
+					$data['hora'] = $horaEvento;
+
+					$temFrequencia = false;
+					if($resposta = $this->getRepositorio()->getEventoFrequenciaORM()->verificarFrequencia($idEvento, $diaRealDoEvento, $idPessoa)){
+						if($resposta['frequencia'] === 'S'){
+							$temFrequencia = true;
+						}
+					}
+					$data['temFrequencia'] = $temFrequencia;
+					$resultado['grupoEventos'][] = $data;
+				}
+				$resultado['idGrupo'] = $grupo->getId();
+				$resultado['periodo'] = $periodo;
+				$dados['resultado'] = $resultado;
+			} catch (Exception $exc) {
+				$dados['message'] = $exc->getMessage();
+			}
+		}
+		$response->setContent(Json::encode($dados));
+		return $response;
+	}
 
 	public function enviarAction() {
 		$sessao = new Container(Constantes::$NOME_APLICACAO);

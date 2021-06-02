@@ -654,35 +654,56 @@ class Funcoes {
 		if ($tipo == 1) {
 			$resposta = 'SUNDAY';
 		}
+		if ($tipo == 2) {
+			$resposta = 'DOM';
+		}
 		break;
 		case 2:$resposta = 'MON';
 		if ($tipo == 1) {
 			$resposta = 'MONDAY';
+		}
+		if ($tipo == 2) {
+			$resposta = 'SEG';
 		}
 		break;
 		case 3:$resposta = 'TUE';
 		if ($tipo == 1) {
 			$resposta = 'TUESDAY';
 		}
+		if ($tipo == 2) {
+			$resposta = 'TER';
+		}
 		break;
 		case 4:$resposta = 'WED';
 		if ($tipo == 1) {
 			$resposta = 'WEDNESDAY';
+		}
+		if ($tipo == 2) {
+			$resposta = 'QUA';
 		}
 		break;
 		case 5:$resposta = 'THU';
 		if ($tipo == 1) {
 			$resposta = 'THURSDAY';
 		}
+		if ($tipo == 2) {
+			$resposta = 'QUI';
+		}
 		break;
 		case 6:$resposta = 'FRI';
 		if ($tipo == 1) {
 			$resposta = 'FRIDAY';
 		}
+		if ($tipo == 2) {
+			$resposta = 'SEX';
+		}
 		break;
 		case 7:$resposta = 'SAT';
 		if ($tipo == 1) {
 			$resposta = 'SATURDAY';
+		}
+		if ($tipo == 2) {
+			$resposta = 'SAB';
 		}
 		break;
 		}

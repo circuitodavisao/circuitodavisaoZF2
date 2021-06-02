@@ -719,7 +719,7 @@ class Grupo extends CircuitoEntity {
      * Retorna o grupo evento ordenados por dia da semana
      * @return GrupoEvento
      */
-	function getGrupoEventoOrdenadosPorDiaDaSemana() {
+	function getGrupoEventoOrdenadosPorDiaDaSemana($repositorio) {
 		$grupoSelecionado = $this;
 		$grupoEventosCelulasTodas = null;
 		$grupoEventos = null;
@@ -740,7 +740,9 @@ class Grupo extends CircuitoEntity {
 			}
 
 			if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
-				$grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+				//$grupoEventos = $grupoSelecionado->getGrupoEquipe()->getGrupoEventoPorTipoEAtivo(EventoTipo::tipoCulto);
+				$grupoEquipe = $grupoSelecionado->getGrupoEquipe();
+				$grupoEventos = $repositorio->getGrupoEventoORM()->pegarCultosPorGrupoId($grupoEquipe->getId());
 			} else {
 				/* Lider de equipe ou igreja */
 				$grupoEventos = array();
@@ -985,9 +987,9 @@ class Grupo extends CircuitoEntity {
         return $resposta;
     }
 
-    function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false) {
+    function getGrupoEventoNoPeriodo($periodo, $apenasCelulas = false, $repositorio) {
         $grupoEventosNoPeriodo = array();
-        $grupoEventos = $this->getGrupoEventoOrdenadosPorDiaDaSemana();
+        $grupoEventos = $this->getGrupoEventoOrdenadosPorDiaDaSemana($repositorio);
         if ($apenasCelulas) {
             unset($grupoEventos);
             if (!empty($grupoEventoOrdenadosPorDiaDaSemana)) {
