@@ -204,10 +204,12 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //		}
 
 		$html .= '</div>';
+		$html .= '</div>';
+
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row">';
 
-		$html .= '<div id="divEventos'.$pessoa->getId().'" class="text-center col-lg-6 col-md-6 col-sm-6 col-xs-12 mb5 hidden" style="padding-top: 0px">';
+		$html .= '<div id="divEventos'.$pessoa->getId().'" class="text-center mb5 hidden" style="padding-top: 0px">';
 		$html .= '<img width="11" hegth="11" src="/img/loader.gif"></i>';
 		$html .= '</div>';
 
