@@ -108,7 +108,6 @@ class GrupoPessoaORM extends CircuitoORM {
 			$result = $this->getEntityManager()->createQuery($dql)
 				->setParameter(1, (int) $idGrupo)
 				->setParameter(2, $dataFinalFormatada)
-				->setMaxResults(12)
 				->getResult();
 			return $result;
 		} catch (Exception $exc) {
@@ -142,7 +141,6 @@ class GrupoPessoaORM extends CircuitoORM {
 				->setParameter(1, (int) $idGrupo)
 				->setParameter(2, $dataFinalFormatada)
 				->setParameter(3, $dataInicialFormatada)
-				->setMaxResults(12)
 				->getResult();
 			return $result;
 		} catch (Exception $exc) {
