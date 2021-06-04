@@ -33,14 +33,14 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$pessoas = $this->montaListagemDePessoas();
 
 		$grupoEventoNoPeriodo = $this->view->grupoEventos;
-		if (count($grupoEventoNoPeriodo) == 0) {
-			$html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
-		} else {
+//		if (count($grupoEventoNoPeriodo) == 0) {
+//			$html .= '<div class="alert alert-warning"><i class="fa fa-warning pr10" aria-hidden="true"></i>&nbsp;Sem eventos cadastrados!</div>';
+//		} else {
 			$this->setDiaDeSemanaHoje(date('N'));
 			foreach ($pessoas as $pessoa) {
 				$html .= $this->montaLinhaDaPessoa($pessoa, $grupoEventoNoPeriodo);
 			}
-		}
+//		}
 		return $html;
 	}
 
@@ -152,7 +152,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row btn-default p5">';
 
-		$html .= '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 0px">';
+		$html .= '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding-top: 0px">';
 
 		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 		$iconeDaPessoa = '';
@@ -162,15 +162,15 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //			}
 //		}
 		$html .= $iconeDaPessoa;
-//		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
-//		$html .= $pessoa->getNomeListaDeLancamento(5);
-//		$html .= '</span>';
-//		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
+		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
+		$html .= $pessoa->getNomeListaDeLancamento(2);
+		$html .= '</span>';
+		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
 		$html .= $pessoa->getNome();
-//		$html .= '</span>';
+		$html .= '</span>';
 		$html .= '</div>';
 		/* Col 6 */
-//		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-top: 0px">';
+		$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-top: 0px">';
 //
 //
 //		if($pessoa->getTelefone()){
@@ -190,6 +190,8 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //		$html .= '</div>';
 		/* Col 6 */
 
+		$html .= '<span id="" class="btn btn-success btn-xs ml5" onclick="mostrarLancar(\''.$pessoa->getId().'\');">Lançar <i class="fa fa-send"></i></span>';
+
 		$html .= '</div>';
 		/* Row */
 
@@ -202,19 +204,25 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //		}
 
 		$html .= '</div>';
+		$html .= '</div>';
+
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row">';
+
+		$html .= '<div id="divEventos'.$pessoa->getId().'" class="text-center mb5 hidden" style="padding-top: 0px">';
+		$html .= '<img width="11" hegth="11" src="/img/loader.gif"></i>';
+		$html .= '</div>';
 
 		$numeroDeEvento = count($grupoEventoNoPeriodo);
 		foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 			$diaDaSemanaDoEvento = (int) $grupoEvento->getEvento()->getDia();
 			if ($diaDaSemanaDoEvento === 1) {
-				$diaDaSemanaDoEvento = 7; // domingo
-		} else {
-			$diaDaSemanaDoEvento--;
-		}
+					$diaDaSemanaDoEvento = 7; // domingo
+			} else {
+				$diaDaSemanaDoEvento--;
+			}
 		/* Validação Evento mostrar ou não */
-		$mostrarParaLancar = true;
+			$mostrarParaLancar = true;
 //		$mostrarParaLancar = false;
 //		if ($this->view->periodo < 0) {
 //			$arrayPeriodo = $this->arrayPeriodo;
@@ -236,61 +244,61 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //		if ($this->view->periodo < 0) {
 //			$mostrarParaLancar = true;
 //		}
-		$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
-		$tamanhoBotao = BotaoSimples::larguraMaxima;
-		$tamanhoBotaoInativo = 'btn-block';
-		if($numeroDeEvento === 1){
-			$espacamento = 'col-lg-12 col-md-12 col-sm-12 col-xs-12';
-		}
-		if($numeroDeEvento === 2){
-			$espacamento = 'col-lg-6 col-md-6 col-sm-6 col-xs-6';
-		}
-		if($numeroDeEvento === 3){
 			$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
-		}
-		$html .= '<div class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
-		$html .= '<p>';
+			$tamanhoBotao = BotaoSimples::larguraMaxima;
+			$tamanhoBotaoInativo = 'btn-block';
+			if($numeroDeEvento === 1){
+				$espacamento = 'col-lg-12 col-md-12 col-sm-12 col-xs-12';
+			}
+			if($numeroDeEvento === 2){
+				$espacamento = 'col-lg-6 col-md-6 col-sm-6 col-xs-6';
+			}
+			if($numeroDeEvento === 3){
+				$espacamento = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+			}
+			$html .= '<div class="text-center '.$espacamento.' mb5" style="padding-top: 0px">';
+			$html .= '<p>';
 //		$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
 //		if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
 //			$eventoNome = 'Cél. Beta';
 //		}
-		$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
+			$diaDaSemanaAjustado = Funcoes::diaDaSemanaPorDia($grupoEvento->getEvento()->getDia());
 //		$html .= $this->view->translate($eventoNome). '<br />';
-		$html .= $this->view->translate($diaDaSemanaAjustado);
-		$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
-		$html .= '</p>';
-		if ($mostrarParaLancar) {
-			$corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
-			$icone = 'fa-thumbs-down';
-			$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
-			if($resposta = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->view->repositorioORM)){
-				if ($resposta) {
-					$corDoBotao = BotaoSimples::botaoPequenoImportante;
-					$icone = 'fa-thumbs-up';
+			$html .= $this->view->translate($diaDaSemanaAjustado);
+			$html .= $grupoEvento->getEvento()->getHoraFormatoHoraMinuto();
+			$html .= '</p>';
+			if ($mostrarParaLancar) {
+				$corDoBotao = BotaoSimples::botaoPequenoMenosImportante;
+				$icone = 'fa-thumbs-down';
+				$diaRealDoEvento = ListagemDePessoasComEventos::diaRealDoEvento($diaDaSemanaDoEvento, $this->view->periodo);
+				if($resposta = $pessoa->getEventoFrequenciaFiltradoPorEventoEDia($grupoEvento->getEvento()->getId(), $diaRealDoEvento, $this->view->repositorioORM)){
+					if ($resposta) {
+						$corDoBotao = BotaoSimples::botaoPequenoImportante;
+						$icone = 'fa-thumbs-up';
+					}
 				}
-			}
-			$idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
-			$iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
-			$idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
-			$parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
-			$funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
-			$funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
-			$extra = $idDoBotao . ' ' . $funcaoOnclick;
-			if(!$this->view->possoAlterar){
-				$extra .= ' disabled';
-			}
-			$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, $tamanhoBotao);
-		} else {/* Eventos futuro */
-			$icone = 1;
-			$iconeRelogio = 1;
+				$idEventoFrequencia = $pessoa->getId() . '_' . $grupoEvento->getEvento()->getId();
+				$iconeBotao = '<i id="icone_' . $idEventoFrequencia . '" class="fa ' . $icone . '"></i>';
+				$idDoBotao = 'id="botao_' . $idEventoFrequencia . '"';
+				$parametrosMudarFrequencia = $pessoa->getId() . ',' . $grupoEvento->getEvento()->getId() . ', "' . $diaRealDoEvento . '", ' . $this->view->grupo->getId() . ', ' . $this->view->periodo;
+				$funcaoMudarFrequencia = 'mudarFrequencia(' . $parametrosMudarFrequencia . ')';
+				$funcaoOnclick = $this->view->funcaoOnClick($funcaoMudarFrequencia);
+				$extra = $idDoBotao . ' ' . $funcaoOnclick;
+				if(!$this->view->possoAlterar){
+					$extra .= ' disabled';
+				}
+				$html .= $this->view->botaoSimples($iconeBotao, $extra, $corDoBotao, $tamanhoBotao);
+			} else {/* Eventos futuro */
+				$icone = 1;
+				$iconeRelogio = 1;
 
-			$html .= '<button type="button" class="btn btn-sm disabled '.$tamanhoBotaoInativo.'">';
-			if ($icone === $iconeRelogio) {
-				$html .= '<i class = "fa fa-clock-o"></i>';
-		}
-		$html .= '</button>';
-		}
-		$html .= '</div>';
+				$html .= '<button type="button" class="btn btn-sm disabled '.$tamanhoBotaoInativo.'">';
+					if ($icone === $iconeRelogio) {
+						$html .= '<i class = "fa fa-clock-o"></i>';
+					}
+				$html .= '</button>';
+			}
+			$html .= '</div>';
 		}
 		$html .= '</div>';
 		$html .= '</div>';
@@ -326,4 +334,4 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 			$this->diaDeSemanaHoje = $diaDeSemanaHoje;
 		}
 
-		}
+}

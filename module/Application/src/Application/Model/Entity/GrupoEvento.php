@@ -17,13 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 class GrupoEvento extends CircuitoEntity {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Evento", inversedBy="grupoEvento")
+     * @ORM\ManyToOne(targetEntity="Evento", inversedBy="grupoEvento", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="evento_id", referencedColumnName="id")
      */
     private $evento;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoEvento")
+     * @ORM\ManyToOne(targetEntity="Grupo", inversedBy="grupoEvento", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="grupo_id", referencedColumnName="id")
      */
     private $grupo;

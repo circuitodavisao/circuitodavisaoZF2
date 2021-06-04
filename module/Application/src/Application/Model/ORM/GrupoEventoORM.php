@@ -32,4 +32,22 @@ class GrupoEventoORM extends CircuitoORM {
 			echo $exc->getTraceAsString();
 		}
 	}
+
+	public function pegarCultosPorGrupoId($idGrupo) {
+		$dql = "SELECT "
+			. " ge "
+			. "FROM  " . Constantes::$ENTITY_GRUPO_EVENTO . " ge "
+			. "JOIN ge.evento e "
+			. "WHERE "
+			. "ge.evento_id = e.id AND "
+			. "e.tipo_id = 2 AND ge.grupo_id = ?1 ";
+		try {
+			return $this->getEntityManager()->createQuery($dql)  
+								   ->setParameter(1, $idGrupo)
+								   ->getResult();
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
 }

@@ -48,4 +48,25 @@ class EventoFrequenciaORM extends CircuitoORM {
 		return $resultado[0]['quantidade'];
 	}
 
+	public function verificarFrequencia($idEvento, $dia, $idPessoa){
+		$dataFormatada = DateTime::createFromFormat('Y-m-d', $dia);
+		$dataFormatada->setTime(0,0,0);
+		$dqlBase = "SELECT "
+			. "ef.frequencia as frequencia "
+			. "FROM  " . Constantes::$ENTITY_EVENTO_FREQUENCIA . " ef "
+			. "WHERE "
+			. "ef.pessoa_id = ?1 AND "
+			. "ef.evento_id = ?2 AND "
+			. "ef.dia = ?3 ";
+
+		$resultado = $this->getEntityManager()->createQuery($dqlBase)
+			->setParameter(1, (int) $idPessoa)
+			->setParameter(2, (int) $idEvento)
+			->setParameter(3, $dataFormatada)
+			->getResult();
+
+
+		return $resultado[0];
+	}
+
 }
