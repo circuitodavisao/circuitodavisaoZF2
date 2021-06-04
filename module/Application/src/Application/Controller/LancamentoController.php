@@ -95,7 +95,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
-            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAnterior' => true,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
             'possoAlterar' => $possoAlterar,
 			'grupoEventos' => $grupoEventoNoPeriodo,
@@ -206,7 +206,7 @@ class LancamentoController extends CircuitoController {
 		$somaPorPeriodoETipo = array();
 		$celulasRealizadasNoPrimeiroPeriodo = 0;
 		for($indiceDePeriodos = $arrayPeriodoDoMesAtual[0]; $indiceDePeriodos <= 0; $indiceDePeriodos++){
-			$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
+			$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos, false, $this->getRepositorio());
 
 			/* verificando visitante no mes */
 			foreach ($grupoEventoNoPeriodo as $grupoEvento) {
@@ -560,8 +560,7 @@ class LancamentoController extends CircuitoController {
 				$indiceDePeriodos = $periodo;
 
 				for($indiceMes = $arrayPeriodoDoMesAtual[0]; $indiceMes <= $arrayPeriodoDoMesAtual[1]; $indiceMes++){
-					$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceMes);
-
+					$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceMes, false, $this->getRepositorio());
 					/* verificando visitante no mes */
 					foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 						if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelula
@@ -589,7 +588,7 @@ class LancamentoController extends CircuitoController {
 				}
 
 				$relatorio = array();
-				$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos);
+				$grupoEventoNoPeriodo = $grupo->getGrupoEventoNoPeriodo($indiceDePeriodos, false, $this->getRepositorio());
 				foreach ($grupoEventoNoPeriodo as $grupoEvento) {
 					$tipoCampo = 0;
 					if ($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCulto) {
