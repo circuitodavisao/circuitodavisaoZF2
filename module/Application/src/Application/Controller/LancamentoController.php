@@ -95,7 +95,7 @@ class LancamentoController extends CircuitoController {
             Constantes::$GRUPO => $grupo,
             Constantes::$PERIODO => $periodo,
             Constantes::$VALIDACAO => $validacaoPessoasCadastradas,
-            'mostrarBotaoPeriodoAnterior' => $mostrarBotaoPeriodoAnterior,
+            'mostrarBotaoPeriodoAnterior' => true,
             'mostrarBotaoPeriodoAfrente' => $mostrarBotaoPeriodoAfrente,
             'possoAlterar' => $possoAlterar,
 			'grupoEventos' => $grupoEventoNoPeriodo,
