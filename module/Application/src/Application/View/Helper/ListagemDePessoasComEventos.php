@@ -152,7 +152,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">';
 		$html .= '<div class="row btn-default p5">';
 
-		$html .= '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding-top: 0px">';
+		$html .= '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" style="padding-top: 0px">';
 
 		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
 		$iconeDaPessoa = '';
@@ -163,34 +163,34 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 //		}
 		$html .= $iconeDaPessoa;
 		$html .= '<span id="span_nome_' . $pessoa->getId() . '" ' . $corTextoTagsExtrasXs . '>';
-		$html .= $pessoa->getNomeListaDeLancamento(2);
+		$html .= $pessoa->getNomeListaDeLancamento(3);
 		$html .= '</span>';
 		$html .= '<span id="span_nome_lg_' . $pessoa->getId() . '"' . $corTextoTagsExtrasLg . '>';
 		$html .= $pessoa->getNome();
 		$html .= '</span>';
 		$html .= '</div>';
 		/* Col 6 */
-		$html .= '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding-top: 0px">';
-//
-//
-//		if($pessoa->getTelefone()){
-//			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
-//		}else{
-//			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
-//		}
-//		$html .= $telefone;
-//
-//		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
-//			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
-//			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
-//			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
-//			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
-//		}		
-//
+		$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="padding-top: 0px">';
+
+
+		if($pessoa->getTelefone()){
+			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
+		}else{
+			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
+		}
+		$html .= $telefone;
+
+		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
+			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
+			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
+			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
+			$html .= '<span id="" class="btn btn-danger btn-xs ml5" onclick="removerPessoa(\''.$dadosRemover.'\');"><i class="fa fa-times"></i></span>';
+		}		
+
 //		$html .= '</div>';
 		/* Col 6 */
 
-		$html .= '<span id="" class="btn btn-success btn-xs ml5" onclick="mostrarLancar(\''.$pessoa->getId().'\');">Lançar <i class="fa fa-send"></i></span>';
+		$html .= '<span id="" class="btn btn-success btn-xs ml5" onclick="mostrarLancar(\''.$pessoa->getId().'\');"><i class="fa fa-send"></i></span>';
 
 		$html .= '</div>';
 		/* Row */
