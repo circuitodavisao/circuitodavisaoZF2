@@ -627,13 +627,13 @@ class Funcoes {
 		$id = (int) $idEvento;
 		switch ($id) {
 		case EventoTipo::tipoCulto:
-			$resposta = 'Cult';
+			$resposta = 'Culto';
 			break;
 		case EventoTipo::tipoCelula:
-			$resposta = 'Cell';
+			$resposta = 'Célula';
 			break;
 		case EventoTipo::tipoCelulaEstrategica:
-			$resposta = 'Cell';
+			$resposta = 'Célula B.';
 			break;
 		default:
 			break;
