@@ -159,6 +159,13 @@ class LancamentoController extends CircuitoController {
 						}
 					}
 					$data['temFrequencia'] = $temFrequencia;
+
+					$eventoNome = Funcoes::nomeDoEvento($grupoEvento->getEvento()->getTipo_id());
+					if($grupoEvento->getEvento()->getEventoTipo()->getId() === EventoTipo::tipoCelulaEstrategica){
+						$eventoNome = 'Cél. Beta';
+					}
+					$data['tipo'] = $eventoNome;
+
 					$resultado['grupoEventos'][] = $data;
 				}
 				$resultado['idGrupo'] = $grupo->getId();

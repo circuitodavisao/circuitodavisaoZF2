@@ -81,7 +81,7 @@ const mostrarLancar = async (idPessoa) => {
 			const funcaoMudarFrequencia = `mudarFrequencia(${idPessoa}, ${grupoEvento.idEvento}, '${grupoEvento.diaReal}', ${json.resultado.idGrupo}, ${json.resultado.periodo})`
 	
 			html += '<div class="text-center col-lg-4 col-md-4 col-sm-4 col-xs-4 mb5" style="padding-top: 0px">'
-			html += `<p>${grupoEvento.diaDaSemana}<br />${dia}<br />${grupoEvento.hora}</p>`
+			html += `<p>${grupoEvento.tipo}<br />${grupoEvento.diaDaSemana}<br />${dia}<br />${grupoEvento.hora}</p>`
 			html += `<button id="botao_${idEventoFrequencia}" type="button" class="btn btn-sm btn-block btn-${color}" onClick="${funcaoMudarFrequencia}">`;
 			html += iconeBotao
 			html += '</button>';
