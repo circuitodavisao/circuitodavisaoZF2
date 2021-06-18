@@ -27,7 +27,7 @@ class ListagemTurmas extends AbstractHelper {
 		$turmas = $this->view->turmas;
 		$turmasAtivas = array();
 		foreach ($turmas as $turma) {
-			if ($turma->verificarSeEstaAtivo()) {
+			if ($turma->verificarSeEstaAtivo() && ($turma->getAno() === intVal(date('Y')) || $turma->getAno() === intVal(date('Y') - 1))) {
 				$turmasAtivas[] = $turma;
 			}
 		}
