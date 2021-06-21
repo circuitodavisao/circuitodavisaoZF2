@@ -15,23 +15,19 @@ class Correios {
 
     static public function cep($endereco) {
         include('phpQuery-onefile.php');
-        $html = self::simpleCurl('http://www.buscacep.correios.com.br/sistemas/buscacep/resultadoBuscaCepEndereco.cfm', array(
-                    'relaxation' => $endereco,
-                    'tipoCEP' => 'ALL',
-                    'semelhante' => 'N',
+        $html = self::simpleCurl('https://buscacepinter.correios.com.br/app/endereco/carrega-cep-endereco.php', array(
+                    'endereco' => $endereco,
+					'tipoCEP' => 'ALL',
+					'pagina' => '/app/endereco/index.php',
         ));
-        $document = \phpQuery::newDocumentHTML($html, $charset = 'utf-8');
-        $pesquisa = array();
 
-        // Selects all elements with a given class
-        $matches = $document->find('.tmptabela');
-        $explodeMatches = explode('>', $matches);
         $dados = array();
-        $dados['logradouro'] = str_replace('</td', '', $explodeMatches[13]);
-        $dados['bairro'] = str_replace('</td', '', $explodeMatches[15]);
-        $explodeCidadeUf = explode('/', str_replace('</td', '', $explodeMatches[17]));
-        $dados['cidade'] = $explodeCidadeUf[0];
-        $dados['uf'] = $explodeCidadeUf[1];
+		$json = json_decode($html);
+		$dados['json'] = $json;
+		$dados['logradouro'] = $json->dados[0]->logradouroDNEC;
+		$dados['bairro'] = $json->dados[0]->bairro;
+        $dados['cidade'] = $json->dados[0]->localidade;
+        $dados['uf'] = $json->dados[0]->uf;
         $pesquisa[] = $dados;
         return $pesquisa;
     }
