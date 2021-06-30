@@ -175,4 +175,21 @@ class FatoLiderORM extends CircuitoORM {
 		}
 	}
 
+	public function encontrarFatoLiderAbaixoPorNumeroIdentificador($numeroIdentificador) {
+		$dql = "SELECT fl "
+			. "FROM  " . Constantes::$ENTITY_FATO_LIDER . " fl "
+			. "WHERE "
+			. "fl.numero_identificador LIKE ?1 AND fl.data_inativacao IS NULL";
+
+		try {
+			$numeroIdentificador = $numeroIdentificador.'%';
+			$result = $this->getEntityManager()->createQuery($dql)
+				->setParameter(1, $numeroIdentificador)
+				->getResult();
+			return $result;
+		} catch (Exception $exc) {
+			echo $exc->getTraceAsString();
+		}
+	}
+
 }
