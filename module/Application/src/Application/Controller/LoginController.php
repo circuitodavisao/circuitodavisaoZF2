@@ -3216,4 +3216,50 @@ class LoginController extends CircuitoController {
 		return new ViewModel(array('repositorio'=>$this->getRepositorio()));	
 	}
 
+	public function lideresCoordenacaoAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
+
+		$dados = array();
+		$html = '';
+		$html .= '<br />';
+
+		$html .= '<table border=1>';
+		$html .= '<tr>';
+		$html .= '<td>Nome</td>';
+		$html .= '<td>Documento</td>';
+		$html .= '<td>Telefone</td>';
+		$html .= '<td>Email</td>';
+		$html .= '<td>CEP</td>';
+		$html .= '</tr>';
+	
+		$grupoCoordenacao = $this->getRepositorio()->getGrupoORM()->encontrarPorId(3182);
+		$grupoPaiFilhoFilhos = $grupoCoordenacao->getGrupoPaiFilhoFilhosAtivosReal();
+			foreach ($grupoPaiFilhoFilhos as $grupoPaiFilhoFilho12) {
+				$grupoIgreja = $grupoPaiFilhoFilho12->getGrupoPaiFilhoFilho();
+				$numeroIdentificador = $this->getRepositorio()->getFatoCicloORM()->montarNumeroIdentificador($this->getRepositorio(), $grupoIgreja);
+				$fatosLideres = $this->getRepositorio()->getFatoLiderORM()->encontrarFatoLiderAbaixoPorNumeroIdentificador($numeroIdentificador);
+				foreach($fatosLideres as $fatoLider){
+					$idGrupo = substr($fatoLider->getNumero_identificador(), (strlen($fatoLider->getNumero_identificador())-8));
+					$grupoLider = $this->getRepositorio()->getGrupoORM()->encontrarPorId(intVal($idGrupo));
+					foreach($grupoLider->getResponsabilidadesAtivas() as $grupoResposnavel){
+						$pessoa = $grupoResposnavel->getPessoa();
+						$html .= '<tr>';
+						$html .= '<td>' .$pessoa->getNome() . '</td>';
+						$html .= '<td>' .$pessoa->getDocumento() . '</td>';
+						$html .= '<td>' .$pessoa->getTelefone() . '</td>';
+						$html .= '<td>' .$pessoa->getEmail() . '</td>';
+						$html .= '<td>' .$pessoa->getCep() . '</td>';
+						$html .= '</tr>';
+					}	
+					
+				}
+
+			}
+		$html .= '<table>';
+		$dados['html'] = $html;
+		return new ViewModel($dados);	
+	}
+
 }
