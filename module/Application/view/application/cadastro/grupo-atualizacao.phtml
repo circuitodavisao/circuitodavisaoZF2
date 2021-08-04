@@ -77,7 +77,7 @@ echo $this->form()->openTag($form);
 
                     $funcaoOnClickContinuarCelular = $this->funcaoOnClick('abrirDivCodigoVerificador()');
                     echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
-                    echo $this->botaoLink(Constantes::$TRADUCAO_CONTINUAR, '#', 7, $funcaoOnClickContinuarCelular);
+                    echo $this->botaoLink('Finalizar', '#', 7, $funcaoOnClickFinalizar);
                     echo '</div>';
 
                     $funcaoOnClickVoltarEndereco = $this->funcaoOnClick('botaoVoltarEndereco()');
