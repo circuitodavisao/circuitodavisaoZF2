@@ -77,6 +77,8 @@ echo $this->form()->openTag($form);
 
                     $funcaoOnClickContinuarCelular = $this->funcaoOnClick('abrirDivCodigoVerificador()');
                     echo '<div id="divBotaoTelefoneContinuar" class="hidden">';
+
+                    $funcaoOnClickFinalizar = $this->funcaoOnClick('finalizarAtualizacao(this.form)');
                     echo $this->botaoLink('Finalizar', '#', 7, $funcaoOnClickFinalizar);
                     echo '</div>';
 
