@@ -3303,7 +3303,7 @@ class LoginController extends CircuitoController {
 						){
 						$html .= '<tr>';
 						$html .= '<td>' .$equipe->getNome() . '</td>';
-						$html .= '<td>' .$hirarquiaId->getNome() . '</td>';
+						$html .= '<td>' .$hirarquia->getNome() . '</td>';
 						$html .= '<td>' .$pessoa->getNome() . '</td>';
 						$html .= '<td>' .$pessoa->getDocumento() . '</td>';
 						$html .= '<td>' .$pessoa->getTelefone() . '</td>';
