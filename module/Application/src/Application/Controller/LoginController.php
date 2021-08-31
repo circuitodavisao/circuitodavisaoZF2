@@ -3291,8 +3291,8 @@ class LoginController extends CircuitoController {
 					$grupoLider = $this->getRepositorio()->getGrupoORM()->encontrarPorId(intVal($idGrupo));
 					foreach($grupoLider->getResponsabilidadesAtivas() as $grupoResposnavel){
 						$pessoa = $grupoResposnavel->getPessoa();
-						$hirarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
-						$hirarquiaId = hierarquia()->getId();
+						$hierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
+						$hirarquiaId = $hierarquia->getId();
 						$equipe = $grupoLider->getGrupoEquipe()->getEntidadeAtiva();
 						if(
 							$hirarquiaId === 1 ||
@@ -3303,7 +3303,7 @@ class LoginController extends CircuitoController {
 						){
 						$html .= '<tr>';
 						$html .= '<td>' .$equipe->getNome() . '</td>';
-						$html .= '<td>' .$hirarquia->getNome() . '</td>';
+						$html .= '<td>' .$hierarquia->getNome() . '</td>';
 						$html .= '<td>' .$pessoa->getNome() . '</td>';
 						$html .= '<td>' .$pessoa->getDocumento() . '</td>';
 						$html .= '<td>' .$pessoa->getTelefone() . '</td>';
