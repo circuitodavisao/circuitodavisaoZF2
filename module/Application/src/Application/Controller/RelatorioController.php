@@ -4561,7 +4561,7 @@ public function alunosNaSemanaAction(){
 								$time['informacao'] = $grupo1728->getEntidadeAtiva()->getNome() ? $grupo1728->getEntidadeAtiva()->getNome() : $grupo1728->getEntidadeAtiva()->getNumero();
 								$time['lideres'] = $grupo1728->getNomeLideresAtivos();
 								$times[] = $time;
-								if($grupo1728->getId() === 40379){
+								if($grupo1728->getId() === 3428){
 									if($grupoPaiFilhoFilhos4 = $grupo1728->getGrupoPaiFilhoFilhosAtivosReal()){
 										foreach ($grupoPaiFilhoFilhos4 as $grupoPaiFilhoFilho4) {
 											$grupo4 = $grupoPaiFilhoFilho4->getGrupoPaiFilhoFilho();
