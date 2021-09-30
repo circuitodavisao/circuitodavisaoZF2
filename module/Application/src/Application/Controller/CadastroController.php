@@ -3525,12 +3525,24 @@ class CadastroController extends CircuitoController {
 									if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
 										&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
 										$temSolicitacoesPendentes = true;
+										$data = array();
+										$data['grupo1'] = $solicitacaoParaVerificar->getObjeto1();									
+										$data['grupo2'] = $solicitacaoParaVerificar->getObjeto2();									
+										$data['mes'] = $solicitacaoParaVerificar->getMes();									
+										$data['ano'] = $solicitacaoParaVerificar->getAno();									
+										$dados['solicitacoes'][] = $data;
 									}
 								}	
 								foreach($solicitacoesParaVerificarObjeto2 as $solicitacaoParaVerificar){					
 									if($solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::CONCLUIDO
 										&& $solicitacaoParaVerificar->getSolicitacaoSituacaoAtiva()->getSituacao()->getId() !== Situacao::RECUSAO){							
 										$temSolicitacoesPendentes = true;
+										$data = array();
+										$data['grupo1'] = $solicitacaoParaVerificar->getObjeto1();									
+										$data['grupo2'] = $solicitacaoParaVerificar->getObjeto2();									
+										$data['mes'] = $solicitacaoParaVerificar->getMes();									
+										$data['ano'] = $solicitacaoParaVerificar->getAno();									
+										$dados['solicitacoes'][] = $data;
 									}
 								}	
 								
