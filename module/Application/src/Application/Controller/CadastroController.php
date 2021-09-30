@@ -3481,7 +3481,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function trocarResponsabilidadesFinalizarAction(){
-		self::validarSeSouRegiao();
+		//self::validarSeSouRegiao();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($sessao->idEntidadeAtual);
 		$grupoLogado = $entidade->getGrupo();
