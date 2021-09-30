@@ -3528,8 +3528,7 @@ class CadastroController extends CircuitoController {
 										$data = array();
 										$data['grupo1'] = $solicitacaoParaVerificar->getObjeto1();									
 										$data['grupo2'] = $solicitacaoParaVerificar->getObjeto2();									
-										$data['mes'] = $solicitacaoParaVerificar->getMes();									
-										$data['ano'] = $solicitacaoParaVerificar->getAno();									
+										$data['data_criacao'] = $solicitacaoParaVerificar->getData_criacaoStringPadraoBrasil();									
 										$dados['solicitacoes'][] = $data;
 									}
 								}	
@@ -3540,8 +3539,7 @@ class CadastroController extends CircuitoController {
 										$data = array();
 										$data['grupo1'] = $solicitacaoParaVerificar->getObjeto1();									
 										$data['grupo2'] = $solicitacaoParaVerificar->getObjeto2();									
-										$data['mes'] = $solicitacaoParaVerificar->getMes();									
-										$data['ano'] = $solicitacaoParaVerificar->getAno();									
+										$data['data_criacao'] = $solicitacaoParaVerificar->getData_criacaoStringPadraoBrasil();									
 										$dados['solicitacoes'][] = $data;
 									}
 								}	
