@@ -3468,7 +3468,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function trocarResponsabilidadesAction(){
-		self::validarSeSouRegiao();
+		//self::validarSeSouRegiao();
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
