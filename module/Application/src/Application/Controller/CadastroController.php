@@ -2591,14 +2591,18 @@ class CadastroController extends CircuitoController {
 
 		$solicitacoesDivididasPorTipo = array();
 
-		if($entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
+		if(
+			$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::presidencial &&
+			$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::regiao &&
 		$entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao){
 			$idIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
 			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idIgreja);
 
 			$solicitacoesTipo = $this->getRepositorio()->getSolicitacaoTipoORM()->encontrarTodos();
 		}
-		if($entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial ||
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao ||
 		$entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao){
 			$idRegiao = $entidade->getGrupo()->getId();
 			$solicitacoes = $this->getRepositorio()->getSolicitacaoORM()->encontrarTodosPorDataDeCriacao($dataInicio, $dataFim, $idRegiao);
