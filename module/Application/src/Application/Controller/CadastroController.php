@@ -2561,7 +2561,7 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function solicitacoesAction() {
-		self::validarSeSouIgrejaOuEquipeOuCoordencaoOuRegiao();
+		//self::validarSeSouIgrejaOuEquipeOuCoordencaoOuRegiao();
 		$request = $this->getRequest();
 		$dados = array();
 		if($request->isPost()){
