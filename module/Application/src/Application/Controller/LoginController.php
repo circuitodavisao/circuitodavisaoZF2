@@ -3289,6 +3289,7 @@ class LoginController extends CircuitoController {
 				foreach($fatosLideres as $fatoLider){
 					$idGrupo = substr($fatoLider->getNumero_identificador(), (strlen($fatoLider->getNumero_identificador())-8));
 					$grupoLider = $this->getRepositorio()->getGrupoORM()->encontrarPorId(intVal($idGrupo));
+					if($grupoLider->verificarSeEstaAtivo()){
 					foreach($grupoLider->getResponsabilidadesAtivas() as $grupoResposnavel){
 						$pessoa = $grupoResposnavel->getPessoa();
 						$hierarquia = $pessoa->getPessoaHierarquiaAtivo()->getHierarquia();
@@ -3313,6 +3314,7 @@ class LoginController extends CircuitoController {
 						}
 					}	
 					
+					}
 				}
 
 			}
