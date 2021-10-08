@@ -820,7 +820,7 @@ class LoginController extends CircuitoController {
     }
 
     public function consultarOrdenacaoAction(){
-		//self::validarSeSouPresidencial();
+		self::validarSeSouPresidencial();
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
         //$idEntidadeAtual = $sessao->idEntidadeAtual;
         $idEntidadeAtual = 9497; // idEntidade do presidencial setado temporariamente
