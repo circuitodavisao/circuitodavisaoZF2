@@ -1117,9 +1117,8 @@ class LoginController extends CircuitoController {
 				$json = Json::decode($body);
 				if($turmaPessoa = $this->getRepositorio()->getTurmaPessoaORM()->encontrarPorId($json->matricula)){
 					if(
-						true
+						false
 //						$turmaPessoa->getTurma()->getGrupo()->getGrupoRegiao()->getId() === 3110 // REGIAO DF
-//
 //						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 23793
 //						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 13617
 //						|| $turmaPessoa->getTurma()->getGrupo()->getGrupoIgreja()->getId() === 17995
