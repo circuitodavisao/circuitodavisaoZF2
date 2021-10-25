@@ -135,7 +135,7 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'selectedAtual' => $selectedAtual,
 			'selectedAnterior' => $selectedAnterior,
-			'grupoIgreja' => $grupoIgreja->getId();
+			'grupoIgreja' => $grupoIgreja->getId(),
 			//'registros' => $registros,
 		);
 
