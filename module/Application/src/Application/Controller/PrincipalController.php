@@ -43,6 +43,7 @@ class PrincipalController extends CircuitoController {
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
+		$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
 
@@ -134,6 +135,7 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'selectedAtual' => $selectedAtual,
 			'selectedAnterior' => $selectedAnterior,
+			'grupoIgreja' => $grupoIgreja->getId();
 			//'registros' => $registros,
 		);
 
