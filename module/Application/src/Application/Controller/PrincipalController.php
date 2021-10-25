@@ -49,7 +49,7 @@ class PrincipalController extends CircuitoController {
 			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe || 
 			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
 		){
-			$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
+			$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja()->getId();
 		}
 		$grupoLogado = $grupo;
 		$pessoaLogada = $pessoa;
@@ -142,7 +142,7 @@ class PrincipalController extends CircuitoController {
 			'repositorio' => $this->getRepositorio(),
 			'selectedAtual' => $selectedAtual,
 			'selectedAnterior' => $selectedAnterior,
-			'grupoIgreja' => $grupoIgreja->getId(),
+			'grupoIgreja' => $grupoIgreja,
 			//'registros' => $registros,
 		);
 
