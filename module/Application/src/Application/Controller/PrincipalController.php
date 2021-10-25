@@ -44,7 +44,11 @@ class PrincipalController extends CircuitoController {
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
 		$grupoIgreja = 0;
-		if($entidade->getEntidadeTipo()->getId() > 5){
+		if(
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::equipe || 
+			$entidade->getEntidadeTipo()->getId() === EntidadeTipo::subEquipe
+		){
 			$grupoIgreja = $entidade->getGrupo()->getGrupoIgreja();
 		}
 		$grupoLogado = $grupo;
