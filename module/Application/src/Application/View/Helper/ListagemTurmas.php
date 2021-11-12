@@ -43,7 +43,7 @@ class ListagemTurmas extends AbstractHelper {
 			$html .= '<th class="text-center">Curso</th>';
 			$html .= '<th class="text-center">M&ecirc;s/Ano</th>';
 			$html .= '<th class="text-center hidden-xs">Observação</th>';			
-			$html .= '<th class="text-center hidden-xs">Alunos</th>';
+			$html .= '<th class="text-center hidden-xs">Alunos Ativos</th>';
 			$html .= '<th class="text-center hidden-xs">Aula Aberta</th>';
 			$html .= '<th class="text-center"></th>';
 			$html .= '</tr>';
