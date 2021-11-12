@@ -63,9 +63,9 @@ class ListagemTurmas extends AbstractHelper {
 						if($this->view->relatorio[$turma->getId()][Situacao::ATIVO]){
 							$totalAlunos += $this->view->relatorio[$turma->getId()][Situacao::ATIVO];
 						}
-						if($this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]){
-							$totalAlunos += $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL];
-						}
+						//if($this->view->relatorio[$turma->getId()][Situacao::ESPECIAL]){
+							//$totalAlunos += $this->view->relatorio[$turma->getId()][Situacao::ESPECIAL];
+						//}
 					}
 				}
 
