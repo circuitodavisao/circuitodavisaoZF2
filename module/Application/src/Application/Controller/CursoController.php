@@ -540,7 +540,7 @@ class CursoController extends CircuitoController {
 		$turmas = $entidadeDaIgreja->getGrupo()->getTurma();		
 		$relatorio = array();;
 		if($relatorioCursos[0]){
-			//$relatorio = $relatorioCursos[0];
+			$relatorio = $relatorioCursos[0];
 		}
 		$view = new ViewModel(array(
 			'turmas' => $turmas,
