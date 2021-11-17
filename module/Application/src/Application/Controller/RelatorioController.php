@@ -804,8 +804,8 @@ class RelatorioController extends CircuitoController {
 				$tipoRelatorioEquipe = 2;
 				$tipoRelatorioPessoal = 1;
 				$periodoInicial = -8;
-				$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
-				$relatorio2 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaQuantidade);
+				//$relatorio = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioEquipe, false, RelatorioController::relatorioCelulaQuantidade);
+				//$relatorio2 = RelatorioController::montaRelatorio($this->getRepositorio(), $numeroIdentificador, $periodoInicial, $tipoRelatorioPessoal, false, RelatorioController::relatorioCelulaQuantidade);
 				$grupoResponsabilidades = $grupo->getResponsabilidadesAtivas();
 				$fotos = '';
 				foreach ($grupoResponsabilidades as $grupoResponsabilidade) {
@@ -815,10 +815,10 @@ class RelatorioController extends CircuitoController {
 				$dados = array();
 				$dados['nomeLideres'] = $grupo->getNomeLideresAtivos();
 				$dados['fotos'] = $fotos;
-				$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'] + $relatorio['celulaQuantidadeEstrategica'];
-				$dados['celulaQuantidadePessoal'] = $relatorio2['celulaQuantidade'] + $relatorio2['celulaQuantidadeEstrategica'];
-				$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
-				$dados['quantidadeLideresPessoal'] = $relatorio2['quantidadeLideres'];
+				//$dados['celulaQuantidade'] = $relatorio['celulaQuantidade'] + $relatorio['celulaQuantidadeEstrategica'];
+				//$dados['celulaQuantidadePessoal'] = $relatorio2['celulaQuantidade'] + $relatorio2['celulaQuantidadeEstrategica'];
+				//$dados['quantidadeLideres'] = $relatorio['quantidadeLideres'];
+				//$dados['quantidadeLideresPessoal'] = $relatorio2['quantidadeLideres'];
 				if($dados['quantidadeLideres'] === null){
 					$dados['quantidadeLideres'] = 0;
 				}
