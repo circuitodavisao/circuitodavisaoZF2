@@ -1040,7 +1040,7 @@ class PrincipalController extends CircuitoController {
 		$request = $this->getRequest();
 		$response = $this->getResponse();
 		$dadosFinal = array();
-		$resultado = array();
+		$resultao = array();
 		if ($request->isPost()) {
 			try {
 				$body = $request->getContent();
@@ -1140,11 +1140,13 @@ class PrincipalController extends CircuitoController {
 							$discipulos .= '<option class="lider grupoEquipe grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
 
 							if (!$grupo12->verificaSeECasal()) {
-								if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-									$homens .= '<option id="homem'.$grupo12->getId().'" class="'.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
-								}
-								if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-									$mulheres .= '<option class="mulheres '.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+								if($grupo12->getGrupoResponsavelAtivo()){
+									if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+										$homens .= '<option id="homem'.$grupo12->getId().'" class="'.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+									}
+									if ($grupo12->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+										$mulheres .= '<option class="mulheres '.$grupo->getId().'" value="' . $grupo12->getId() . '">' . $informacao . '</option>';
+									}
 								}
 							} else {
 								$casais .= '<option value="' . $grupo12->getId() . '">' . $informacao . '</option>';
@@ -1158,11 +1160,13 @@ class PrincipalController extends CircuitoController {
 									$informacao = $grupo144->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
 									$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
 									if (!$grupo144->verificaSeECasal()) {
-										if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-											$homens .= '<option id="homem'.$grupo144->getId().'" class="'.$grupo12->getId().'"  value="' . $grupo144->getId() . '">' . $informacao . '</option>';
-										}
-										if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-											$mulheres .= '<option class="mulheres '.$grupo12->getId().'" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+										if($grupo144->getGrupoResponsavelAtivo()){
+											if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+												$homens .= '<option id="homem'.$grupo144->getId().'" class="'.$grupo12->getId().'"  value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+											}
+											if ($grupo144->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+												$mulheres .= '<option class="mulheres '.$grupo12->getId().'" value="' . $grupo144->getId() . '">' . $informacao . '</option>';
+											}
 										}
 									} else {
 										$casais .= '<option value="' . $grupo144->getId() . '">' . $informacao . '</option>';
@@ -1176,11 +1180,13 @@ class PrincipalController extends CircuitoController {
 											$informacao = $grupo1728->getEntidadeAtiva()->infoEntidade() . ' - ' . $nomeLideres;
 											$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . '" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
 											if (!$grupo1728->verificaSeECasal()) {																																					
-												if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-													$homens .= '<option id="homem'.$grupo1728->getId().'" class="'.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
-												}
-												if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-													$mulheres .= '<option class="mulheres '.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+												if($grupo1728->getGrupoResponsavelAtivo()){
+													if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+														$homens .= '<option id="homem'.$grupo1728->getId().'" class="'.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+													}
+													if ($grupo1728->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+														$mulheres .= '<option class="mulheres '.$grupo144->getId().'" value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
+													}
 												}
 											} else {
 												$casais .= '<option value="' . $grupo1728->getId() . '">' . $informacao . '</option>';
@@ -1196,12 +1202,13 @@ class PrincipalController extends CircuitoController {
 													$discipulos .= '<option class="lider grupo' . $grupo->getId() . ' grupo'.$grupo12->getId().' grupo' . $grupo144->getId() . ' grupo' . $grupo1728->getId() . '" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
 
 													if (!$grupo20736->verificaSeECasal()) {	
-
-														if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
-															$homens .= '<option id="homem'.$grupo20736->getId().'" class="'.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
-														}
-														if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
-															$mulheres .= '<option class="mulheres '.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+														if($grupo20736->getGrupoResponsavelAtivo()){
+															if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'M') {
+																$homens .= '<option id="homem'.$grupo20736->getId().'" class="'.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+															}
+															if ($grupo20736->getGrupoResponsavelAtivo()->getPessoa()->getSexo() == 'F') {
+																$mulheres .= '<option class="mulheres '.$grupo1728->getId().'" value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
+															}
 														}
 													} else {
 														$casais .= '<option value="' . $grupo20736->getId() . '">' . $informacao . '</option>';
