@@ -2274,7 +2274,7 @@ class RelatorioController extends CircuitoController {
 
 				$valor1 = ($fato1->c1+$fato1->c2+$fato1->c3+$fato1->c4+$fato1->c5+$fato1->c6)/$diferencaDePeriodos;
 				if($valor1 > $valorDeCorte){
-					//$fatosMensalValidados[] = $fato1;
+					$fatosMensalValidados[] = $fato1;
 				}
 			}
 
@@ -2292,32 +2292,32 @@ class RelatorioController extends CircuitoController {
 					$fato2->mediac = $valor2;
 
 					if($valor1 > $valor2){
-						$fatosMensal[$x] = $fato2;
-						$fatosMensal[$y] = $fato1;
+						$fatosMensalValidados[$x] = $fato2;
+						$fatosMensalValidados[$y] = $fato1;
 					}
 				}
 			}
 			/* removendo nao lideres */
 			$fatosFitrados = array();
-			foreach($fatosMensal as $fatoMensal){
-				$idGrupo = substr($fatoMensal->getNumero_identificador(), (count($fatoMensal->getNumero_identificador())-8));
-				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
-				if(
-					$grupo->verificarSeEstaAtivo() &&
-					$grupo->getResponsabilidadesAtivas() > 0
-				){
-					if(
-						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula) ||
-						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)
-					){
-						$fatoMensal->setLideres($grupo->getNomeLideresAtivos());
-						if($fatoMensal->getEntidade() == ''){
-							$fatoMensal->setEntidade(' INATIVO');
-						}
-						$fatosFitrados[] = $fatoMensal;
-					}
-				}
-			}
+//			foreach($fatosMensalValidados as $fatoMensal){
+//				$idGrupo = substr($fatoMensal->getNumero_identificador(), (count($fatoMensal->getNumero_identificador())-8));
+//				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
+//				if(
+//					$grupo->verificarSeEstaAtivo() &&
+//					$grupo->getResponsabilidadesAtivas() > 0
+//				){
+//					if(
+//						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelula) ||
+//						$grupo->getGrupoEventoAtivosPorTipo(EventoTipo::tipoCelulaEstrategica)
+//					){
+//						$fatoMensal->setLideres($grupo->getNomeLideresAtivos());
+//						if($fatoMensal->getEntidade() == ''){
+//							$fatoMensal->setEntidade(' INATIVO');
+//						}
+//						$fatosFitrados[] = $fatoMensal;
+//					}
+//				}
+//			}
 			$dados['filtrado'] = true;
 			$dados['fatosMensal'] = $fatosFitrados;
 			$dados['repositorio'] = $this->getRepositorio();
