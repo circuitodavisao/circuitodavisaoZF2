@@ -2299,7 +2299,7 @@ class RelatorioController extends CircuitoController {
 			}
 			/* removendo nao lideres */
 			$fatosFitrados = array();
-//			foreach($fatosMensalValidados as $fatoMensal){
+			foreach($fatosMensalValidados as $fatoMensal){
 //				$idGrupo = substr($fatoMensal->getNumero_identificador(), (count($fatoMensal->getNumero_identificador())-8));
 //				$grupo = $this->getRepositorio()->getGrupoORM()->encontrarPorId($idGrupo);
 //				if(
@@ -2314,10 +2314,10 @@ class RelatorioController extends CircuitoController {
 //						if($fatoMensal->getEntidade() == ''){
 //							$fatoMensal->setEntidade(' INATIVO');
 //						}
-//						$fatosFitrados[] = $fatoMensal;
+						$fatosFitrados[] = $fatoMensal;
 //					}
 //				}
-//			}
+			}
 			$dados['filtrado'] = true;
 			$dados['fatosMensal'] = $fatosFitrados;
 			$dados['repositorio'] = $this->getRepositorio();
