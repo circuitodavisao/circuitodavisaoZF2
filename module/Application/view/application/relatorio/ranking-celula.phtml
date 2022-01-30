@@ -28,6 +28,7 @@ echo '</tr>';
 echo '</thead>';
 
 echo '<tbody>';
+echo 'total ' . count($this->fatosMensal);
 if($this->fatosMensal && $this->filtrado){
 	$contagemRanking = 1;
 	foreach($this->fatosMensal as $fato){
