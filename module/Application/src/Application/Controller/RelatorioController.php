@@ -2265,12 +2265,25 @@ class RelatorioController extends CircuitoController {
 			$diferencaDePeriodos = self::diferencaDePeriodos($arrayPeriodoDoMes[0], $arrayPeriodoDoMes[1], $mes, $ano);		
 			$dados['periodos'] = $diferencaDePeriodos;
 
-			// ordenando
+			// removendo os fatos vazios
+			$fatosMensalValidados = array();
 			$totalDeFatos = count($fatosMensal);
+			$valorDeCorte = 5;
+			for($x = 0; $x < $totalDeFatos; $x++){
+				$fato1 = $fatosMensal[$x];
+
+				$valor1 = ($fato1->c1+$fato1->c2+$fato1->c3+$fato1->c4+$fato1->c5+$fato1->c6)/$diferencaDePeriodos;
+				if($valor1 > $valorDeCorte){
+					$fatosMensalValidados[] = $fato1;
+				}
+			}
+
+			// ordenando
+			$totalDeFatos = count($fatosMensalValidados);
 			for($x = 0; $x < $totalDeFatos; $x++){
 				for($y = 0; $y < $totalDeFatos; $y++){
-					$fato1 = $fatosMensal[$x];
-					$fato2 = $fatosMensal[$y];
+					$fato1 = $fatosMensalValidados[$x];
+					$fato2 = $fatosMensalValidados[$y];
 
 					$valor1 = ($fato1->c1+$fato1->c2+$fato1->c3+$fato1->c4+$fato1->c5+$fato1->c6)/$diferencaDePeriodos;
 					$valor2 = ($fato2->c1+$fato2->c2+$fato2->c3+$fato2->c4+$fato2->c5+$fato2->c6)/$diferencaDePeriodos;
