@@ -2274,7 +2274,7 @@ class RelatorioController extends CircuitoController {
 
 				$valor1 = ($fato1->c1+$fato1->c2+$fato1->c3+$fato1->c4+$fato1->c5+$fato1->c6)/$diferencaDePeriodos;
 				if($valor1 > $valorDeCorte){
-					$fatosMensalValidados[] = $fato1;
+					//$fatosMensalValidados[] = $fato1;
 				}
 			}
 
