@@ -420,7 +420,7 @@ class IndexController extends CircuitoController {
 	public function solicitacoesAction() {
 		set_time_limit(0);
 		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', '60');
+		ini_set('max_execution_time', '180');
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_start = (float) $sec + (float) $usec;
@@ -649,7 +649,7 @@ class IndexController extends CircuitoController {
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
 									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
-									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+									//$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
 
 									/* Nova solicitacao situacao */
 									$solicitacaoSituacao = new SolicitacaoSituacao();
@@ -660,7 +660,7 @@ class IndexController extends CircuitoController {
 										$html .= '<br />Solicitação RECUSADA';
 									}
 									$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao));
-									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+									//$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
 								}
 							}
 						}
@@ -668,7 +668,7 @@ class IndexController extends CircuitoController {
 						$html .= '<br />Sem Solicitação';
 					}
 				}
-				$this->getRepositorio()->fecharTransacao();
+				//$this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
 				$html .= $exc->getTraceAsString();
