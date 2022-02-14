@@ -650,7 +650,7 @@ class IndexController extends CircuitoController {
 									$solicitacaoSituacaoAtiva = $solicitacao->getSolicitacaoSituacaoAtiva();
 									/* inativar solicitacao situacao ativa */
 									$solicitacaoSituacaoAtiva->setDataEHoraDeInativacao();
-									//$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
+									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacaoAtiva, false);
 
 									/* Nova solicitacao situacao */
 									$solicitacaoSituacao = new SolicitacaoSituacao();
@@ -661,7 +661,7 @@ class IndexController extends CircuitoController {
 										$html .= '<br />Solicitação RECUSADA';
 									}
 									$solicitacaoSituacao->setSituacao($this->getRepositorio()->getSituacaoORM()->encontrarPorId($idSituacao));
-									//$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
+									$this->getRepositorio()->getSolicitacaoSituacaoORM()->persistir($solicitacaoSituacao);
 								}
 							}
 						}
@@ -669,7 +669,7 @@ class IndexController extends CircuitoController {
 						$html .= '<br />Sem Solicitação';
 					}
 				//}
-				//$this->getRepositorio()->fecharTransacao();
+				$this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
 				$html .= $exc->getTraceAsString();
