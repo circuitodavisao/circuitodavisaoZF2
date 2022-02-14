@@ -458,7 +458,7 @@ class IndexController extends CircuitoController {
 			$this->getRepositorio()->iniciarTransacao();
 			try {
 				//for($indiceHierarquia = 10; $indiceHierarquia > 0; $indiceHierarquia--){
-					$indiceHierarquia = 8;
+					$indiceHierarquia = 7;
 					$html .= '<br /><br /><br />Hierarquia: '.$indiceHierarquia;
 					if($solicitacoesPorHierarquia[$indiceHierarquia]){
 						$html .= '<br />TEM SOLICITACOES';
