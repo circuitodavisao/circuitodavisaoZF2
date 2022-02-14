@@ -465,7 +465,7 @@ class IndexController extends CircuitoController {
 						$count = 0;
 						foreach($solicitacoesPorHierarquia[$indiceHierarquia] as $arraySolicitacao){
 							$count++;
-							if($count === 20){
+							if($count === 10){
 								break;
 							}
 							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao->getId());
