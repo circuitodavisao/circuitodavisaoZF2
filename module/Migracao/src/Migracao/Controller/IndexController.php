@@ -462,7 +462,12 @@ class IndexController extends CircuitoController {
 					$html .= '<br /><br /><br />Hierarquia: '.$indiceHierarquia;
 					if($solicitacoesPorHierarquia[$indiceHierarquia]){
 						$html .= '<br />TEM SOLICITACOES';
+						$count = 0;
 						foreach($solicitacoesPorHierarquia[$indiceHierarquia] as $arraySolicitacao){
+							$count++;
+							if($count === 20){
+								break;
+							}
 							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao->getId());
 							if($solicitacao->verificarSeEstaAtivo()){
 
