@@ -457,8 +457,8 @@ class IndexController extends CircuitoController {
 
 			$this->getRepositorio()->iniciarTransacao();
 			try {
-				//for($indiceHierarquia = 10; $indiceHierarquia > 0; $indiceHierarquia--){
-					$indiceHierarquia = 1;
+				for($indiceHierarquia = 10; $indiceHierarquia > 0; $indiceHierarquia--){
+					//$indiceHierarquia = 1;
 					$html .= '<br /><br /><br />Hierarquia: '.$indiceHierarquia;
 					if($solicitacoesPorHierarquia[$indiceHierarquia]){
 						$html .= '<br />TEM SOLICITACOES';
@@ -466,7 +466,7 @@ class IndexController extends CircuitoController {
 						foreach($solicitacoesPorHierarquia[$indiceHierarquia] as $arraySolicitacao){
 							$count++;
 							if($count === 10){
-								break;
+								//break;
 							}
 							$solicitacao = $this->getRepositorio()->getSolicitacaoORM()->encontrarPorId($arraySolicitacao->getId());
 							if($solicitacao->verificarSeEstaAtivo()){
@@ -673,7 +673,7 @@ class IndexController extends CircuitoController {
 					}else{
 						$html .= '<br />Sem Solicitação';
 					}
-				//}
+				}
 				$this->getRepositorio()->fecharTransacao();
 			} catch (Exception $exc) {
 				$this->getRepositorio()->desfazerTransacao();
