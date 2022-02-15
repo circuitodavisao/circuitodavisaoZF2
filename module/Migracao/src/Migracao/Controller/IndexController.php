@@ -4294,7 +4294,7 @@ class IndexController extends CircuitoController {
 				}
 				$contador++;
 			}
-			$this->getRepositorio()->fecharTransacao();
+			//$this->getRepositorio()->fecharTransacao();
 		} catch(Exception $e){
 			$this->getRepositorio()->desfazerTransacao();
 		}
