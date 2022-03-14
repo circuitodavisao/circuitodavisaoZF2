@@ -300,19 +300,22 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 $link = 'relatorio';
 				switch ($indiceMenuRelatorio) {
 				case 1:
-					$label = 'Membresia';
+					$label = 'Membresia (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
+$link = '#';
 					break;
 				case 2:
-					$label = 'C&eacute;lulas Realizadas';
+					$label = 'C&eacute;lulas Realizadas (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
+$link = '#';
 					break;
 				case 3:
-					$label = 'C&eacute;lulas Quantidade';
+					$label = 'C&eacute;lulas Quantidade (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
+$link = '#';
 					break;
 			case 5:
 					$label = 'C&eacute;lulas de Elite';
@@ -320,16 +323,18 @@ $link = 'relatorioNovo';
 $link = 'relatorioNovo';
 					break;
 				case 6:
-					$label = 'Membresia das Igrejas';
+					$label = 'Membresia das Igrejas (Manutenção)';
 
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 					$mostrar = true;
 }
 $link = 'relatorioNovo';
+$link = '#';
 					break;
-	
+
 				case 9:
-					$label = 'Parceiro de Deus Consolidado';
+					$label = 'Parceiro de Deus Consolidado (Manutenção)';
+$link = '#';
 					$mostrar = true;
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao) {
@@ -338,7 +343,7 @@ $link = 'relatorioNovo';
 			} else {
 				$mostrar = false;
 			}
-						
+
 					}
 					break;
 				}
