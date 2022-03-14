@@ -318,7 +318,7 @@ $link = 'relatorioNovo';
 $link = '';
 					break;
 			case 5:
-					$label = 'C&eacute;lulas de Elite';
+					$label = 'C&eacute;lulas de Elite (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
 					break;
@@ -349,10 +349,10 @@ $link = '';
 				}
 				if ($mostrar) {
 					$html .= '<li>';
-					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
+					//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
 					$html .= '<span class="fa fa-table"></span>';
 					$html .= $label;
-					$html .= '</a>';
+					//$html .= '</a>';
 					$html .= '</li>';
 				}
 			}
