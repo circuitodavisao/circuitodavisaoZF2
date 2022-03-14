@@ -270,9 +270,10 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
-			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
+			//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
+			$html .= '<a href="#">';
 			$html .= '<span class="fa fa-money"></span>';
-			$html .= 'Parceiro de Deus';
+			$html .= 'Parceiro de Deus (Manutenção)';
 			$html .= '</a>';
 			$html .= '</li>';
 
