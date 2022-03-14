@@ -204,7 +204,8 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){							
 					$html .= '<li>';
-					$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
+					//$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
+					$html .= '<a href="#">';
 					$html .= '<span class="fa fa-user"></span>';
 					$html .= 'Secretário Parceiro de Deus';
 					$html .= '</a>';
