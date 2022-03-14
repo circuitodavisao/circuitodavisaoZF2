@@ -303,19 +303,19 @@ $link = 'relatorio';
 					$label = 'Membresia (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '#';
+$link = '';
 					break;
 				case 2:
 					$label = 'C&eacute;lulas Realizadas (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '#';
+$link = '';
 					break;
 				case 3:
 					$label = 'C&eacute;lulas Quantidade (Manutenção)';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '#';
+$link = '';
 					break;
 			case 5:
 					$label = 'C&eacute;lulas de Elite';
@@ -334,7 +334,7 @@ $link = '#';
 
 				case 9:
 					$label = 'Parceiro de Deus Consolidado (Manutenção)';
-$link = '#';
+$link = '';
 					$mostrar = true;
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao) {
