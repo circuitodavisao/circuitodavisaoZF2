@@ -350,9 +350,10 @@ $link = '';
 				if ($mostrar) {
 					$html .= '<li>';
 					//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
+					$html .= '<a href="#">';
 					$html .= '<span class="fa fa-table"></span>';
 					$html .= $label;
-					//$html .= '</a>';
+					$html .= '</a>';
 					$html .= '</li>';
 				}
 			}
