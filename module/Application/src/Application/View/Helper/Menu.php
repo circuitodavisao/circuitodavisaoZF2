@@ -204,8 +204,7 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 
 			if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::igreja){							
 					$html .= '<li>';
-					//$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
-					$html .= '<a href="#">';
+					$html .= '<a href="/lancamentoParceiroDeDeusUsuarios" onClick="mostrarSplash();">';
 					$html .= '<span class="fa fa-user"></span>';
 					$html .= 'Secretário Parceiro de Deus';
 					$html .= '</a>';
@@ -271,9 +270,10 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
-			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
+			//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
+			$html .= '<a href="#">';
 			$html .= '<span class="fa fa-money"></span>';
-			$html .= 'Parceiro de Deus';
+			$html .= 'Parceiro de Deus (Manutenção)';
 			$html .= '</a>';
 			$html .= '</li>';
 
