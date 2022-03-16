@@ -41,6 +41,10 @@ class PrincipalController extends CircuitoController {
 		/* dados pessoa logada */
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
+		if($entidade === null || !$entidade || $entidade === undefined){
+			return $this->redirect()->toRoute('/');
+		}
+
 		$pessoa = $this->getRepositorio()->getPessoaORM()->encontrarPorId($sessao->idPessoa);
 		$grupo = $entidade->getGrupo();
 		$grupoIgreja = 0;

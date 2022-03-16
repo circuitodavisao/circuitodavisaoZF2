@@ -446,7 +446,7 @@ class Module {
             Constantes::$ROUTE_LOGIN,
             'migracao',
             'deploy',
-			'principal',
+			//'principal',
         );
         if (!isset($matchedRoute) || in_array($matchedRoute->getMatchedRouteName(), $allowedRoutesConfig)) {
 // no auth check required

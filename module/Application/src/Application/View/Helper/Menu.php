@@ -270,10 +270,9 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 		&& $this->view->entidade->getEntidadeTipo()->getId() !== EntidadeTipo::coordenacao) {
 
 			$html .= '<li>';
-			//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
-			$html .= '<a href="#">';
+			$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\'lancamentoParceiroDeDeusExtrato\', null);">';
 			$html .= '<span class="fa fa-money"></span>';
-			$html .= 'Parceiro de Deus (Manutenção)';
+			$html .= 'Parceiro de Deus';
 			$html .= '</a>';
 			$html .= '</li>';
 
@@ -301,41 +300,36 @@ if ($this->view->entidade->verificarSeEstaAtivo()){
 $link = 'relatorio';
 				switch ($indiceMenuRelatorio) {
 				case 1:
-					$label = 'Membresia (Manutenção)';
+					$label = 'Membresia';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '';
 					break;
 				case 2:
-					$label = 'C&eacute;lulas Realizadas (Manutenção)';
+					$label = 'C&eacute;lulas Realizadas';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '';
 					break;
 				case 3:
-					$label = 'C&eacute;lulas Quantidade (Manutenção)';
+					$label = 'C&eacute;lulas Quantidade';
 					$mostrar = true;
 $link = 'relatorioNovo';
-$link = '';
 					break;
 			case 5:
-					$label = 'C&eacute;lulas de Elite (Manutenção)';
+					$label = 'C&eacute;lulas de Elite';
 					$mostrar = true;
 $link = 'relatorioNovo';
 					break;
 				case 6:
-					$label = 'Membresia das Igrejas (Manutenção)';
+					$label = 'Membresia das Igrejas';
 
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::presidencial){
 					$mostrar = true;
 }
 $link = 'relatorioNovo';
-$link = '#';
 					break;
 
 				case 9:
-					$label = 'Parceiro de Deus Consolidado (Manutenção)';
-$link = '';
+					$label = 'Parceiro de Deus Consolidado';
 					$mostrar = true;
 		if ($this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::regiao
 		|| $this->view->entidade->getEntidadeTipo()->getId() === EntidadeTipo::coordenacao) {
@@ -350,8 +344,7 @@ $link = '';
 				}
 				if ($mostrar) {
 					$html .= '<li>';
-					//$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
-					$html .= '<a href="#">';
+					$html .= '<a href="#" onClick="mostrarSplash(); funcaoCircuito(\''.$link.'/' . $indiceMenuRelatorio . '\', null);">';
 					$html .= '<span class="fa fa-table"></span>';
 					$html .= $label;
 					$html .= '</a>';
