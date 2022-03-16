@@ -2255,10 +2255,9 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function ativarFichaRevisaoAction() {
-				return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
 			Constantes::$ACTION => 'semAcesso',
 		));
-
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
