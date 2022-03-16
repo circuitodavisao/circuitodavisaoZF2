@@ -797,12 +797,14 @@ class Grupo extends CircuitoEntity {
 			$dataParaComparar = strtotime('1900-01-01');
 		}
 		$grupoSelecionado = $this;
+		$entidadeTipoId = $grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId();
+
 		$arrayDeGruposEventos = Array();
-		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
+		if ($entidadeTipoId === Entidade::IGREJA) {
 			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
 			$arrayDeGruposEventos[] = $grupoEventos;
 		}
-		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE) {
+		if ($entidadeTipoId=== Entidade::SUBEQUIPE) {
 			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::SUBEQUIPE ||
 				$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 
@@ -814,7 +816,7 @@ class Grupo extends CircuitoEntity {
 			$grupoEventos = $grupoSelecionado->getGrupoEventoAtivosPorTipo(EventoTipo::tipoRevisao);
 			$arrayDeGruposEventos[] = $grupoEventos;
 		}
-		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
+		if ($entidadeTipoId === Entidade::EQUIPE) {
 			while ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::EQUIPE) {
 				$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 				if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::IGREJA) {
@@ -825,9 +827,9 @@ class Grupo extends CircuitoEntity {
 			$arrayDeGruposEventos[] = $grupoEventos;
 		}
 
-		if ($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::REGIONAL ||
-			$grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
-				if($grupoSelecionado->getEntidadeAtiva()->getEntidadeTipo()->getId() === Entidade::COORDENACAO) {
+		if ($entidadeTipoId === Entidade::REGIONAL ||
+			$entidadeTipoId === Entidade::COORDENACAO) {
+				if($entidadeTipoId === Entidade::COORDENACAO) {
 					$grupoSelecionado = $grupoSelecionado->getGrupoPaiFilhoPaiAtivo()->getGrupoPaiFilhoPai();
 				}
 				$grupoSelecionadoGrupoPaiFilhoFilhos = $grupoSelecionado->getGrupoPaiFilhoFilhosAtivos(1);
