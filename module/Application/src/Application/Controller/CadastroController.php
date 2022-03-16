@@ -1832,9 +1832,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function selecionarRevisionistaAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 
@@ -1864,9 +1861,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function selecionarRevisionistaTodosAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 
@@ -1896,9 +1890,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function cadastrarPessoaRevisaoAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		/* Helper Controller */
@@ -1945,9 +1936,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function salvarPessoaRevisaoAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$request = $this->getRequest();
@@ -2026,9 +2014,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function fichaRevisaoAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2068,9 +2053,6 @@ class CadastroController extends CircuitoController {
 
 	public function selecionarFichasRevisionistaAction() {
 
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2130,9 +2112,6 @@ class CadastroController extends CircuitoController {
 
 	public function listaLideresAction() {
 
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
@@ -2192,9 +2171,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function listaRevisionistasAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2255,9 +2231,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function ativarFichaRevisaoAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
@@ -2279,9 +2252,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function fichasAtivasAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2312,9 +2282,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function selecionarFichasAtivasAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
@@ -2358,9 +2325,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function consultarFichaAction() {
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 
 		$request = $this->getRequest();
@@ -2522,9 +2486,6 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function ativarLideresRevisaoAction() {
-					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-						Constantes::$ACTION => 'semAcesso',
-					));
 
 
 		try {
@@ -3301,9 +3262,6 @@ class CadastroController extends CircuitoController {
 
 	public function selecionarRevisionistaCrachaAction() {
 
-		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
-			Constantes::$ACTION => 'semAcesso',
-		));
 
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
