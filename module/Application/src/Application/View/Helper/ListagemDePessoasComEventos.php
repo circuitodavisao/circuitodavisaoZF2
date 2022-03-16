@@ -178,7 +178,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}else{
 			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
 		}
-		$html .= $telefone;
+		//$html .= $telefone;
 
 		if(false && $pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
