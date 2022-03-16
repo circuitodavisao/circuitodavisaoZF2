@@ -43,3 +43,4 @@ COMMENT ON COLUMN grupo_pessoa.tipo_id IS 'Identificação do tipo da pessoa vol
 COMMENT ON COLUMN grupo_pessoa.transferido IS 'Identificação para saber se foi transferido ou não';
 COMMENT ON COLUMN grupo_pessoa.nucleo_perfeito IS 'Enumeração para co líder ou líder em treinamento';
 
+create index index_grupo_pessoa_data_inativacao on grupo_pessoa(data_inativacao);
