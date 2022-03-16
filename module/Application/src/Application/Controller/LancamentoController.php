@@ -184,6 +184,10 @@ class LancamentoController extends CircuitoController {
 	}
 
 	public function enviarAction() {
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		ini_set('max_execution_time', '180');
+	
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$entidade = CircuitoController::getEntidadeLogada($this->getRepositorio(), $sessao);
