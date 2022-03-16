@@ -2006,6 +2006,11 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function fichaRevisaoAction() {
+		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+			Constantes::$ACTION => 'semAcesso',
+		));
+
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idEventoFrequencia = $sessao->idSessao;
@@ -2042,6 +2047,11 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function selecionarFichasRevisionistaAction() {
+
+		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+			Constantes::$ACTION => 'semAcesso',
+		));
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 
 		$idRevisao = $sessao->idSessao;
@@ -2099,6 +2109,11 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function listaLideresAction() {
+		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+			Constantes::$ACTION => 'semAcesso',
+		));
+
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$eventoRevisao = $this->getRepositorio()->getEventoORM()->encontrarPorId($idRevisao);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
@@ -3237,6 +3252,11 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function selecionarRevisionistaCrachaAction() {
+
+		return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+			Constantes::$ACTION => 'semAcesso',
+		));
+
 		$sessao = new Container(Constantes::$NOME_APLICACAO);
 		$idEntidadeAtual = $sessao->idEntidadeAtual;
 		$entidade = $this->getRepositorio()->getEntidadeORM()->encontrarPorId($idEntidadeAtual);
