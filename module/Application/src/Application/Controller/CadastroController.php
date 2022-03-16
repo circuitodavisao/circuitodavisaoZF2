@@ -2523,6 +2523,10 @@ class CadastroController extends CircuitoController {
 	}
 
 	public function ativarLideresRevisaoAction() {
+					return $this->redirect()->toRoute(Constantes::$ROUTE_PRINCIPAL, array(
+						Constantes::$ACTION => 'semAcesso',
+					));
+
 
 		try {
 			$this->getRepositorio()->iniciarTransacao();
