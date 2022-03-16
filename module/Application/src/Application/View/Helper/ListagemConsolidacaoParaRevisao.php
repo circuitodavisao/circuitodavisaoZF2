@@ -39,35 +39,38 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 			}
 		}
 
-		/* Ordenacao de pessoas */
-		$valores = array();
-		foreach ($pessoasGrupo as $pg) {
-			$valor = 0;
-			switch ($pg->getTipo()) {
-			case 'CO':
-				$valor = 4;
-				break;
-			case 'VI':
-				$valor = 1;
-				break;
+		if(false){
+			/* Ordenacao de pessoas */
+			$valores = array();
+			foreach ($pessoasGrupo as $pg) {
+				$valor = 0;
+				switch ($pg->getTipo()) {
+				case 'CO':
+					$valor = 4;
+					break;
+				case 'VI':
+					$valor = 1;
+					break;
+				}
+				$valores[$pg->getId()] = $valor;
 			}
-			$valores[$pg->getId()] = $valor;
-		}
 
-		$pA = array();
-		$res = array();
-		for ($i = 0; $i < count($pessoasGrupo); $i++) {
-			for ($j = 0; $j < count($pessoasGrupo); $j++) {
-				$pA[1] = $pessoasGrupo[$i];
-				$pA[2] = $pessoasGrupo[$j];
-				$res[1] = $valores[$pA[1]->getId()];
-				$res[2] = $valores[$pA[2]->getId()];
-				if ($res[1] < $res[2]) {
-					$pessoasGrupo[$i] = $pA[2];
-					$pessoasGrupo[$j] = $pA[1];
+			$pA = array();
+			$res = array();
+			for ($i = 0; $i < count($pessoasGrupo); $i++) {
+				for ($j = 0; $j < count($pessoasGrupo); $j++) {
+					$pA[1] = $pessoasGrupo[$i];
+					$pA[2] = $pessoasGrupo[$j];
+					$res[1] = $valores[$pA[1]->getId()];
+					$res[2] = $valores[$pA[2]->getId()];
+					if ($res[1] < $res[2]) {
+						$pessoasGrupo[$i] = $pA[2];
+						$pessoasGrupo[$j] = $pA[1];
+					}
 				}
 			}
 		}
+
 		foreach ($pessoasGrupo as $pgA) {
 			$pessoas[] = $pgA;
 		}
@@ -96,9 +99,9 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 			$html .= '<table class="table">';
 			$html .= '<thead>';
 			$html .= '<tr>';
-			$html .= '<th class="text-center">';
-			$html .= $this->view->translate(Constantes::$TRADUCAO_TIPO_REVISIONISTA);
-			$html .= '</th>';
+			//$html .= '<th class="text-center">';
+			//$html .= $this->view->translate(Constantes::$TRADUCAO_TIPO_REVISIONISTA);
+			//$html .= '</th>';
 			$html .= '<th class="text-center">';
 			$html .= $this->view->translate(Constantes::$TRADUCAO_NOME_REVISIONISTA);
 			$html .= '</th>';
@@ -109,7 +112,7 @@ class ListagemConsolidacaoParaRevisao extends AbstractHelper {
 
 			foreach ($pessoas as $pessoa) {
 				$html .= '<tr>';
-				$html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
+				//$html .= '<td class="text-center">' . $pessoa->getTipo() . '</td>';
 
 				$stringNomeDaFuncaoOnClickInserir = 'funcaoCadastro("' . Constantes::$PAGINA_CADASTRAR_PESSOA_REVISAO . '", ' . $pessoa->getId() . ')';
 
