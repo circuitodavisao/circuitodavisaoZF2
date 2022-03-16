@@ -128,7 +128,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$corTextoTagsExtrasXs = ' class="hidden-lg" ';
 		$corTextoTagsExtrasLg = ' class="hidden-xs hidden-sm hidden-md" ';		
 		$border = '';		
-		if ($pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
+		if (false && $pessoa->getTipo() != 'LP' && !$pessoa->getAtivo()) {
 			if ($pessoa->getDataInativacao()) {
 				/* Verificando em qual periodo foi inativado */
 				$stringPeriodo = $this->arrayPeriodo[3] . '-' . $this->arrayPeriodo[2] . '-' . $this->arrayPeriodo[1];
@@ -173,7 +173,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		$html .= '<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="padding-top: 0px">';
 
 
-		if($pessoa->getTelefone()){
+		if(false && $pessoa->getTelefone()){
 			$telefone = '<a id="linkWhatsapp_'.$pessoa->getId().'" class="btn btn-success btn-xs" href="https://api.whatsapp.com/send?phone=55'.$pessoa->getTelefone().'"><i class="fa fa-whatsapp"></i></a>';
 		}else{
 			$telefone = '<span class="label label-warning" data-placement="bottom" data-toggle="popover" data-content="Sem Telefone" style="cursor: pointer;"><i class="fa fa-warning"></i></span>';
