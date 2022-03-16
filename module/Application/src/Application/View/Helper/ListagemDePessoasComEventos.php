@@ -154,7 +154,9 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 
 		$html .= '<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" style="padding-top: 0px">';
 
-		$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
+		if(false){
+			$html .= '<span class="label label-dark">'.$pessoa->getTipo() . '</span> ';
+		}
 		$iconeDaPessoa = '';
 //		if($pessoa->getTipo() != 'LP'){
 //			if($pessoa->verificarSeEhAluno()){
