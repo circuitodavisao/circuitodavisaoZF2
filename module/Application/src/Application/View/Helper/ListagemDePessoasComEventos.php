@@ -180,7 +180,7 @@ class ListagemDePessoasComEventos extends AbstractHelper {
 		}
 		$html .= $telefone;
 
-		if($pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
+		if(false && $pessoa->getAtivo() && $this->view->periodo == 0 && $this->view->possoAlterar){
 			$dadosAlterar = $pessoa->getId().'_'.$pessoa->getTipo();
 			$dadosRemover = $pessoa->getGrupoPessoaAtivo()->getId();
 			$html .= '<span id="" class="btn btn-dark btn-xs ml5" onclick="alterarPessoa(\''.$dadosAlterar.'\');"><i class="fa fa-pencil"></i></span>';
